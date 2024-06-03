@@ -2,3 +2,4 @@
 .env
 *.sublime-*
 .DS_Store
+data/*
