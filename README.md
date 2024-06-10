@@ -3,10 +3,24 @@ Smart Hydration UoB Final Project
 
 ## Project setup
 
-1. `cd path/to/repo`
+1. Install yarn
 
-2. `python -m venv .venv` - creates a Python virtual environment within the repo in a folder called .venv (this shouldn't be committed to the repo)
+```
+brew install yarn
+```
 
-3. `source .venv/bin/activate` - makes your terminal run inside the virtual environment
+(probably different on windows)
 
-4. `pip install -r requirements.txt` - installs all libraries listed in requirements.txt
+2. Install dependencies
+
+```
+cd apps/smart-hydration-app
+yarn
+```
+
+3. Start dev server with
+
+```
+yarn start
+```
+
