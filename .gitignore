@@ -2,5 +2,15 @@
 .env
 *.sublime-*
 .DS_Store
-node_modules
-.expo
+data/*
+node_modules/
+.expo/
+dist/
+npm-debug.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+web-build/
