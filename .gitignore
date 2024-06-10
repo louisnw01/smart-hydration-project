@@ -2,4 +2,5 @@
 .env
 *.sublime-*
 .DS_Store
-data/*
+node_modules
+.expo
