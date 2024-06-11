@@ -10,7 +10,7 @@ export default function Index() {
 
     return (
 
-        <View className="flex justify-between h-full">
+        <View className="flex flex-1 justify-between h-full">
             {/*<Text className="bg-black text-md text-white">you are hydrated</Text>*/}
             <PageRouter />
             <NavigationBar />
