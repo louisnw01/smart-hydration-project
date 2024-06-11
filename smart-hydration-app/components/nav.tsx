@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, Pressable } from "react-native";
 import { atom, useAtom } from "jotai";
 import { selectedPageAtom } from "@/atom/nav";
 import HomePage from "@/app/home";
@@ -18,10 +18,10 @@ function NavItem({text}: {text: string}) {
     const color = page == text ? 'black' : 'rgb(100, 100, 100)';
 
     return (
-        <TouchableOpacity className="flex flex-col"
+        <Pressable className="flex flex-col"
             onPress={() => setPage(text)}
         >
-            <View className="h-8 w-8 mx-2"
+            <View className="h-8 w-8 mx-2 rounded-lg"
                 style={{backgroundColor: color}}
             />
             <Text
@@ -30,7 +30,7 @@ function NavItem({text}: {text: string}) {
             >
                 {text}
             </Text>
-        </TouchableOpacity>
+        </Pressable>
     )
 }
 
