@@ -10,24 +10,24 @@ import PopupPage from "@/components/PopupPage";
 const settingsOptions = ["Profile", ""]
 
 export default function HomePage() {
-    const popupPage = useAtomValue(popupPageAtom)
-
     return (
-                <PageWrapper>
-                    <PageHeading text='home page'/>
-                    <SettingsButton />
-                    <View className="flex flex-row justify-center mt-32">
-                        <Drop width={200} height={200}/>
-                    </View>
-                    {popupPage == "settings" &&
-                    <PopupPage>
-                        <Text className="text-2xl">Item 1</Text>
-                        <Text className="text-2xl">Item 2</Text>
-                        <Text className="text-2xl">Item 3</Text>
-                    </PopupPage>
-                    }
-                </PageWrapper>
-            )
+    <PageWrapper>
+        <PageHeading text='smart hydration' />
 
+        <Text className="w-full text-center text-8xl mt-16">70%</Text>
 
+        <View className="flex flex-row justify-center mt-32">
+            <Drop width={200} height={200}/>
+        </View>
+        {popupPage == "settings" &&
+            <PopupPage>
+                <Text className="text-2xl">Item 1</Text>
+                <Text className="text-2xl">Item 2</Text>
+                <Text className="text-2xl">Item 3</Text>
+            </PopupPage>
+        }
+
+    </PageWrapper>
+    )
 }
+
