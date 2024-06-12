@@ -6,7 +6,7 @@ export default function HydrationPercentage() {
 const hydration = useAtomValue(hydrationAtom);
 
     return (
-            <Text className= "w-full text-center text-8xl mt-16">
+            <Text className= "w-full text-center text-8xl mt-16 font-semibold">
                 {hydration.toString()}%
             </Text>
     )
