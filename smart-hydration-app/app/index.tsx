@@ -3,6 +3,7 @@ import "../global.css"
 import { Text, View } from 'react-native';
 import { useAtomValue } from "jotai";
 import { selectedPageAtom } from "@/atom/nav";
+
 import PageRouter from "@/components/page-router";
 
 export default function Index() {
