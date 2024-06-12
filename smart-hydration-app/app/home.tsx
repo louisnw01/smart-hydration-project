@@ -6,11 +6,14 @@ import PageHeading from "@/components/common/page-heading";
 export default function HomePage() {
     return (
     <PageWrapper>
-        <PageHeading text='home page' />
+        <PageHeading text='smart hydration' />
+
+        <Text className="w-full text-center text-8xl mt-16">70%</Text>
 
         <View className="flex flex-row justify-center mt-32">
             <Drop width={200} height={200}/>
         </View>
+
     </PageWrapper>
     )
 }
