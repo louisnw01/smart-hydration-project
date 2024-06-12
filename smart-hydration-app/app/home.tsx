@@ -28,7 +28,7 @@ export default function HomePage() {
             <PopupPage>
                 <OptionBlock text='Dark Mode' />
                 <OptionBlock text='Notifications' />
-                <OptionBlock text='Eradicate Dehydration' />
+                <OptionBlock text='Auto-Update' />
             </PopupPage>
         }
     </PageWrapper>
