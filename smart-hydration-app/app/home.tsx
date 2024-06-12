@@ -12,9 +12,12 @@ import PopupPage from "@/components/PopupPage";
 const settingsOptions = ["Profile", ""]
 
 export default function HomePage() {
+    const popupPage = useAtomValue(popupPageAtom);
+
     return (
     <PageWrapper>
         <PageHeading text='home page' />
+        <SettingsButton />
         <HydrationPercentage/>
         <View className="flex flex-row justify-center mt-32">
             <Drop width={200} height={200}/>
