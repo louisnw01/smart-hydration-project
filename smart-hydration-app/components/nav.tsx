@@ -36,7 +36,7 @@ function NavItem({text}: {text: string}) {
 
 export default function NavigationBar() {
     return (
-        <View className="fixed bottom-0 left-0 flex flex-row bg-gray-100 justify-between w-screen py-2 px-10">
+        <View className="fixed bottom-0 left-0 flex flex-row border-t border-gray-200 justify-between w-screen py-2 px-10">
             <NavItem text='home' />
             <NavItem text='trends' />
             <NavItem text='devices' />

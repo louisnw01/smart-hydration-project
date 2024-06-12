@@ -6,19 +6,10 @@ import { selectedPageAtom } from "@/atom/nav";
 import PageRouter from "@/components/page-router";
 
 export default function Index() {
-    const page = useAtomValue(selectedPageAtom);
-
     return (
-
         <View className="flex flex-1 justify-between h-full">
-            {/*<Text className="bg-black text-md text-white">you are hydrated</Text>*/}
             <PageRouter />
             <NavigationBar />
-
-
         </View>
-
     );
 }
-
-
