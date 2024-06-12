@@ -4,6 +4,12 @@ import PageWrapper from "@/components/common/page-wrapper";
 import PageHeading from "@/components/common/page-heading";
 import HydrationPercentage from "@/components/hydration-pct";
 import HydrationStatus from "@/components/hydration-status";
+import SettingsButton from "@/components/SettingsButton";
+import { popupPageAtom } from "@/atom/nav";
+import {useAtomValue} from "jotai";
+import PopupPage from "@/components/PopupPage";
+
+const settingsOptions = ["Profile", ""]
 
 export default function HomePage() {
     return (
@@ -14,6 +20,14 @@ export default function HomePage() {
             <Drop width={200} height={200}/>
         </View>
         <HydrationStatus/>
+        {popupPage == "settings" &&
+            <PopupPage>
+                <Text className="text-2xl">Item 1</Text>
+                <Text className="text-2xl">Item 2</Text>
+                <Text className="text-2xl">Item 3</Text>
+            </PopupPage>
+        }
     </PageWrapper>
     )
 }
+
