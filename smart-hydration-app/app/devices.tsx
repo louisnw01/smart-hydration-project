@@ -23,6 +23,29 @@ function DeviceRow({name}) {
 }
 
 
+function FetchDemo() {
+    const [fetchedValue, setFetchedValue] = useState<string|null>(null);
+
+
+    const fetchData = async () => {
+        const response = await fetch('http://localhost:8081/');
+        const data = await response.json();
+        setFetchedValue(data.message);
+    }
+
+    fetchData();
+
+    if (fetchedValue == null) {
+        return null;
+    }
+
+    return (
+        <Text className="text-xl font-bold">{fetchedValue}</Text>
+    )
+}
+
+
+
 export default function DevicesPage() {
     const [showAddNew, setShowAddNew] = useState<boolean>(false);
 
@@ -55,7 +78,7 @@ export default function DevicesPage() {
                 </View>
             </View>
 
-
+            <FetchDemo />
 
 
 
