@@ -10,6 +10,7 @@ const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity)
 
 const SlideUp: React.FC<SlideUpAnimProps> = props => {
     const slideUpAnim = useRef(new Animated.Value(1000)).current;
+    const [popupStatus, setPopupStatus] = useAtom(popupPageAtom);
     const [direction, setDirection] = useState<"up" | "down">("up");
     const flipDirection = () => {
         direction === "up" ? setDirection("down") : setDirection("up");
@@ -20,7 +21,13 @@ const SlideUp: React.FC<SlideUpAnimProps> = props => {
             toValue,
             duration: 350,
             useNativeDriver: true,
-        }).start();
+        }).start(() => {
+            if (direction === "down") {
+                setPopupStatus("none");
+            }
+        });
+
+
     }, [slideUpAnim, direction]);
     return (
         <AnimatedTouchable className="position absolute top-0 w-full h-1/6"  style={{
