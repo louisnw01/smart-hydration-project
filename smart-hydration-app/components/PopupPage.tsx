@@ -1,4 +1,4 @@
-import {Animated, View, Pressable, ViewStyle, TouchableOpacity} from "react-native";
+import {Animated, View, Pressable, ViewStyle, TouchableOpacity, Easing} from "react-native";
 import {useAtom} from "jotai";
 import {popupPageAtom} from "@/atom/nav";
 import {useSetAtom} from "jotai/react/useSetAtom";
@@ -19,7 +19,8 @@ const SlideUp: React.FC<SlideUpAnimProps> = props => {
         const toValue = (direction === "up" ? 100 : 1000);
         Animated.timing(slideUpAnim, {
             toValue,
-            duration: 350,
+            easing: Easing.out(Easing.exp),
+            duration: 500,
             useNativeDriver: true,
         }).start(() => {
             if (direction === "down") {
@@ -34,6 +35,7 @@ const SlideUp: React.FC<SlideUpAnimProps> = props => {
             ...props.style,
             height: slideUpAnim,
             backgroundColor: 'transparent',
+            zIndex: 1,
         }} onPress={() => {flipDirection()}}></AnimatedTouchable>
     )
 }
