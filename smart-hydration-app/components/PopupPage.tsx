@@ -12,6 +12,8 @@ const SlideUp: React.FC<SlideUpAnimProps> = props => {
     const slideUpAnim = useRef(new Animated.Value(1000)).current;
     const [popupStatus, setPopupStatus] = useAtom(popupPageAtom);
     const [direction, setDirection] = useState<"up" | "down">("up");
+
+    // code for slide up and slide down animations
     const flipDirection = () => {
         direction === "up" ? setDirection("down") : setDirection("up");
     }
