@@ -1,4 +1,3 @@
-import { atom, useAtom } from 'jotai'
 import { atomWithQuery } from 'jotai-tanstack-query'
 
 // TODO server_url should be in .env
@@ -11,7 +10,7 @@ const ENDPOINTS = {
 export const helloWorldQAtom = atomWithQuery((get) => ({
     queryKey: ['hello-world'],
     queryFn: async () => {
-        const res = await fetch(SERVER_URL+ENDPOINTS.HELLO_WORLD);
-        return res.json();
+        const result = await fetch(SERVER_URL+ENDPOINTS.HELLO_WORLD);
+        return result.json();
     },
 }));

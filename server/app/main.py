@@ -1,6 +1,18 @@
+import os
 from fastapi import FastAPI
+from models import db
+
 
 app = FastAPI()
+
+db.bind(
+    provider='postgres',
+    user=os.getenv("DB_USERNAME"),
+    password=os.getenv("DB_PASSWORD"),
+    host=os.getenv("DB_HOST"),
+    database='postgres'
+)
+db.generate_mapping(create_tables=True)
 
 
 @app.get("/")
