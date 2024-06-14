@@ -3,20 +3,44 @@ import requests
 import datetime as dt
 from dotenv import load_dotenv
 import os
+import re
 
 load_dotenv()
 
 
-cookies = {
-    'XSRF-TOKEN': os.getenv("XSRF-TOKEN"),
-    'smart_hydration_session': os.getenv("smart_hydration_session"),
-}
+def login_and_get_session():
+    session = requests.Session()
+
+    response = session.get('https://www.smarthydration.online/login')
+
+    csrf_token_pattern = re.compile(r'name="_token" value="(.*?)"')
+    match = csrf_token_pattern.search(response.text)
+
+    token = match.group(1)
+
+    response = session.post('https://www.smarthydration.online/login', data={
+        '_token': token,
+        'email': os.getenv('SMART_HYDRATION_EMAIL'),
+        'password': os.getenv('SMART_HYDRATION_PASSWORD'),
+    })
+
+    if response.status_code != 200:
+        raise Exception(f"could not login to smart hydration (status code {response.status_code})")
+
+    return session
+
+
+
+session = login_and_get_session()
+
+
+# cookies = response.cookies.get_dict()
 
 headers = {
     'Accept': 'application/json',
 }
 
-response = requests.get("https://www.smarthydration.online/data/device/jug001056/events/hydration", headers=headers, cookies=cookies)
+response = session.get("https://www.smarthydration.online/data/device/jug001056/events/hydration", headers=headers)
 
 if (response.status_code != 200):
     print("error")
