@@ -2,14 +2,13 @@ import PageHeading from "@/components/common/page-heading";
 import PageWrapper from "@/components/common/page-wrapper";
 import { useState } from "react";
 import { Pressable, Text, View } from "react-native";
+import FetchDemo from "./fetch-demo";
 
 
 
 function DeviceRow({name}) {
     return (
         <View className="mx-6 bg-gray-200 px-7 py-4 flex flex-row justify-between rounded-xl">
-
-
             <View className="flex">
                 <Text className="text-xl font-bold">{name}</Text>
                 <Text className="">connected</Text>
@@ -21,29 +20,6 @@ function DeviceRow({name}) {
         </View>
     )
 }
-
-
-function FetchDemo() {
-    const [fetchedValue, setFetchedValue] = useState<string|null>(null);
-
-
-    const fetchData = async () => {
-        const response = await fetch('http://localhost:8081/');
-        const data = await response.json();
-        setFetchedValue(data.message);
-    }
-
-    fetchData();
-
-    if (fetchedValue == null) {
-        return null;
-    }
-
-    return (
-        <Text className="text-xl font-bold">{fetchedValue}</Text>
-    )
-}
-
 
 
 export default function DevicesPage() {
