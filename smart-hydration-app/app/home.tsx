@@ -1,13 +1,14 @@
-import { Text, View } from "react-native";
+import {Switch, Text, View} from "react-native";
 import Drop from "../assets/svgs/water-drop-svgrepo-com.svg"
 import PageWrapper from "@/components/common/page-wrapper";
 import PageHeading from "@/components/common/page-heading";
 import HydrationPercentage from "@/components/hydration-pct";
 import HydrationStatus from "@/components/hydration-status";
-import SettingsButton from "@/components/SettingsButton";
+import SettingsButton from "@/components/settings-button";
 import { popupPageAtom } from "@/atom/nav";
 import {useAtomValue} from "jotai";
-import PopupPage from "@/components/PopupPage";
+import PopupPage from "@/components/popup-page";
+import OptionBlock from "@/components/common/option-block";
 
 const settingsOptions = ["Profile", ""]
 
@@ -25,9 +26,9 @@ export default function HomePage() {
         <HydrationStatus/>
         {popupPage == "settings" &&
             <PopupPage>
-                <Text className="text-2xl">Item 1</Text>
-                <Text className="text-2xl">Item 2</Text>
-                <Text className="text-2xl">Item 3</Text>
+                <OptionBlock text='Dark Mode' />
+                <OptionBlock text='Notifications' />
+                <OptionBlock text='Auto-Update' />
             </PopupPage>
         }
     </PageWrapper>
