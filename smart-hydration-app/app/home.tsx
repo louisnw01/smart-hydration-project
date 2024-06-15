@@ -4,11 +4,11 @@ import PageWrapper from "@/components/common/page-wrapper";
 import PageHeading from "@/components/common/page-heading";
 import HydrationPercentage from "@/components/hydration-pct";
 import HydrationStatus from "@/components/hydration-status";
-import SettingsButton from "@/components/SettingsButton";
+import SettingsButton from "@/components/settings-button";
 import { popupPageAtom } from "@/atom/nav";
 import {useAtomValue} from "jotai";
-import PopupPage from "@/components/PopupPage";
-import OptionBlock from "@/components/common/OptionBlock";
+import PopupPage from "@/components/popup-page";
+import OptionBlock from "@/components/common/option-block";
 
 const settingsOptions = ["Profile", ""]
 
