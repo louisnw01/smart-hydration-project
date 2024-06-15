@@ -1,11 +1,10 @@
 import os
-from fastapi import FastAPI
-from .models import db
 from dotenv import load_dotenv
+from models import db
+from services import find_user, create_user
+
 
 load_dotenv()
-
-app = FastAPI()
 
 db.bind(
     provider='postgres',
@@ -17,6 +16,5 @@ db.bind(
 db.generate_mapping(create_tables=True)
 
 
-@app.get("/")
-async def root():
-    return {"message": "Hello World"}
+find_user('isaac')
+
