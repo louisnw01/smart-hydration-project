@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { View, Text, Pressable } from "react-native";
 import { atom, useAtom } from "jotai";
-import { selectedPageAtom } from "@/atom/nav";
+import {popupPageAtom, selectedPageAtom} from "@/atom/nav";
 import HomePage from "@/app/home";
 import TrendsPage from "@/app/trends";
 import DevicesPage from "@/app/devices";
@@ -14,13 +14,12 @@ interface NavProps {
 
 function NavItem({text}: {text: string}) {
     const [page, setPage] = useAtom(selectedPageAtom);
-
+    const [popupStatus, setPopupStatus] = useAtom(popupPageAtom);
     const color = page == text ? 'black' : 'rgb(100, 100, 100)';
 
     return (
         <Pressable className="flex flex-col"
-            onPress={() => setPage(text)}
-        >
+            onPress={() => {setPage(text); setPopupStatus("none");}}>
             <View className="h-8 w-8 mx-2 rounded-lg"
                 style={{backgroundColor: color}}
             />
