@@ -5,12 +5,15 @@ import { useAtomValue } from "jotai";
 import { selectedPageAtom } from "@/atom/nav";
 
 import PageRouter from "@/components/page-router";
+import {GestureHandlerRootView} from "react-native-gesture-handler";
 
 export default function Index() {
     return (
+        <GestureHandlerRootView>
         <View className="flex flex-1 justify-between h-full">
             <PageRouter />
             <NavigationBar />
         </View>
+        </GestureHandlerRootView>
     );
 }
