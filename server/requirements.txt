@@ -2,3 +2,4 @@ requests
 python-dotenv
 fastapi
 psycopg2-binary
+pony
