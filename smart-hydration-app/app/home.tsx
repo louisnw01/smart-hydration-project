@@ -1,4 +1,4 @@
-import {Switch, Text, View} from "react-native";
+import {Dimensions, Switch, Text, View} from "react-native";
 import Drop from "../assets/svgs/water-drop-svgrepo-com.svg"
 import PageWrapper from "@/components/common/page-wrapper";
 import PageHeading from "@/components/common/page-heading";
@@ -14,14 +14,14 @@ const settingsOptions = ["Profile", ""]
 
 export default function HomePage() {
     const popupPage = useAtomValue(popupPageAtom);
-
+    const { width, height } = Dimensions.get('window');
     return (
     <PageWrapper>
         <PageHeading text='home page' />
         <SettingsButton />
         <HydrationPercentage/>
-        <View className="flex flex-row justify-center mt-32">
-            <Drop width={200} height={200}/>
+        <View className="flex flex-row justify-center mt-16">
+            <Drop width={width / 2} height={height / 4} />
         </View>
         <HydrationStatus/>
         {popupPage == "settings" &&
