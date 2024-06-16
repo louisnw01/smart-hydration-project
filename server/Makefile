@@ -12,5 +12,3 @@ build:
 
 clean:
 	docker rm $(CONTAINER_NAME); docker rmi $(IMAGE_NAME)
-
-
