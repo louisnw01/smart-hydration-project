@@ -7,7 +7,7 @@ import {useAtom} from "jotai";
 export default function SettingsButton() {
     const [buttonAction, setButtonAction] = useAtom(popupPageAtom)
     return (
-        <Pressable className="position absolute right-[20px] top-[10px]" onPress={() => {(buttonAction == "none") ? setButtonAction("settings") : setButtonAction("none")}}>
+        <Pressable className="position absolute right-[8%] top-[2%]" onPress={() => {(buttonAction == "none") ? setButtonAction("settings") : setButtonAction("none")}}>
             <Text>Settings</Text>
         </Pressable>
     )

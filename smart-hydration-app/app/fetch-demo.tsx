@@ -1,9 +1,9 @@
 import { helloWorldQAtom } from "@/atom/query";
-import { useAtom } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 import { Button, Text } from "react-native";
 
 export default function FetchDemo() {
-    const [{ data, isLoading, isError, refetch }] = useAtom(helloWorldQAtom);
+    const { data, isLoading, isError, refetch } = useAtomValue(helloWorldQAtom);
 
     let text;
     if (isLoading) {
