@@ -1,6 +1,7 @@
 IMAGE_NAME=smart-hydration-backend
 CONTAINER_NAME=smart-hydration-server
 
+
 dev:
 	source .venv/bin/activate && fastapi dev --port 8085 app/main.py
 
@@ -12,5 +13,6 @@ build:
 
 clean:
 	docker rm $(CONTAINER_NAME); docker rmi $(IMAGE_NAME)
+
 
 
