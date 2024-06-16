@@ -2,14 +2,13 @@ import PageHeading from "@/components/common/page-heading";
 import PageWrapper from "@/components/common/page-wrapper";
 import { useState } from "react";
 import { Pressable, Text, View } from "react-native";
+import FetchDemo from "./fetch-demo";
 
 
 
 function DeviceRow({name}) {
     return (
         <View className="mx-6 bg-gray-200 px-7 py-4 flex flex-row justify-between rounded-xl">
-
-
             <View className="flex">
                 <Text className="text-xl font-bold">{name}</Text>
                 <Text className="">connected</Text>
@@ -55,7 +54,7 @@ export default function DevicesPage() {
                 </View>
             </View>
 
-
+            <FetchDemo />
 
 
 
