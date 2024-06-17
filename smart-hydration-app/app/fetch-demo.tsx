@@ -1,5 +1,5 @@
 import { helloWorldQAtom } from "@/atom/query";
-import { useAtom, useAtomValue } from "jotai";
+import { useAtomValue } from "jotai";
 import { Button, Text } from "react-native";
 
 export default function FetchDemo() {

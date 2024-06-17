@@ -1,9 +1,10 @@
 import PageHeading from "@/components/common/page-heading";
 import PageWrapper from "@/components/common/page-wrapper";
-import { useState } from "react";
 import { Pressable, Text, View } from "react-native";
 import FetchDemo from "./fetch-demo";
-
+import PopupPage from "@/components/popup-page";
+import { useAtom } from "jotai";
+import { popupPageAtom } from "@/atom/nav";
 
 
 function DeviceRow({name}) {
@@ -23,31 +24,22 @@ function DeviceRow({name}) {
 
 
 export default function DevicesPage() {
-    const [showAddNew, setShowAddNew] = useState<boolean>(false);
-
-    const handlePress = () => {
-        setShowAddNew(true);
-    }
-
-    const handleClose = () => {
-        setShowAddNew(false);
-    }
+    const [popup, setPopup] = useAtom(popupPageAtom);
 
     return (
         <PageWrapper>
-            <View className="flex flex-row justify-between">
-                <PageHeading text="devices page" />
-                <Text className="text-3xl font-semibold mr-6 mt-1" onPress={handlePress}>+</Text>
-            </View>
+            <PageHeading text="devices page">
+                <Text className="text-3xl font-semibold" onPress={() => setPopup('devices')}>+</Text>
+            </PageHeading>
 
-            <View className="mt-12 flex gap-6">
+            <View className="mt-16 flex gap-6">
                 <DeviceRow name="My Jug" />
                 <DeviceRow name="Isaac's Jug" />
 
 
                 <View className="flex flex-row justify-center">
                     <Pressable className="bg-gray-200 py-2 px-3 rounded-3xl"
-                        onPress={handlePress}
+                        onPress={() => setPopup('devices')}
                     >
                         <Text >+ add a new device</Text>
                     </Pressable>
@@ -55,24 +47,13 @@ export default function DevicesPage() {
             </View>
 
             <FetchDemo />
-
-
-
-            {showAddNew &&
-                <View className="absolute bottom-0 left-0 w-full h-[80%]">
-
-                    <View className="mx-4 bg-gray-200 rounded-lg p-5 h-full">
-
-
-                        <Text className="absolute right-0 text-2xl font-bold mr-2" onPress={handleClose}>x</Text>
-
-
-                        <Text>Add a device</Text>
-
-
-                    </View>
-                </View>
-            }
+            <>
+                {popup === 'devices' &&
+                    <PopupPage>
+                            <PageHeading text="Add a device" />
+                    </PopupPage>
+                }
+            </>
 
         </PageWrapper>
     )
