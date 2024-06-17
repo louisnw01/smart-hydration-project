@@ -1,9 +1,10 @@
 
-import { View, Text } from "react-native";
+import { Text } from "react-native";
 import { atom, useAtom } from "jotai";
 import GenericOnboardContent from "@/components/generic-onboard-content";
 import NextButton from "@/components/next-button";
 import SubmitButton from "@/components/submit-button";
+import PageWrapper from "@/components/common/page-wrapper";
 
 
 export const currentPageAtom = atom('home');
@@ -43,12 +44,12 @@ export default function OnboardingPage( {}){
 
   const CurrentPage = pages[pageIndex];
   return (
-    <View>
-      <GenericOnboardContent title={currentPageContent.title} content={currentPageContent.content} />
-      {pageIndex < maxPageIndex - 1 && <NextButton onPress={handleNext} />}
-      {pageIndex === maxPageIndex - 1 && <SubmitButton onPress={handleSubmit} />}
-    </View>
+    <PageWrapper>
+      <GenericOnboardContent title={currentPageContent.title}>
+      {currentPageContent.content}
+      </GenericOnboardContent>
+      <>{pageIndex < maxPageIndex - 1 && <NextButton onPress={handleNext} />}</>
+      <>{pageIndex === maxPageIndex - 1 && <SubmitButton onPress={handleSubmit} />}</>
+    </PageWrapper>
   )
 }
-
-//Don't know how to style the components properly
