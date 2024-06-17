@@ -14,6 +14,9 @@ npm-debug.*
 *.mobileprovision
 *.orig.*
 web-build/
+ios/
+android/
 
 pyrightconfig.json
 __pycache__/
+eas.json

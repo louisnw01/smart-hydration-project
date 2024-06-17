@@ -1,3 +1,4 @@
+import colors from "@/colors";
 import {useState} from "react";
 import {Switch, View, Text} from "react-native";
 
@@ -5,11 +6,13 @@ import {Switch, View, Text} from "react-native";
 export default function OptionBlock( { text }) {
     const [toggled, setToggled] = useState(false)
     return (
-        <View className="flex-row justify-between pr-10 bg-gray-100 rounded-xl px-7 py-4">
-        <Text className="text-2xl">{text}</Text>
-        <Switch trackColor={{false: 'gray', true: 'green'}}
-            onValueChange={(value) => setToggled(!toggled)}
-            value={toggled}/>
+        <View className="flex-row justify-between bg-gray-100 rounded-xl px-7 py-3">
+            <Text className="text-xl mt-1">{text}</Text>
+            <Switch
+                trackColor={{false: 'gray', true: colors.blue}}
+                onValueChange={(value) => setToggled(!toggled)}
+                value={toggled}
+            />
         </View>
     )
 }

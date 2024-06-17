@@ -16,7 +16,7 @@ export default function Droplet() {
     const height = 252-scaledHydrationAmount;
 
     return (
-        <View className="flex flex-row justify-center mt-[10%]">
+        <View className="flex flex-row justify-center">
             <View className="absolute">
                 <Svg height="200" width="200" viewBox="0 0 264.564 264.564">
                     <Defs>
