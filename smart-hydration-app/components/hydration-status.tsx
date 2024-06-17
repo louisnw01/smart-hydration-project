@@ -9,11 +9,11 @@ export default function HydrationStatus () {
     const hydrated = hydration >= 70;
 
     return (
-        <View className="mx-6 px-7 bg-gray-200 py-4 flex flex-row rounded-xl mt-16"
+        <View className="mx-6 px-7 bg-gray-200 py-4 flex flex-row rounded-xl"
         style={{
             backgroundColor: hydrated ? colors.green : colors.red
         }}>
-            <Text className="w-full text-center text-3xl text-white text-red">
+            <Text className="w-full text-center text-3xl text-white">
                 {hydrated ? HYDRATION_MESSAGE.high : HYDRATION_MESSAGE.low}
             </Text>
         </View>
