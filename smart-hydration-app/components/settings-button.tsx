@@ -1,13 +1,12 @@
-import {View, Text, Pressable} from "react-native";
-import {popupPageAtom} from "@/atom/nav";
-import {useSetAtom} from "jotai/react/useSetAtom";
-import {useAtom} from "jotai";
+import { Text, Pressable} from "react-native";
+import { popupPageAtom } from "@/atom/nav";
+import { useSetAtom } from "jotai";
 
 
 export default function SettingsButton() {
-    const [buttonAction, setButtonAction] = useAtom(popupPageAtom)
+    const setButtonAction = useSetAtom(popupPageAtom)
     return (
-        <Pressable className="position absolute right-[8%] top-[2%]" onPress={() => {(buttonAction == "none") ? setButtonAction("settings") : setButtonAction("none")}}>
+        <Pressable onPress={() => setButtonAction("settings")}>
             <Text>Settings</Text>
         </Pressable>
     )

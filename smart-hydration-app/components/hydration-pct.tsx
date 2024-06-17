@@ -4,10 +4,9 @@ import { useAtomValue } from "jotai";
 
 export default function HydrationPercentage() {
 const hydration = useAtomValue(hydrationAtom);
-
     return (
-            <Text className= "w-full text-center text-8xl mt-16 font-semibold">
-                {hydration.toString()}%
-            </Text>
+        <Text className= "w-full text-center text-8xl font-semibold">
+            {hydration}%
+        </Text>
     )
 }
