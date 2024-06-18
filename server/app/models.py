@@ -8,7 +8,7 @@ class User(db.Entity):
     id = PrimaryKey(int, auto=True)
     email = Required(str)
     name = Required(str)
-    community = Required('Community')
+    community = Optional('Community')
     hash = Required(str)
     jug_user = Optional('JugUser', reverse="user")
 
