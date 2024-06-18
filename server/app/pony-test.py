@@ -14,4 +14,3 @@ db.bind(
     database='postgres'
 )
 db.generate_mapping(create_tables=True)
-
