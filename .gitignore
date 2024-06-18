@@ -1,3 +1,5 @@
+*.apk
+*.aab
 .venv
 .env
 *.sublime-*
