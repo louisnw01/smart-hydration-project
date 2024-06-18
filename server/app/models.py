@@ -10,6 +10,7 @@ class User(db.Entity):
     name = Required(str)
     community = Required('Community')
     hash = Required(str)
+    jug_user = Optional('JugUser', reverse="user")
 
 class JugUser(db.Entity):
     id = PrimaryKey(int, auto=True)
@@ -21,6 +22,7 @@ class JugUser(db.Entity):
     ethnicity = Optional(str)
     jugs = Set('Jug')
     community = Required('Community')
+    user = Optional(User, reverse="jug_user")
 
 class Jug(db.Entity):
     id = PrimaryKey(int, auto=True)
