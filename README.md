@@ -41,6 +41,9 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
+3. Update `.env`
+
+
 3. Run the dev server with the makefile
 
 ```
