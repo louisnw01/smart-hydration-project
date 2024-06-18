@@ -6,11 +6,33 @@ db = Database();
 
 class User(db.Entity):
     id = PrimaryKey(int, auto=True)
-    name = Required(str)
     email = Required(str)
+    name = Required(str)
+    community = Required('Community')
     hash = Required(str)
 
+class JugUser(db.Entity):
+    id = PrimaryKey(int, auto=True)
+    name = Required(str)
+    dob = Required(str)
+    weight = Optional(str)
+    height = Optional(str)
+    sex = Optional(str)
+    ethnicity = Optional(str)
+    jugs = Set('Jug')
 
 class Jug(db.Entity):
+    id = PrimaryKey(int, auto=True)
+    smart_hydration_id = Required(str)
+    qr_hash = Required(str)
+    name = Optional(str)
+    owner = Optional(JugUser)
+
+class Community(db.Entity):
+    id = PrimaryKey(int, auto=True)
+    jug_users = Set(JugUser)
+    followers = Set(User)
+
+class Medication(db.Entity):
     id = PrimaryKey(int, auto=True)
     name = Required(str)

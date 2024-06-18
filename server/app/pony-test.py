@@ -15,6 +15,3 @@ db.bind(
 )
 db.generate_mapping(create_tables=True)
 
-
-find_user('isaac')
-
