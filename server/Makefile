@@ -1,5 +1,6 @@
 IMAGE_NAME=smart-hydration-backend
 CONTAINER_NAME=smart-hydration-server
+SHELL := /bin/bash
 
 dev:
 	source .venv/bin/activate && fastapi dev --port 8085 app/main.py
