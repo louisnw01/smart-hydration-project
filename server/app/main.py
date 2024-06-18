@@ -20,3 +20,6 @@ db.generate_mapping(create_tables=True)
 @app.get("/")
 async def root():
     return {"message": "Hello World"}
+
+
+
