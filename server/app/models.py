@@ -20,6 +20,7 @@ class JugUser(db.Entity):
     sex = Optional(str)
     ethnicity = Optional(str)
     jugs = Set('Jug')
+    community = Required('Community')
 
 class Jug(db.Entity):
     id = PrimaryKey(int, auto=True)
@@ -30,7 +31,7 @@ class Jug(db.Entity):
 
 class Community(db.Entity):
     id = PrimaryKey(int, auto=True)
-    jug_users = Set(JugUser)
+    jug_users = Set(JugUser, reverse="community")
     followers = Set(User)
 
 class Medication(db.Entity):
