@@ -8,6 +8,13 @@ def create_user(name, email, hash):
     user = User(name=name, email=email, hash=hash)
     commit()
 
+@db_session
+def delete_user(name,email,hash):
+    name = User.get(name=name)
+    email = User.get(email=email)
+    hash = User.get(hash=hash)
+    if name and email and hash:
+        name.delete()
 
 @db_session
 def find_user(name):
