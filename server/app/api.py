@@ -7,7 +7,6 @@ import re
 
 load_dotenv()
 
-
 def login_and_get_session():
     session = requests.Session()
 
