@@ -31,6 +31,7 @@ class Jug(db.Entity):
 
 class Community(db.Entity):
     id = PrimaryKey(int, auto=True)
+    name = Required(str)
     jug_users = Set(JugUser, reverse="community")
     followers = Set(User)
 
