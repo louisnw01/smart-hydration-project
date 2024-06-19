@@ -1,7 +1,7 @@
 import os
 from dotenv import load_dotenv
 from models import db
-from services import find_user, create_user, delete_user
+from services import find_user, create_user, delete_user, create_community, find_community
 
 
 load_dotenv()
@@ -15,10 +15,14 @@ db.bind(
 )
 db.generate_mapping(create_tables=True)
 
-#create_user('jasmine','email','hash')
-find_user('jasmine')
+#find_community('bristol-uni')
+#create_community('bristol-uni')
+#find_('bristol-uni')
+
+#create_user('Tim','something','hash456',2)
+#find_user('tim')
 #got it working but only when community is optional
-#delete_user('jasmine','email','hash')
+delete_user('jasmine')
 #how to make sure it works without community
 #is that info only stored in the user table
 #make sure how community works -> creating user what values can it have -> tried with integer but crashed
