@@ -15,8 +15,9 @@ db.bind(
 )
 db.generate_mapping(create_tables=True)
 
-create_user('jasmine','email','hash')
-#find_user('Neill')
+#create_user('jasmine','email','hash')
+find_user('jasmine')
+#got it working but only when community is optional
 #delete_user('jasmine','email','hash')
 #how to make sure it works without community
 #is that info only stored in the user table
