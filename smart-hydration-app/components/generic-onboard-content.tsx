@@ -2,14 +2,16 @@ import { Text, View } from "react-native";
 
 interface PageContent {
   title: string;
-  content: React.ReactNode;
+  children: JSX.Element | JSX.Element[];
 }
 
-export default function GenericOnboardContent({ title, content }: PageContent) {
+export default function GenericOnboardContent({ children, title }: PageContent) {
   return (
-      <View>
-        <Text>{title}</Text>
-        {content}
+      <View className="flex mt-7 justify-center h-full gap-12">
+        <View className="flex flex-row justify-center">
+          <Text className="text-2xl font-light text-gray-500 dark:text-gray-400">{title}</Text>
+        </View>
+        {children}
       </View>
   );
 }
