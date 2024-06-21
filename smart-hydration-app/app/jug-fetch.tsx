@@ -3,7 +3,7 @@ import { useAtomValue } from "jotai";
 import { DeviceRow } from "./devices"
 import {Button, FlatList, Text, View} from "react-native";
 
-export default function FetchDemo() {
+export default function DeviceFetch() {
     const { data, isLoading, isError, refetch } = useAtomValue(helloWorldQAtom);
 
     let text;
@@ -15,6 +15,20 @@ export default function FetchDemo() {
         text = []
     } else {
         text = JSON.parse(data);
+    }
+
+    const formattedDate: {
+        date: string,
+        time: string,
+    } = {
+        date: "",
+        time: "",
+    };
+
+    function convertDateTime(dateString: string) {
+        formattedDate.date = dateString.substring(0, 9);
+        formattedDate.time = dateString.substring(11, 16);
+        return formattedDate;
     }
 
 
@@ -43,7 +57,10 @@ export default function FetchDemo() {
                                         {firstValue.water_after}ml
                                     </Text>
                                     <Text className="text-red-500 font-semibold text-right">
-                                        {firstValue.timestamp}
+                                        {convertDateTime(firstValue.timestamp).time}
+                                    </Text>
+                                    <Text className="text-red-500 font-semibold text-right">
+                                        {convertDateTime(firstValue.timestamp).date}
                                     </Text>
                                 </View>
                                     :

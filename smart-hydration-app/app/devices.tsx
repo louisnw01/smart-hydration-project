@@ -1,7 +1,7 @@
 import PageHeading from "@/components/common/page-heading";
 import PageWrapper from "@/components/common/page-wrapper";
 import { Pressable, Text, View } from "react-native";
-import FetchDemo from "./fetch-demo";
+import JugFetch from "./jug-fetch";
 import PopupPage from "@/components/popup-page";
 import { useAtom } from "jotai";
 import { popupPageAtom } from "@/atom/nav";
@@ -32,21 +32,20 @@ export default function DevicesPage() {
                 <Text className="text-3xl font-semibold" onPress={() => setPopup('devices')}>+</Text>
             </PageHeading>
 
+
+
+            <JugFetch />
             <View className="mt-16 flex gap-6">
-                <DeviceRow name="My Jug" />
-                <DeviceRow name="Isaac's Jug" />
 
 
                 <View className="flex flex-row justify-center">
                     <Pressable className="bg-gray-200 py-2 px-3 rounded-3xl"
-                        onPress={() => setPopup('devices')}
+                               onPress={() => setPopup('devices')}
                     >
                         <Text >+ add a new device</Text>
                     </Pressable>
                 </View>
             </View>
-
-            <FetchDemo />
             <>
                 {popup === 'devices' &&
                     <PopupPage>
