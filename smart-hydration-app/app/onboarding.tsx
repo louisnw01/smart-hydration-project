@@ -7,6 +7,7 @@ import SubmitButton from "@/components/submit-button";
 import TextInputBox from "@/components/text-input-box";
 import Drop from "../assets/svgs/water-drop-svgrepo-com.svg"
 import PageWrapper from "@/components/common/page-wrapper";
+import { SelectInputBox } from "@/components/select-input-box";
 
 
 export const currentPageAtom = atom('home');
@@ -33,7 +34,15 @@ export default function OnboardingPage( {}){
     {
       title: 'What is your height?',
       content: <Text>Placeholder for height page content</Text>,
+    },
+    {
+      title: 'What is your medication?',
+      content: <>
+        <Text>Placeholder for height page content</Text>
+        <SelectInputBox multiple={false} />
+      </>,
     }
+
   ]
 
   const currentPageContent = pages[pageIndex];
