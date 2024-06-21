@@ -14,7 +14,7 @@ export default function Index() {
     if (isOnboarding) {
         return <OnboardingPage />
     }
-
+    
     return (
         <View className="flex flex-1 justify-between h-full">
             {/*<Text className="bg-black text-md text-white">you are hydrated</Text>*/}
@@ -23,5 +23,3 @@ export default function Index() {
         </View>
     );
 }
-
-

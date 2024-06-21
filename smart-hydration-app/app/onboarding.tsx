@@ -57,7 +57,6 @@ export default function OnboardingPage( {}){
     {
       title: 'What is your medication?',
       content: <>
-        <Text>Placeholder for height page content</Text>
         <SelectInputBox multiple={false} />
       </>,
     }
