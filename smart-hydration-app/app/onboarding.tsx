@@ -21,6 +21,19 @@ export default function OnboardingPage( {}){
   //replace content with components e.g. TextInput with props for specific text like "Enter your name"
   const pages = [
     {
+      title: 'Enter your email address',
+      content:
+      <View>
+      <TextInputBox name='email address' placeholder='Enter your email address' />
+        <View>
+        <Text>Enter in your password</Text>,
+        <TextInputBox name='password' placeholder='Enter your password' />,
+        </View>
+
+      </View>
+    },
+
+    {
       title: 'What is your name?',
       content:
       <View>
@@ -36,13 +49,25 @@ export default function OnboardingPage( {}){
       content: <Text>Placeholder for height page content</Text>,
     },
     {
+      title: 'What is your ethnicity?',
+      content:
+      <TextInputBox name="username" placeholder='Select your ethnicity' />
+
+    },
+    {
       title: 'What is your medication?',
       content: <>
         <Text>Placeholder for height page content</Text>
         <SelectInputBox multiple={false} />
       </>,
     }
+    ,
+    {
+      title: 'What are your medical conditions?',
+      content:
+      <TextInputBox name="conditions" placeholder='Select medical conditions' />,
 
+    },
   ]
 
   const currentPageContent = pages[pageIndex];
