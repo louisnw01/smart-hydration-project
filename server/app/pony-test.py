@@ -17,12 +17,17 @@ db.generate_mapping(create_tables=True)
 
 #find_community('bristol-uni')
 #create_community('bristol-uni')
+#create_community('bristol-uni23')
 #find_('bristol-uni')
 
-#create_user('Tim','something','hash456',2)
-#find_user('tim')
+#create_user('Tim2','something','hash456', 10)
+#create_user('Tim','something','hash4567', 11)
+
+#find_user('Tim')
+delete_user('Tim2','something','hash456')
+#delete_user('Tim2')
 #got it working but only when community is optional
-delete_user('jasmine')
+#delete_user('Tim2')
 #how to make sure it works without community
 #is that info only stored in the user table
 #make sure how community works -> creating user what values can it have -> tried with integer but crashed
