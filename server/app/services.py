@@ -9,16 +9,13 @@ def create_user(name, email, hash,community):
     commit()
 
 @db_session
-def delete_user(user_name):#email,hash)
-    user = User.get(name=user_name)
-    user_id = user.id
-    community = Community.get(id=user_id)
-    #email = User.get(email=email)
-    #hash = User.get(hash=hash)
-    #if user: #and email and hash:
-    #    user.delete()
-    show(community)
-    return community
+def delete_user(user_name, email,hash):
+    user = User.get(name=user_name,email=email,hash=hash)
+    if user:
+        community_id = user.community
+        community = Community.get(id=community_id.id)
+        community.delete()
+        user.delete()
 
 
 @db_session
