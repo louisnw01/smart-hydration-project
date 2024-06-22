@@ -5,17 +5,17 @@ from pony.orm.core import commit, get, select, raw_sql, db_session, set_sql_debu
 from .api import login_and_get_session, headers
 import json
 import pprint
-
-load_dotenv()
-
-db.bind(
-    provider='postgres',
-    user=os.getenv("DB_USERNAME"),
-    password=os.getenv("DB_PASSWORD"),
-    host=os.getenv("DB_HOST"),
-    database='postgres'
-)
-db.generate_mapping(create_tables=True)
+#
+# load_dotenv()
+#
+# db.bind(
+#     provider='postgres',
+#     user=os.getenv("DB_USERNAME"),
+#     password=os.getenv("DB_PASSWORD"),
+#     host=os.getenv("DB_HOST"),
+#     database='postgres'
+# )
+# db.generate_mapping(create_tables=True)
 
 @db_session
 def create_user(name, email, hash):
@@ -23,10 +23,7 @@ def create_user(name, email, hash):
     commit()
 
 
-@db_session
-def find_user(name):
-    result = get(u for u in User if u.name == name)
-    return result
+
 
 @db_session
 def get_jug_data(user_id, sh_jug_id):
@@ -36,65 +33,6 @@ def get_jug_data(user_id, sh_jug_id):
     return response.json()
 
 
-@db_session
-def get_community_by_user(user_id):
-    result = getattr(user_id, "community")
-    return result
-
-@db_session
-def get_user_by_jug_user(jug_user_id):
-    print("Getting user for juguser " )
-    print(jug_user_id)
 
 
-def get_most_recent_event(sh_jug_id):
-    session = login_and_get_session()
-    response = session.get("https://www.smarthydration.online/data/device/" + sh_jug_id + "/events/hydration", headers=headers)
-    print("last event:")
-    return response.json()[-1]
-
-@db_session
-def has_access_to_jug(user, sh_jug_id):
-    relevant_jug = getattr(get(j for j in Jug if j.smart_hydration_id == sh_jug_id), 'owner')
-    jug_community = getattr(relevant_jug, "community")
-    user_community = getattr(find_user(user), "community")
-    if (jug_community == user_community):
-        print('The user can access the jug')
-        return True
-    return False
-
-@db_session
-def get_jug_list_by_community(community_member):
-    jug_community = community_member.community
-    juglist = select(j.smart_hydration_id for j in Jug if (j.owner.community == jug_community))[:]
-    return juglist
-
-def fetch_data_for_jug(sh_jug_id):
-    session = login_and_get_session()
-    response = session.get("https://www.smarthydration.online/data/device/" + sh_jug_id + "/events/hydration", headers=headers)
-    if not response.ok:
-        return { sh_jug_id : "Jug Not Found" }
-    else:
-        return { get_jug_name_by_id(sh_jug_id) : response.json()[-1] }
-
-@db_session
-def get_jug_name_by_id(sh_jug_id):
-    jug = get(j for j in Jug if j.smart_hydration_id == sh_jug_id)
-    name = getattr(jug, "name")
-    return name
-
-def get_community_jug_data(user_id):
-    print('Getting data for ' + user_id)
-    juglist = get_jug_list_by_community(find_user(user_id))
-    responses = []
-    for j in juglist:
-        print('Trying: ' + j)
-        responses.append(fetch_data_for_jug(j))
-    return responses
-
-
-#get_most_recent_event("jug001053")
-test_user = find_user('Neill')
-#test if the current user is neill, and he owns the jug, can he add it?
-print(has_access_to_jug('Neill', "jug001053"))
 
