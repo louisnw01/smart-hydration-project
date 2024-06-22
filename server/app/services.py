@@ -28,6 +28,7 @@ def find_user(name):
 def create_community(name):
     community = Community(name=name)
     commit()
+    return community 
 
 @db_session
 def find_community(name):
