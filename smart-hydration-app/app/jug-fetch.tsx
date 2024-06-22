@@ -1,10 +1,9 @@
-import { helloWorldQAtom } from "@/atom/query";
+import {getJugDataAtom, helloWorldQAtom} from "@/atom/query";
 import { useAtomValue } from "jotai";
-import { DeviceRow } from "./devices"
-import {Button, FlatList, Text, View} from "react-native";
+import {ActivityIndicator, Button, FlatList, Text, View} from "react-native";
 
 export default function DeviceFetch() {
-    const { data, isLoading, isError, refetch } = useAtomValue(helloWorldQAtom);
+    const { data, isLoading, isError, refetch } = useAtomValue(getJugDataAtom);
 
     let text;
     if (isLoading) {
@@ -26,7 +25,8 @@ export default function DeviceFetch() {
     };
 
     function convertDateTime(dateString: string) {
-        formattedDate.date = dateString.substring(0, 9);
+        // makes sense as the timestamps are always the same length
+        formattedDate.date = dateString.substring(0, 10);
         formattedDate.time = dateString.substring(11, 16);
         return formattedDate;
     }
@@ -36,16 +36,16 @@ export default function DeviceFetch() {
 
     return (
         <View>
-            {isLoading == false &&
-            <View className="mt-16 flex gap-6">{
-                text.map((value) => {
+            {isLoading == false ?
+                <View className="mt-16 flex gap-6">{
+                text.map((value: object) => {
                     const firstValue = Object.values(value)[0]
                     const jugName = Object.keys(value)
                     return (
                         <View>
                         <View className="mx-6 bg-gray-200 px-7 py-4 flex flex-row justify-between rounded-xl">
                             <View className="flex">
-                                <Text className="text-xl font-bold">{jugName}</Text>
+                                <Text key="{jugName}" className="text-xl font-bold">{jugName}</Text>
                                 {firstValue != 'Jug Not Found' &&
                                 <Text className="">connected</Text>
                                 }
@@ -73,6 +73,12 @@ export default function DeviceFetch() {
                     )
                 })
             }</View>
+                :
+                <View>
+                    <ActivityIndicator className="justify-center top-2/4"></ActivityIndicator>
+                <Text className="mt-16 flex justify-center text-center">Loading Jugs, Please Wait...</Text>
+
+                </View>
             }
             <Button onPress={() => refetch()} title="refetch data" />
         </View>
