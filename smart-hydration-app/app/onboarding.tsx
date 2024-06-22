@@ -19,6 +19,7 @@ export default function OnboardingPage( {} ){
   const [pageIndex, setPageIndex] = useAtom(pageIndexAtom);
   const sexOptions = ['Female', 'Male', 'Prefer not to say'];
   const binaryOptions = ['Yes', 'No'];
+  const measureOptions = ['Metric', 'Imperial'];
 
   const pages = [
     {
@@ -46,7 +47,7 @@ export default function OnboardingPage( {} ){
       <RadioButton options={binaryOptions} defaultString='No' />
       {/* This screen TBD: are we scanning QR code? */}
       {/* To do: add conditional display based on radio selection */}
-      <Text className="text-2xl font-light">If yes</Text>
+      <Text className="text-xl font-light my-2">If yes</Text>
       <TextInputBox name="jug-ID" placeholder='Enter a jug ID' />
       </View>,
     },
@@ -55,9 +56,9 @@ export default function OnboardingPage( {} ){
       content: <View>
       <RadioButton options={binaryOptions} defaultString='No'/>
       {/* Display different content depending on radio button selection: create parent component for radio button? */}
-      <Text className="text-2xl font-light">If yes</Text>
+      <Text className="text-xl font-light my-2">If yes</Text>
       <TextInputBox name="invite-code" placeholder='Enter an invite code' />
-      <Text className="text-2xl font-light">If no</Text>
+      <Text className="text-xl font-light my-2">If no</Text>
       <TextInputBox name="community-name" placeholder='Enter a new community name' />
       </View>,
     },
@@ -68,19 +69,17 @@ export default function OnboardingPage( {} ){
       </View>,
     },
     {
-      title: 'What is your height?',
+      title: 'What are your height and weight?',
       content: <View>
+      {/* make radio buttons functional: switch between metric and imperial */}
+      <Text className="text-xl font-light my-2">Height</Text>
+      <RadioButton options={measureOptions} defaultString='Metric'/>
       <NumberInputBox name="height" placeholder='Enter your height in cm' />
-      {/* add option for imperial */}
+      <Text className="text-xl font-light my-2">Weight</Text>
+      <RadioButton options={measureOptions} defaultString='Metric'/>
+      <NumberInputBox name="weight" placeholder='Enter your weight in kg' />
       </View>,
     },
-    {
-      title: 'What is your weight?',
-      content: <View>
-      <NumberInputBox name="weight" placeholder='Enter your weight in kg' />
-      {/* add option for imperial */}
-      </View>,
-    }
   ]
 
   const currentPageContent = pages[pageIndex];
@@ -99,7 +98,7 @@ export default function OnboardingPage( {} ){
   const CurrentPage = pages[pageIndex];
   return (
     // to do: back button, skip button, greying out next button conditionally, progress bar
-
+    // app doesn't display properly unless browser is in mobile mode. Not sure if this is a problem?
       <PageWrapper>
         <View className='bg-gray-100 p-10 h-screen block'>
           <View className='flex flex-col flex-1 items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0'></View>
