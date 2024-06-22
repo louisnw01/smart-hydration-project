@@ -12,7 +12,7 @@ const RadioButton = ({ options, defaultString }: RadioInputProperties) => {
     <View>
         {options.map((option, index) => (
             <View key={index} className="flex-row my-1">
-            <Pressable className="h-5 w-5 mx-1 rounded-full border bg-gray-300 border-gray-500 items-center justify-center"  onPress={() => setSelectedValue(option)}> 
+            <Pressable className="h-5 w-5 mx-1 rounded-full bg-gray-300 border border-gray-500 items-center justify-center"  onPress={() => setSelectedValue(option)}> 
             {selectedValue === option && <View className="h-4 w-4 rounded-full border bg-black" />}
             </Pressable>
             <Text>{option}</Text>
