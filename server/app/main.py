@@ -1,10 +1,11 @@
 import os
-from fastapi import FastAPI, HTTPException
+import json
+from fastapi import FastAPI, Query, HTTPException
 from dotenv import load_dotenv
 
+from .services import create_user, get_user_hash, get_auth_token, user_exists, get_community_jug_data
 from .models import db
 from .schemas import UserLogin, UserRegister
-from .services import create_user, get_user_hash, get_auth_token, user_exists
 from .util import get_hash
 
 
@@ -52,4 +53,9 @@ async def login(form: UserLogin):
     return {"access_token": token, "token_type": "bearer"}
 
 
+@app.get("/community-jug-status/")
+async def get_community_jug_status(user_id: str = Query(...)):
+    print(user_id)
+    data = get_community_jug_data(user_id)
+    return json.dumps(data)
 

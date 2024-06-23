@@ -1,7 +1,7 @@
 import os
 from pony.orm.core import *
 
-db = Database();
+db = Database()
 
 
 class User(db.Entity):
