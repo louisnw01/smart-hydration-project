@@ -2,12 +2,6 @@ import { DeviceInfo } from "@/interfaces/device";
 import { ReactNode } from "react";
 import { View, Text } from "react-native";
 
-interface DeviceRowProps {
-    name: string,
-    isStale: boolean,
-    mlAmount: number,
-    mlCapacity: number,
-}
 
 export default function DeviceRow({device}: {device: DeviceInfo}) {
     const percentFull = (device.water_level / device.capacity) * 100;
