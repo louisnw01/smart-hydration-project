@@ -1,9 +1,9 @@
-import {getJugDataAtom, helloWorldQAtom} from "@/atom/query";
+import { getJugDataQAtom, helloWorldQAtom } from "@/atom/query";
 import { useAtomValue } from "jotai";
-import {ActivityIndicator, Button, FlatList, Text, View} from "react-native";
+import { ActivityIndicator, Button, FlatList, Text, View } from "react-native";
 
 export default function DeviceFetch() {
-    const { data, isLoading, isError, refetch } = useAtomValue(getJugDataAtom);
+    const { data, isLoading, isError, refetch } = useAtomValue(getJugDataQAtom);
 
     let text;
     if (isLoading) {
