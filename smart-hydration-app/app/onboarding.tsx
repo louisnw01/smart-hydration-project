@@ -10,7 +10,9 @@ import RadioButton from "@/components/radio-button";
 import Checkbox from "@/components/checkbox";
 import Drop from "../assets/svgs/water-drop-svgrepo-com.svg"
 import PageWrapper from "@/components/common/page-wrapper";
-
+import PageProgressBar from "@/components/page-progress-bar";
+import BackButton from "@/components/back-button";
+import SkipButton from "@/components/skip-button";
 
 export const currentPageAtom = atom('home');
 export const pageIndexAtom = atom(0);
@@ -25,6 +27,7 @@ export default function OnboardingPage( {} ){
     {
     title: 'Login screen',
       content: <Text>Placeholder for Jasmine's login screen</Text>,
+      skippable: 0, //not skippable: 0, skippable: 1
     },
     {
       title: 'Do you consent to the collection of personal health information?',
@@ -34,12 +37,14 @@ export default function OnboardingPage( {} ){
       <Text>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod  tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim  veniam, pariatur. Excepteur sint  occaecat cupidatat non proident, sunt in culpa qui officia deserunt  mollit anim id est laborum. </Text>
       <Checkbox text='I consent' />
       </View>,
+      skippable: 0,
     },
     {
       title: 'What is your date of birth?',
       content: <View>
       <TextInputBox name="dob" placeholder='dd-mm-yyyy' />
       </View>,
+      skippable: 0,
     },
     {
       title: 'Do you have a Smart Hydation jug?',
@@ -50,9 +55,10 @@ export default function OnboardingPage( {} ){
       <Text className="text-xl font-light my-2">If yes</Text>
       <TextInputBox name="jug-ID" placeholder='Enter a jug ID' />
       </View>,
+      skippable: 1,
     },
     {
-      title: 'Are you part of an existing Smart Hydration community?',
+      title: 'Are you part of a Smart Hydration community?',
       content: <View>
       <RadioButton options={binaryOptions} defaultString='No'/>
       {/* Display different content depending on radio button selection: create parent component for radio button? */}
@@ -61,12 +67,14 @@ export default function OnboardingPage( {} ){
       <Text className="text-xl font-light my-2">If no</Text>
       <TextInputBox name="community-name" placeholder='Enter a new community name' />
       </View>,
+      skippable: 1,
     },
     {
       title: 'What is your sex?',
       content: <View>
       <RadioButton options={sexOptions} defaultString='Prefer not to say'/> {/*Bug: not defaulting to prefer not to say */}
       </View>,
+      skippable: 1,
     },
     {
       title: 'What are your height and weight?',
@@ -79,6 +87,7 @@ export default function OnboardingPage( {} ){
       <RadioButton options={measureOptions} defaultString='Metric'/>
       <NumberInputBox name="weight" placeholder='Enter your weight in kg' />
       </View>,
+      skippable: 0, 
     },
   ]
 
@@ -90,6 +99,14 @@ export default function OnboardingPage( {} ){
     setPageIndex((prevIndex) => (prevIndex + 1) % pages.length);
   };
 
+  const handleSkip = () => {
+    setPageIndex((prevIndex) => (prevIndex + 1) % pages.length);
+  };
+
+  const handleBack = () => {
+    setPageIndex((prevIndex) => (prevIndex - 1) % pages.length);
+  };
+
   const handleSubmit = () => {
    //do nothing for now
    //later, go to homepage
@@ -97,10 +114,10 @@ export default function OnboardingPage( {} ){
 
   const CurrentPage = pages[pageIndex];
   return (
-    // to do: back button, skip button, greying out next button conditionally, progress bar
     // app doesn't display properly unless browser is in mobile mode. Not sure if this is a problem?
       <PageWrapper>
         <View className='bg-gray-100 p-10 h-screen block'>
+        <PageProgressBar currentPage={pageIndex + 1} totalPages={pages.length}></PageProgressBar>
           <View className='flex flex-col flex-1 items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0'></View>
                   <View className='items-center justify-center p-9 space-y-7 md:space-y-9 sm:p-8'>
       <>{pageIndex === 0 && <Text className='text-4xl font-bold text-gray-2000 md:text-2xl text-nowrap ... '>Smart Hydration</Text>}</>
@@ -116,10 +133,13 @@ export default function OnboardingPage( {} ){
       </View>
       <>{pageIndex < maxPageIndex - 1 && <NextButton onPress={handleNext} />}</>
       <>{pageIndex === maxPageIndex - 1 && <SubmitButton onPress={handleSubmit} />}</>
-
-
+      <>{pageIndex > 0 && <BackButton onPress={handleBack} />}</>
+      <>{currentPageContent.skippable != 0 && <SkipButton onPress={handleSkip} />}</>
     </PageWrapper>
-
-
+    //To do: Differentiate between Next and Skip buttons
+       //Next should save the entered data and be greyed out when no data submitted
+       //Skip should skip regardless of whether data is submitted and not save it
+    //To do: Add "Skip Optional Onboarding" button on last mandatory page, with "Continue" button
+    //To do: create visual progress bar to replace "Page x/y"
   )
 }
