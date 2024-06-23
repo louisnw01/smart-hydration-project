@@ -1,11 +1,12 @@
 import os
+from uuid import UUID
 from pony.orm.core import *
 
 db = Database()
 
 
 class User(db.Entity):
-    id = PrimaryKey(int, auto=True)
+    id = PrimaryKey(UUID, auto=True)
     email = Required(str)
     name = Required(str)
     community = Optional('Community')

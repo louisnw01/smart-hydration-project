@@ -95,3 +95,7 @@ def get_community_jug_data(user_id):
         print('Trying: ' + j)
         responses.append(fetch_data_for_jug(j))
     return responses
+
+@db_session
+def get_user_by_id(user_id):
+    return User.get(id=user_id)
