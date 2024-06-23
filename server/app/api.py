@@ -1,9 +1,8 @@
-import json
-import requests
-import datetime as dt
-from dotenv import load_dotenv
 import os
+import requests
 import re
+from dotenv import load_dotenv
+
 
 load_dotenv()
 
@@ -15,6 +14,9 @@ def login_and_get_session():
 
     csrf_token_pattern = re.compile(r'name="_token" value="(.*?)"')
     match = csrf_token_pattern.search(response.text)
+
+    if not match:
+        return None
 
     token = match.group(1)
 
@@ -30,53 +32,25 @@ def login_and_get_session():
     return session
 
 
-
-session = login_and_get_session()
-
-
-# cookies = response.cookies.get_dict()
-
 headers = {
     'Accept': 'application/json',
 }
 
-response = session.get("https://www.smarthydration.online/data/device/jug001056/events/hydration", headers=headers)
 
-if (response.status_code != 200):
-    print("error")
-
-
-data = response.json()
+def query(session, endpoint):
+    response = session.get(f'https://www.smarthydration.online{endpoint}', headers=headers)
+    return response.json() if response.ok else None
 
 
-print(json.dumps(data, indent=4))
+def fetch_data_for_jug(session, jug_id):
+    result = query(session, f'/data/device/{jug_id}')
+    if result is None:
+        return None
 
-
-
-
-
-# print(json.dumps(response.json(), indent=4))
-
-
-hydration_per_day = []
-
-for row in data:
-    if row['type'] != 'DRINK':
-        continue
-    time = dt.datetime.strptime(row['created_at'], '%Y-%m-%dT%H:%M:%S.%fZ')
-    date = time.strftime("%Y-%m-%d")
-
-    if len(hydration_per_day) == 0 or hydration_per_day[-1]['time'] != date:
-        hydration_per_day.append({
-            'time': date,
-            'consumed': row['water_delta']
-        })
-    else:
-        hydration_per_day[-1]['consumed'] += row['water_delta']
-
-    # print(f'{time} drank {water_consumed}mls')
-
-
-for row in hydration_per_day:
-    print(row)
-
+    return {
+        'capacity': result['device_model']['capacity_ml'],
+        'charging': result['telemetry']['charging'],
+        'battery': result['telemetry']['battery'],
+        'temperature': round(result['telemetry']['temperature'], 3),
+        'water_level': result['water_level']['d'],
+    }
