@@ -1,12 +1,14 @@
 import os
 import json
-from fastapi import FastAPI, Query, HTTPException
+from fastapi import FastAPI, Query, HTTPException, Depends
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from dotenv import load_dotenv
+from typing import Optional
 
-from .services import create_user, get_user_hash, get_auth_token, user_exists, get_community_jug_data
+from .services import create_user, get_user_by_id, get_user_hash, get_auth_token, user_exists, get_community_jug_data, find_user
 from .models import db
 from .schemas import UserLogin, UserRegister
-from .util import get_hash
+from .auth import get_hash, decode_auth_token
 
 
 load_dotenv()
@@ -21,6 +23,21 @@ db.bind(
     database='postgres'
 )
 db.generate_mapping(create_tables=True)
+
+
+get_bearer_token = HTTPBearer(auto_error=False)
+async def auth_user(
+    auth: Optional[HTTPAuthorizationCredentials] = Depends(get_bearer_token),
+) -> str:
+    if auth is None:
+        raise HTTPException(status_code=401, detail='unauthorized token')
+
+    user_id = decode_auth_token(auth.credentials)
+
+    if user_id is None or not get_user_by_id(user_id):
+        raise HTTPException(status_code=401, detail='unauthorized token')
+
+    return user_id
 
 
 @app.get("/")
@@ -58,4 +75,12 @@ async def get_community_jug_status(user_id: str = Query(...)):
     print(user_id)
     data = get_community_jug_data(user_id)
     return json.dumps(data)
+
+# example of using a protected route; the Depends(auth_user) part should be added to all protected routes
+@app.get("/protected")
+async def protected(user_id: str = Depends(auth_user)):
+
+    user = get_user_by_id(user_id)
+
+    return f"name={user.name} email={user.email}"
 
