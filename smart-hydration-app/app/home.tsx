@@ -8,21 +8,27 @@ import {useAtomValue} from "jotai";
 import PopupPage from "@/components/popup-page";
 import OptionBlock from "@/components/common/option-block";
 import Droplet from "@/components/droplet";
-import { View } from "react-native";
+import { View, Text, Pressable } from "react-native";
 
 
 export default function HomePage() {
     const popupPage = useAtomValue(popupPageAtom);
     return (
     <PageWrapper>
-        <PageHeading text='home page'>
+        <PageHeading text='smart hydration'>
             <SettingsButton />
         </PageHeading>
 
         <View className="flex justify-evenly h-full">
             <HydrationPercentage/>
             <Droplet />
+
             <HydrationStatus/>
+            <View className="flex flex-row justify-center">
+                <Pressable className="bg-gray-200 px-4 py-1 rounded-2xl">
+                <Text className="text-xl">+ add a drink</Text>
+                </Pressable>
+            </View>
         </View>
 
         <>
