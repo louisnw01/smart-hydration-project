@@ -1,4 +1,4 @@
-import {Text, Pressable, View} from "react-native";
+import {Text, Pressable} from "react-native";
 
 interface NextButtonProps {
     onPress: () => void;
