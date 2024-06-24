@@ -35,8 +35,23 @@ def get_community_id(name):
 
 @db_session
 def create_jug(sh_id, qr_hash, name):
-    Jug(smart_hydration_id=sh_id, qr_hash=qr_hash, name = name)
+    Jug(smart_hydration_id=sh_id, qr_hash=qr_hash, name=name)
     commit()
+
+
+@db_session
+def link_jug_to_user(user_id, jug_id):
+    user = User.get(id=user_id)
+    if not user.jug_user:
+        create_jug_user(user.name, user.dob, user.community)
+
+    jug_user = user.jug_user
+    link_jug_to_jug_user(jug_user.id, jug_id)
+
+
+def unlink_jug_from_user(user_id, jug_id):
+    jug_user = User.get(id=user_id).jug_user
+    unlink_jug_from_jug_user(jug_user.id, jug_id)
 
 
 @db_session
