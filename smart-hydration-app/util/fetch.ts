@@ -5,6 +5,8 @@ const SERVER_URL = 'http://localhost:8085';
 export const ENDPOINTS = {
     HELLO_WORLD: '/',
     FETCH_COMMUNITY: '/community-jug-status',
+    LOGIN: '/login',
+    REGISTER: '/register'
 }
 
 
@@ -12,6 +14,7 @@ interface RequestOptions {
     method: 'get' | 'post',
     query: {[key: string]: any},
     body: {[key: string]: any},
+    auth?: string,
 }
 
 export async function request(endpoint: string, options: Partial<RequestOptions>){
@@ -30,9 +33,16 @@ export async function request(endpoint: string, options: Partial<RequestOptions>
         }
     }
 
+    let headers = {'Content-Type': 'application/json'};
+
+    if (options.auth) {
+        headers = {...headers, ...{'Authorization': `Bearer ${options.auth}`}}
+    }
+
     const result = await fetch(url, {
         method: options.method || 'get',
         body: JSON.stringify(options.body),
+        headers: headers,
     });
 
     return result;
