@@ -1,34 +1,19 @@
 import { atomWithQuery } from 'jotai-tanstack-query'
 import {atom} from "jotai";
+import { authTokenAtom } from './user';
+import { ENDPOINTS, request } from '@/util/fetch';
+import { DeviceInfo } from '@/interfaces/device';
 
-// TODO server_url should be in .env
-const SERVER_URL = 'http://localhost:8085';
 
-const ENDPOINTS = {
-    HELLO_WORLD: '/',
-    FETCH_COMMUNITY: '/community-jug-status/',
-}
+export const getJugDataQAtom = atomWithQuery((get) => ({
+    queryKey: ['get-jug-data', get(authTokenAtom)],
+    queryFn: async ({queryKey: [, token]}): Promise<DeviceInfo[]> => {
+        const response = await request(ENDPOINTS.FETCH_COMMUNITY, {query: {user_id: token}})
 
-// change the user_id here (probs needs to be the unique user id, not the user name)
-const authTokenAtom = atom('Neill')
-
-export const helloWorldQAtom = atomWithQuery((get) => ({
-    queryKey: ['hello-world'],
-    queryFn: async () => {
-        const result = await fetch(SERVER_URL+ENDPOINTS.FETCH_COMMUNITY);
-        return result.json();
-    },
-}));
-
-export const getJugDataAtom = atomWithQuery((get) => ({
-    queryKey: ['getJugData', get(authTokenAtom)],
-    queryFn: async () => {
-        const token = get(authTokenAtom);
-        const response = await fetch(SERVER_URL+ENDPOINTS.FETCH_COMMUNITY+`?user_id=${token}`);
         if (!response.ok) {
             throw new Error('Jug Data Could Not Be Found');
         }
-        const result = await response.json();
-        return result;
+
+        return await response.json();
     }
 }))

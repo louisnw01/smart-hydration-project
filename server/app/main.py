@@ -5,7 +5,9 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from dotenv import load_dotenv
 from typing import Optional
 
-from .services import create_user, get_user_by_id, get_user_hash, get_auth_token, user_exists, get_community_jug_data, find_user
+from .services import create_user, get_jug_ids_by_community, get_user_hash, get_auth_token,\
+                        user_exists, get_jug_name_by_id, find_user
+from .api import login_and_get_session, fetch_data_for_jug
 from .models import db
 from .schemas import UserLogin, UserRegister
 from .auth import get_hash, decode_auth_token
@@ -70,11 +72,23 @@ async def login(form: UserLogin):
     return {"access_token": token, "token_type": "bearer"}
 
 
-@app.get("/community-jug-status/")
+@app.get("/community-jug-status")
 async def get_community_jug_status(user_id: str = Query(...)):
-    print(user_id)
-    data = get_community_jug_data(user_id)
-    return json.dumps(data)
+    user = find_user(user_id)
+    if not user:
+        raise HTTPException(status_code=400, detail='user not found')
+
+    community = user.community
+    jug_ids = get_jug_ids_by_community(community)
+    devices_info = []
+    session = login_and_get_session()
+    for jug_id in jug_ids:
+        jug_data = fetch_data_for_jug(session, jug_id)
+        if jug_data is None:
+            continue
+        jug_data['name'] = get_jug_name_by_id(jug_id)
+        devices_info.append(jug_data)
+    return devices_info
 
 # example of using a protected route; the Depends(auth_user) part should be added to all protected routes
 @app.get("/protected")
