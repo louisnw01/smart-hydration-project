@@ -1,10 +1,9 @@
-import { atomWithMutation, atomWithQuery } from 'jotai-tanstack-query'
-import { atom } from "jotai";
+import { atomWithQuery } from 'jotai-tanstack-query'
+import {atom} from "jotai";
+import { authTokenAtom } from './user';
+import { ENDPOINTS, request } from '@/util/fetch';
+import { DeviceInfo } from '@/interfaces/device';
 
-// TODO server_url should be in .env
-const SERVER_URL = 'http://localhost:8085';
-
-const authTokenAtom=atom<string>("neill")
 
 const ENDPOINTS = {
     HELLO_WORLD: '/',
@@ -33,4 +32,16 @@ export const linkJugToUserAtom = atomWithMutation((get) => ({
         return result.json();
     },
 
+}))
+export const getJugDataQAtom = atomWithQuery((get) => ({
+    queryKey: ['get-jug-data', get(authTokenAtom)],
+    queryFn: async ({queryKey: [, token]}): Promise<DeviceInfo[]> => {
+        const response = await request(ENDPOINTS.FETCH_COMMUNITY, {query: {user_id: token}})
+
+        if (!response.ok) {
+            throw new Error('Jug Data Could Not Be Found');
+        }
+
+        return await response.json();
+    }
 }))

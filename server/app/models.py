@@ -1,28 +1,29 @@
 import os
+from uuid import UUID
 from pony.orm.core import *
 
-db = Database();
+db = Database()
 
 
 class User(db.Entity):
-    id = PrimaryKey(int, auto=True)
+    id = PrimaryKey(UUID, auto=True)
     email = Required(str)
     name = Required(str)
-    community = Required('Community')
+    community = Optional('Community')
     hash = Required(str)
-    jug_user = Optional('JugUser', reverse="user")
+    jug_user = Optional('JugUser')
 
 class JugUser(db.Entity):
     id = PrimaryKey(int, auto=True)
     name = Required(str)
-    dob = Required(str)
+    dob = Optional(str)
     weight = Optional(str)
     height = Optional(str)
     sex = Optional(str)
     ethnicity = Optional(str)
     jugs = Set('Jug')
-    community = Required('Community')
-    user = Optional(User, reverse="jug_user")
+    community = Optional('Community')
+    user = Optional(User)
 
 class Jug(db.Entity):
     id = PrimaryKey(int, auto=True)
@@ -34,7 +35,7 @@ class Jug(db.Entity):
 class Community(db.Entity):
     id = PrimaryKey(int, auto=True)
     name = Required(str)
-    jug_users = Set(JugUser, reverse="community")
+    jug_users = Set(JugUser)
     followers = Set(User)
 
 class Medication(db.Entity):
