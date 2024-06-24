@@ -2,6 +2,7 @@
   "expo": {
     "name": "smart-hydration-app",
     "slug": "smart-hydration-app",
+    "owner": "smart-hydration-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -13,13 +14,15 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.louisnw01.smarthydrationapp"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.louisnw01.smarthydrationapp"
     },
     "web": {
       "bundler": "metro",
@@ -31,6 +34,14 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "429f1ddf-7110-4380-a62a-6f3856a4a1dc"
+      }
     }
   }
 }
