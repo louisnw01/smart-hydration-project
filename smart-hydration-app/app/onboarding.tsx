@@ -23,16 +23,37 @@ export default function OnboardingPage( {} ){
   const sexOptions = ['Female', 'Male', 'Prefer not to say'];
   const binaryOptions = ['Yes', 'No'];
   const measureOptions = ['Metric', 'Imperial'];
+  const medications = [
+    { key: '1', value: 'Paracetemol' },
+    { key: '2', value: 'Voltaren' },
+    { key: '3', value: 'Asprin' },
+    { key: '4', value: 'Ibuprofen' },
+    { key: '5', value: 'Penicillin' },
+  ];
+  //ethnicity array isn't used yet but it will be
+  const ethicities = [
+    { key: '1', value: 'Ethinicity 1' },
+    { key: '2', value: 'Ethnicity 2' },
+    { key: '3', value: 'Ethncitiy 3' },
+    { key: '4', value: 'Etnicity 4' },
+    { key: '5', value: 'Ethnicity 5' },
+  ];
+  const conditions = [
+    { key: '1', value: 'Condition 1' },
+    { key: '2', value: 'Condition 2' },
+    { key: '3', value: 'Condition 3' },
+    { key: '4', value: 'Condition 4' },
+    { key: '5', value: 'Condition 5' },
+  ];
 
   const pages = [
     {
-      title: 'Enter your email address',
+      title: 'Enter your email address and password',
       content:
       <View>
       <TextInputBox name='email address' placeholder='Enter your email address' />
         <View>
-        <Text>Enter in your password</Text>,
-        <TextInputBox name='password' placeholder='Enter your password' />,
+        <TextInputBox name='password' placeholder='Enter your password' />
         </View>
       </View>,
       skippable: 0,
@@ -61,26 +82,6 @@ export default function OnboardingPage( {} ){
       <TextInputBox name="dob" placeholder='dd-mm-yyyy' />
       </View>,
       skippable: 0,
-    },
-    {
-      title: 'What is your ethnicity?',
-      content:
-      <TextInputBox name="username" placeholder='Select your ethnicity' />,
-      skippable: 0, 
-    },
-    {
-      title: 'What is your medication?',
-      content: <>
-        <SelectInputBox multiple={false} />
-      </>,
-      skippable: 0, 
-    }
-    ,
-    {
-      title: 'What are your medical conditions?',
-      content:
-      <TextInputBox name="conditions" placeholder='Select medical conditions' />,
-      skippable: 0, 
     },
     {
       title: 'Do you have a Smart Hydation jug?',
@@ -123,8 +124,38 @@ export default function OnboardingPage( {} ){
       <RadioButton options={measureOptions} defaultString='Metric'/>
       <NumberInputBox name="weight" placeholder='Enter your weight in kg' />
       </View>,
+      skippable: 1, 
+    },
+    //make ethnicity field a single-select dropdown list
+    {
+      title: 'What is your ethnicity?',
+      content:
+      <TextInputBox name="username" placeholder='Enter your ethnicity' />,
+      skippable: 1, 
+    },
+    {
+      title: 'What medications do you take?',
+      content: <>
+        <SelectInputBox multiple={false} data={medications} />
+      </>,
+      skippable: 1, 
+    }
+    ,
+    {
+      title: 'What are your medical conditions?',
+      content:
+      <>
+        <SelectInputBox multiple={false} data={conditions} />
+      </>,
+      skippable: 1, 
+    },
+    {
+      title: "You're nearly there!",
+      content:
+      <Text>Tap Submit All to set up your Smart Hydration profile.</Text>,
       skippable: 0, 
     },
+    
   ]
 
   const currentPageContent = pages[pageIndex];
