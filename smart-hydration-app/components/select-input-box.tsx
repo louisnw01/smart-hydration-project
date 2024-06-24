@@ -3,10 +3,11 @@ import { SelectList, MultipleSelectList } from "react-native-dropdown-select-lis
 
 export interface SelectInputBoxProperties {
   multiple?: boolean;
+  data: { key: string, value: string }[];
 }
 
 export const SelectInputBox = (props: SelectInputBoxProperties) => {
-  const { multiple } = props;
+  const { multiple, data } = props;
 
   const [selected, setSelected] = useState<string | undefined>();
   const [selectedMultiple, setSelectedMultiple] = useState<string[]>([]);
@@ -14,11 +15,6 @@ export const SelectInputBox = (props: SelectInputBoxProperties) => {
   useEffect(() => {
     console.log(selected, selectedMultiple);
   })
-
-  const data = [
-    { key: '1', value: 'Paracetamol' },
-    { key: '2', value: 'Voltaren' },
-  ];
 
   return (
     <>
