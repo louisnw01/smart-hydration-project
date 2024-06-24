@@ -10,13 +10,15 @@ const isOnboarding = true;
 export default function Index() {
     if (isOnboarding) {
         return <OnboardingPage />
+    } 
+    else{
+        return (
+            <GestureHandlerRootView>
+                <View className="flex flex-1 justify-between h-full">
+                    <PageRouter />
+                    <NavigationBar />
+                </View>
+            </GestureHandlerRootView>
+        );
     }
-    return (
-        <GestureHandlerRootView>
-            <View className="flex flex-1 justify-between h-full">
-                <PageRouter />
-                <NavigationBar />
-            </View>
-        </GestureHandlerRootView>
-    );
 }
