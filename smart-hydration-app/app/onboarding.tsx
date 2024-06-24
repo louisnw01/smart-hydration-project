@@ -10,6 +10,7 @@ import RadioButton from "@/components/radio-button";
 import Checkbox from "@/components/checkbox";
 import Drop from "../assets/svgs/water-drop-svgrepo-com.svg"
 import PageWrapper from "@/components/common/page-wrapper";
+import { SelectInputBox } from "@/components/select-input-box";
 import PageProgressBar from "@/components/page-progress-bar";
 import BackButton from "@/components/back-button";
 import SkipButton from "@/components/skip-button";
@@ -25,9 +26,24 @@ export default function OnboardingPage( {} ){
 
   const pages = [
     {
-    title: 'Login screen',
-      content: <Text>Placeholder for Jasmine's login screen</Text>,
-      skippable: 0, //not skippable: 0, skippable: 1
+      title: 'Enter your email address',
+      content:
+      <View>
+      <TextInputBox name='email address' placeholder='Enter your email address' />
+        <View>
+        <Text>Enter in your password</Text>,
+        <TextInputBox name='password' placeholder='Enter your password' />,
+        </View>
+      </View>,
+      skippable: 0,
+    },
+    {
+      title: 'What is your name?',
+      content:
+      <View>
+      <TextInputBox name="username" placeholder='Enter your name' />
+      </View>,
+      skippable: 0,
     },
     {
       title: 'Do you consent to the collection of personal health information?',
@@ -45,6 +61,26 @@ export default function OnboardingPage( {} ){
       <TextInputBox name="dob" placeholder='dd-mm-yyyy' />
       </View>,
       skippable: 0,
+    },
+    {
+      title: 'What is your ethnicity?',
+      content:
+      <TextInputBox name="username" placeholder='Select your ethnicity' />,
+      skippable: 0, 
+    },
+    {
+      title: 'What is your medication?',
+      content: <>
+        <SelectInputBox multiple={false} />
+      </>,
+      skippable: 0, 
+    }
+    ,
+    {
+      title: 'What are your medical conditions?',
+      content:
+      <TextInputBox name="conditions" placeholder='Select medical conditions' />,
+      skippable: 0, 
     },
     {
       title: 'Do you have a Smart Hydation jug?',
