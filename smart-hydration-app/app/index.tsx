@@ -7,11 +7,10 @@ import OnboardingPage from "./onboarding";
 
 const isOnboarding = true;
 
+export default function Index() {
     if (isOnboarding) {
         return <OnboardingPage />
     }
-
-export default function Index() {
     return (
         <GestureHandlerRootView>
             <View className="flex flex-1 justify-between h-full">
