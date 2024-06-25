@@ -14,7 +14,7 @@ export default function DeviceRow({device}: {device: DeviceInfo}) {
                 <Text className="text-xl font-bold">{device.name}</Text>
                 <View className="flex-row gap-3">
                     <Text>connected</Text>
-                    <BatteryIndicator charge={0.2123}/>
+                    <BatteryIndicator charge={device.battery}/>
                 </View>
             </View>
             <View className='flex justify-evenly'>
@@ -40,7 +40,7 @@ function BatteryIndicator({charge}: {charge: number}) {
                 backgroundColor: charge >= 0.3 ? colors.green : colors.red
             }}/>
             <View className="w-6 h-3 my-1 border rounded-md"/>
-            <Text>{charge*100}%</Text>
+            <Text>{(charge*100).toFixed(0)}%</Text>
         </View>
     )
 }
