@@ -10,6 +10,7 @@ import DeviceRow from "@/components/devices/device-row";
 import { DeviceInfo } from "@/interfaces/device";
 import { useState } from "react";
 import { unlinkJugFromUserMAtom } from "@/atom/query";
+import TextInputWithButton from "@/components/text-input-box-button";
 
 
 export default function DevicesPage() {
@@ -49,14 +50,11 @@ export default function DevicesPage() {
             <>
                 {popup === 'devices' &&
                     <PopupPage>
-                            <PageHeading text="Add a device" />
-                            <View className="flex flex-row justify-center py-20">
-                            <Pressable className="bg-gray-200 px-4 py-1 rounded-2xl"
-                                       onPress={()=>mutate(device.id)}
-                            >
-                                <Text className="text-xl">Click to add</Text>
-                            </Pressable>
-                        </View>
+                            <PageHeading text="Add a device"/>
+                            <View className="flex flex-row justify-center pt-20">
+                                <TextInputWithButton name="jug-link-input" placeholder="e.g. jug001053"
+                                label="Input Smart Hydration ID"/>
+                            </View>
                     </PopupPage>
                 }
 
@@ -65,7 +63,10 @@ export default function DevicesPage() {
                         <PageHeading text={`${device.name} options`} />
                         <View className="flex flex-row justify-center py-20">
                             <Pressable className="bg-red px-4 py-1 rounded-2xl"
-                                       onPress={()=>mutate(device.id)}
+                                       onPress={()=>{
+                                        mutate(device.id);
+                                        setPopup('none');
+                                    }}
                             >
                                 <Text className="text-xl">Delete device</Text>
                             </Pressable>

@@ -7,17 +7,18 @@ import { DeviceInfo } from '@/interfaces/device';
 export const linkJugToUserMAtom = atomWithMutation((get) => ({
 
     mutationKey: ['link-jug-to-user', get(authTokenIdAtom)],
+
     mutationFn: async (jugId: string) => {
-        const token = get(authTokenAtom);
+        const token = get(authTokenIdAtom);
 
         const response = await request(ENDPOINTS.LINK_JUG_TO_USER, {method: "post", 
-            body: {'userId': token, 'jugId': jugId}})
+            body: {userId: token, jugId: jugId}})
 
             if (!response.ok) {
                 throw new Error('Jug could not be linked to user');
             }
     
-            return await response.json();
+            return;
         } 
     }))
 
@@ -28,9 +29,7 @@ export const unlinkJugFromUserMAtom = atomWithMutation((get) => ({
         mutationFn: async (jugId: string) => {
             const token = get(authTokenIdAtom);
             const response = await request(ENDPOINTS.UNLINK_JUG_FROM_USER, {method: "post", 
-                body: {userId: token, jugId: jugId
-
-                }})
+                body: {userId: token, jugId: jugId}})
     
                 if (!response.ok) {
                     throw new Error('Jug could not be unlinked from user');
