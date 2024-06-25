@@ -7,7 +7,7 @@ import { useAtom, useAtomValue } from "jotai";
 import { popupPageAtom } from "@/atom/nav";
 import { getJugDataQAtom } from "@/atom/query";
 import DeviceRow from "@/components/devices/device-row";
-import AddDeviceModal from "@/components/devices/add-device-modal";
+// import AddDeviceModal from "@/components/devices/add-device-modal";
 import { useState } from "react";
 
 
@@ -56,9 +56,9 @@ export default function DevicesPage() {
                     </View>
                 </View>
                 <>
-                    {popup === 'devices' &&
+                    {/*popup === 'devices' &&
                         <AddDeviceModal />
-                    }
+                    */}
                 </>
             </ScrollView>
         </PageWrapper>
