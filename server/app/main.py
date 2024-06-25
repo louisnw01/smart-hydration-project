@@ -6,8 +6,10 @@ from typing import Optional
 
 from starlette.middleware.cors import CORSMiddleware
 
-from .services import create_user, get_jug_ids_by_community, get_user_hash, get_auth_token, \
-    user_exists, get_jug_name_by_id, find_user, link_jug_to_jug_user, get_user_by_id
+from .services import (create_user, get_jug_ids_by_community, get_user_hash, get_auth_token,
+                       user_exists, get_jug_name_by_id, find_user, get_user_by_id,
+                       unlink_jug_from_user_s,
+                       link_jug_to_user_s)
 from .api import login_and_get_session, fetch_data_for_jug
 from .models import db
 from .schemas import UserLogin, UserRegister, JugLink
@@ -58,12 +60,12 @@ async def root():
 
 @app.post('/link-jug-to-user')
 async def link_jug_to_user(body):
-    link_jug_to_jug_user(body.userId, body.jugId)
+    link_jug_to_user_s(body.userId, body.jugId)
 
 
 @app.post('/unlink-jug-from-user')
 async def unlink_jug_from_user(body: JugLink):
-    unlink_jug_from_user(body.userId, body.jugId)
+    unlink_jug_from_user_s(body.userId, body.jugId)
 
 
 @app.post("/register")

@@ -50,6 +50,13 @@ export default function DevicesPage() {
                 {popup === 'devices' &&
                     <PopupPage>
                             <PageHeading text="Add a device" />
+                            <View className="flex flex-row justify-center py-20">
+                            <Pressable className="bg-gray-200 px-4 py-1 rounded-2xl"
+                                       onPress={()=>mutate(device.id)}
+                            >
+                                <Text className="text-xl">Click to add</Text>
+                            </Pressable>
+                        </View>
                     </PopupPage>
                 }
 
