@@ -1,6 +1,22 @@
 import { atom } from "jotai";
+import { atomEffect } from "jotai-effect";
+import { getItemAsync, setItemAsync } from "expo-secure-store"
 
-// change the user_id here (probs needs to be the unique user id, not the user name)
-export const authTokenAtom = atom<string|null>('Neill');
+const _authTokenAtom = atom<string|null>('Neill');
+
+export const authTokenAtom = atom((get) => get(_authTokenAtom),
+async (get, set, update: string) => {
+    set(_authTokenAtom, update);
+    setItemAsync('auth_token', update);
+    }
+);
 
 // export const isLoggedInAtom = atom((get) => get(authTokenAtom) != null);
+
+export const authTokenInitEAtom = atomEffect((get, set) => {
+    getItemAsync('auth_token').then((token) => {
+        if (token) {
+            set(authTokenAtom, token);
+        }
+    })
+})
