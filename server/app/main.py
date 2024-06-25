@@ -10,7 +10,7 @@ from .services import create_user, get_jug_ids_by_community, get_user_hash, get_
 from .api import login_and_get_session, fetch_data_for_jug
 from .models import db
 from .schemas import UserLogin, UserRegister
-from .auth import get_hash, decode_auth_token
+from .auth import get_hash, decode_auth_token, generate_auth_token
 
 
 load_dotenv()
@@ -68,7 +68,7 @@ async def login(form: UserLogin):
     if hashed_password != given_hash:
         raise HTTPException(status_code=400, detail="incorrect email or password")
 
-    token = get_auth_token(form.email)
+    token = generate_auth_token(form.email)
     return {"access_token": token, "token_type": "bearer"}
 
 
