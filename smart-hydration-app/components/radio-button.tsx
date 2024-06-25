@@ -15,7 +15,7 @@ const RadioButton = ({ options, defaultString }: RadioInputProperties) => {
                     <Pressable className="h-5 w-5 mx-1 rounded-full bg-gray-300 border border-gray-500 items-center justify-center" onPress={() => setSelectedValue(option)}>
                         {selectedValue === option && <View className="h-4 w-4 rounded-full border bg-black" />}
                     </Pressable>
-                    <Text>{option}</Text>
+                    <Text className="text-l font-light">{option}</Text>
                 </View>
             ))}
         </View>

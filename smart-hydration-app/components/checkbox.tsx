@@ -16,7 +16,7 @@ const Checkbox = ({ text }: CheckboxProperties) => {
             <Pressable className="w-4 h-4 bg-gray-300 border border-gray-500 items-center justify-center" onPress={handleCheckboxChange}>
                 {checked === true && <View className="h-3 w-3 bg-black" />}
             </Pressable>
-            <Text className="mx-2 text-lg">{text}</Text>
+            <Text className="mx-2 text-2xl">{text}</Text>
         </View>
     );
 };
