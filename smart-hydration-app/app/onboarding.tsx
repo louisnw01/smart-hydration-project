@@ -21,6 +21,7 @@ export const pageIndexAtom = atom(0);
 export default function OnboardingPage({ }) {
     const [pageIndex, setPageIndex] = useAtom(pageIndexAtom);
     const sexOptions = ['Female', 'Male', 'Prefer not to say'];
+    {/*Bug: radio button not defaulting to prefer not to say */}
     const binaryOptions = ['Yes', 'No'];
     const measureOptions = ['Metric', 'Imperial'];
     const medications = [
@@ -71,7 +72,7 @@ export default function OnboardingPage({ }) {
             content:
                 <View>
                     {/* To do: make this text scrollable (will be longer than a single page) */}
-                    <Text>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod  tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim  veniam, pariatur. Excepteur sint  occaecat cupidatat non proident, sunt in culpa qui officia deserunt  mollit anim id est laborum. </Text>
+                    <Text className="text-xl font-light">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod  tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim  veniam, pariatur. Excepteur sint  occaecat cupidatat non proident, sunt in culpa qui officia deserunt  mollit anim id est laborum. </Text>
                     <Checkbox text='I consent' />
                 </View>,
             skippable: 0,
@@ -109,7 +110,7 @@ export default function OnboardingPage({ }) {
         {
             title: 'What is your sex?',
             content: <View>
-                <RadioButton options={sexOptions} defaultString='Prefer not to say' /> {/*Bug: not defaulting to prefer not to say */}
+                <RadioButton options={sexOptions} defaultString='Prefer not to say' />
             </View>,
             skippable: 1,
         },
@@ -152,7 +153,7 @@ export default function OnboardingPage({ }) {
         {
             title: "You're nearly there!",
             content:
-                <Text>Tap Submit All to set up your Smart Hydration profile.</Text>,
+                <Text className="text-xl font-light">Tap Submit All to set up your Smart Hydration profile.</Text>,
             skippable: 0,
         },
 
@@ -185,11 +186,11 @@ export default function OnboardingPage({ }) {
         <PageWrapper>
             <View className='bg-gray-100 p-10 h-screen block'>
                 <PageProgressBar currentPage={pageIndex + 1} totalPages={pages.length}></PageProgressBar>
-                <View className='flex flex-col flex-1 items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0'></View>
+                <View className='flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0'></View>
                 <View className='items-center justify-center p-9 space-y-7 md:space-y-9 sm:p-8'>
                     <>{pageIndex === 0 && <Text className='text-4xl font-bold text-gray-2000 md:text-2xl text-nowrap ... '>Smart Hydration</Text>}</>
                     <View>
-                        <>{pageIndex === 0 && <View className="flex flex-row justify-center mb-2 sm:mb-4">
+                        <>{pageIndex === 0 && <View className="flex flex-row justify-center my-4 mb-2 sm:mb-4">
                             <Drop width={100} height={100} />
                         </View>}</>
                         <GenericOnboardContent title={currentPageContent.title}>
