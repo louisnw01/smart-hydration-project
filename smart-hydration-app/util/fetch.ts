@@ -38,15 +38,15 @@ export async function request(endpoint: string, options: Partial<RequestOptions>
  
     let headers = {'Content-type': 'application/json'};
  
-    if (options.auth) {
-        headers = {...headers, ...{'Authorization': `Bearer ${options.auth}`}}
-    }
+    // if (options.auth) {
+    //     headers = {...headers, ...{'Authorization': `Bearer ${options.auth}`}}
+    // }
  
     const result = await fetch(url, {
         method: options.method || 'get',
         body: JSON.stringify(options.body),
-        headers: options.auth ? {'Authorization': `Bearer ${options.auth}`} : undefined
-        //headers: headers,
+        //headers: options.auth ? {'Authorization': `Bearer ${options.auth}`} : undefined,
+        headers: headers,
     });
  
     return result;

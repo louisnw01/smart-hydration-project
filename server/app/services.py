@@ -76,7 +76,7 @@ def create_jug(sh_id, qr_hash, name):
 
 
 @db_session
-def link_jug_to_user(user_id, jug_id):
+def link_jug_to_user_s(user_id, jug_id):
     user = User.get(id=user_id)
     if not user.jug_user:
         create_jug_user(user.name, user.dob, user.community)
@@ -86,21 +86,21 @@ def link_jug_to_user(user_id, jug_id):
 
 
 @db_session
-def unlink_jug_from_user(user_id, jug_id):
+def unlink_jug_from_user_s(user_id, jug_id):
     jug_user = User.get(id=user_id).jug_user
     unlink_jug_from_jug_user(jug_user.id, jug_id)
 
 
 @db_session
-def link_jug_to_jug_user(jug_id, jug_user_id):
-    jug = Jug.get(id=jug_id)
+def link_jug_to_jug_user(jug_user_id, jug_id):
+    jug = Jug.get(smart_hydration_id=jug_id)
     JugUser.get(id=jug_user_id).jugs.add(jug)
     commit()
 
 
 @db_session
-def unlink_jug_from_jug_user(jug_id, jug_user_id):
-    jug = Jug.get(id=jug_id)
+def unlink_jug_from_jug_user(jug_user_id, jug_id):
+    jug = Jug.get(smart_hydration_id=jug_id)
     JugUser.get(id=jug_user_id).jugs.remove(jug)
     commit()
 

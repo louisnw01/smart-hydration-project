@@ -5,10 +5,12 @@ class UserLogin(BaseModel):
     email: str
     password: str
 
+
 class UserRegister(BaseModel):
     name: str
     email: str
     password: str
+
 
 class JugLink(BaseModel):
     userId: str
