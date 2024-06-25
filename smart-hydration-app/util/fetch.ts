@@ -6,7 +6,8 @@ export const ENDPOINTS = {
     HELLO_WORLD: '/',
     FETCH_COMMUNITY: '/community-jug-status',
     LOGIN: '/login',
-    REGISTER: '/register'
+    REGISTER: '/register',
+    UPDATE: '/update',
 }
 
 

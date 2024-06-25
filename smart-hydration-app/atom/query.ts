@@ -52,3 +52,20 @@ export const registerMAtom = atomWithMutation((get) => ({
         return object.access_token;
     }
 }));
+
+export const updateMAtom = atomWithMutation((get) => ({
+    mutationKey: ['update'],
+    mutationFn: async (formData: {email: string, password: string}) => {
+        const response = await request(ENDPOINTS.LOGIN, {
+            method: 'post',
+            body: formData,
+        })
+
+        if (!response.ok) {
+            return 'failure';
+        }
+
+        const object = await response.json()
+        return object.access_token;
+    }
+}));
