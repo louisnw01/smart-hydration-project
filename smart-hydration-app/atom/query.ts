@@ -1,4 +1,4 @@
-import { atomWithQuery, atomWithMutation } from 'jotai-tanstack-query'
+import { atomWithQuery, atomWithMutation, queryClientAtom } from 'jotai-tanstack-query'
 import { authTokenAtom, authTokenIdAtom } from './user';
 import { ENDPOINTS, request } from '@/util/fetch';
 import { DeviceInfo } from '@/interfaces/device';
@@ -19,7 +19,11 @@ export const linkJugToUserMAtom = atomWithMutation((get) => ({
             }
     
             return;
-        } 
+        },
+        onSuccess: () => {
+            const queryClient = get(queryClientAtom)
+            void queryClient.invalidateQueries({queryKey:['get-jug-data']})
+        },
     }))
 
 export const unlinkJugFromUserMAtom = atomWithMutation((get) => ({
@@ -36,7 +40,12 @@ export const unlinkJugFromUserMAtom = atomWithMutation((get) => ({
                 }
         
                 return;
-            } 
+            }, 
+        
+        onSuccess: () => {
+            const queryClient = get(queryClientAtom)
+            void queryClient.invalidateQueries({queryKey:['get-jug-data']})
+        },
         }))
 
 export const getJugDataQAtom = atomWithQuery((get) => ({

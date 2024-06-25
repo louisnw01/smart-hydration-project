@@ -59,7 +59,7 @@ async def root():
 
 
 @app.post('/link-jug-to-user')
-async def link_jug_to_user(body):
+async def link_jug_to_user(body: JugLink):
     link_jug_to_user_s(body.userId, body.jugId)
 
 
