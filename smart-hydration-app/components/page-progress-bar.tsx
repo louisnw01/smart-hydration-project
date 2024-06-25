@@ -11,7 +11,7 @@ export interface PageProgressProperties {
 const PageProgressBar = ({ currentPage, totalPages }: PageProgressProperties) => {
     return (
         <View className="flex items-center">
-            <Text className="text-sm font-medium text-gray-900 dark:text-white">Page {currentPage}/{totalPages}</Text>
+            <Text className="text-xl font-semibold font-medium text-gray-900 dark:text-white">Page {currentPage}/{totalPages}</Text>
         </View>
     );
 };
