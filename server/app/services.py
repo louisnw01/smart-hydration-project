@@ -9,7 +9,6 @@ import json
 def create_user(name, email, hash):
     User(name=name, email=email, hash=hash)
     commit()
-    return user.id
 
 
 @db_session
@@ -86,6 +85,7 @@ def link_jug_to_user(user_id, jug_id):
     link_jug_to_jug_user(jug_user.id, jug_id)
 
 
+@db_session
 def unlink_jug_from_user(user_id, jug_id):
     jug_user = User.get(id=user_id).jug_user
     unlink_jug_from_jug_user(jug_user.id, jug_id)
@@ -106,13 +106,15 @@ def unlink_jug_from_jug_user(jug_id, jug_user_id):
 
 
 @db_session
-def get_jug_id(name):
-    return Jug.get(name=name).id
+def get_jug_id(sh_id):
+    return Jug.get(smart_hydration_id=sh_id).id
 
 
 @db_session
 def get_jug_user_id(name):
     return JugUser.get(name=name).id
+
+
 def has_access_to_jug(user, sh_jug_id):
     relevant_jug = getattr(get(j for j in Jug if j.smart_hydration_id == sh_jug_id), 'owner')
     jug_community = relevant_jug.community

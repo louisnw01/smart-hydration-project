@@ -1,22 +1,28 @@
 // TODO server_url should be in .env
 const SERVER_URL = 'http://localhost:8085';
-
-
+ 
+ 
 export const ENDPOINTS = {
     HELLO_WORLD: '/',
     FETCH_COMMUNITY: '/community-jug-status',
+    LOGIN: '/login',
+    REGISTER: '/register',
+    UNLINK_JUG_FROM_USER: '/unlink-jug-from-user',
+    LINK_JUG_TO_USER: '/link-jug-to-user'
 }
-
-
+ 
+ 
 interface RequestOptions {
     method: 'get' | 'post',
     query: {[key: string]: any},
     body: {[key: string]: any},
+    auth?: string,
 }
+
 
 export async function request(endpoint: string, options: Partial<RequestOptions>){
     let url = SERVER_URL+endpoint;
-
+ 
     if (options.query) {
         url += '?';
         let isFirstEntry = true;
@@ -29,11 +35,19 @@ export async function request(endpoint: string, options: Partial<RequestOptions>
             url += `${key}=${val}`
         }
     }
-
+ 
+    let headers = {'Content-type': 'application/json'};
+ 
+    if (options.auth) {
+        headers = {...headers, ...{'Authorization': `Bearer ${options.auth}`}}
+    }
+ 
     const result = await fetch(url, {
         method: options.method || 'get',
         body: JSON.stringify(options.body),
+        headers: options.auth ? {'Authorization': `Bearer ${options.auth}`} : undefined
+        //headers: headers,
     });
-
+ 
     return result;
 }
