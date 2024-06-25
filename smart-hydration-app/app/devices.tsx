@@ -7,11 +7,16 @@ import { useAtom, useAtomValue } from "jotai";
 import { popupPageAtom } from "@/atom/nav";
 import { getJugDataQAtom } from "@/atom/query";
 import DeviceRow from "@/components/devices/device-row";
+import { DeviceInfo } from "@/interfaces/device";
+import { useState } from "react";
+import { unlinkJugFromUserMAtom } from "@/atom/query";
 
 
 export default function DevicesPage() {
     const [popup, setPopup] = useAtom(popupPageAtom);
+    const [device, setDevice] = useState<DeviceInfo|null>(null);
     const { data, isLoading, isError, refetch } = useAtomValue(getJugDataQAtom);
+    const {mutate} = useAtomValue(unlinkJugFromUserMAtom);
 
     return (
         <PageWrapper>
@@ -28,7 +33,10 @@ export default function DevicesPage() {
                     </View>
                 }
 
-                {data && data.map((device, idx) => <DeviceRow key={idx} device={device} /> )}
+                {data && data.map((device, idx) => <DeviceRow key={idx} device={device} onPress= {()=>{
+                    setPopup('device');
+                    setDevice(device);
+                    }} /> )}
 
                 <View className="flex flex-row justify-center">
                     <Pressable className="bg-gray-200 py-2 px-3 rounded-3xl"
@@ -44,6 +52,19 @@ export default function DevicesPage() {
                             <PageHeading text="Add a device" />
                     </PopupPage>
                 }
+
+                {popup === 'device' &&
+                    <PopupPage>
+                        <PageHeading text={`${device.name} options`} />
+                        <View className="flex flex-row justify-center py-20">
+                            <Pressable className="bg-red px-4 py-1 rounded-2xl"
+                                       onPress={()=>mutate(device.id)}
+                            >
+                                <Text className="text-xl">Delete device</Text>
+                            </Pressable>
+                        </View>
+                    </PopupPage>
+                }   
             </>
 
         </PageWrapper>

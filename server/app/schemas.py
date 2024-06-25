@@ -9,3 +9,7 @@ class UserRegister(BaseModel):
     name: str
     email: str
     password: str
+
+class JugLink(BaseModel):
+    userId: str
+    jugId: str
