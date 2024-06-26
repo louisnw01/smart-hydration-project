@@ -5,13 +5,14 @@ import { selectedPageAtom } from "@/atom/nav";
 import { useAtomValue } from "jotai";
 
 export default function PageRouter() {
-    const page = useAtomValue(selectedPageAtom);
+    const page = useAtomValue(selectedPageAtom)
+
     switch (page) {
-    case 'home':
-        return <HomePage />
-    case 'trends':
-        return <TrendsPage />
-    case 'devices':
-        return <DevicesPage />
+        case 'home':
+            return <HomePage />
+        case 'trends':
+            return <TrendsPage />
+        case 'devices':
+            return <DevicesPage />
     }
 }

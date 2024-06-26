@@ -9,7 +9,7 @@ import json
 def create_user(name, email, hash):
     user = User(name=name, email=email, hash=hash)
     commit()
-    return user.id
+    return user
 
 
 @db_session
@@ -91,3 +91,7 @@ def get_jug_name_by_id(sh_jug_id):
 @db_session
 def get_user_by_id(user_id):
     return User.get(id=user_id)
+
+@db_session
+def get_user_by_email(email):
+    return User.get(email=email)
