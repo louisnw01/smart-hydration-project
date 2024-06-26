@@ -9,3 +9,8 @@ class UserRegister(BaseModel):
     name: str
     email: str
     password: str
+
+class JugUserUpdate(BaseModel):
+    id: int
+    dob: str
+

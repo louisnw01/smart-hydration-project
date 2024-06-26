@@ -4,6 +4,7 @@ import PageWrapper from "@/components/common/page-wrapper";
 import React from "react";
 import { ScrollView, Text, View } from "react-native";
 import { CartesianChart, Bar } from "victory-native"
+// @ts-ignore
 import SFPro from '../assets/fonts/SF-Pro-Display-Regular.otf'
 import { useFont } from "@shopify/react-native-skia";
 

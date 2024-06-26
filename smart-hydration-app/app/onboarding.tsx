@@ -11,16 +11,19 @@ import BackButton from "@/components/back-button";
 import SkipButton from "@/components/skip-button";
 import RegisterPage from "@/components/onboarding/register";
 import NamePage from "@/components/onboarding/name";
-import { registerMAtom } from "@/atom/query";
+import {registerMAtom, updateMAtom} from "@/atom/query";
 import { authTokenAtom } from "@/atom/user";
 
 export const pageIndexAtom = atom(0);
 
 export default function OnboardingPage() {
-    const { mutate, data } = useAtomValue(registerMAtom);
+    const { mutate: registerMutate, data: registerData } = useAtomValue(registerMAtom);
+    const { mutate: updateMutate, data: updateData } = useAtomValue(updateMAtom);
     const setAuthToken = useSetAtom(authTokenAtom);
 
-    if (data) setAuthToken(data);
+
+
+    if (registerData) setAuthToken(registerData);
 
     const [pageIndex, setPageIndex] = useAtom(pageIndexAtom);
     // const sexOptions = ['Female', 'Male', 'Prefer not to say'];
@@ -169,7 +172,14 @@ export default function OnboardingPage() {
     };
 
     const handleSubmit = () => {
-        mutate();
+        //commenting this out to avoid "POST/register HTTP/1.1 422 Unprocessable error"
+        //registerMutate();
+        handleDOB(1, "02-09-1989");
+    };
+
+    const handleDOB = (id: number, dob: string) => {
+        const formData = { id: id, dob: dob };
+        updateMutate(formData);
     };
 
     return (
@@ -181,7 +191,7 @@ export default function OnboardingPage() {
                     {currentPageContent.content}
                 </GenericOnboardContent>
             </ScrollView>
-            <>{pageIndex < maxPageIndex - 1 && <NextButton onPress={handleNext} />}</>
+            <>{pageIndex < maxPageIndex - 1 && <NextButton onPress={handleNext}  />}</>
             <>{pageIndex === maxPageIndex - 1 && <SubmitButton onPress={handleSubmit} />}</>
             <>{pageIndex > 0 && <BackButton onPress={handleBack} />}</>
             <>{currentPageContent.skippable != 0 && <SkipButton onPress={handleSkip} />}</>

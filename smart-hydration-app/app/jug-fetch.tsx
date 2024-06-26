@@ -1,4 +1,4 @@
-import { getJugDataQAtom, helloWorldQAtom } from "@/atom/query";
+import { getJugDataQAtom } from "@/atom/query";
 import { useAtomValue } from "jotai";
 import { ActivityIndicator, Button, FlatList, Text, View } from "react-native";
 
@@ -13,6 +13,7 @@ export default function DeviceFetch() {
     } else if (data == undefined){
         text = []
     } else {
+        // @ts-ignore
         text = JSON.parse(data);
     }
 

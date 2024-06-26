@@ -63,8 +63,8 @@ export const registerMAtom = atomWithMutation((get) => ({
 
 export const updateMAtom = atomWithMutation((get) => ({
     mutationKey: ['update'],
-    mutationFn: async (formData: {email: string, password: string}) => {
-        const response = await request(ENDPOINTS.LOGIN, {
+    mutationFn: async (formData: {id: number, dob: string}) => {
+        const response = await request(ENDPOINTS.UPDATE, {
             method: 'post',
             body: formData,
         })

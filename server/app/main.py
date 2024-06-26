@@ -5,11 +5,11 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from dotenv import load_dotenv
 from typing import Optional
 
-from .services import create_user, get_jug_ids_by_community, get_user_hash, get_auth_token,\
-                        user_exists, get_jug_name_by_id, find_user, get_user_by_id, get_user_by_email
+from .services import create_user, get_jug_ids_by_community, get_user_hash, get_auth_token, \
+    user_exists, get_jug_name_by_id, find_user, get_user_by_id, get_user_by_email, update_dob
 from .api import login_and_get_session, fetch_data_for_jug
 from .models import db
-from .schemas import UserLogin, UserRegister
+from .schemas import UserLogin, UserRegister, JugUserUpdate
 from .auth import get_hash, decode_auth_token, generate_auth_token
 
 
@@ -73,19 +73,11 @@ async def login(form: UserLogin):
     token = generate_auth_token(user.id)
     return {"access_token": token, "token_type": "bearer"}
 
-@app.put("/update")
-async def update_weight(
-    update_request: UpdateEmailRequest,
-    user_id: str = Depends(auth_user)
-):
-    try:
-        update_user_email(user_id, update_request.new_email)
-        return {"message": "Email updated successfully"}
-    except ValueError as e:
-        raise HTTPException(status_code=404, detail=str(e))
-    except Exception as e:
-        raise HTTPException(status_code=500, detail="An error occurred while updating the email")
-
+# Need to add auth stuff to /update endpoint. Not sure how to do this for post vs get
+@app.post("/update")
+async def update(form: JugUserUpdate):
+    update_dob(form.id, form.dob)
+    return {"message": "DOB updated successfully"}
 
 @app.get("/community-jug-status")
 async def get_community_jug_status(user_id: str = Depends(auth_user)):
