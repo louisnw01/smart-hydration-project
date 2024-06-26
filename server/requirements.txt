@@ -39,3 +39,4 @@ httptools~=0.6.1
 watchfiles~=0.22.0
 python-multipart~=0.0.9
 setuptools~=68.2.0
+pyjwt
