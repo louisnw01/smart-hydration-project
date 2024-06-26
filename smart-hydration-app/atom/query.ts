@@ -1,21 +1,24 @@
 import { atomWithMutation, atomWithQuery } from 'jotai-tanstack-query'
-import {atom} from "jotai";
 import { authTokenAtom } from './user';
 import { ENDPOINTS, request } from '@/util/fetch';
 import { DeviceInfo } from '@/interfaces/device';
+import { registerInfoAtom } from '@/components/onboarding-router';
 
 
 export const getJugDataQAtom = atomWithQuery((get) => ({
     queryKey: ['get-jug-data', get(authTokenAtom)],
     queryFn: async ({queryKey: [, token]}): Promise<DeviceInfo[]> => {
-        const response = await request(ENDPOINTS.FETCH_COMMUNITY, {query: {user_id: token}})
+        const response = await request(ENDPOINTS.FETCH_COMMUNITY,
+            {auth: token as string}
+        )
 
         if (!response.ok) {
             throw new Error('Jug Data Could Not Be Found');
         }
 
         return await response.json();
-    }
+    },
+    enabled: !!get(authTokenAtom),
 }))
 
 
@@ -27,21 +30,25 @@ export const loginMAtom = atomWithMutation((get) => ({
             body: formData,
         })
 
+        const object = await response.json()
+
         if (!response.ok) {
-            return 'failure';
+            throw new Error(object.detail);
         }
 
-        const object = await response.json()
         return object.access_token;
     }
 }));
 
 export const registerMAtom = atomWithMutation((get) => ({
     mutationKey: ['register'],
-    mutationFn: async (formData: {email: string, password: string, name: string}) => {
+    mutationFn: async () => {
+        const registrationInfo = get(registerInfoAtom);
+        if (!registrationInfo) return;
+
         const response = await request(ENDPOINTS.REGISTER, {
             method: 'post',
-            body: formData,
+            body: registrationInfo,
         })
 
         if (!response.ok) {
@@ -49,6 +56,7 @@ export const registerMAtom = atomWithMutation((get) => ({
         }
 
         const object = await response.json()
+        alert(object.access_token)
         return object.access_token;
     }
 }));
