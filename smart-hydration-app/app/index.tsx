@@ -2,7 +2,11 @@ import NavigationBar from "@/components/nav";
 import "../global.css"
 import { View } from 'react-native';
 import PageRouter from "@/components/page-router";
-import {GestureHandlerRootView} from "react-native-gesture-handler";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { useAtomValue, useSetAtom } from "jotai";
+import { authTokenAtom, isLoggedInAtom } from "@/atom/user";
+import OnboardingRouter from "@/components/onboarding-router";
+
 import { Provider } from 'jotai/react'
 import { useHydrateAtoms } from 'jotai/react/utils'
 import {
@@ -19,6 +23,14 @@ const HydrateAtoms = ({ children }) => {
 }
 
 export default function Index() {
+    // const setAuthToken = useSetAtom(authTokenAtom);
+    // setAuthToken(null);
+    const isLoggedIn = useAtomValue(isLoggedInAtom);
+
+    if (!isLoggedIn) {
+        return <OnboardingRouter />
+    }
+
     return (
         <QueryClientProvider client={queryClient}>
         <Provider>
@@ -33,4 +45,5 @@ export default function Index() {
         </Provider>
       </QueryClientProvider>
     );
+
 }

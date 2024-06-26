@@ -5,6 +5,7 @@ import jwt
 from fastapi import Request, HTTPException
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from dotenv import load_dotenv
+from uuid import UUID
 
 
 AUTH_TOKEN_EXPIRATION_SECS = 86_400 # 1 day, for now
@@ -15,9 +16,9 @@ def get_hash(string: str):
     return hash_object.hexdigest()
 
 
-def generate_auth_token(user_id: str):
+def generate_auth_token(user_id: UUID):
     payload = {
-        "id": user_id,
+        "id": str(user_id),
         "expires": time.time() + AUTH_TOKEN_EXPIRATION_SECS
     }
     return jwt.encode(payload, os.getenv('JWT_SECRET'), algorithm=os.getenv('JWT_ALGORITHM'))
