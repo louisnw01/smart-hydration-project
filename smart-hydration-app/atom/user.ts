@@ -2,7 +2,7 @@ import { atom } from "jotai";
 import { atomEffect } from "jotai-effect";
 import { getItemAsync, setItemAsync } from "expo-secure-store"
 
-const _authTokenAtom = atom<string|null>('Neill');
+const _authTokenAtom = atom<string|null>(null);
 
 export const authTokenAtom = atom((get) => get(_authTokenAtom),
 async (get, set, update: string) => {
@@ -11,7 +11,7 @@ async (get, set, update: string) => {
     }
 );
 
-// export const isLoggedInAtom = atom((get) => get(authTokenAtom) != null);
+export const isLoggedInAtom = atom((get) => get(authTokenAtom) != null);
 
 export const authTokenInitEAtom = atomEffect((get, set) => {
     getItemAsync('auth_token').then((token) => {

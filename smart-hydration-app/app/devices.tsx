@@ -1,9 +1,7 @@
 import PageHeading from "@/components/common/page-heading";
 import PageWrapper from "@/components/common/page-wrapper";
 import { ActivityIndicator, Pressable, RefreshControl, ScrollView, Text, View } from "react-native";
-import JugFetch from "./jug-fetch";
-import PopupPage from "@/components/popup-page";
-import { useAtom, useAtomValue } from "jotai";
+import { useSetAtom, useAtomValue } from "jotai";
 import { popupPageAtom } from "@/atom/nav";
 import { getJugDataQAtom } from "@/atom/query";
 import DeviceRow from "@/components/devices/device-row";
@@ -12,9 +10,9 @@ import { useState } from "react";
 
 
 export default function DevicesPage() {
-    const [popup, setPopup] = useAtom(popupPageAtom);
+    const setPopup = useSetAtom(popupPageAtom);
     const [refreshing, setRefreshing] = useState(false);
-    const { data, isLoading, isError, refetch } = useAtomValue(getJugDataQAtom);
+    const { data, isLoading, refetch } = useAtomValue(getJugDataQAtom);
 
     const handleRefresh = () => {
         setRefreshing(true);

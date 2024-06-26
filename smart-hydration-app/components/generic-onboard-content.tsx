@@ -1,5 +1,4 @@
 import { Text, View } from "react-native";
-import PageProgressBar from "./page-progress-bar";
 
 interface PageContent {
     title: string;
