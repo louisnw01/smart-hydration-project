@@ -71,19 +71,18 @@ async def login(form: UserLogin):
     token = generate_auth_token(form.email)
     return {"access_token": token, "token_type": "bearer"}
 
-@app.post("/update")
-async def login(form: UserLogin):
-    if not user_exists(form.email):
-        raise HTTPException(status_code=400, detail="incorrect email or password")
-
-    hashed_password = get_user_hash(form.email)
-    given_hash = get_hash(form.password)
-
-    if hashed_password != given_hash:
-        raise HTTPException(status_code=400, detail="incorrect email or password")
-
-    token = generate_auth_token(form.email)
-    return {"access_token": token, "token_type": "bearer"}
+@app.put("/update")
+async def update_weight(
+    update_request: UpdateEmailRequest,
+    user_id: str = Depends(auth_user)
+):
+    try:
+        update_user_email(user_id, update_request.new_email)
+        return {"message": "Email updated successfully"}
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail="An error occurred while updating the email")
 
 
 @app.get("/community-jug-status")

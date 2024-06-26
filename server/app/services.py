@@ -14,17 +14,16 @@ def create_user(name, email, hash):
 
 @db_session
 def create_jug_user(
-    name: str,
-    user_id: int | None = None,
-    **kwargs
+        name: str,
+        user_id: int | None = None,
+        **kwargs
 ):
     # if community_id is None and user_id is None:
-        # raise Exception("jug user must be assigned to a community or a user")
-
+    # raise Exception("jug user must be assigned to a community or a user")
 
     user = User[user_id]
     # elif community_id:
-        # community = Community[community_id]
+    # community = Community[community_id]
 
     jug_user = JugUser(name=name, user=user, **kwargs)
     commit()
@@ -75,7 +74,7 @@ def get_jug_name_by_id(sh_jug_id):
     name = jug.name
     return name
 
-  
+
 # def get_community_jug_data(user_id):
 #     print('Getting data for ' + user_id)
 #     community = find_user(user_id).community
@@ -91,3 +90,12 @@ def get_jug_name_by_id(sh_jug_id):
 @db_session
 def get_user_by_id(user_id):
     return User.get(id=user_id)
+
+
+@db_session
+def update_weight(user_id: int, new_weight: str):
+    jug_user = get(u for u in JugUser if u.user.id == user_id)
+    if jug_user is None:
+        return False
+    jug_user.weight = new_weight
+    return True if jug_user.weight == new_weight else False
