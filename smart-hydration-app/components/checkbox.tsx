@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Text, View, Pressable } from 'react-native';
 
 export interface CheckboxProperties {
@@ -6,7 +6,7 @@ export interface CheckboxProperties {
 }
 
 const Checkbox = ({ text }: CheckboxProperties) => {
-    const [checked, setChecked] = React.useState(false);
+    const [checked, setChecked] = useState(false);
     const handleCheckboxChange = () => {
         setChecked((prevChecked) => !prevChecked);
     };
