@@ -16,12 +16,12 @@ db.bind(
 db.generate_mapping(create_tables=True)
 
 #find_community('bristol-uni')
-community = create_community('bristol-uni')
+#community = create_community('bristol-uni')
 
 #create_community('bristol-uni23')
 #find_('bristol-uni')
 
-create_user('Tim2','something','hash456', community.id)
+#create_user('Tim2','something','hash456', community.id)
 #create_user('Tim','something','hash4567', 11)
 
 #find_user('Tim')

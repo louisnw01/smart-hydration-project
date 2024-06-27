@@ -22,6 +22,3 @@ async def root():
     return {"message": "Hello World"}
 
 
-@app.get("/api/data")
-def get_data():
-    return {"message": "Hello from FastAPI!"}
