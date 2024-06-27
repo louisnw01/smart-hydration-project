@@ -178,8 +178,7 @@ export default function OnboardingPage() {
     const ethnicityValue = useAtomValue(ethnicityAtom); 
 
     const handleSubmit = () => {
-        //comment next line out to avoid "POST/register HTTP/1.1 422 Unprocessable error"
-        //registerMutate();
+        registerMutate();
         //currently hardcoding the jug user id to "1": better to get it from the user that's been created
         updateJugUserData(1, "dob", dobValue);
         updateJugUserData(1, "ethnicity", ethnicityValue);
