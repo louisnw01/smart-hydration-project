@@ -11,13 +11,14 @@ import BackButton from "@/components/back-button";
 import SkipButton from "@/components/skip-button";
 import RegisterPage from "@/components/onboarding/register";
 import NamePage from "@/components/onboarding/name";
-import {registerMAtom, updateMAtom} from "@/atom/query";
+import { registerMAtom, updateMAtom } from "@/atom/query";
 import { authTokenAtom } from "@/atom/user";
 import { ethnicityAtom, dobAtom } from "@/atom/jug-user";
 
 export const pageIndexAtom = atom(0);
 
 export default function OnboardingPage() {
+    //created two mutate atoms, one for register and one for mutate
     const { mutate: registerMutate, data: registerData } = useAtomValue(registerMAtom);
     const { mutate: updateMutate, data: updateData } = useAtomValue(updateMAtom);
     const setAuthToken = useSetAtom(authTokenAtom);
@@ -30,7 +31,7 @@ export default function OnboardingPage() {
 
     const [pageIndex, setPageIndex] = useAtom(pageIndexAtom);
     // const sexOptions = ['Female', 'Male', 'Prefer not to say'];
-    {/*Bug: radio button not defaulting to prefer not to say */}
+    {/*Bug: radio button not defaulting to prefer not to say */ }
     // const binaryOptions = ['Yes', 'No'];
     // const measureOptions = ['Metric', 'Imperial'];
     // const medications = [
@@ -128,12 +129,12 @@ export default function OnboardingPage() {
         //     skippable: 1,
         // },
         // //make ethnicity field a single-select dropdown list
-         {
-             title: 'What is your ethnicity?',
-             content:
-                 <TextInputBox placeholder='Enter your ethnicity' setValue={setEthnicity} />,
-             skippable: 1,
-         },
+        {
+            title: 'What is your ethnicity?',
+            content:
+                <TextInputBox placeholder='Enter your ethnicity' setValue={setEthnicity} />,
+            skippable: 1,
+        },
         // {
         //     title: 'What medications do you take?',
         //     content: <>
@@ -174,16 +175,17 @@ export default function OnboardingPage() {
         setPageIndex((prevIndex) => (prevIndex - 1) % pages.length);
     };
 
-    const dobValue = useAtomValue(dobAtom); 
-    const ethnicityValue = useAtomValue(ethnicityAtom); 
+    const dobValue = useAtomValue(dobAtom);
+    const ethnicityValue = useAtomValue(ethnicityAtom);
 
     const handleSubmit = () => {
         registerMutate();
-        //currently hardcoding the jug user id to "1": better to get it from the user that's been created
+        //currently assuming the jug user ID is always "1": better to get this value on the fly
         updateJugUserData(1, "dob", dobValue);
         updateJugUserData(1, "ethnicity", ethnicityValue);
     };
 
+    //key is column name in jug user table e.g. "dob", value is value being updated
     const updateJugUserData = (id: number, key: string, value: string) => {
         const formData = { id: id, key: key, value: value };
         updateMutate(formData);
@@ -198,7 +200,7 @@ export default function OnboardingPage() {
                     {currentPageContent.content}
                 </GenericOnboardContent>
             </ScrollView>
-            <>{pageIndex < maxPageIndex - 1 && <NextButton onPress={handleNext}  />}</>
+            <>{pageIndex < maxPageIndex - 1 && <NextButton onPress={handleNext} />}</>
             <>{pageIndex === maxPageIndex - 1 && <SubmitButton onPress={handleSubmit} />}</>
             <>{pageIndex > 0 && <BackButton onPress={handleBack} />}</>
             <>{currentPageContent.skippable != 0 && <SkipButton onPress={handleSkip} />}</>

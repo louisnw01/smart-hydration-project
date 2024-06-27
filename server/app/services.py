@@ -97,6 +97,7 @@ def get_user_by_email(email):
     return User.get(email=email)
 
 
+# Key is column heading in JugUser table e.g. "dob"
 @db_session
 def update_jug_user_data(user_id: int, key: str, new_value: str):
     jug_user = JugUser.get(id=user_id)

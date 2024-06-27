@@ -13,4 +13,4 @@ export default function NamePage() {
     );
 }
 
-//trying to reconcile use of setValue as prop in TextInputBox with existing setInfo
+//trying to reconcile use of setValue function as prop in TextInputBox component with existing use of setInfo

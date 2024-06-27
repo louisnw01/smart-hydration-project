@@ -73,7 +73,18 @@ async def login(form: UserLogin):
     token = generate_auth_token(user.id)
     return {"access_token": token, "token_type": "bearer"}
 
-# Need to add auth stuff to /update endpoint. Not sure how to do this for post vs get
+# When I tried auth_user, this caused "POST /update HTTP/1.1" 401 Unauthorized
+
+# @app.post("/update")
+# async def update(form: JugUserUpdate, user_id: str = Depends(auth_user)):
+#     user = get_user_by_id(user_id)
+#     if not user:
+#         raise HTTPException(status_code=400, detail='user not found')
+#     update_jug_user_data(form.id, form.key, form.value)
+#     return {"message": "Jug user data updated successfully"}
+
+
+# Endpoint for updating jug user data
 @app.post("/update")
 async def update(form: JugUserUpdate):
     update_jug_user_data(form.id, form.key, form.value)

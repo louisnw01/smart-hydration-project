@@ -7,6 +7,8 @@ export interface TextInputProperties {
     setValue: (value: string) => void;
 }
 
+//passing setValue function into this component, so that the value entered in text box can be used in onboardin.tsx
+
 //add validation to ensure only text can be entered?
 const TextInputBox = ({ placeholder, textContentType, setValue }: TextInputProperties) => {
     return (
