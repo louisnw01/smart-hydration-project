@@ -7,7 +7,7 @@ from typing import Optional
 
 from .services import create_user, get_jug_ids_by_community, get_user_hash, get_auth_token,\
                         user_exists, get_jug_name_by_id, find_user
-from .api import login_and_get_session, fetch_data_for_jug
+from .api import login_and_get_session, fetch_data_for_jug, calculate_hydration_level_for_day
 from .models import db
 from .schemas import UserLogin, UserRegister
 from .auth import get_hash, decode_auth_token
@@ -97,4 +97,10 @@ async def protected(user_id: str = Depends(auth_user)):
     user = get_user_by_id(user_id)
 
     return f"name={user.name} email={user.email}"
+
+@app.get("/daily-jug-data")
+async def get_days_jug_data(jug_id: str = Query(...), day: str = Query(...)):
+    print(jug_id, day)
+    session = login_and_get_session()
+    return calculate_hydration_level_for_day(session, jug_id, day)
 

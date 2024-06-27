@@ -2,6 +2,9 @@ import os
 import requests
 import re
 from dotenv import load_dotenv
+import pprint
+import json
+import datetime as dt
 
 
 load_dotenv()
@@ -54,3 +57,25 @@ def fetch_data_for_jug(session, jug_id):
         'temperature': round(result['telemetry']['temperature'], 3),
         'water_level': result['water_level']['d'],
     }
+
+def calculate_hydration_level_for_day(session, jug_id, day):
+    # get a list of all hydration events for the jug for the past year
+    start_date = dt.datetime.now() - dt.timedelta(days=365)
+    start_date_string = start_date.strftime("%Y-%m-%dT%H:%M:%S")
+
+    data = query(session, f'/data/device/{jug_id}/events/hydration?minDate={start_date_string}')
+    # 2024-06-21T12:09:32.476000
+    # split the array
+
+    daily_aggregate = []
+    for row in data:
+        if row['type'] != 'DRINK':
+            continue
+        row['timestamp'] = row['timestamp'][:16]
+        row['timestamp'] = dt.datetime.strptime(row['timestamp'], '%Y-%m-%dT%H:%M').timestamp()
+        daily_aggregate.append({
+            'time': row['timestamp'],
+            'amount': (row['water_delta'] * -1)
+        })
+    return daily_aggregate
+
