@@ -12,5 +12,7 @@ class UserRegister(BaseModel):
 
 class JugUserUpdate(BaseModel):
     id: int
-    dob: str
+    key: str
+    value: str
+
 

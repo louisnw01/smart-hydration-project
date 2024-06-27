@@ -5,10 +5,10 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from dotenv import load_dotenv
 from typing import Optional
 
-from .services import create_user, get_jug_ids_by_community, get_user_hash, get_auth_token, \
-    user_exists, get_jug_name_by_id, find_user, get_user_by_id, get_user_by_email, update_dob
+from .services import create_user, get_jug_ids_by_community, get_user_hash, \
+    user_exists, get_jug_name_by_id, get_user_by_id, get_user_by_email, update_jug_user_data
 from .api import login_and_get_session, fetch_data_for_jug
-from .models import db
+from .models import db, JugUser
 from .schemas import UserLogin, UserRegister, JugUserUpdate
 from .auth import get_hash, decode_auth_token, generate_auth_token
 
@@ -76,8 +76,8 @@ async def login(form: UserLogin):
 # Need to add auth stuff to /update endpoint. Not sure how to do this for post vs get
 @app.post("/update")
 async def update(form: JugUserUpdate):
-    update_dob(form.id, form.dob)
-    return {"message": "DOB updated successfully"}
+    update_jug_user_data(form.id, form.key, form.value)
+    return {"message": "Jug user data updated successfully"}
 
 @app.get("/community-jug-status")
 async def get_community_jug_status(user_id: str = Depends(auth_user)):

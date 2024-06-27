@@ -13,6 +13,7 @@ import RegisterPage from "@/components/onboarding/register";
 import NamePage from "@/components/onboarding/name";
 import {registerMAtom, updateMAtom} from "@/atom/query";
 import { authTokenAtom } from "@/atom/user";
+import { ethnicityAtom, dobAtom } from "@/atom/jug-user";
 
 export const pageIndexAtom = atom(0);
 
@@ -20,6 +21,8 @@ export default function OnboardingPage() {
     const { mutate: registerMutate, data: registerData } = useAtomValue(registerMAtom);
     const { mutate: updateMutate, data: updateData } = useAtomValue(updateMAtom);
     const setAuthToken = useSetAtom(authTokenAtom);
+    const setDob = useSetAtom(dobAtom);
+    const setEthnicity = useSetAtom(ethnicityAtom);
 
 
 
@@ -77,7 +80,7 @@ export default function OnboardingPage() {
         {
             title: 'What is your date of birth?',
             content: <View>
-                <TextInputBox placeholder='dd-mm-yyyy' />
+                <TextInputBox placeholder='dd-mm-yyyy' setValue={setDob} />
             </View>,
             skippable: 0,
         },
@@ -125,12 +128,12 @@ export default function OnboardingPage() {
         //     skippable: 1,
         // },
         // //make ethnicity field a single-select dropdown list
-        // {
-        //     title: 'What is your ethnicity?',
-        //     content:
-        //         <TextInputBox name="username" placeholder='Enter your ethnicity' />,
-        //     skippable: 1,
-        // },
+         {
+             title: 'What is your ethnicity?',
+             content:
+                 <TextInputBox placeholder='Enter your ethnicity' setValue={setEthnicity} />,
+             skippable: 1,
+         },
         // {
         //     title: 'What medications do you take?',
         //     content: <>
@@ -171,14 +174,19 @@ export default function OnboardingPage() {
         setPageIndex((prevIndex) => (prevIndex - 1) % pages.length);
     };
 
+    const dobValue = useAtomValue(dobAtom); 
+    const ethnicityValue = useAtomValue(ethnicityAtom); 
+
     const handleSubmit = () => {
-        //commenting this out to avoid "POST/register HTTP/1.1 422 Unprocessable error"
+        //comment next line out to avoid "POST/register HTTP/1.1 422 Unprocessable error"
         //registerMutate();
-        handleDOB(1, "02-09-1989");
+        //currently hardcoding the jug user id to "1": better to get it from the user that's been created
+        updateJugUserData(1, "dob", dobValue);
+        updateJugUserData(1, "ethnicity", ethnicityValue);
     };
 
-    const handleDOB = (id: number, dob: string) => {
-        const formData = { id: id, dob: dob };
+    const updateJugUserData = (id: number, key: string, value: string) => {
+        const formData = { id: id, key: key, value: value };
         updateMutate(formData);
     };
 

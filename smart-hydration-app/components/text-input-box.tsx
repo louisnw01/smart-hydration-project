@@ -1,17 +1,18 @@
-import { TextInput } from 'react-native';
+import { TextInput, TextInputProps } from 'react-native';
 
 export interface TextInputProperties {
     placeholder?: string;
     onChange?: (text: string) => void;
-    textContentType?: string;
+    textContentType?: TextInputProps['textContentType'];
+    setValue: (value: string) => void;
 }
 
 //add validation to ensure only text can be entered?
-const TextInputBox = ({ placeholder, onChange, textContentType }: TextInputProperties) => {
+const TextInputBox = ({ placeholder, textContentType, setValue }: TextInputProperties) => {
     return (
         <TextInput
             placeholder={placeholder}
-            onChangeText={onChange}
+            onChangeText={setValue}
             placeholderTextColor='black'
             textContentType={textContentType}
             secureTextEntry={textContentType == 'password'}
