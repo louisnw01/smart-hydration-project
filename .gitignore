@@ -23,3 +23,5 @@ android/
 pyrightconfig.json
 __pycache__/
 eas.json
+
+sh-key-pair.pem
