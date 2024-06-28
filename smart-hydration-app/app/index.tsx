@@ -22,7 +22,7 @@ const HydrateAtoms = ({ children }) => {
   return children
 }
 
-export default function Index() {
+function App () {
     // const setAuthToken = useSetAtom(authTokenAtom);
     // setAuthToken(null);
     const isLoggedIn = useAtomValue(isLoggedInAtom);
@@ -32,14 +32,21 @@ export default function Index() {
     }
 
     return (
+      <View className="flex flex-1 justify-between h-full">
+        <PageRouter/>
+        <NavigationBar/>
+      </View>
+    )
+
+}
+
+export default function Index() {
+    return (
         <QueryClientProvider client={queryClient}>
         <Provider>
           <HydrateAtoms>
             <GestureHandlerRootView>
-                <View className="flex flex-1 justify-between h-full">
-                    <PageRouter />
-                    <NavigationBar />
-                </View>
+              <App/>
             </GestureHandlerRootView>
           </HydrateAtoms>
         </Provider>
