@@ -1,12 +1,9 @@
+import hashlib
 import os
 import time
-import hashlib
-import jwt
-from fastapi import Request, HTTPException
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from dotenv import load_dotenv
 from uuid import UUID
 
+import jwt
 
 AUTH_TOKEN_EXPIRATION_SECS = 86_400 # 1 day, for now
 

@@ -1,8 +1,6 @@
-import os
-from dotenv import load_dotenv
-from .models import db, User, Jug, JugUser, Community, JugUser, Community
-from pony.orm.core import commit, get, select, db_session, set_sql_debug, show
-import json
+from pony.orm.core import commit, get, select, db_session
+
+from .models import User, Jug, JugUser, Community
 
 
 @db_session

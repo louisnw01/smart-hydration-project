@@ -12,7 +12,6 @@ export const linkJugToUserMAtom = atomWithMutation((get) => ({
     mutationFn: async (jugId: string) => {
         
         const token = get(authTokenAtom);
-        alert(token);
         const response = await request(ENDPOINTS.LINK_JUG_TO_USER, {method: "post", 
             body: {jugId: jugId},
             auth: token as string})
@@ -32,10 +31,9 @@ export const linkJugToUserMAtom = atomWithMutation((get) => ({
 export const unlinkJugFromUserMAtom = atomWithMutation((get) => ({
         
         mutationKey: ['unlink-jug-from-user', get(authTokenAtom)],
-        
+        enabled: !!get(authTokenAtom),
         mutationFn: async (jugId: string) => {
             const token = get(authTokenAtom);
-            alert(token);
             const response = await request(ENDPOINTS.UNLINK_JUG_FROM_USER, {method: "post", 
                 body: {jugId: jugId},
                 auth: token as string})

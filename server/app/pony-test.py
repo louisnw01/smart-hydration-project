@@ -24,4 +24,3 @@ jug_id = get_jug_id("R2D2")
 jug_user_id = get_jug_user_id("Luke")
 # link_jug_to_jug_user(jug_id, jug_user_id)
 unlink_jug_from_jug_user(jug_id, jug_user_id)
-

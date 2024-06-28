@@ -1,19 +1,19 @@
 import os
-from fastapi import FastAPI, Query, HTTPException, Depends
-from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
-from dotenv import load_dotenv
 from typing import Optional
 
+from dotenv import load_dotenv
+from fastapi import FastAPI, HTTPException, Depends
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from starlette.middleware.cors import CORSMiddleware
 
-from .services import (create_user, get_jug_ids_by_community, get_user_hash, get_auth_token,
-                       user_exists, get_jug_name_by_id, find_user, get_user_by_id, get_user_by_email, get_user_by_id,
-                       unlink_jug_from_user_s,
-                       link_jug_to_user_s)
 from .api import login_and_get_session, fetch_data_for_jug
+from .auth import get_hash, decode_auth_token, generate_auth_token
 from .models import db
 from .schemas import UserLogin, UserRegister, JugLink
-from .auth import get_hash, decode_auth_token, generate_auth_token
+from .services import (create_user, get_jug_ids_by_community, get_user_hash, user_exists, get_jug_name_by_id,
+                       get_user_by_email, get_user_by_id,
+                       unlink_jug_from_user_s,
+                       link_jug_to_user_s)
 
 load_dotenv()
 
