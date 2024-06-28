@@ -1,5 +1,6 @@
 import PageHeading from "@/components/common/page-heading";
 import PageWrapper from "@/components/common/page-wrapper";
+import PopupPage from "@/components/popup-page";
 import { ActivityIndicator, Pressable, RefreshControl, ScrollView, Text, View } from "react-native";
 import { useSetAtom, useAtomValue } from "jotai";
 import { popupPageAtom } from "@/atom/nav";
@@ -12,20 +13,26 @@ import TextInputWithButton from "@/components/text-input-box-button";
 
 
 export default function DevicesPage() {
+    const popupPage = useAtomValue(popupPageAtom);
     const setPopup = useSetAtom(popupPageAtom);
-    const [refreshing, setRefreshing] = useState(false);
+    const [refreshing, setRefreshing] = useState(true);
     const [device, setDevice] = useState<DeviceInfo|null>(null);
     const { data, isLoading, refetch } = useAtomValue(getJugDataQAtom);
     const {mutate} = useAtomValue(unlinkJugFromUserMAtom);
 
+    const wait = (timeout: number | undefined) => {
+        return new Promise(resolve => setTimeout(resolve, timeout));
+      };
+
     const handleRefresh = () => {
         setRefreshing(true);
-        refetch()
+        refetch();
+        wait(2000).then(() => setRefreshing(false))
     }
 
-    if (!isLoading && refreshing) {
-        setRefreshing(false);
-    }
+    // if (!isLoading && refreshing) {
+    //     setRefreshing(false);
+    // }
     
 
     return (
@@ -62,7 +69,7 @@ export default function DevicesPage() {
                 </View>
             </View>
             <>
-                {popup === 'devices' &&
+                {popupPage === 'devices' &&
                     <PopupPage>
                             <PageHeading text="Add a device"/>
                             <View className="flex flex-row justify-center pt-20">
@@ -72,7 +79,7 @@ export default function DevicesPage() {
                     </PopupPage>
                 }
 
-                {popup === 'device' &&
+                {popupPage === 'device' &&
                     <PopupPage>
                         <PageHeading text={`${device.name} options`} />
                         <View className="flex flex-row justify-center py-20">
@@ -88,7 +95,7 @@ export default function DevicesPage() {
                     </PopupPage>
                 }   
             </>
-
+            </ScrollView>
         </PageWrapper>
     )
 }

@@ -18,6 +18,7 @@ export default function LoginPage() {
 
     if (data) {
         setAuthToken(data)
+        
     }
 
     const handleSubmit = () => {
