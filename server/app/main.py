@@ -7,7 +7,7 @@ from typing import Optional
 
 from .services import create_user, get_jug_ids_by_community, get_user_hash, get_auth_token,\
                         user_exists, get_jug_name_by_id, find_user, get_user_by_id, get_user_by_email
-from .api import login_and_get_session, fetch_data_for_jug
+from .api import login_and_get_session, fetch_data_for_jug, get_all_jug_ids
 from .models import db
 from .schemas import UserLogin, UserRegister
 from .auth import get_hash, decode_auth_token, generate_auth_token
@@ -76,6 +76,7 @@ async def login(form: UserLogin):
 
 @app.get("/community-jug-status")
 async def get_community_jug_status(user_id: str = Depends(auth_user)):
+    # TODO perhaps this logic should be in auth_user, and it returns user rather than user_id
     user = get_user_by_id(user_id)
     if not user:
         raise HTTPException(status_code=400, detail='user not found')
@@ -91,3 +92,13 @@ async def get_community_jug_status(user_id: str = Depends(auth_user)):
         jug_data['name'] = get_jug_name_by_id(jug_id)
         devices_info.append(jug_data)
     return devices_info
+
+@app.post("/check-token")
+async def check_token(user_id: str = Depends(auth_user)):
+    return {"status": "success"}
+
+# Temporary for MVP
+@app.get("/get-all-jugs")
+async def get_all_jugs(user_id: str = Depends(auth_user)):
+    session = login_and_get_session()
+    return get_all_jug_ids(session)

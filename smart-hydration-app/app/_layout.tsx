@@ -1,6 +1,6 @@
 import NavigationBar from "@/components/nav";
 import "../global.css";
-import { View } from "react-native";
+import { Appearance, View } from "react-native";
 import PageRouter from "@/components/page-router";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useAtomValue, useSetAtom } from "jotai";
@@ -15,6 +15,8 @@ export default function Index() {
     const setAuthToken = useSetAtom(authTokenAtom);
     const isLoggedIn = useAtomValue(isLoggedInAtom);
     const insets = useSafeAreaInsets();
+
+    Appearance.setColorScheme("light");
 
     const getTokenFromStorage = async () => {
         const token = await getItemAsync("auth_token");
