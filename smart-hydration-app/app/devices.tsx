@@ -1,23 +1,30 @@
 import PageHeading from "@/components/common/page-heading";
 import PageWrapper from "@/components/common/page-wrapper";
-import { ActivityIndicator, Pressable, RefreshControl, ScrollView, Text, View } from "react-native";
-import { useSetAtom, useAtomValue } from "jotai";
+import {
+    ActivityIndicator,
+    Pressable,
+    RefreshControl,
+    ScrollView,
+    Text,
+    View,
+} from "react-native";
+import { useSetAtom, useAtomValue, useAtom } from "jotai";
 import { popupPageAtom } from "@/atom/nav";
 import { getJugDataQAtom } from "@/atom/query";
 import DeviceRow from "@/components/devices/device-row";
-// import AddDeviceModal from "@/components/devices/add-device-modal";
+import AddDeviceModal from "@/components/devices/add-device-modal";
 import { useState } from "react";
-
+import StyledButton from "@/components/common/button";
 
 export default function DevicesPage() {
-    const setPopup = useSetAtom(popupPageAtom);
+    const [popup, setPopup] = useAtom(popupPageAtom);
     const [refreshing, setRefreshing] = useState(false);
     const { data, isLoading, refetch } = useAtomValue(getJugDataQAtom);
 
     const handleRefresh = () => {
         setRefreshing(true);
-        refetch()
-    }
+        refetch();
+    };
 
     if (!isLoading && refreshing) {
         setRefreshing(false);
@@ -26,39 +33,46 @@ export default function DevicesPage() {
     return (
         <PageWrapper>
             <ScrollView
-            refreshControl={
-                <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
-
-            }>
+                refreshControl={
+                    <RefreshControl
+                        refreshing={refreshing}
+                        onRefresh={handleRefresh}
+                    />
+                }
+            >
                 <PageHeading text="Devices">
-                    <Text className="text-3xl font-semibold" onPress={() => setPopup('devices')}>+</Text>
+                    <Text
+                        className="text-3xl font-semibold"
+                        onPress={() => setPopup("devices")}
+                    >
+                        +
+                    </Text>
                 </PageHeading>
 
                 <View className="mt-16 flex gap-6">
-
-                    {isLoading &&
+                    {isLoading && (
                         <View>
                             <ActivityIndicator className="justify-center top-2/4" />
-                            <Text className="mt-16 flex justify-center text-center">Getting your jugs...</Text>
+                            <Text className="mt-16 flex justify-center text-center">
+                                Getting your jugs...
+                            </Text>
                         </View>
-                    }
+                    )}
 
-                    {data && data.map((device, idx) => <DeviceRow key={idx} device={device} /> )}
+                    {data &&
+                        data.map((device, idx) => (
+                            <DeviceRow key={idx} device={device} />
+                        ))}
 
                     <View className="flex flex-row justify-center">
-                        <Pressable className="bg-gray-200 py-2 px-3 rounded-3xl"
-                                   onPress={() => setPopup('devices')}
-                        >
-                            <Text >+ add a new device</Text>
-                        </Pressable>
+                        <StyledButton
+                            text="+ add a new device"
+                            onPress={() => setPopup("devices")}
+                        />
                     </View>
                 </View>
-                <>
-                    {/*popup === 'devices' &&
-                        <AddDeviceModal />
-                    */}
-                </>
+                <>{popup === "devices" && <AddDeviceModal />}</>
             </ScrollView>
         </PageWrapper>
-    )
+    );
 }
