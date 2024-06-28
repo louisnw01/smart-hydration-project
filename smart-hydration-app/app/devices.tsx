@@ -1,5 +1,6 @@
 import PageHeading from "@/components/common/page-heading";
 import PageWrapper from "@/components/common/page-wrapper";
+
 import { ActivityIndicator, Pressable, Text, View } from "react-native";
 import JugFetch from "./jug-fetch";
 import PopupPage from "@/components/popup-page";

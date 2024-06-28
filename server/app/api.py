@@ -58,24 +58,30 @@ def fetch_data_for_jug(session, jug_id):
         'water_level': result['water_level']['d'],
     }
 
-def calculate_hydration_level_for_day(session, jug_id, day):
+def get_jug_data(session, jug, start_timestamp):
     # get a list of all hydration events for the jug for the past year
-    start_date = dt.datetime.now() - dt.timedelta(days=365)
-    start_date_string = start_date.strftime("%Y-%m-%dT%H:%M:%S")
+    # TODO convert start_timestamp to datetime. fromTimestamp
+    start_date = dt.datetime.fromtimestamp(start_timestamp)
 
-    data = query(session, f'/data/device/{jug_id}/events/hydration?minDate={start_date_string}')
+    data = query(session, f'/data/device/{jug.smart_hydration_id}/events/hydration?maxCount=1000')
+    if data is None:
+        return []
     # 2024-06-21T12:09:32.476000
     # split the array
 
-    daily_aggregate = []
+#  iso_date = dt.datetime.fromisoformat(row['timestamp'])
+# ValueError: Invalid isoformat string: '2023-07-06T06:43:04.000000Z'
+    import pprint
+    pprint.pprint(data)
+    aggs = []
     for row in data:
         if row['type'] != 'DRINK':
             continue
-        row['timestamp'] = row['timestamp'][:16]
-        row['timestamp'] = dt.datetime.strptime(row['timestamp'], '%Y-%m-%dT%H:%M').timestamp()
-        daily_aggregate.append({
-            'time': row['timestamp'],
-            'amount': (row['water_delta'] * -1)
-        })
-    return daily_aggregate
+        iso_date = dt.datetime.fromisoformat(row['timestamp'].replace('Z', ''))
 
+        aggs.append({
+            'time': iso_date.timestamp(),
+            'value': -row['water_delta'],
+            'name': jug.name,
+        })
+    return aggs
