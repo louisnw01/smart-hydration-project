@@ -59,13 +59,13 @@ async def root():
 
 
 @app.post('/link-jug-to-user')
-async def link_jug_to_user(body: JugLink):
-    link_jug_to_user_s(body.userId, body.jugId)
+async def link_jug_to_user(body: JugLink, user_id: str = Depends(auth_user)):
+    link_jug_to_user_s(user_id, body.jugId)
 
 
 @app.post('/unlink-jug-from-user')
-async def unlink_jug_from_user(body: JugLink):
-    unlink_jug_from_user_s(body.userId, body.jugId)
+async def unlink_jug_from_user(body: JugLink, user_id: str = Depends(auth_user)):
+    unlink_jug_from_user_s(user_id, body.jugId)
 
 
 @app.post("/register")

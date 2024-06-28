@@ -13,5 +13,4 @@ class UserRegister(BaseModel):
 
 
 class JugLink(BaseModel):
-    userId: str
     jugId: str
