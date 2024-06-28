@@ -9,11 +9,11 @@ export default function DeviceRow({device}: {device: DeviceInfo}) {
 
     const isStale = false;
     return (
-        <View className="mx-6 bg-gray-200 px-7 py-4 flex flex-row justify-between rounded-xl">
+        <View className="mx-6 bg-gray-200 px-7 py-4 flex flex-row justify-between rounded-xl dark:bg-gray-800">
             <View className="flex">
-                <Text className="text-xl font-bold">{device.name}</Text>
+                <Text className="text-xl font-bold dark:text-white">{device.name}</Text>
                 <View className="flex-row gap-3">
-                    <Text>connected</Text>
+                    <Text className="dark:text-white">connected</Text>
                     <BatteryIndicator charge={device.battery}/>
                 </View>
             </View>
@@ -26,7 +26,7 @@ export default function DeviceRow({device}: {device: DeviceInfo}) {
 }
 
 function EndText({children, className}: {children: ReactNode, className?: string}) {
-    const style = 'font-semibold text-right' + (className ?? '');
+    const style = 'font-semibold text-right dark:text-white ' + (className ?? '');
     return <Text className={style}>{children}</Text>;
 }
 
@@ -39,8 +39,8 @@ function BatteryIndicator({charge}: {charge: number}) {
                 width: scaledCharge,
                 backgroundColor: charge >= 0.3 ? colors.green : colors.red
             }}/>
-            <View className="w-6 h-3 my-1 border rounded-md"/>
-            <Text>{(charge*100).toFixed(0)}%</Text>
+            <View className="w-6 h-3 my-1 border rounded-md dark:border-gray-200"/>
+            <Text className="dark:text-white">{(charge*100).toFixed(0)}%</Text>
         </View>
     )
 }

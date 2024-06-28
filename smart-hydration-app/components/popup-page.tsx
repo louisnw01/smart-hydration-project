@@ -42,7 +42,7 @@ export default function PopupPage( { children }: { children: JSX.Element | JSX.E
     <GestureDetector gesture={pan}>
         <Animated.View className="absolute top-0 left-0 w-full h-full z-20" style={animatedStyles}>
 
-                <View className="position relative bottom-0 w-full h-full left-0 bg-white pl-5 pr-5 pt-5 gap-5 rounded-xl">
+                <View className="position relative bottom-0 w-full h-full left-0 bg-white pl-5 pr-5 pt-5 gap-5 rounded-xl dark:bg-black">
                     { children }
                 </View>
 

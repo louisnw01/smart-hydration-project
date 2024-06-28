@@ -7,7 +7,7 @@ export default function SettingsButton() {
     const setButtonAction = useSetAtom(popupPageAtom)
     return (
         <Pressable onPress={() => setButtonAction("settings")}>
-            <Text>Settings</Text>
+            <Text className="dark:text-white">Settings</Text>
         </Pressable>
     )
 }

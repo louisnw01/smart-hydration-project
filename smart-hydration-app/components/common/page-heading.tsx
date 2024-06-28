@@ -4,7 +4,7 @@ export default function PageHeading({children, text}: {children?: JSX.Element | 
     return (
         <View className="absolute w-full z-10">
             <View className="flex flex-row justify-between mx-6">
-                <Text className="text-3xl font-semibold">{text}</Text>
+                <Text className="text-3xl font-semibold dark:text-white">{text}</Text>
                 {children}
             </View>
         </View>
