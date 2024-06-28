@@ -1,3 +1,4 @@
+import json
 import os
 import requests
 import re
@@ -53,4 +54,22 @@ def fetch_data_for_jug(session, jug_id):
         'battery': result['telemetry']['battery'],
         'temperature': round(result['telemetry']['temperature'], 3),
         'water_level': result['water_level']['d'],
+    }
+
+# Temporary for MVP
+def get_all_jug_ids(session):
+    real_id = 5
+    fake_id = 2
+
+    real_jugs = query(session, f'/data/organisation/{real_id}/device/list')
+    fake_jugs = query(session, f'/data/organisation/{fake_id}/device/list')
+
+    if real_jugs is None or fake_jugs is None:
+        return
+
+    print(json.dumps(real_jugs, indent=4))
+
+    return {
+        "real": [x['identifier'] for x in real_jugs],
+        "fake": [x['identifier'] for x in fake_jugs]
     }
