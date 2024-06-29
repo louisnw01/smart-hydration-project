@@ -1,11 +1,10 @@
 import os
 from dotenv import load_dotenv
-from models import db, User, Jug, JugUser, Community
+from .models import db, User, Jug, JugUser
 from pony.orm.core import commit, get, select, raw_sql, db_session, set_sql_debug, show
-from api import login_and_get_session, headers
+from .api import login_and_get_session, headers
 import json
 import pprint
-from services import create_community, create_jug_user, delete_user, create_user
 
 #
 #load_dotenv()
