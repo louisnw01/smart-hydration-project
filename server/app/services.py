@@ -1,6 +1,6 @@
 import os
 from dotenv import load_dotenv
-from .models import db, User, Jug, JugUser, Community
+from models import db, User, Jug, JugUser, Community
 from pony.orm.core import commit, get, select, db_session, set_sql_debug, show
 import json
 
@@ -15,7 +15,7 @@ def create_user(name, email, hash,community):
 @db_session
 def create_jug_user(
     name: str,
-    user_id: int | None = None,
+    user_id: int| None = None,
     **kwargs
 ):
     # if community_id is None and user_id is None:
@@ -26,7 +26,7 @@ def create_jug_user(
     # elif community_id:
         # community = Community[community_id]
 
-    jug_user = JugUser(name=name, user=user, **kwargs)
+    jug_user = JugUser(name=name, user=user,**kwargs)
     commit()
     return jug_user.id
 
@@ -53,8 +53,13 @@ def delete_user(user_name, email,hash):
     if user:
         community_id = user.community
         #fetch community object using community's id community_id.id as community in USer model links to Community model
-        community = Community.get(id=community_id.id)
-        community.delete()
+        if community_id:
+            community = Community.get(id=community_id.id)
+            if community:
+                jug_user = JugUser.get(id=community_id.id)
+                if jug_user:
+                    jug_user.delete()
+                community.delete()
         user.delete()
 
 
@@ -64,8 +69,8 @@ def find_user(name):
     return result
 
 @db_session
-def create_community(name):
-    community = Community(name=name)
+def create_community(name,id):
+    community = Community(name=name,id=id)
     commit()
     return community
 
