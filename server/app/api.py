@@ -1,8 +1,8 @@
+import json
 import os
 import requests
 import re
 from dotenv import load_dotenv
-import pprint
 import json
 import datetime as dt
 
@@ -58,6 +58,25 @@ def fetch_data_for_jug(session, jug_id):
         'water_level': result['water_level']['d'],
     }
 
+
+# Temporary for MVP
+def get_all_jug_ids(session):
+    real_id = 5
+    fake_id = 2
+
+    real_jugs = query(session, f'/data/organisation/{real_id}/device/list')
+    fake_jugs = query(session, f'/data/organisation/{fake_id}/device/list')
+
+    if real_jugs is None or fake_jugs is None:
+        return
+
+    print(json.dumps(real_jugs, indent=4))
+
+    return {
+        "real": [x['identifier'] for x in real_jugs],
+        "fake": [x['identifier'] for x in fake_jugs]
+    }
+
 def get_jug_data(session, jug, start_timestamp):
     # get a list of all hydration events for the jug for the past year
     # TODO convert start_timestamp to datetime. fromTimestamp
@@ -71,8 +90,7 @@ def get_jug_data(session, jug, start_timestamp):
 
 #  iso_date = dt.datetime.fromisoformat(row['timestamp'])
 # ValueError: Invalid isoformat string: '2023-07-06T06:43:04.000000Z'
-    import pprint
-    pprint.pprint(data)
+
     aggs = []
     for row in data:
         if row['type'] != 'DRINK':

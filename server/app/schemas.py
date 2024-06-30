@@ -1,3 +1,4 @@
+from typing import List
 from pydantic import BaseModel
 
 
@@ -14,3 +15,7 @@ class UserRegister(BaseModel):
 
 class JugLink(BaseModel):
     jugId: str
+
+
+class LinkJugsForm(BaseModel):
+    jugIds: List[str]

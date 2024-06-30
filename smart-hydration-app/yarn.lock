@@ -1947,9 +1947,9 @@
     "@react-navigation/elements" "^1.3.30"
     warn-once "^0.1.0"
 
-"@react-navigation/native@^6.0.2", "@react-navigation/native@~6.1.6":
+"@react-navigation/native@~6.1.6":
   version "6.1.17"
-  resolved "https://registry.npmjs.org/@react-navigation/native/-/native-6.1.17.tgz"
+  resolved "https://registry.yarnpkg.com/@react-navigation/native/-/native-6.1.17.tgz#439f15a99809d26ea4682d2a3766081cf2ca31cf"
   integrity sha512-mer3OvfwWOHoUSMJyLa4vnBH3zpFmCwuzrBPlw7feXklurr/ZDiLjLxUScOot6jLRMz/67GyilEYMmP99LL0RQ==
   dependencies:
     "@react-navigation/core" "^6.4.16"
@@ -8111,6 +8111,11 @@ react-native-dropdown-select-list@^2.0.5:
   version "2.0.5"
   resolved "https://registry.yarnpkg.com/react-native-dropdown-select-list/-/react-native-dropdown-select-list-2.0.5.tgz#3626b2bf9b9c5e157b02f60cf36174cde7550056"
   integrity sha512-TepbcagQVUMB6nLuIlVU2ghRpQHAECOeZWe8K04ymW6NqbKbxuczZSDFfdCiABiiQ2dFD+8Dz65y4K7/uUEqGg==
+
+react-native-esp-smartconfig@^0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/react-native-esp-smartconfig/-/react-native-esp-smartconfig-0.4.0.tgz#bef6bb9c2de77edfa3218331d2fbdea02884f035"
+  integrity sha512-s1N0xoMOI+0dEP6vomVJj9SKDBxYf3bGeayOKQt78KCXVjqRY96A8CmYf4/kJl1Gu+uF5SVzfE2epzFi1zoZCQ==
 
 react-native-gesture-handler@~2.16.1:
   version "2.16.2"
