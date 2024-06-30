@@ -10,4 +10,5 @@ export interface DeviceInfo {
 export interface TrendsInfo {
     time: string,
     amount: number,
+    id: string,
 }
