@@ -1,8 +1,60 @@
-import { atomWithMutation, atomWithQuery } from "jotai-tanstack-query";
+import {
+    atomWithQuery,
+    atomWithMutation,
+    queryClientAtom,
+} from "jotai-tanstack-query";
 import { authTokenAtom } from "./user";
 import { ENDPOINTS, request } from "@/util/fetch";
-import { DeviceInfo } from "@/interfaces/device";
+import { DeviceInfo, TrendsInfo } from "@/interfaces/device";
 import { registerInfoAtom } from "@/components/onboarding-router";
+import { useAtomValue, useSetAtom } from "jotai";
+
+export const linkJugToUserMAtom = atomWithMutation((get) => ({
+    mutationKey: ["link-jug-to-user", get(authTokenAtom)],
+    enabled: !!get(authTokenAtom),
+    mutationFn: async (jugIds: string[]) => {
+        const token = get(authTokenAtom);
+        const response = await request(ENDPOINTS.LINK_JUG_TO_USER, {
+            method: "post",
+            body: { jugIds: jugIds },
+            auth: token as string,
+        });
+
+        if (!response.ok) {
+            throw new Error("Jug could not be linked to user");
+        }
+
+        return;
+    },
+    onSuccess: () => {
+        const queryClient = get(queryClientAtom);
+        void queryClient.invalidateQueries({ queryKey: ["get-jug-data"] });
+    },
+}));
+
+export const unlinkJugFromUserMAtom = atomWithMutation((get) => ({
+    mutationKey: ["unlink-jug-from-user", get(authTokenAtom)],
+    enabled: !!get(authTokenAtom),
+    mutationFn: async (jugId: string) => {
+        const token = get(authTokenAtom);
+        const response = await request(ENDPOINTS.UNLINK_JUG_FROM_USER, {
+            method: "post",
+            body: { jugId: jugId },
+            auth: token as string,
+        });
+
+        if (!response.ok) {
+            throw new Error("Jug could not be unlinked from user");
+        }
+
+        return;
+    },
+
+    onSuccess: () => {
+        const queryClient = get(queryClientAtom);
+        void queryClient.invalidateQueries({ queryKey: ["get-jug-data"] });
+    },
+}));
 
 export const getJugDataQAtom = atomWithQuery((get) => ({
     queryKey: ["get-jug-data", get(authTokenAtom)],
@@ -20,6 +72,19 @@ export const getJugDataQAtom = atomWithQuery((get) => ({
     enabled: !!get(authTokenAtom),
 }));
 
+export const getHydrationAtom = atomWithQuery((get) => ({
+    queryKey: ["historial-jug-data", get(authTokenAtom)],
+    queryFn: async ({ queryKey: [, token] }): Promise<TrendsInfo[]> => {
+        const ts = new Date(2024, 5, 26).getTime();
+        const response = await request(ENDPOINTS.FETCH_HISTORICAL_JUG_DATA, {
+            query: {
+                juguser_id: 1,
+                timestamp: ts / 1000,
+            },
+        });
+        return await response.json();
+    },
+}));
 export const loginMAtom = atomWithMutation((get) => ({
     mutationKey: ["login"],
     mutationFn: async (formData: { email: string; password: string }) => {
@@ -36,6 +101,12 @@ export const loginMAtom = atomWithMutation((get) => ({
 
         return object.access_token;
     },
+    // onSuccess: () => {
+    //     const setAuthToken = useSetAtom(authTokenAtom);
+    //     const queryClient = get(queryClientAtom);
+    //     const token = queryClient.getQueryData(['login']);
+    //     setAuthToken(token as string);
+    // },
 }));
 
 export const registerMAtom = atomWithMutation((get) => ({

@@ -3,7 +3,7 @@ import "../global.css";
 import { Appearance, Dimensions, View, StyleSheet, Text } from "react-native";
 import PageRouter from "@/components/page-router";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { useAtomValue, useSetAtom } from "jotai";
+import { Provider, useAtomValue, useSetAtom } from "jotai";
 import { authTokenAtom, isLoggedInAtom } from "@/atom/user";
 import OnboardingRouter from "@/components/onboarding-router";
 import { getItemAsync, deleteItemAsync } from "expo-secure-store";
@@ -12,34 +12,30 @@ import { request } from "@/util/fetch";
 import ModalRouter from "@/components/modal-router";
 
 import { SharedValue } from "react-native-gesture-handler/lib/typescript/handlers/gestures/reanimatedWrapper";
-import { Stack } from "expo-router";
+import { Stack, useRouter } from "expo-router";
+import { useHydrateAtoms } from "jotai/react/utils";
+import { queryClientAtom } from "jotai-tanstack-query";
+import { useEffect } from "react";
+import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 
-export default function Index() {
+const queryClient = new QueryClient();
+
+const HydrateAtoms = ({ children }) => {
+    useHydrateAtoms([[queryClientAtom, queryClient]]);
+    return children;
+};
+
+function WrappedIndex() {
     const setAuthToken = useSetAtom(authTokenAtom);
     const isLoggedIn = useAtomValue(isLoggedInAtom);
-    const insets = useSafeAreaInsets();
-
-    const screenHeight = Dimensions.get("window").height;
-
-    // const animatedStyles = useAnimatedStyle(() => ({
-    //     transform: [
-    //         {
-    //             scale: interpolate(
-    //                 animation.value,
-    //                 [screenHeight, 0],
-    //                 [1, 0.9],
-    //             ),
-    //         },
-    //     ],
-    //     paddingTop: insets.top,
-    //     paddingBottom: insets.bottom,
-    // }));
-
-    Appearance.setColorScheme("light");
+    const router = useRouter();
 
     const getTokenFromStorage = async () => {
         const token = await getItemAsync("auth_token");
-        if (!token) return;
+        if (!token) {
+            router.replace("login");
+            return;
+        }
         const result = await request("/check-token", {
             method: "post",
             auth: token,
@@ -48,35 +44,39 @@ export default function Index() {
             setAuthToken(token);
         } else {
             deleteItemAsync("auth_token");
+            router.replace("login");
         }
     };
-    getTokenFromStorage();
 
-    // if (!isLoggedIn) {
-    //     return <OnboardingRouter />;
-    // }
+    useEffect(() => {
+        getTokenFromStorage();
+    }, []);
 
     return (
-        // <GestureHandlerRootView>
-        // {/* <AnimationContext.Provider value={animation}> */}
-        // <View className="flex flex-1 bg-black">
-        // {/* <Animated.View */}
-        // className="flex flex-1 bg-white dark:bg-black"
-        // style={animatedStyles}
-        // >
         <Stack>
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
             <Stack.Screen
                 name="(modals)"
-                options={{ headerShown: false, presentation: "formSheet" }}
+                options={{
+                    headerShown: false,
+                    presentation: "formSheet",
+                }}
             />
+            <Stack.Screen name="login" options={{ headerShown: false }} />
         </Stack>
-        // {/* <PageRouter / > */}
-        // {/* <NavigationBar /> */}
-        //             </Animated.View>
-        //         </View>
-        //         {/* <ModalRouter /> */}
-        //     </AnimationContext.Provider>
-        // </GestureHandlerRootView>
+    );
+}
+
+export default function Index() {
+    Appearance.setColorScheme("light");
+
+    return (
+        <QueryClientProvider client={queryClient}>
+            <Provider>
+                <HydrateAtoms>
+                    <WrappedIndex />
+                </HydrateAtoms>
+            </Provider>
+        </QueryClientProvider>
     );
 }

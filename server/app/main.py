@@ -1,21 +1,32 @@
 import os
-import json
-from fastapi import FastAPI, Query, HTTPException, Depends
-from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
-from dotenv import load_dotenv
 from typing import Optional
+from pony.orm.core import db_session
 
-from .services import create_user, get_jug_ids_by_community, get_user_hash, get_auth_token,\
-                        user_exists, get_jug_name_by_id, find_user, get_user_by_id, get_user_by_email
-from .api import login_and_get_session, fetch_data_for_jug, get_all_jug_ids
-from .models import db
-from .schemas import UserLogin, UserRegister
+from dotenv import load_dotenv
+from fastapi import FastAPI, HTTPException, Depends
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from starlette.middleware.cors import CORSMiddleware
+
+from .api import login_and_get_session, fetch_data_for_jug, get_jug_data, get_all_jug_ids
 from .auth import get_hash, decode_auth_token, generate_auth_token
-
+from .models import db, User, JugUser
+from .schemas import LinkJugsForm, UserLogin, UserRegister, JugLink
+from .services import (create_user, get_jug_ids_by_community, get_user_hash, user_exists, get_jug_name_by_id,
+                       get_user_by_email, get_user_by_id,
+                       unlink_jug_from_user_s,
+                       link_jugs_to_user_s)
 
 load_dotenv()
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 db.bind(
     provider='postgres',
@@ -26,10 +37,11 @@ db.bind(
 )
 db.generate_mapping(create_tables=True)
 
-
 get_bearer_token = HTTPBearer(auto_error=False)
+
+
 async def auth_user(
-    auth: Optional[HTTPAuthorizationCredentials] = Depends(get_bearer_token),
+        auth: Optional[HTTPAuthorizationCredentials] = Depends(get_bearer_token),
 ) -> str:
     if auth is None:
         raise HTTPException(status_code=401, detail='unauthorized token')
@@ -45,6 +57,16 @@ async def auth_user(
 @app.get("/")
 async def root():
     return {"message": "Hello World"}
+
+
+@app.post('/link-jug-to-user')
+async def link_jug_to_user(body: LinkJugsForm, user_id: str = Depends(auth_user)):
+    link_jugs_to_user_s(user_id, body.jugIds)
+
+
+@app.post('/unlink-jug-from-user')
+async def unlink_jug_from_user(body: JugLink, user_id: str = Depends(auth_user)):
+    unlink_jug_from_user_s(user_id, body.jugId)
 
 
 @app.post("/register")
@@ -90,6 +112,7 @@ async def get_community_jug_status(user_id: str = Depends(auth_user)):
         if jug_data is None:
             continue
         jug_data['name'] = get_jug_name_by_id(jug_id)
+        jug_data['id'] = jug_id
         devices_info.append(jug_data)
     return devices_info
 
@@ -102,3 +125,34 @@ async def check_token(user_id: str = Depends(auth_user)):
 async def get_all_jugs(user_id: str = Depends(auth_user)):
     session = login_and_get_session()
     return get_all_jug_ids(session)
+
+# example of using a protected route; the Depends(auth_user) part should be added to all protected routes
+# @app.get("/protected")
+# async def protected(user_id: str = Depends(auth_user)):
+
+#     user = get_user_by_id(user_id)
+
+#     return f"name={user.name} email={user.email}"
+
+@app.get("/historical-jug-data")
+async def get_historical_jug_data(juguser_id: int, timestamp: int):
+
+    # atm only works for one jug per user
+    # check if the user_id OWNS or follows the jugusers community
+
+    with db_session:
+        juguser = JugUser.get(id=juguser_id)
+        user = juguser.community.followers.order_by(User.id).first() # TODO fix
+        if user.community != juguser.community:
+            raise HTTPException(status_code=400, detail='unauthorized')
+        jugs = juguser.jugs
+
+        session = login_and_get_session()
+        # sorry neill
+
+        big_list = []
+        for jug in jugs:
+            big_list.extend(get_jug_data(session, jug, timestamp))
+
+
+        return sorted(big_list, key=lambda x: x['time'])

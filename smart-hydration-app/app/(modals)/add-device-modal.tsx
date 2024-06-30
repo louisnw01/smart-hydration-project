@@ -9,19 +9,22 @@ import {
     TextInput,
     SectionList,
     Pressable,
+    ActivityIndicator,
 } from "react-native";
 import { ScrollView } from "react-native";
 import { useAtomValue, useSetAtom } from "jotai";
-import { getAllJugsQAtom } from "@/atom/query";
+import { getAllJugsQAtom, linkJugToUserMAtom } from "@/atom/query";
 import { popupPageAtom } from "@/atom/nav";
 import colors from "@/colors";
 import StyledButton from "../../components/common/button";
 import { useNavigation } from "expo-router";
+import Loading from "@/components/common/loading";
 
 export default function MVPAddDeviceModal() {
     const { data, isLoading } = useAtomValue(getAllJugsQAtom);
     const navigation = useNavigation();
     const [selectedJugs, setSelectedJugs] = useState(new Set());
+    const { mutate: linkJugsToUser } = useAtomValue(linkJugToUserMAtom);
     const handleSelect = (jug_id: string) => {
         if (selectedJugs.has(jug_id)) {
             selectedJugs.delete(jug_id);
@@ -32,9 +35,11 @@ export default function MVPAddDeviceModal() {
     };
 
     const handlePress = () => {
-        alert(
-            `todo: add jugs ${Array.from(selectedJugs).join(", ")} to account`,
-        );
+        // alert(
+        //     `todo: add jugs ${Array.from(selectedJugs).join(", ")} to account`,
+        // );
+
+        linkJugsToUser(Array.from(selectedJugs));
 
         // code to add to account here
         navigation.goBack();
@@ -47,6 +52,8 @@ export default function MVPAddDeviceModal() {
                     this page is temporary, and will not be shown in production.
                 </Text>
             </View>
+
+            <Loading isLoading={isLoading} message="Getting all jug names.." />
 
             {data && (
                 <SectionList
