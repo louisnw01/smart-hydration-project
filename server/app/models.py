@@ -13,6 +13,7 @@ class User(db.Entity):
     hash = Required(str)
     jug_user = Optional('JugUser')
 
+
 class JugUser(db.Entity):
     id = PrimaryKey(int, auto=True)
     name = Required(str)
@@ -25,6 +26,7 @@ class JugUser(db.Entity):
     community = Optional('Community')
     user = Optional(User)
 
+
 class Jug(db.Entity):
     id = PrimaryKey(int, auto=True)
     smart_hydration_id = Required(str)
@@ -32,11 +34,13 @@ class Jug(db.Entity):
     name = Optional(str)
     owner = Optional(JugUser)
 
+
 class Community(db.Entity):
     id = PrimaryKey(int, auto=True)
     name = Required(str)
     jug_users = Set(JugUser)
     followers = Set(User)
+
 
 class Medication(db.Entity):
     id = PrimaryKey(int, auto=True)

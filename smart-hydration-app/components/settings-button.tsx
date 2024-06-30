@@ -1,4 +1,4 @@
-import { Text, Pressable} from "react-native";
+import { Text, Pressable } from "react-native";
 import { popupPageAtom } from "@/atom/nav";
 import { useSetAtom } from "jotai";
 
