@@ -6,3 +6,9 @@ export interface DeviceInfo {
     temperature: number,
     water_level: number,
 }
+
+export interface TrendsInfo {
+    time: string,
+    amount: number,
+    id: string,
+}

@@ -10,14 +10,17 @@ import {
 } from "react-native";
 import { useSetAtom, useAtomValue, useAtom } from "jotai";
 import { popupPageAtom } from "@/atom/nav";
-import { getJugDataQAtom } from "@/atom/query";
+import { getJugDataQAtom, unlinkJugFromUserMAtom } from "@/atom/query";
 import DeviceRow from "@/components/devices/device-row";
 import { useState } from "react";
 import StyledButton from "@/components/common/button";
+import { DeviceInfo } from "@/interfaces/device";
+import { useNavigation } from "expo-router";
+import Loading from "@/components/common/loading";
 
 export default function DevicesPage() {
-    const [refreshing, setRefreshing] = useState(false);
     const { data, isLoading, refetch } = useAtomValue(getJugDataQAtom);
+    const [refreshing, setRefreshing] = useState(false);
 
     const handleRefresh = () => {
         setRefreshing(true);
@@ -39,14 +42,10 @@ export default function DevicesPage() {
                 }
             >
                 <View className="mt-8 flex gap-6">
-                    {isLoading && (
-                        <View>
-                            <ActivityIndicator className="justify-center top-2/4" />
-                            <Text className="mt-16 flex justify-center text-center">
-                                Getting your jugs...
-                            </Text>
-                        </View>
-                    )}
+                    <Loading
+                        isLoading={isLoading}
+                        message="Getting your jugs.."
+                    />
 
                     {data &&
                         data.map((device, idx) => (

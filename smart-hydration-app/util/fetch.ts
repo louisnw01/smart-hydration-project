@@ -1,4 +1,5 @@
 // TODO server_url should be in .env
+
 const SERVER_URL = "http://localhost:8085";
 // const SERVER_URL = "http://18.133.247.202";
 
@@ -7,6 +8,9 @@ export const ENDPOINTS = {
     FETCH_COMMUNITY: "/community-jug-status",
     LOGIN: "/login",
     REGISTER: "/register",
+    UNLINK_JUG_FROM_USER: "/unlink-jug-from-user",
+    LINK_JUG_TO_USER: "/link-jug-to-user",
+    FETCH_HISTORICAL_JUG_DATA: "/historical-jug-data",
     GET_ALL_JUGS: "/get-all-jugs",
 };
 
@@ -35,7 +39,6 @@ export async function request(
             url += `${key}=${val}`;
         }
     }
-
     let headers = { "Content-Type": "application/json" };
 
     if (options.auth) {
