@@ -1,4 +1,5 @@
 // TODO server_url should be in .env
+
 const SERVER_URL = 'http://localhost:8085';
  
  
@@ -8,7 +9,8 @@ export const ENDPOINTS = {
     LOGIN: '/login',
     REGISTER: '/register',
     UNLINK_JUG_FROM_USER: '/unlink-jug-from-user',
-    LINK_JUG_TO_USER: '/link-jug-to-user'
+    LINK_JUG_TO_USER: '/link-jug-to-user',
+    FETCH_HISTORICAL_JUG_DATA: "/historical-jug-data",
 }
  
  
@@ -35,7 +37,7 @@ export async function request(endpoint: string, options: Partial<RequestOptions>
             url += `${key}=${val}`
         }
     }
-
+  
     let headers = {'Content-Type': 'application/json'};
 
     if (options.auth) {

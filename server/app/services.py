@@ -134,7 +134,7 @@ def get_jug_name_by_id(sh_jug_id):
     name = jug.name
     return name
 
-  
+
 # def get_community_jug_data(user_id):
 #     print('Getting data for ' + user_id)
 #     community = find_user(user_id).community
