@@ -14,10 +14,8 @@ import { getJugDataQAtom } from "@/atom/query";
 import DeviceRow from "@/components/devices/device-row";
 import { useState } from "react";
 import StyledButton from "@/components/common/button";
-import MVPAddDeviceModal from "@/components/devices/mvp-add-device-modal";
 
 export default function DevicesPage() {
-    const [popup, setPopup] = useAtom(popupPageAtom);
     const [refreshing, setRefreshing] = useState(false);
     const { data, isLoading, refetch } = useAtomValue(getJugDataQAtom);
 
@@ -40,16 +38,7 @@ export default function DevicesPage() {
                     />
                 }
             >
-                <PageHeading text="Devices">
-                    <Text
-                        className="text-3xl font-semibold"
-                        onPress={() => setPopup("devices")}
-                    >
-                        +
-                    </Text>
-                </PageHeading>
-
-                <View className="mt-16 flex gap-6">
+                <View className="mt-8 flex gap-6">
                     {isLoading && (
                         <View>
                             <ActivityIndicator className="justify-center top-2/4" />
@@ -67,12 +56,11 @@ export default function DevicesPage() {
                     <View className="flex flex-row justify-center">
                         <StyledButton
                             text="+ add a new device"
-                            onPress={() => setPopup("devices")}
+                            href="add-device-modal"
                         />
                     </View>
                 </View>
             </ScrollView>
-            <>{popup === "devices" && <MVPAddDeviceModal />}</>
         </PageWrapper>
     );
 }

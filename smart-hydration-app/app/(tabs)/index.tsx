@@ -15,27 +15,17 @@ export default function HomePage() {
     const popupPage = useAtomValue(popupPageAtom);
     return (
         <PageWrapper>
-            <PageHeading text="smart hydration">
+            {/* <PageHeading text="smart hydration">
                 <SettingsButton />
-            </PageHeading>
+            </PageHeading> */}
 
             <View className="flex justify-evenly h-full items-center">
                 <HydrationPercentage />
                 <Droplet />
 
                 <HydrationStatus />
-                <StyledButton text="+ add a drink" textSize="xl" />
+                <StyledButton text="+ add a drink" textSize="xl" href="home" />
             </View>
-
-            <>
-                {popupPage === "settings" && (
-                    <PopupPage>
-                        <OptionBlock text="Dark Mode" />
-                        <OptionBlock text="Notifications" />
-                        <OptionBlock text="Auto-Update" />
-                    </PopupPage>
-                )}
-            </>
         </PageWrapper>
     );
 }

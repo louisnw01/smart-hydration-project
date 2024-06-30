@@ -1,19 +1,40 @@
-import { GestureResponderEvent, Pressable, Text } from "react-native";
+import { Link } from "expo-router";
+import {
+    GestureResponderEvent,
+    Pressable,
+    StyleProp,
+    Text,
+    View,
+    ViewStyle,
+} from "react-native";
 
 interface ButtonProps {
     text: string;
-    onPress?: (event: GestureResponderEvent) => void;
-    color?: string;
+    href?: string;
     textSize?: "sm" | "md" | "lg" | "xl";
+    buttonClass?: string;
+    textClass?: string;
 }
-export default function StyledButton({ text, onPress, textSize }: ButtonProps) {
-    const textClass = textSize ? "text-" + textSize : undefined;
+export default function StyledButton({
+    text,
+    href,
+    textSize,
+    buttonClass,
+    textClass,
+}: ButtonProps) {
+    let finalTextClass = textSize ? "text-" + textSize : "";
+    finalTextClass += " " + textClass;
+
+    if (!buttonClass) {
+        buttonClass = "bg-gray-200";
+    }
+    const finalButtonClass =
+        "justify-center px-3 py-3 rounded-3xl " + buttonClass;
     return (
-        <Pressable
-            className="flex justify-center bg-gray-200 px-3 py-3 rounded-3xl"
-            onPress={onPress}
-        >
-            <Text className={textClass}>{text}</Text>
-        </Pressable>
+        <View className={finalButtonClass}>
+            <Link className={finalTextClass} href={href}>
+                {text}
+            </Link>
+        </View>
     );
 }

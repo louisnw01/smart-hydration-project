@@ -15,7 +15,6 @@
   },
   "dependencies": {
     "@expo/vector-icons": "^14.0.0",
-    "@react-navigation/native": "^6.0.2",
     "@shopify/react-native-skia": "1.2.3",
     "@tanstack/query-core": "^5.45.0",
     "expo": "~51.0.14",
