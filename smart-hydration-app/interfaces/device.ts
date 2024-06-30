@@ -5,4 +5,5 @@ export interface DeviceInfo {
     battery: number,
     temperature: number,
     water_level: number,
+    id: string,
 }

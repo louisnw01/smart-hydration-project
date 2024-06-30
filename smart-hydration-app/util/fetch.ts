@@ -1,15 +1,17 @@
 // TODO server_url should be in .env
 const SERVER_URL = 'http://localhost:8085';
-
-
+ 
+ 
 export const ENDPOINTS = {
     HELLO_WORLD: '/',
     FETCH_COMMUNITY: '/community-jug-status',
     LOGIN: '/login',
-    REGISTER: '/register'
+    REGISTER: '/register',
+    UNLINK_JUG_FROM_USER: '/unlink-jug-from-user',
+    LINK_JUG_TO_USER: '/link-jug-to-user'
 }
-
-
+ 
+ 
 interface RequestOptions {
     method: 'get' | 'post',
     query: {[key: string]: any},
@@ -17,9 +19,10 @@ interface RequestOptions {
     auth?: string,
 }
 
+
 export async function request(endpoint: string, options: Partial<RequestOptions>){
     let url = SERVER_URL+endpoint;
-
+ 
     if (options.query) {
         url += '?';
         let isFirstEntry = true;
@@ -44,6 +47,6 @@ export async function request(endpoint: string, options: Partial<RequestOptions>
         body: JSON.stringify(options.body),
         headers: headers,
     });
-
+ 
     return result;
 }
