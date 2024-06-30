@@ -7,8 +7,22 @@ import { useAtomValue, useSetAtom } from "jotai";
 import { authTokenAtom, isLoggedInAtom } from "@/atom/user";
 import OnboardingRouter from "@/components/onboarding-router";
 
+import { Provider } from 'jotai/react'
+import { useHydrateAtoms } from 'jotai/react/utils'
+import {
+  QueryClient,
+  QueryClientProvider,
+} from '@tanstack/react-query'
+import { queryClientAtom } from 'jotai-tanstack-query'
 
-export default function Index() {
+const queryClient = new QueryClient()
+
+const HydrateAtoms = ({ children }) => {
+  useHydrateAtoms([[queryClientAtom, queryClient]])
+  return children
+}
+
+function App () {
     // const setAuthToken = useSetAtom(authTokenAtom);
     // setAuthToken(null);
     const isLoggedIn = useAtomValue(isLoggedInAtom);
@@ -18,12 +32,25 @@ export default function Index() {
     }
 
     return (
-        <GestureHandlerRootView>
-            <View className="flex flex-1 justify-between h-full">
-                <PageRouter />
-                <NavigationBar />
-            </View>
-        </GestureHandlerRootView>
+      <View className="flex flex-1 justify-between h-full">
+        <PageRouter/>
+        <NavigationBar/>
+      </View>
+    )
+
+}
+
+export default function Index() {
+    return (
+        <QueryClientProvider client={queryClient}>
+        <Provider>
+          <HydrateAtoms>
+            <GestureHandlerRootView>
+              <App/>
+            </GestureHandlerRootView>
+          </HydrateAtoms>
+        </Provider>
+      </QueryClientProvider>
     );
 
 }
