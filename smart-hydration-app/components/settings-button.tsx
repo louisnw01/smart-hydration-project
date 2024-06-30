@@ -1,13 +1,13 @@
 import { Text, Pressable } from "react-native";
 import { popupPageAtom } from "@/atom/nav";
 import { useSetAtom } from "jotai";
-
+import { Link } from "expo-router";
 
 export default function SettingsButton() {
-    const setButtonAction = useSetAtom(popupPageAtom)
+    const setButtonAction = useSetAtom(popupPageAtom);
     return (
-        <Pressable onPress={() => setButtonAction("settings")}>
-            <Text>Settings</Text>
-        </Pressable>
-    )
+        <Link href="/settings-modal" className="dark:text-white">
+            Settings
+        </Link>
+    );
 }
