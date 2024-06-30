@@ -5,5 +5,10 @@ export interface DeviceInfo {
     battery: number,
     temperature: number,
     water_level: number,
+}
+
+export interface TrendsInfo {
+    time: string,
+    amount: number,
     id: string,
 }
