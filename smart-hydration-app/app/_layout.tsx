@@ -1,26 +1,26 @@
 import NavigationBar from "@/components/nav";
 import "../global.css";
-import { Appearance, Dimensions, View, StyleSheet, Text } from "react-native";
+import {Appearance, Dimensions, View, StyleSheet, Text} from "react-native";
 import PageRouter from "@/components/page-router";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { Provider, useAtomValue, useSetAtom } from "jotai";
-import { authTokenAtom, isLoggedInAtom } from "@/atom/user";
+import {GestureHandlerRootView} from "react-native-gesture-handler";
+import {Provider, useAtomValue, useSetAtom} from "jotai";
+import {authTokenAtom, isLoggedInAtom} from "@/atom/user";
 import OnboardingRouter from "@/components/onboarding-router";
-import { getItemAsync, deleteItemAsync } from "expo-secure-store";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { request } from "@/util/fetch";
+import {getItemAsync, deleteItemAsync} from "expo-secure-store";
+import {useSafeAreaInsets} from "react-native-safe-area-context";
+import {request} from "@/util/fetch";
 import ModalRouter from "@/components/modal-router";
 
-import { SharedValue } from "react-native-gesture-handler/lib/typescript/handlers/gestures/reanimatedWrapper";
-import { Stack, useRouter } from "expo-router";
-import { useHydrateAtoms } from "jotai/react/utils";
-import { queryClientAtom } from "jotai-tanstack-query";
-import { useEffect } from "react";
-import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
+import {SharedValue} from "react-native-gesture-handler/lib/typescript/handlers/gestures/reanimatedWrapper";
+import {Stack, useRouter} from "expo-router";
+import {useHydrateAtoms} from "jotai/react/utils";
+import {queryClientAtom} from "jotai-tanstack-query";
+import {useEffect} from "react";
+import {QueryClientProvider, QueryClient} from "@tanstack/react-query";
 
 const queryClient = new QueryClient();
 
-const HydrateAtoms = ({ children }) => {
+const HydrateAtoms = ({children}) => {
     useHydrateAtoms([[queryClientAtom, queryClient]]);
     return children;
 };
@@ -54,7 +54,7 @@ function WrappedIndex() {
 
     return (
         <Stack>
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen name="(tabs)" options={{headerShown: false}}/>
             <Stack.Screen
                 name="(modals)"
                 options={{
@@ -62,7 +62,7 @@ function WrappedIndex() {
                     presentation: "formSheet",
                 }}
             />
-            <Stack.Screen name="login" options={{ headerShown: false }} />
+            <Stack.Screen name="login" options={{headerShown: false}}/>
         </Stack>
     );
 }
@@ -74,7 +74,7 @@ export default function Index() {
         <QueryClientProvider client={queryClient}>
             <Provider>
                 <HydrateAtoms>
-                    <WrappedIndex />
+                    <WrappedIndex/>
                 </HydrateAtoms>
             </Provider>
         </QueryClientProvider>
