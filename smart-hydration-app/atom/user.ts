@@ -13,3 +13,5 @@ export const authTokenAtom = atom(
 );
 
 export const isLoggedInAtom = atom((get) => get(authTokenAtom) != null);
+
+export const userNameAtom = atom<string | null>(null);

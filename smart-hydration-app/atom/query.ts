@@ -8,6 +8,7 @@ import { ENDPOINTS, request } from "@/util/fetch";
 import { DeviceInfo, TrendsInfo } from "@/interfaces/device";
 import { registerInfoAtom } from "@/components/onboarding-router";
 import { useAtomValue, useSetAtom } from "jotai";
+import { User } from "@/interfaces/user";
 
 export const linkJugToUserMAtom = atomWithMutation((get) => ({
     mutationKey: ["link-jug-to-user", get(authTokenAtom)],
@@ -65,6 +66,22 @@ export const getJugDataQAtom = atomWithQuery((get) => ({
 
         if (!response.ok) {
             throw new Error("Jug Data Could Not Be Found");
+        }
+
+        return await response.json();
+    },
+    enabled: !!get(authTokenAtom),
+}));
+
+export const getUserQAtom = atomWithQuery((get) => ({
+    queryKey: ["user", get(authTokenAtom)],
+    queryFn: async ({ queryKey: [, token] }): Promise<string> => {
+        const response = await request(ENDPOINTS.FETCH_USER, {
+            auth: token as string,
+        });
+
+        if (!response.ok) {
+            throw new Error("User Could Not Be Found");
         }
 
         return await response.json();
