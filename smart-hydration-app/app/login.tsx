@@ -5,12 +5,13 @@ import { useAtomValue, useSetAtom } from "jotai";
 import { loginMAtom } from "@/atom/query";
 
 import { authTokenAtom } from "@/atom/user";
-import { onboardingRouterAtom } from "@/components/onboarding-router";
 import PageWrapper from "@/components/common/page-wrapper";
 import TextInputBox from "@/components/text-input-box";
+import Drop from "@/assets/svgs/water-drop-svgrepo-com.svg";
+import { useRouter } from "expo-router";
 
 export default function LoginPage() {
-    const setPage = useSetAtom(onboardingRouterAtom);
+    const router = useRouter();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const setAuthToken = useSetAtom(authTokenAtom);
@@ -19,6 +20,7 @@ export default function LoginPage() {
 
     if (data) {
         setAuthToken(data);
+        router.replace("(tabs)");
     }
 
     const handleSubmit = () => {

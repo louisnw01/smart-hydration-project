@@ -3,10 +3,10 @@ import {
     atomWithMutation,
     queryClientAtom,
 } from "jotai-tanstack-query";
-import { authTokenAtom } from "./user";
+import { authTokenAtom, registerInfoAtom } from "./user";
 import { ENDPOINTS, request } from "@/util/fetch";
 import { DeviceInfo, TrendsInfo } from "@/interfaces/device";
-import { registerInfoAtom } from "@/components/onboarding-router";
+
 import { useAtomValue, useSetAtom } from "jotai";
 
 export const linkJugToUserMAtom = atomWithMutation((get) => ({
