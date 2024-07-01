@@ -5,27 +5,28 @@ from .models import User, Jug, JugUser, Community
 
 @db_session
 def create_user(name, email, hash):
-    User(name=name, email=email, hash=hash)
+    user = User(name=name, email=email, hash=hash)
     commit()
+    return user
 
 
-@db_session
-def create_jug_user(
-    name: str,
-    user_id: int | None = None,
-    **kwargs
-):
-    # if community_id is None and user_id is None:
-        # raise Exception("jug user must be assigned to a community or a user")
+# @db_session
+# def create_jug_user(
+#     name: str,
+#     user_id: int | None = None,
+#     **kwargs
+# ):
+#     # if community_id is None and user_id is None:
+#         # raise Exception("jug user must be assigned to a community or a user")
 
 
-    user = User[user_id]
-    # elif community_id:
-        # community = Community[community_id]
+#     user = User[user_id]
+#     # elif community_id:
+#         # community = Community[community_id]
 
-    jug_user = JugUser(name=name, user=user, **kwargs)
-    commit()
-    return jug_user.id
+#     jug_user = JugUser(name=name, user=user, **kwargs)
+#     commit()
+#     return jug_user.id
 
 
 @db_session
@@ -51,8 +52,8 @@ def find_user(name):
 
 
 @db_session
-def create_jug_user(name, dob, community):
-    JugUser(name=name, dob=dob, community=community)
+def create_jug_user(user):
+    JugUser(name=user.name, user=user, community=user.community)
     commit()
 
 
@@ -77,7 +78,7 @@ def create_jug(sh_id, qr_hash, name):
 def link_jugs_to_user_s(user_id, jug_ids):
     user = User.get(id=user_id)
     if not user.jug_user:
-        create_jug_user(user.name, user.dob, user.community)
+        create_jug_user(user)
 
     jug_user = user.jug_user
     link_jugs_to_jug_user(jug_user.id, jug_ids)
