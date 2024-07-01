@@ -1,6 +1,6 @@
 import { View, Pressable, Text, ScrollView } from "react-native";
 
-import { useState } from "react";
+import { useState} from "react";
 import { useAtomValue, useSetAtom } from "jotai";
 import { loginMAtom } from "@/atom/query";
 
@@ -8,6 +8,7 @@ import { authTokenAtom } from "@/atom/user";
 import { onboardingRouterAtom } from "@/components/onboarding-router";
 import PageWrapper from "@/components/common/page-wrapper";
 import TextInputBox from "@/components/text-input-box";
+import Drop from "../assets/svgs/water-drop-svgrepo-com.svg";
 
 export default function LoginPage() {
     const setPage = useSetAtom(onboardingRouterAtom);
