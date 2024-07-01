@@ -4,7 +4,7 @@ import { Appearance, Dimensions, View, StyleSheet, Text } from "react-native";
 import PageRouter from "@/components/page-router";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Provider, useAtomValue, useSetAtom } from "jotai";
-import { authTokenAtom, isLoggedInAtom } from "@/atom/user";
+import { authTokenAtom, isLoggedInAtom, userNameAtom } from "@/atom/user";
 import OnboardingRouter from "@/components/onboarding-router";
 import { getItemAsync, deleteItemAsync } from "expo-secure-store";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -17,6 +17,7 @@ import { useHydrateAtoms } from "jotai/react/utils";
 import { queryClientAtom } from "jotai-tanstack-query";
 import { useEffect } from "react";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
+import { getUserQAtom } from "@/atom/query";
 
 const queryClient = new QueryClient();
 
@@ -27,8 +28,10 @@ const HydrateAtoms = ({ children }) => {
 
 function WrappedIndex() {
     const setAuthToken = useSetAtom(authTokenAtom);
+    const setUserName = useSetAtom(userNameAtom);
     const isLoggedIn = useAtomValue(isLoggedInAtom);
     const router = useRouter();
+    const {data, isSuccess, refetch} = useAtomValue(getUserQAtom);
 
     const getTokenFromStorage = async () => {
         const token = await getItemAsync("auth_token");
@@ -42,6 +45,8 @@ function WrappedIndex() {
         });
         if (result.ok) {
             setAuthToken(token);
+            const name = (await refetch()).data;
+            setUserName(name as string);
         } else {
             deleteItemAsync("auth_token");
             router.replace("login");

@@ -14,7 +14,7 @@ from .schemas import LinkJugsForm, UserLogin, UserRegister, JugLink
 from .services import (create_user, get_jug_ids_by_community, get_user_hash, user_exists, get_jug_name_by_id,
                        get_user_by_email, get_user_by_id,
                        unlink_jug_from_user_s,
-                       link_jugs_to_user_s)
+                       link_jugs_to_user_s, get_user_name)
 
 load_dotenv()
 
@@ -116,15 +116,23 @@ async def get_community_jug_status(user_id: str = Depends(auth_user)):
         devices_info.append(jug_data)
     return devices_info
 
+
 @app.post("/check-token")
 async def check_token(user_id: str = Depends(auth_user)):
     return {"status": "success"}
+
 
 # Temporary for MVP
 @app.get("/get-all-jugs")
 async def get_all_jugs(user_id: str = Depends(auth_user)):
     session = login_and_get_session()
     return get_all_jug_ids(session)
+
+
+@app.get("/user")
+async def get_user(user_id: str = Depends(auth_user)):
+    return get_user_name(user_id)
+
 
 # example of using a protected route; the Depends(auth_user) part should be added to all protected routes
 # @app.get("/protected")
@@ -136,13 +144,12 @@ async def get_all_jugs(user_id: str = Depends(auth_user)):
 
 @app.get("/historical-jug-data")
 async def get_historical_jug_data(juguser_id: int, timestamp: int):
-
     # atm only works for one jug per user
     # check if the user_id OWNS or follows the jugusers community
 
     with db_session:
         juguser = JugUser.get(id=juguser_id)
-        user = juguser.community.followers.order_by(User.id).first() # TODO fix
+        user = juguser.community.followers.order_by(User.id).first()  # TODO fix
         if user.community != juguser.community:
             raise HTTPException(status_code=400, detail='unauthorized')
         jugs = juguser.jugs
@@ -153,6 +160,5 @@ async def get_historical_jug_data(juguser_id: int, timestamp: int):
         big_list = []
         for jug in jugs:
             big_list.extend(get_jug_data(session, jug, timestamp))
-
 
         return sorted(big_list, key=lambda x: x['time'])
