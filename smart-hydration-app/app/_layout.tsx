@@ -31,7 +31,7 @@ function WrappedIndex() {
     const setUserName = useSetAtom(userNameAtom);
     const isLoggedIn = useAtomValue(isLoggedInAtom);
     const router = useRouter();
-    const {data, isSuccess, refetch} = useAtomValue(getUserQAtom);
+    const {data, refetch} = useAtomValue(getUserQAtom);
 
     const getTokenFromStorage = async () => {
         const token = await getItemAsync("auth_token");

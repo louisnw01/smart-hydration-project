@@ -7,14 +7,14 @@ from fastapi import FastAPI, HTTPException, Depends
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from starlette.middleware.cors import CORSMiddleware
 
-from .api import login_and_get_session, fetch_data_for_jug, get_jug_data, get_all_jug_ids
+from .api import login_and_get_session, fetch_data_for_jug, get_jug_data, get_all_jug_ids, get_todays_intake
 from .auth import get_hash, decode_auth_token, generate_auth_token
 from .models import db, User, JugUser
 from .schemas import LinkJugsForm, UserLogin, UserRegister, JugLink
 from .services import (create_user, get_jug_ids_by_community, get_user_hash, user_exists, get_jug_name_by_id,
                        get_user_by_email, get_user_by_id,
                        unlink_jug_from_user_s,
-                       link_jugs_to_user_s, get_user_name)
+                       link_jugs_to_user_s, get_user_name, get_users_jugs)
 
 load_dotenv()
 
@@ -162,3 +162,18 @@ async def get_historical_jug_data(juguser_id: int, timestamp: int):
             big_list.extend(get_jug_data(session, jug, timestamp))
 
         return sorted(big_list, key=lambda x: x['time'])
+
+
+@app.get("/todays-total-intake")
+async def get_todays_total_intake(user_id: str = Depends(auth_user)):
+    with db_session:
+        jug_sh_ids = get_users_jugs(user_id)
+
+        session = login_and_get_session()
+
+        intake_total = 0
+
+        for sh_id in jug_sh_ids:
+            intake_total += get_todays_intake(session, sh_id)
+
+    return intake_total

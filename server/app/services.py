@@ -160,3 +160,10 @@ def get_user_by_email(email):
 @db_session
 def get_user_name(user_id):
     return User.get(id=user_id).name
+
+
+@db_session
+def get_users_jugs(user_id):
+    jug_user = User.get(id=user_id).jug_user
+    jug_list = select(j.smart_hydration_id for j in Jug if (jug_user == j.owner))
+    return jug_list
