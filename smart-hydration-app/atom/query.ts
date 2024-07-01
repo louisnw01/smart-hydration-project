@@ -102,6 +102,23 @@ export const getHydrationAtom = atomWithQuery((get) => ({
         return await response.json();
     },
 }));
+
+export const getTodaysIntakeAtom = atomWithQuery((get) => ({
+    queryKey: ["todays-total-intake", get(authTokenAtom)],
+    queryFn: async ({ queryKey: [, token] }): Promise<number> => {
+        const response = await request(ENDPOINTS.GET_TODAYS_INTAKE, {
+            auth: token as string,
+        });
+
+        if (!response.ok) {
+            throw new Error("User Total Intake Could Not Be Found");
+        }
+
+        return await response.json();
+    },
+    enabled: !!get(authTokenAtom),
+}));
+
 export const loginMAtom = atomWithMutation((get) => ({
     mutationKey: ["login"],
     mutationFn: async (formData: { email: string; password: string }) => {

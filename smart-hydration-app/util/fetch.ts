@@ -13,6 +13,7 @@ export const ENDPOINTS = {
     FETCH_HISTORICAL_JUG_DATA: "/historical-jug-data",
     GET_ALL_JUGS: "/get-all-jugs",
     FETCH_USER: "/user",
+    GET_TODAYS_INTAKE: "/todays-total-intake"
 };
 
 interface RequestOptions {

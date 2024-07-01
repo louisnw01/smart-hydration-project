@@ -6,7 +6,6 @@ from dotenv import load_dotenv
 import json
 import datetime as dt
 
-
 load_dotenv()
 
 
@@ -77,10 +76,13 @@ def get_all_jug_ids(session):
         "fake": [x['identifier'] for x in fake_jugs]
     }
 
+
 def get_jug_data(session, jug, start_timestamp):
     # get a list of all hydration events for the jug for the past year
     # TODO convert start_timestamp to datetime. fromTimestamp
-    start_date = dt.datetime.fromtimestamp(start_timestamp)
+    start_date = dt.datetime.fromtimestamp(start_timestamp/1000)
+    print(start_timestamp/1000)
+    print("start_date = " + start_date.isoformat())
 
     data = query(session, f'/data/device/{jug.smart_hydration_id}/events/hydration?maxCount=1000')
     if data is None:
@@ -88,14 +90,17 @@ def get_jug_data(session, jug, start_timestamp):
     # 2024-06-21T12:09:32.476000
     # split the array
 
-#  iso_date = dt.datetime.fromisoformat(row['timestamp'])
-# ValueError: Invalid isoformat string: '2023-07-06T06:43:04.000000Z'
+    #  iso_date = dt.datetime.fromisoformat(row['timestamp'])
+    # ValueError: Invalid isoformat string: '2023-07-06T06:43:04.000000Z'
 
     aggs = []
     for row in data:
         if row['type'] != 'DRINK':
             continue
         iso_date = dt.datetime.fromisoformat(row['timestamp'].replace('Z', ''))
+        is_today = iso_date.date() > dt.datetime.today().date()
+        print(iso_date)
+        print(is_today)
 
         aggs.append({
             'time': iso_date.timestamp(),
@@ -103,3 +108,22 @@ def get_jug_data(session, jug, start_timestamp):
             'name': jug.name,
         })
     return aggs
+
+
+def get_todays_intake(session, jug):
+    dt.date.today()
+
+    data = query(session, f'/data/device/{jug}/events/hydration?maxCount=1000')
+    if data is None:
+        return []
+
+    total_intake = 0
+    for row in data:
+        if ((row['type'] != 'DRINK') |
+                (dt.datetime.fromisoformat(row['timestamp'].replace('Z', '')).date() < dt.datetime.today().date())):
+            continue
+
+        total_intake -= row['water_delta']
+
+    return total_intake
+
