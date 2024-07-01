@@ -1,6 +1,6 @@
 import { View, Pressable, Text, ScrollView } from "react-native";
 
-import { useState } from "react";
+import { useState} from "react";
 import { useAtomValue, useSetAtom } from "jotai";
 import { loginMAtom } from "@/atom/query";
 
