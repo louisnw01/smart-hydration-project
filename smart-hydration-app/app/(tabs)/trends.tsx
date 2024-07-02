@@ -103,28 +103,26 @@ function BarChart() {
     // alert(JSON.stringify(dateData));
 
     return (
-        <VictoryContainer responsive={true}>
-            <VictoryChart
-                theme={custom}
-                containerComponent={
-                    <VictoryZoomContainer zoomDimension="x" allowPan={true} />
-                }
-                domainPadding={{ x: 20 }}
-                padding={{ bottom: 130, left: 50, top: 30, right: 60 }}
-            >
-                <VictoryBar
-                    style={{ data: { fill: "#5cb5e1" } }}
-                    data={memoedData}
-                    scale={{ x: "time" }}
-                    cornerRadius={4}
-                />
-                <VictoryLine
-                    data={
-                        memoedData?.map((row) => ({ x: row.x, y: 2200 })) ?? []
-                    }
-                />
-            </VictoryChart>
-        </VictoryContainer>
+        // <VictoryContainer responsive={true}>
+        <VictoryChart
+            theme={custom}
+            // containerComponent={
+            //     <VictoryZoomContainer zoomDimension="x" allowPan={true} />
+            // }
+            domainPadding={{ x: 20 }}
+            padding={{ bottom: 130, left: 50, top: 30, right: 60 }}
+        >
+            <VictoryBar
+                style={{ data: { fill: "#5cb5e1" } }}
+                data={memoedData}
+                scale={{ x: "time" }}
+                cornerRadius={4}
+            />
+            <VictoryLine
+                data={memoedData?.map((row) => ({ x: row.x, y: 2200 })) ?? []}
+            />
+        </VictoryChart>
+        // {/* </VictoryContainer> */ }
     );
 }
 
