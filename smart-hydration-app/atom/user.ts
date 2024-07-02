@@ -1,22 +1,33 @@
 import { atom } from "jotai";
-import { atomEffect } from "jotai-effect";
-import { getItemAsync, setItemAsync } from "expo-secure-store"
+import {
+    getItem,
+    setItem,
+    setItemAsync,
+    deleteItemAsync,
+} from "expo-secure-store";
 
-const _authTokenAtom = atom<string|null>(null);
+import { atomWithStorage, createJSONStorage } from "jotai/vanilla/utils";
 
-export const authTokenAtom = atom((get) => get(_authTokenAtom),
-async (get, set, update: string) => {
-    set(_authTokenAtom, update);
-    setItemAsync('auth_token', update);
-    }
+const _authTokenAtom = atom<string | null>(null);
+
+export const authTokenAtom = atom(
+    (get) => get(_authTokenAtom),
+    async (get, set, update: string) => {
+        set(_authTokenAtom, update);
+        setItemAsync("auth_token", update);
+    },
 );
 
 export const isLoggedInAtom = atom((get) => get(authTokenAtom) != null);
 
-export const authTokenInitEAtom = atomEffect((get, set) => {
-    getItemAsync('auth_token').then((token) => {
-        if (token) {
-            set(authTokenAtom, token);
-        }
-    })
-})
+export const userNameAtom = atom<string | null>(null);
+export const registerInfoAtom = atom<Partial<RegistrationInfo>>({});
+
+// Stored values that persist between open/closing the app
+const storage = createJSONStorage(() => ({
+    getItem: getItem,
+    setItem: setItem,
+    removeItem: deleteItemAsync,
+}));
+
+export const colorSchemeAtom = atomWithStorage("color-scheme", false, storage);

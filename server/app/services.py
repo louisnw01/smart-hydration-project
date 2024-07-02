@@ -1,8 +1,6 @@
-import os
-from dotenv import load_dotenv
-from .models import db, User, Jug, JugUser, Community
-from pony.orm.core import commit, get, select, db_session, set_sql_debug, show
-import json
+from pony.orm.core import commit, get, select, db_session
+
+from .models import User, Jug, JugUser, Community
 
 
 @db_session
@@ -12,23 +10,23 @@ def create_user(name, email, hash):
     return user
 
 
-@db_session
-def create_jug_user(
-    name: str,
-    user_id: int | None = None,
-    **kwargs
-):
-    # if community_id is None and user_id is None:
-        # raise Exception("jug user must be assigned to a community or a user")
+# @db_session
+# def create_jug_user(
+#     name: str,
+#     user_id: int | None = None,
+#     **kwargs
+# ):
+#     # if community_id is None and user_id is None:
+#         # raise Exception("jug user must be assigned to a community or a user")
 
 
-    user = User[user_id]
-    # elif community_id:
-        # community = Community[community_id]
+#     user = User[user_id]
+#     # elif community_id:
+#         # community = Community[community_id]
 
-    jug_user = JugUser(name=name, user=user, **kwargs)
-    commit()
-    return jug_user.id
+#     jug_user = JugUser(name=name, user=user, **kwargs)
+#     commit()
+#     return jug_user.id
 
 
 @db_session
@@ -78,6 +76,68 @@ def find_community(name):
     return result
 
 @db_session
+def create_jug_user(user):
+    JugUser(name=user.name, user=user, community=user.community)
+    commit()
+
+
+@db_session
+def create_community(name):
+    Community(name=name)
+    commit()
+
+
+@db_session
+def get_community_id(name):
+    return Community.get(name=name).id
+
+
+@db_session
+def create_jug(sh_id, qr_hash, name):
+    Jug(smart_hydration_id=sh_id, qr_hash=qr_hash, name=name)
+    commit()
+
+
+@db_session
+def link_jugs_to_user_s(user_id, jug_ids):
+    user = User.get(id=user_id)
+    if not user.jug_user:
+        create_jug_user(user)
+
+    jug_user = user.jug_user
+    link_jugs_to_jug_user(jug_user.id, jug_ids)
+
+
+@db_session
+def unlink_jug_from_user_s(user_id, jug_id):
+    jug_user = User.get(id=user_id).jug_user
+    unlink_jug_from_jug_user(jug_user.id, jug_id)
+
+
+@db_session
+def link_jugs_to_jug_user(jug_user_id, jug_ids):
+    jugs = select(j for j in Jug if j.smart_hydration_id in jug_ids)
+    JugUser.get(id=jug_user_id).jugs.add(jugs)
+    commit()
+
+
+@db_session
+def unlink_jug_from_jug_user(jug_user_id, jug_id):
+    jug = Jug.get(smart_hydration_id=jug_id)
+    JugUser.get(id=jug_user_id).jugs.remove(jug)
+    commit()
+
+
+@db_session
+def get_jug_id(sh_id):
+    return Jug.get(smart_hydration_id=sh_id).id
+
+
+@db_session
+def get_jug_user_id(name):
+    return JugUser.get(name=name).id
+
+
 def has_access_to_jug(user, sh_jug_id):
     relevant_jug = getattr(get(j for j in Jug if j.smart_hydration_id == sh_jug_id), 'owner')
     jug_community = relevant_jug.community
@@ -116,6 +176,19 @@ def get_jug_name_by_id(sh_jug_id):
 def get_user_by_id(user_id):
     return User.get(id=user_id)
 
+
 @db_session
 def get_user_by_email(email):
     return User.get(email=email)
+
+
+@db_session
+def get_user_name(user_id):
+    return User.get(id=user_id).name
+
+
+@db_session
+def get_users_jugs(user_id):
+    jugs = User.get(id=user_id).jug_user.jugs
+    # jug_list = select(j.smart_hydration_id for j in Jug if (jug_user == j.owner))
+    return jugs
