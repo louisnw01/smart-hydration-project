@@ -6,7 +6,7 @@ dev:
 	source .venv/bin/activate && fastapi dev --port 8085 app/main.py
 
 run:
-	docker run -d --name $(CONTAINER_NAME) -p 8085:80 $(IMAGE_NAME)
+	docker run -d --name $(CONTAINER_NAME) -p 80:80 $(IMAGE_NAME)
 
 build:
 	docker build -t $(IMAGE_NAME) .
