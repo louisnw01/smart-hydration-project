@@ -1,6 +1,5 @@
 import { View, Text, Pressable, Appearance } from "react-native";
 import { useAtom, useAtomValue } from "jotai";
-import { popupPageAtom, selectedPageAtom } from "@/atom/nav";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 function NavItem({ text }: { text: string }) {
@@ -33,7 +32,6 @@ function NavItem({ text }: { text: string }) {
 }
 
 export default function NavigationBar() {
-    const popupShown = useAtomValue(popupPageAtom) !== "none";
     const insets = useSafeAreaInsets();
 
     if (popupShown) {
