@@ -24,6 +24,7 @@ export default function DeviceInfoModal() {
     const navigation = useNavigation();
     const device = useAtomValue(selectedDeviceAtom);
     const { mutate: unlinkJugFromUser } = useAtomValue(unlinkJugFromUserMAtom);
+
     if (!device) return;
     return (
         <View className="flex flex-row justify-center py-20">
