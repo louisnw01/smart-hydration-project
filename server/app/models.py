@@ -32,7 +32,7 @@ class Jug(db.Entity):
     smart_hydration_id = Required(str)
     qr_hash = Required(str)
     name = Optional(str)
-    owner = Optional(JugUser)
+    owners = Set('JugUser')
 
 
 class Community(db.Entity):
@@ -45,3 +45,11 @@ class Community(db.Entity):
 class Medication(db.Entity):
     id = PrimaryKey(int, auto=True)
     name = Required(str)
+
+class Test1(db.Entity):
+    id = PrimaryKey(int, auto=True)
+    my_test_2s = Set('Test2')
+
+class Test2(db.Entity):
+    id = PrimaryKey(int, auto=True)
+    my_test_1s = Set('Test1')

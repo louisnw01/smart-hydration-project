@@ -1,6 +1,8 @@
 import "../global.css";
+
 import { Provider, useAtomValue, useSetAtom } from "jotai";
 import { authTokenAtom, isLoggedInAtom } from "@/atom/user";
+
 import { Stack, useRouter } from "expo-router";
 import { useHydrateAtoms } from "jotai/react/utils";
 import { queryClientAtom } from "jotai-tanstack-query";
@@ -10,9 +12,11 @@ import "react-native-reanimated";
 import { deleteItemAsync, getItemAsync } from "expo-secure-store";
 import { request } from "@/util/fetch";
 import { useEffect } from "react";
+import { getUserQAtom } from "@/atom/query";
+
 const queryClient = new QueryClient();
 
-const HydrateAtoms = ({ children }) => {
+const HydrateAtoms = ({children}) => {
     useHydrateAtoms([[queryClientAtom, queryClient]]);
     return children;
 };
@@ -21,8 +25,10 @@ function WrappedIndex() {
     useAtomValue(colorSchemeEAtom);
 
     const setAuthToken = useSetAtom(authTokenAtom);
+    const setUserName = useSetAtom(userNameAtom);
     const isLoggedIn = useAtomValue(isLoggedInAtom);
     const router = useRouter();
+    const {data, refetch} = useAtomValue(getUserQAtom);
 
     const getTokenFromStorage = async () => {
         const token = await getItemAsync("auth_token");
@@ -36,6 +42,8 @@ function WrappedIndex() {
         });
         if (result.ok) {
             setAuthToken(token);
+            const name = (await refetch()).data;
+            setUserName(name as string);
         } else {
             deleteItemAsync("auth_token");
             router.replace("onboarding/login-register");
@@ -73,7 +81,7 @@ export default function Index() {
         <QueryClientProvider client={queryClient}>
             <Provider>
                 <HydrateAtoms>
-                    <WrappedIndex />
+                    <WrappedIndex/>
                 </HydrateAtoms>
             </Provider>
         </QueryClientProvider>

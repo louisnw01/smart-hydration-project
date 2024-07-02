@@ -92,6 +92,7 @@ export default function DeviceInfoModal() {
     const router = useRouter();
     const device = useAtomValue(selectedDeviceAtom);
     const { mutate: unlinkJugFromUser } = useAtomValue(unlinkJugFromUserMAtom);
+
     if (!device) return;
     return (
         <View className="mt-16 mx-5">
