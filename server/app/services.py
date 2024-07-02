@@ -47,19 +47,16 @@ def get_auth_token(email):
     pass
 
 @db_session
-def delete_user(user_name, email,hash):
-    user = User.get(name=user_name,email=email,hash=hash)
+def delete_user(user_id):
+    user = User.get(id=user_id)
     #if user is found get community associated with user in user.community
     if user:
-        community_id = user.community
-        #fetch community object using community's id community_id.id as community in USer model links to Community model
-        if community_id:
-            community = Community.get(id=community_id.id)
-            if community:
-                jug_user = JugUser.get(id=community_id.id)
-                if jug_user:
-                    jug_user.delete()
-                community.delete()
+        community = Community.get(id=user.community.id)
+        if community:
+            jug_user = JugUser.get(id=user.community.id)
+            if jug_user:
+                jug_user.delete()
+            community.delete()
         user.delete()
 
 
