@@ -31,7 +31,6 @@ export default function HomePage() {
         setRefreshing(false);
     }
 
-
     return (
         <PageWrapper>
             {/* <PageHeading text="smart hydration">

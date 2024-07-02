@@ -1,11 +1,11 @@
-import { authTokenAtom } from "@/atom/user";
+import { authTokenAtom, colorSchemeAtom } from "@/atom/user";
 import OptionBlock from "@/components/common/option-block";
 import { useRouter } from "expo-router";
 import { atom, useSetAtom } from "jotai";
-import { Pressable, Text, View } from "react-native";
+import { Appearance, Pressable, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-
-const colorSchemeAtom = atom<boolean>(false);
+import { getItemAsync, setItemAsync, deleteItemAsync } from "expo-secure-store";
+import { atomWithStorage, createJSONStorage } from "jotai/vanilla/utils";
 
 export default function SettingsModal() {
     const insets = useSafeAreaInsets();
@@ -23,7 +23,7 @@ export default function SettingsModal() {
                 <OptionBlock text="Dark Mode" atom={colorSchemeAtom} />
             </View>
             <View className="gap-5">
-                <View className="w-full h-[1px] bg-gray-300" />
+                <View className="w-full h-[1px] bg-gray-300 dark:bg-neutral-700" />
                 <Pressable
                     className="items-center bg-red rounded-xl px-7 py-3"
                     onPress={() => {
