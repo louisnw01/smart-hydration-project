@@ -4,9 +4,14 @@ import { useSetAtom } from "jotai";
 import TextInputBox from "@/components/text-input-box";
 import { registerInfoAtom } from "@/atom/user";
 import GenericOnboardContent from "@/components/generic-onboard-content";
+import { useRouter } from "expo-router";
 
 export default function RegisterPage() {
+<<<<<<< HEAD
     const setPage = useSetAtom(onboardingRouterAtom);
+=======
+    const router = useRouter();
+>>>>>>> main
     const setInfo = useSetAtom(registerInfoAtom);
 
     return (
@@ -33,7 +38,7 @@ export default function RegisterPage() {
                     textContentType="password"
                 />
                 <Pressable
-                    onPress={() => setPage("login")}
+                    onPress={() => router.push("login")}
                     className="bg-blue px-4 py-2 rounded-xl mt-16"
                 >
                     <Text className="font-semibold text-white">

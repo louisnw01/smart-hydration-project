@@ -7,14 +7,14 @@ from fastapi import FastAPI, HTTPException, Depends
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from starlette.middleware.cors import CORSMiddleware
 
-from .api import login_and_get_session, fetch_data_for_jug, get_jug_data, get_all_jug_ids
+from .api import login_and_get_session, fetch_data_for_jug, get_jug_data, get_all_jug_ids, get_todays_intake
 from .auth import get_hash, decode_auth_token, generate_auth_token
 from .models import db, User, JugUser
 from .schemas import LinkJugsForm, UserLogin, UserRegister, JugLink
 from .services import (create_user, get_jug_ids_by_community, get_user_hash, user_exists, get_jug_name_by_id,
                        get_user_by_email, get_user_by_id,
                        unlink_jug_from_user_s,
-                       link_jugs_to_user_s)
+                       link_jugs_to_user_s, get_user_name, get_users_jugs)
 
 load_dotenv()
 
@@ -99,32 +99,42 @@ async def login(form: UserLogin):
 @app.get("/community-jug-status")
 async def get_community_jug_status(user_id: str = Depends(auth_user)):
     # TODO perhaps this logic should be in auth_user, and it returns user rather than user_id
-    user = get_user_by_id(user_id)
-    if not user:
-        raise HTTPException(status_code=400, detail='user not found')
 
-    community = user.community
-    jug_ids = get_jug_ids_by_community(community)
-    devices_info = []
-    session = login_and_get_session()
-    for jug_id in jug_ids:
-        jug_data = fetch_data_for_jug(session, jug_id)
-        if jug_data is None:
-            continue
-        jug_data['name'] = get_jug_name_by_id(jug_id)
-        jug_data['id'] = jug_id
-        devices_info.append(jug_data)
-    return devices_info
+
+    with db_session:
+    # community = user.community
+        user = User.get(id=user_id)
+        if not user:
+            raise HTTPException(status_code=400, detail='user not found')
+        jugs = user.jug_user.jugs
+        devices_info = []
+        session = login_and_get_session()
+        for jug in jugs:
+            jug_data = fetch_data_for_jug(session, jug.id)
+            if jug_data is None:
+                continue
+            jug_data['name'] = jug.name
+            jug_data['id'] = jug.smart_hydration_id
+            devices_info.append(jug_data)
+        return devices_info
+
 
 @app.post("/check-token")
 async def check_token(user_id: str = Depends(auth_user)):
     return {"status": "success"}
+
 
 # Temporary for MVP
 @app.get("/get-all-jugs")
 async def get_all_jugs(user_id: str = Depends(auth_user)):
     session = login_and_get_session()
     return get_all_jug_ids(session)
+
+
+@app.get("/user")
+async def get_user(user_id: str = Depends(auth_user)):
+    return get_user_name(user_id)
+
 
 # example of using a protected route; the Depends(auth_user) part should be added to all protected routes
 # @app.get("/protected")
@@ -136,13 +146,12 @@ async def get_all_jugs(user_id: str = Depends(auth_user)):
 
 @app.get("/historical-jug-data")
 async def get_historical_jug_data(juguser_id: int, timestamp: int):
-
     # atm only works for one jug per user
     # check if the user_id OWNS or follows the jugusers community
 
     with db_session:
         juguser = JugUser.get(id=juguser_id)
-        user = juguser.community.followers.order_by(User.id).first() # TODO fix
+        user = juguser.community.followers.order_by(User.id).first()  # TODO fix
         if user.community != juguser.community:
             raise HTTPException(status_code=400, detail='unauthorized')
         jugs = juguser.jugs
@@ -154,5 +163,19 @@ async def get_historical_jug_data(juguser_id: int, timestamp: int):
         for jug in jugs:
             big_list.extend(get_jug_data(session, jug, timestamp))
 
-
         return sorted(big_list, key=lambda x: x['time'])
+
+
+@app.get("/todays-total-intake")
+async def get_todays_total_intake(user_id: str = Depends(auth_user)):
+    with db_session:
+        jugs = get_users_jugs(user_id)
+
+        session = login_and_get_session()
+
+        intake_total = 0
+
+        for jug in jugs:
+            intake_total += get_todays_intake(session, jug.smart_hydration_id)
+
+    return intake_total

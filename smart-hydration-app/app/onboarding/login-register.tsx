@@ -1,19 +1,13 @@
 import { View, Pressable, Text } from "react-native";
 import Drop from "@/assets/svgs/water-drop-svgrepo-com.svg";
-import PageWrapper from "@/components/common/page-wrapper";
 import { useRouter } from "expo-router";
 import GenericOnboardContent from "@/components/generic-onboard-content";
 
 export default function LoginRegister() {
-    // const setPage = useSetAtom(onboardingRouterAtom)
     const router = useRouter();
     return (
         <GenericOnboardContent>
-            {/* <View className="flex mt-20 gap-32"> */}
-            {/* <View className="items-center gap-14"> */}
-            {/* <Text className="text-4xl font-bold">Smart Hydration</Text> */}
             <Drop width={100} height={100} />
-            {/* </View> */}
             <View className="items-center gap-4 mt-20">
                 <Pressable
                     onPress={() => router.push("login")}
@@ -32,7 +26,6 @@ export default function LoginRegister() {
                     </Text>
                 </Pressable>
             </View>
-            {/* </View> */}
         </GenericOnboardContent>
     );
 }
