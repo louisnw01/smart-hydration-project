@@ -10,6 +10,8 @@ export default function RegisterPage() {
     const router = useRouter();
     const setInfo = useSetAtom(registerInfoAtom);
 
+
+
     return (
         <GenericOnboardContent
             title="Enter your email and password"
