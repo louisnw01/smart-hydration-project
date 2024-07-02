@@ -80,9 +80,7 @@ def get_all_jug_ids(session):
 def get_jug_data(session, jug, start_timestamp):
     # get a list of all hydration events for the jug for the past year
     # TODO convert start_timestamp to datetime. fromTimestamp
-    start_date = dt.datetime.fromtimestamp(start_timestamp/1000)
-    print(start_timestamp/1000)
-    print("start_date = " + start_date.isoformat())
+    start_date = dt.datetime.fromtimestamp(start_timestamp)
 
     data = query(session, f'/data/device/{jug.smart_hydration_id}/events/hydration?maxCount=1000')
     if data is None:
@@ -98,9 +96,6 @@ def get_jug_data(session, jug, start_timestamp):
         if row['type'] != 'DRINK':
             continue
         iso_date = dt.datetime.fromisoformat(row['timestamp'].replace('Z', ''))
-        is_today = iso_date.date() > dt.datetime.today().date()
-        print(iso_date)
-        print(is_today)
 
         aggs.append({
             'time': iso_date.timestamp(),
