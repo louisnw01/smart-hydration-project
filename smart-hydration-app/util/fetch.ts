@@ -1,6 +1,10 @@
 // TODO server_url should be in .env
 
+<<<<<<< HEAD
 //const SERVER_URL = "http://localhost:8085";
+=======
+// const SERVER_URL = "http://localhost:8085";
+>>>>>>> main
 const SERVER_URL = "http://18.133.247.202";
 
 export const ENDPOINTS = {
@@ -12,6 +16,8 @@ export const ENDPOINTS = {
     LINK_JUG_TO_USER: "/link-jug-to-user",
     FETCH_HISTORICAL_JUG_DATA: "/historical-jug-data",
     GET_ALL_JUGS: "/get-all-jugs",
+    FETCH_USER: "/user",
+    GET_TODAYS_INTAKE: "/todays-total-intake",
 };
 
 interface RequestOptions {

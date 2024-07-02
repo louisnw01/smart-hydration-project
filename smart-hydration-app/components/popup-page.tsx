@@ -1,5 +1,4 @@
 import { View, Dimensions } from "react-native";
-import { popupPageAtom } from "@/atom/nav";
 import { useSetAtom } from "jotai";
 import { ReactNode, useContext, useEffect } from "react";
 import {
@@ -28,7 +27,6 @@ export default function PopupPage({
     const viewTop = screenHeight - viewHeight;
     const animation = useContext(AnimationContext);
     if (!animation) return;
-    const popupStatus = useSetAtom(popupPageAtom);
     const animatedStyles = useAnimatedStyle(() => ({
         transform: [{ translateY: animation.value }],
     }));

@@ -1,3 +1,4 @@
+import useColorPalette from "@/util/palette";
 import { Link } from "expo-router";
 import {
     GestureResponderEvent,

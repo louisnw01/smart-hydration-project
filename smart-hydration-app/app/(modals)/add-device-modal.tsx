@@ -14,7 +14,6 @@ import {
 import { ScrollView } from "react-native";
 import { useAtomValue, useSetAtom } from "jotai";
 import { getAllJugsQAtom, linkJugToUserMAtom } from "@/atom/query";
-import { popupPageAtom } from "@/atom/nav";
 import colors from "@/colors";
 import StyledButton from "../../components/common/button";
 import { useNavigation } from "expo-router";
@@ -63,19 +62,26 @@ export default function MVPAddDeviceModal() {
                     }))}
                     renderItem={({ item }) => (
                         <Pressable
-                            className="mx-4 px-4 py-3 rounded-xl my-2"
+                            className="mx-4 px-4 py-3 rounded-xl my-2 bg-gray-200 dark:bg-neutral-800"
                             onPress={() => handleSelect(item)}
                             style={{
-                                backgroundColor: selectedJugs.has(item)
-                                    ? "rgb(90, 240, 130)"
-                                    : "rgb(240, 240, 240)",
+                                ...(selectedJugs.has(item)
+                                    ? {
+                                          backgroundColor: "rgb(90, 240, 130)",
+                                      }
+                                    : undefined),
+                                // backgroundColor: selectedJugs.has(item)
+                                //     ? "rgb(90, 240, 130)"
+                                //     : undefined,
                             }}
                         >
-                            <Text className="text-lg">{item}</Text>
+                            <Text className="text-lg dark:text-white">
+                                {item}
+                            </Text>
                         </Pressable>
                     )}
                     renderSectionHeader={({ section }) => (
-                        <Text className="text-xl font-bold ml-4 pt-4">
+                        <Text className="text-xl font-bold ml-4 pt-4 dark:text-white">
                             {section.title}
                         </Text>
                     )}
