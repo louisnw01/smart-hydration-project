@@ -38,6 +38,8 @@ export default function LoginPage() {
                     <TextInputBox
                         placeholder="Enter your email address"
                         onChange={setEmail}
+                        autoCapitalize="none"
+                        keyboardType="email-address"
                     />
                     <TextInputBox
                         placeholder="Enter your password"
