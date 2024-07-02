@@ -16,6 +16,7 @@ export default function RegisterPage() {
             nextHref="onboarding/name"
         >
             <View className="gap-5 mt-16 items-center">
+                <View style={{width: 350}}>
                 <TextInputBox
                     placeholder="Enter your email address"
 
@@ -25,6 +26,8 @@ export default function RegisterPage() {
                     keyboardType="email-address"
                     autoCapitalize="none"
                 />
+                </View>
+                <View style={{width: 350}}>
                 <TextInputBox
                     placeholder="Enter your password"
                     autoCapitalize="none"
@@ -33,6 +36,7 @@ export default function RegisterPage() {
                     }
                     textContentType="password"
                 />
+                </View>
                 <Pressable
                     onPress={() => router.push("login")}
                     className="bg-blue px-4 py-2 rounded-xl mt-16"
