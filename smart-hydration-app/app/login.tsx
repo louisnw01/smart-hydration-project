@@ -1,17 +1,17 @@
 import { View, Pressable, Text, ScrollView } from "react-native";
 
-import { useState} from "react";
+import { useState } from "react";
 import { useAtomValue, useSetAtom } from "jotai";
 import { loginMAtom } from "@/atom/query";
 
 import { authTokenAtom } from "@/atom/user";
-import { onboardingRouterAtom } from "@/components/onboarding-router";
 import PageWrapper from "@/components/common/page-wrapper";
 import TextInputBox from "@/components/text-input-box";
-import Drop from "../assets/svgs/water-drop-svgrepo-com.svg";
+import Drop from "@/assets/svgs/water-drop-svgrepo-com.svg";
+import { useRouter } from "expo-router";
 
 export default function LoginPage() {
-    const setPage = useSetAtom(onboardingRouterAtom);
+    const router = useRouter();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const setAuthToken = useSetAtom(authTokenAtom);
@@ -20,11 +20,13 @@ export default function LoginPage() {
 
     if (data) {
         setAuthToken(data);
+        router.replace("(tabs)");
     }
 
     const handleSubmit = () => {
         mutate({ email, password });
     };
+
 
     return (
         <PageWrapper>
@@ -37,6 +39,8 @@ export default function LoginPage() {
                     <TextInputBox
                         placeholder="Enter your email address"
                         onChange={setEmail}
+                        autoCapitalize="none"
+                        keyboardType="email-address"
                     />
                     <TextInputBox
                         placeholder="Enter your password"
@@ -58,7 +62,7 @@ export default function LoginPage() {
                         </Text>
                     </Pressable>
                     <Pressable
-                        onPress={() => setPage("register")}
+                        onPress={() => router.push("onboarding/register")}
                         className="bg-blue px-4 py-2 rounded-xl mt-10"
                     >
                         <Text className="text-xl font-semibold text-white">

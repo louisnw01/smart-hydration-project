@@ -3,10 +3,10 @@ import {
     atomWithMutation,
     queryClientAtom,
 } from "jotai-tanstack-query";
-import { authTokenAtom } from "./user";
+import { authTokenAtom, registerInfoAtom } from "./user";
 import { ENDPOINTS, request } from "@/util/fetch";
 import { DeviceInfo, TrendsInfo } from "@/interfaces/device";
-import { registerInfoAtom } from "@/components/onboarding-router";
+
 import { useAtomValue, useSetAtom } from "jotai";
 
 export const linkJugToUserMAtom = atomWithMutation((get) => ({
@@ -88,6 +88,19 @@ export const updateMAtom = atomWithMutation((get) => ({
 
         const object = await response.json()
         return object.access_token;
+
+export const getUserQAtom = atomWithQuery((get) => ({
+    queryKey: ["user", get(authTokenAtom)],
+    queryFn: async ({ queryKey: [, token] }): Promise<string> => {
+        const response = await request(ENDPOINTS.FETCH_USER, {
+            auth: token as string,
+        });
+
+        if (!response.ok) {
+            throw new Error("User Could Not Be Found");
+        }
+
+        return await response.json();
     },
     enabled: !!get(authTokenAtom),
 }));
@@ -105,6 +118,23 @@ export const getHydrationAtom = atomWithQuery((get) => ({
         return await response.json();
     },
 }));
+
+export const getTodaysIntakeAtom = atomWithQuery((get) => ({
+    queryKey: ["todays-total-intake", get(authTokenAtom)],
+    queryFn: async ({ queryKey: [, token] }): Promise<number> => {
+        const response = await request(ENDPOINTS.GET_TODAYS_INTAKE, {
+            auth: token as string,
+        });
+
+        if (!response.ok) {
+            throw new Error("User Total Intake Could Not Be Found");
+        }
+
+        return await response.json();
+    },
+    enabled: !!get(authTokenAtom),
+}));
+
 export const loginMAtom = atomWithMutation((get) => ({
     mutationKey: ["login"],
     mutationFn: async (formData: { email: string; password: string }) => {

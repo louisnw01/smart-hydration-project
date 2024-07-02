@@ -3,14 +3,12 @@ import { DeviceInfo } from "@/interfaces/device";
 import { ReactNode } from "react";
 import { View, Text, Pressable } from "react-native";
 import PopupPage from "@/components/popup-page";
-import { popupPageAtom } from "@/atom/nav";
-import { useAtom, useAtomValue, useSetAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import PageHeading from "@/components/common/page-heading";
 import { Link, useNavigation, useRouter } from "expo-router";
 import { selectedDeviceAtom } from "@/atom/device";
 
 export default function DeviceRow({ device }: { device: DeviceInfo }) {
-    const [popup, setPopup] = useAtom(popupPageAtom);
     const setDevice = useSetAtom(selectedDeviceAtom);
     const router = useRouter();
     const percentFull = (device.water_level / device.capacity) * 100;
@@ -18,7 +16,7 @@ export default function DeviceRow({ device }: { device: DeviceInfo }) {
     const isStale = false;
     return (
         <Pressable
-            className="mx-6 bg-gray-200 px-7 py-4 flex flex-row justify-between rounded-xl dark:bg-gray-800"
+            className="mx-6 bg-gray-200 px-7 py-4 flex flex-row justify-between rounded-xl dark:bg-neutral-800"
             onPress={() => {
                 setDevice(device);
                 router.push("device-info-modal");

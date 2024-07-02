@@ -8,9 +8,8 @@ import {
     Text,
     View,
 } from "react-native";
-import { useSetAtom, useAtomValue, useAtom } from "jotai";
-import { popupPageAtom } from "@/atom/nav";
-import { getJugDataQAtom, unlinkJugFromUserMAtom } from "@/atom/query";
+import { useAtomValue } from "jotai";
+import { getJugDataQAtom } from "@/atom/query";
 import DeviceRow from "@/components/devices/device-row";
 import { useState } from "react";
 import StyledButton from "@/components/common/button";
