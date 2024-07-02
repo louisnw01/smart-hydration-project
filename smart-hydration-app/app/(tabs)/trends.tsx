@@ -11,9 +11,9 @@ import {
 } from "victory-native";
 // import SFPro from "../../assets/fonts/SF-Pro-Display-Regular.otf";
 // import { useFont } from "@shopify/react-native-skia";
-import {useAtomValue, useSetAtom} from "jotai";
-import {chartTimeWindowAtom} from "@/atom/nav";
-import {custom} from "@/constants/chart-theme";
+import { useAtomValue, useSetAtom } from "jotai";
+import { chartTimeWindowAtom } from "@/atom/nav";
+import { custom } from "@/constants/chart-theme";
 import {
     averageDailyHydrationComparison,
     averageHydrationMonthComparison,
