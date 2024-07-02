@@ -8,6 +8,7 @@ import { ENDPOINTS, request } from "@/util/fetch";
 import { DeviceInfo, TrendsInfo } from "@/interfaces/device";
 
 import { useAtomValue, useSetAtom } from "jotai";
+import { User } from "@/interfaces/user";
 
 export const linkJugToUserMAtom = atomWithMutation((get) => ({
     mutationKey: ["link-jug-to-user", get(authTokenAtom)],
@@ -72,6 +73,22 @@ export const getJugDataQAtom = atomWithQuery((get) => ({
     enabled: !!get(authTokenAtom),
 }));
 
+export const getUserQAtom = atomWithQuery((get) => ({
+    queryKey: ["user", get(authTokenAtom)],
+    queryFn: async ({ queryKey: [, token] }): Promise<string> => {
+        const response = await request(ENDPOINTS.FETCH_USER, {
+            auth: token as string,
+        });
+
+        if (!response.ok) {
+            throw new Error("User Could Not Be Found");
+        }
+
+        return await response.json();
+    },
+    enabled: !!get(authTokenAtom),
+}));
+
 export const getHydrationAtom = atomWithQuery((get) => ({
     queryKey: ["historial-jug-data", get(authTokenAtom)],
     queryFn: async ({ queryKey: [, token] }): Promise<TrendsInfo[]> => {
@@ -85,6 +102,23 @@ export const getHydrationAtom = atomWithQuery((get) => ({
         return await response.json();
     },
 }));
+
+export const getTodaysIntakeAtom = atomWithQuery((get) => ({
+    queryKey: ["todays-total-intake", get(authTokenAtom)],
+    queryFn: async ({ queryKey: [, token] }): Promise<number> => {
+        const response = await request(ENDPOINTS.GET_TODAYS_INTAKE, {
+            auth: token as string,
+        });
+
+        if (!response.ok) {
+            throw new Error("User Total Intake Could Not Be Found");
+        }
+
+        return await response.json();
+    },
+    enabled: !!get(authTokenAtom),
+}));
+
 export const loginMAtom = atomWithMutation((get) => ({
     mutationKey: ["login"],
     mutationFn: async (formData: { email: string; password: string }) => {
