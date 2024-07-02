@@ -20,7 +20,7 @@ export default function SubmitPage() {
 
     if (isSuccess) {
         setAuthToken(data);
-        router.replace("index");
+        router.replace("(tabs)");
     }
     return (
         <GenericOnboardContent title="You're nearly there!">

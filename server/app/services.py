@@ -165,6 +165,6 @@ def get_user_name(user_id):
 
 @db_session
 def get_users_jugs(user_id):
-    jug_user = User.get(id=user_id).jug_user
-    jug_list = select(j.smart_hydration_id for j in Jug if (jug_user == j.owner))
-    return jug_list
+    jugs = User.get(id=user_id).jug_user.jugs
+    # jug_list = select(j.smart_hydration_id for j in Jug if (jug_user == j.owner))
+    return jugs

@@ -13,10 +13,11 @@ import { deleteItemAsync, getItemAsync } from "expo-secure-store";
 import { request } from "@/util/fetch";
 import { useEffect } from "react";
 import { getUserQAtom } from "@/atom/query";
+import { userNameAtom } from "@/atom/user";
 
 const queryClient = new QueryClient();
 
-const HydrateAtoms = ({children}) => {
+const HydrateAtoms = ({ children }) => {
     useHydrateAtoms([[queryClientAtom, queryClient]]);
     return children;
 };
@@ -28,7 +29,7 @@ function WrappedIndex() {
     const setUserName = useSetAtom(userNameAtom);
     const isLoggedIn = useAtomValue(isLoggedInAtom);
     const router = useRouter();
-    const {data, refetch} = useAtomValue(getUserQAtom);
+    const { data, refetch } = useAtomValue(getUserQAtom);
 
     const getTokenFromStorage = async () => {
         const token = await getItemAsync("auth_token");
@@ -81,7 +82,7 @@ export default function Index() {
         <QueryClientProvider client={queryClient}>
             <Provider>
                 <HydrateAtoms>
-                    <WrappedIndex/>
+                    <WrappedIndex />
                 </HydrateAtoms>
             </Provider>
         </QueryClientProvider>
