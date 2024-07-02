@@ -1,4 +1,5 @@
 import PageHeader from "@/components/common/header";
+import useColorPalette from "@/util/palette";
 import {
     Entypo,
     FontAwesome,
@@ -6,17 +7,27 @@ import {
     MaterialIcons,
 } from "@expo/vector-icons";
 import { Link, Tabs } from "expo-router";
+import { useColorScheme } from "react-native";
 
 export default function TabLayout() {
+    const palette = useColorPalette();
     return (
         <Tabs
             screenOptions={{
-                tabBarActiveTintColor: "black",
                 headerTitleAlign: "left",
                 headerTitle: (props) => <PageHeader {...props} />,
+                headerStyle: {
+                    backgroundColor: palette.bg,
+                    shadowColor: palette.border,
+                },
+                tabBarStyle: {
+                    backgroundColor: palette.bg,
+                    borderTopColor: palette.border,
+                },
+                tabBarActiveTintColor: palette.fg,
             }}
             sceneContainerStyle={{
-                backgroundColor: "white",
+                backgroundColor: palette.bg,
             }}
         >
             <Tabs.Screen
@@ -28,7 +39,7 @@ export default function TabLayout() {
                     ),
                     headerRight: (props) => (
                         <Link className="px-5" href="settings-modal">
-                            <Entypo name="cog" size={30} color="black" />
+                            <Entypo name="cog" size={30} color={palette.fg} />
                         </Link>
                     ),
                 }}
