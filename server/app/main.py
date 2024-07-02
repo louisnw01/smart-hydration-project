@@ -99,22 +99,24 @@ async def login(form: UserLogin):
 @app.get("/community-jug-status")
 async def get_community_jug_status(user_id: str = Depends(auth_user)):
     # TODO perhaps this logic should be in auth_user, and it returns user rather than user_id
-    user = get_user_by_id(user_id)
-    if not user:
-        raise HTTPException(status_code=400, detail='user not found')
 
-    community = user.community
-    jug_ids = get_jug_ids_by_community(community)
-    devices_info = []
-    session = login_and_get_session()
-    for jug_id in jug_ids:
-        jug_data = fetch_data_for_jug(session, jug_id)
-        if jug_data is None:
-            continue
-        jug_data['name'] = get_jug_name_by_id(jug_id)
-        jug_data['id'] = jug_id
-        devices_info.append(jug_data)
-    return devices_info
+
+    with db_session:
+    # community = user.community
+        user = User.get(id=user_id)
+        if not user:
+            raise HTTPException(status_code=400, detail='user not found')
+        jugs = user.jug_user.jugs
+        devices_info = []
+        session = login_and_get_session()
+        for jug in jugs:
+            jug_data = fetch_data_for_jug(session, jug.id)
+            if jug_data is None:
+                continue
+            jug_data['name'] = jug.name
+            jug_data['id'] = jug.smart_hydration_id
+            devices_info.append(jug_data)
+        return devices_info
 
 @app.post("/check-token")
 async def check_token(user_id: str = Depends(auth_user)):
