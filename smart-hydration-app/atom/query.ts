@@ -8,7 +8,6 @@ import { ENDPOINTS, request } from "@/util/fetch";
 import { DeviceInfo, TrendsInfo } from "@/interfaces/device";
 
 import { useAtomValue, useSetAtom } from "jotai";
-import { User } from "@/interfaces/user";
 
 export const linkJugToUserMAtom = atomWithMutation((get) => ({
     mutationKey: ["link-jug-to-user", get(authTokenAtom)],

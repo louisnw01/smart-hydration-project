@@ -169,13 +169,13 @@ async def get_historical_jug_data(juguser_id: int, timestamp: int):
 @app.get("/todays-total-intake")
 async def get_todays_total_intake(user_id: str = Depends(auth_user)):
     with db_session:
-        jug_sh_ids = get_users_jugs(user_id)
+        jugs = get_users_jugs(user_id)
 
         session = login_and_get_session()
 
         intake_total = 0
 
-        for sh_id in jug_sh_ids:
-            intake_total += get_todays_intake(session, sh_id)
+        for jug in jugs:
+            intake_total += get_todays_intake(session, jug.smart_hydration_id)
 
     return intake_total
