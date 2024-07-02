@@ -49,3 +49,17 @@ pip install -r requirements.txt
 ```
 make dev
 ```
+4. If using an Android simulator:
+
+Make sure the TCP port of the Android simulator is the same as displayed when running:
+```
+make dev
+```
+By running
+```
+adb reverse --list
+```
+If the ports are different, you can change the Android TCP port as follows:
+```
+adb reverse tcp:[FastAPI port] tcp:[FastAPI port]
+```
