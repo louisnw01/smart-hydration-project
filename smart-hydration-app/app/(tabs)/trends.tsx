@@ -1,6 +1,6 @@
 import PageWrapper from "@/components/common/page-wrapper";
-import React, {useMemo} from "react";
-import {Pressable, ScrollView, Text, View} from "react-native";
+import React, { useMemo } from "react";
+import { Pressable, ScrollView, Text, View } from "react-native";
 import {
     VictoryContainer,
     VictoryChart,
