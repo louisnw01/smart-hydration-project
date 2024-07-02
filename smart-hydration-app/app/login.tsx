@@ -26,6 +26,7 @@ export default function LoginPage() {
     const handleSubmit = () => {
         mutate({ email, password });
     };
+    
 
     return (
         <PageWrapper>
@@ -38,6 +39,8 @@ export default function LoginPage() {
                     <TextInputBox
                         placeholder="Enter your email address"
                         onChange={setEmail}
+                        autoCapitalize="none"
+                        keyboardType="email-address"
                     />
                     <TextInputBox
                         placeholder="Enter your password"
