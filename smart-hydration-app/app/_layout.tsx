@@ -6,7 +6,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Provider, useAtomValue, useSetAtom } from "jotai";
 import { authTokenAtom, isLoggedInAtom, userNameAtom } from "@/atom/user";
 import OnboardingRouter from "@/components/onboarding-router";
-import { getItemAsync, deleteItemAsync } from "expo-secure-store";
+import { getItemAsync, deleteItemAsync, setItem } from "expo-secure-store";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { request } from "@/util/fetch";
 import ModalRouter from "@/components/modal-router";
@@ -36,7 +36,7 @@ function WrappedIndex() {
     const getTokenFromStorage = async () => {
         const token = await getItemAsync("auth_token");
         if (!token) {
-            router.replace("login");
+            router.replace("onboarding/login-register");
             return;
         }
         const result = await request("/check-token", {
@@ -49,7 +49,7 @@ function WrappedIndex() {
             setUserName(name as string);
         } else {
             deleteItemAsync("auth_token");
-            router.replace("login");
+            router.replace("onboarding/login-register");
         }
     };
 
@@ -59,7 +59,10 @@ function WrappedIndex() {
 
     return (
         <Stack>
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen
+                name="(tabs)"
+                options={{ headerShown: false, animation: "fade" }}
+            />
             <Stack.Screen
                 name="(modals)"
                 options={{
@@ -68,6 +71,10 @@ function WrappedIndex() {
                 }}
             />
             <Stack.Screen name="login" options={{ headerShown: false }} />
+            <Stack.Screen
+                name="onboarding"
+                options={{ headerShown: false, animation: "slide_from_bottom" }}
+            />
         </Stack>
     );
 }

@@ -1,7 +1,7 @@
 import { View, Text, ScrollView } from "react-native";
 import { atom, useAtom, useAtomValue, useSetAtom } from "jotai";
 import GenericOnboardContent from "@/components/generic-onboard-content";
-import NextButton from "@/components/next-button";
+// import NextButton from "@/components/next-button";
 import SubmitButton from "@/components/submit-button";
 import TextInputBox from "@/components/text-input-box";
 import Checkbox from "@/components/checkbox";
@@ -9,8 +9,7 @@ import PageWrapper from "@/components/common/page-wrapper";
 import PageProgressBar from "@/components/page-progress-bar";
 import BackButton from "@/components/back-button";
 import SkipButton from "@/components/skip-button";
-import RegisterPage from "@/components/onboarding/register";
-import NamePage from "@/components/onboarding/name";
+
 import { registerMAtom } from "@/atom/query";
 import { authTokenAtom } from "@/atom/user";
 
@@ -24,7 +23,9 @@ export default function OnboardingPage() {
 
     const [pageIndex, setPageIndex] = useAtom(pageIndexAtom);
     // const sexOptions = ['Female', 'Male', 'Prefer not to say'];
-    {/*Bug: radio button not defaulting to prefer not to say */}
+    {
+        /*Bug: radio button not defaulting to prefer not to say */
+    }
     // const binaryOptions = ['Yes', 'No'];
     // const measureOptions = ['Metric', 'Imperial'];
     // const medications = [
@@ -52,30 +53,39 @@ export default function OnboardingPage() {
 
     const pages = [
         {
-            title: 'Enter your email address and password',
+            title: "Enter your email address and password",
             content: <RegisterPage />,
             skippable: 0,
         },
         {
-            title: 'What is your name?',
+            title: "What is your name?",
             content: <NamePage />,
             skippable: 0,
         },
         {
-            title: 'Do you consent to the collection of personal health information?',
-            content:
+            title: "Do you consent to the collection of personal health information?",
+            content: (
                 <View>
                     {/* To do: make this text scrollable (will be longer than a single page) */}
-                    <Text className="text-xl font-light">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod  tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim  veniam, pariatur. Excepteur sint  occaecat cupidatat non proident, sunt in culpa qui officia deserunt  mollit anim id est laborum. </Text>
-                    <Checkbox text='I consent' />
-                </View>,
+                    <Text className="text-xl font-light">
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+                        sed do eiusmod tempor incididunt ut labore et dolore
+                        magna aliqua. Ut enim ad minim veniam, pariatur.
+                        Excepteur sint occaecat cupidatat non proident, sunt in
+                        culpa qui officia deserunt mollit anim id est laborum.{" "}
+                    </Text>
+                    <Checkbox text="I consent" />
+                </View>
+            ),
             skippable: 0,
         },
         {
-            title: 'What is your date of birth?',
-            content: <View>
-                <TextInputBox placeholder='dd-mm-yyyy' />
-            </View>,
+            title: "What is your date of birth?",
+            content: (
+                <View>
+                    <TextInputBox placeholder="dd-mm-yyyy" />
+                </View>
+            ),
             skippable: 0,
         },
         // {
@@ -146,11 +156,14 @@ export default function OnboardingPage() {
         // },
         {
             title: "You're nearly there!",
-            content:
-                <Text className="text-xl font-light">Tap Submit All to set up your Smart Hydration profile.</Text>,
+            content: (
+                <Text className="text-xl font-light">
+                    Tap Submit All to set up your Smart Hydration profile.
+                </Text>
+            ),
             skippable: 0,
         },
-    ]
+    ];
 
     const currentPageContent = pages[pageIndex];
 
@@ -176,20 +189,35 @@ export default function OnboardingPage() {
         // app doesn't display properly unless browser is in mobile mode. Not sure if this is a problem?
         <PageWrapper>
             <ScrollView className="flex gap-10 mx-2">
-                <PageProgressBar currentPage={pageIndex + 1} totalPages={pages.length}></PageProgressBar>
+                <PageProgressBar
+                    currentPage={pageIndex + 1}
+                    totalPages={pages.length}
+                ></PageProgressBar>
                 <GenericOnboardContent title={currentPageContent.title}>
                     {currentPageContent.content}
                 </GenericOnboardContent>
             </ScrollView>
-            <>{pageIndex < maxPageIndex - 1 && <NextButton onPress={handleNext} />}</>
-            <>{pageIndex === maxPageIndex - 1 && <SubmitButton onPress={handleSubmit} />}</>
+            <>
+                {pageIndex < maxPageIndex - 1 && (
+                    <NextButton onPress={handleNext} />
+                )}
+            </>
+            <>
+                {pageIndex === maxPageIndex - 1 && (
+                    <SubmitButton onPress={handleSubmit} />
+                )}
+            </>
             <>{pageIndex > 0 && <BackButton onPress={handleBack} />}</>
-            <>{currentPageContent.skippable != 0 && <SkipButton onPress={handleSkip} />}</>
+            <>
+                {currentPageContent.skippable != 0 && (
+                    <SkipButton onPress={handleSkip} />
+                )}
+            </>
         </PageWrapper>
         //To do: Differentiate between Next and Skip buttons
         //Next should save the entered data and be greyed out when no data submitted
         //Skip should skip regardless of whether data is submitted and not save it
         //To do: Add "Skip Optional Onboarding" button on last mandatory page, with "Continue" button
         //To do: create visual progress bar to replace "Page x/y"
-    )
+    );
 }
