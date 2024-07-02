@@ -1,5 +1,3 @@
-import PageHeader from "@/components/common/header";
-import { FontWeight } from "@shopify/react-native-skia";
 import { Stack } from "expo-router";
 
 export default function ModalLayout() {
