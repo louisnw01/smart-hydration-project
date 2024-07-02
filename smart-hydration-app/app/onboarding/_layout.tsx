@@ -1,13 +1,5 @@
-import PageHeader from "@/components/common/header";
 import OnboardingHeader from "@/components/onboarding/onboarding-header";
-
-import {
-    Entypo,
-    FontAwesome,
-    Foundation,
-    MaterialIcons,
-} from "@expo/vector-icons";
-import { Link, Stack, Tabs } from "expo-router";
+import { Stack } from "expo-router";
 
 export default function OnboardingLayout() {
     return (

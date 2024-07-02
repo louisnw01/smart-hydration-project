@@ -1,23 +1,15 @@
-import NavigationBar from "@/components/nav";
 import "../global.css";
-import { Appearance, Dimensions, View, StyleSheet, Text } from "react-native";
-import PageRouter from "@/components/page-router";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Provider, useAtomValue, useSetAtom } from "jotai";
 import { authTokenAtom, isLoggedInAtom } from "@/atom/user";
-import OnboardingRouter from "@/components/onboarding-router";
-import { getItemAsync, deleteItemAsync, setItem } from "expo-secure-store";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { request } from "@/util/fetch";
-import ModalRouter from "@/components/modal-router";
-
-import { SharedValue } from "react-native-gesture-handler/lib/typescript/handlers/gestures/reanimatedWrapper";
 import { Stack, useRouter } from "expo-router";
 import { useHydrateAtoms } from "jotai/react/utils";
 import { queryClientAtom } from "jotai-tanstack-query";
-import { useEffect } from "react";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
-
+import { colorSchemeEAtom } from "@/atom/effect/user";
+import "react-native-reanimated";
+import { deleteItemAsync, getItemAsync } from "expo-secure-store";
+import { request } from "@/util/fetch";
+import { useEffect } from "react";
 const queryClient = new QueryClient();
 
 const HydrateAtoms = ({ children }) => {
@@ -26,6 +18,8 @@ const HydrateAtoms = ({ children }) => {
 };
 
 function WrappedIndex() {
+    useAtomValue(colorSchemeEAtom);
+
     const setAuthToken = useSetAtom(authTokenAtom);
     const isLoggedIn = useAtomValue(isLoggedInAtom);
     const router = useRouter();
@@ -75,8 +69,6 @@ function WrappedIndex() {
 }
 
 export default function Index() {
-    Appearance.setColorScheme("light");
-
     return (
         <QueryClientProvider client={queryClient}>
             <Provider>
