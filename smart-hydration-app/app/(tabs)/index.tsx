@@ -37,14 +37,14 @@ export default function HomePage() {
             {/* <PageHeading text="smart hydration">
                 <SettingsButton />
             </PageHeading> */}
-            <ScrollView
+            <ScrollView contentContainerStyle={{flex:1}}
                 refreshControl={
                     <RefreshControl
                         refreshing={refreshing}
                         onRefresh={handleRefresh}
                     />
                 }>
-                    <View className="flex justify-evenly pt-3 h-full items-center">
+                    <View className="flex flex-1 justify-evenly pt-3 h-full items-center">
                         <HydrationPercentage />
                         <Droplet />
 
