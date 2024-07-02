@@ -6,7 +6,7 @@ import { registerInfoAtom } from "@/atom/user";
 import GenericOnboardContent from "@/components/generic-onboard-content";
 
 export default function RegisterPage() {
-    // const setPage = useSetAtom(onboardingRouterAtom);
+    const setPage = useSetAtom(onboardingRouterAtom);
     const setInfo = useSetAtom(registerInfoAtom);
 
     return (
@@ -17,12 +17,16 @@ export default function RegisterPage() {
             <View className="gap-5 mt-16 items-center">
                 <TextInputBox
                     placeholder="Enter your email address"
+
                     onChange={(val) =>
                         setInfo((prev) => ({ ...prev, email: val }))
                     }
+                    keyboardType="email-address"
+                    autoCapitalize="none"
                 />
                 <TextInputBox
                     placeholder="Enter your password"
+                    autoCapitalize="none"
                     onChange={(val) =>
                         setInfo((prev) => ({ ...prev, password: val }))
                     }
