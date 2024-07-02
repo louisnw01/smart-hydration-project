@@ -12,6 +12,8 @@ export const ENDPOINTS = {
     LINK_JUG_TO_USER: "/link-jug-to-user",
     FETCH_HISTORICAL_JUG_DATA: "/historical-jug-data",
     GET_ALL_JUGS: "/get-all-jugs",
+    FETCH_USER: "/user",
+    GET_TODAYS_INTAKE: "/todays-total-intake"
 };
 
 interface RequestOptions {
