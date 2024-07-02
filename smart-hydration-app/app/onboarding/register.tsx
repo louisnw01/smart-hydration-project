@@ -7,11 +7,7 @@ import GenericOnboardContent from "@/components/generic-onboard-content";
 import { useRouter } from "expo-router";
 
 export default function RegisterPage() {
-<<<<<<< HEAD
-    const setPage = useSetAtom(onboardingRouterAtom);
-=======
     const router = useRouter();
->>>>>>> main
     const setInfo = useSetAtom(registerInfoAtom);
 
     return (
