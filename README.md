@@ -51,11 +51,7 @@ make dev
 ```
 4. If using an Android simulator:
 
-Make sure the TCP port of the Android simulator is the same as displayed when running:
-```
-make dev
-```
-By running
+Make sure the TCP port of the Android simulator is the same as displayed when running `make dev` by running:
 ```
 adb reverse --list
 ```
