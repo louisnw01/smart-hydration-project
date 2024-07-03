@@ -18,7 +18,7 @@ const TextInputBox = ({ placeholder, onChange, textContentType, keyboardType, au
             textContentType={textContentType}
             keyboardType={keyboardType}
             autoCapitalize={autoCapitalize}
-            secureTextEntry={textContentType == 'password'}
+            secureTextEntry={textContentType === 'password'}
             className="bg-gray-200 w-full h-14 placeholder-black text-xl rounded-xl px-3"
         />
     );

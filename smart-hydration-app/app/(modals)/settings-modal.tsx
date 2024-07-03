@@ -1,11 +1,9 @@
 import { authTokenAtom, colorSchemeAtom } from "@/atom/user";
 import OptionBlock from "@/components/common/option-block";
 import { useRouter } from "expo-router";
-import { atom, useSetAtom } from "jotai";
-import { Appearance, Pressable, Text, View } from "react-native";
+import { useSetAtom } from "jotai";
+import { Pressable, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { getItemAsync, setItemAsync, deleteItemAsync } from "expo-secure-store";
-import { atomWithStorage, createJSONStorage } from "jotai/vanilla/utils";
 
 export default function SettingsModal() {
     const insets = useSafeAreaInsets();

@@ -1,7 +1,7 @@
 import "../global.css";
 
 import { Provider, useAtomValue, useSetAtom } from "jotai";
-import { authTokenAtom, isLoggedInAtom } from "@/atom/user";
+import { authTokenAtom } from "@/atom/user";
 
 import { Stack, useRouter } from "expo-router";
 import { useHydrateAtoms } from "jotai/react/utils";
@@ -17,7 +17,7 @@ import { userNameAtom } from "@/atom/user";
 
 const queryClient = new QueryClient();
 
-const HydrateAtoms = ({ children }) => {
+const HydrateAtoms = ({ children } : {children : React.ReactNode})  => {
     useHydrateAtoms([[queryClientAtom, queryClient]]);
     return children;
 };
@@ -27,9 +27,8 @@ function WrappedIndex() {
 
     const setAuthToken = useSetAtom(authTokenAtom);
     const setUserName = useSetAtom(userNameAtom);
-    const isLoggedIn = useAtomValue(isLoggedInAtom);
     const router = useRouter();
-    const { data, refetch } = useAtomValue(getUserQAtom);
+    const { refetch } = useAtomValue(getUserQAtom);
 
     const getTokenFromStorage = async () => {
         const token = await getItemAsync("auth_token");
@@ -53,7 +52,7 @@ function WrappedIndex() {
 
     useEffect(() => {
         getTokenFromStorage();
-    }, []);
+    });
 
     return (
         <Stack>

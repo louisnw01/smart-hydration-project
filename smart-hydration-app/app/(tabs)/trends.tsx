@@ -2,9 +2,7 @@ import PageWrapper from "@/components/common/page-wrapper";
 import React, { useMemo } from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
 import {
-    VictoryContainer,
     VictoryChart,
-    VictoryZoomContainer,
     VictoryBar,
     VictoryLine,
     VictoryAxis,
@@ -60,7 +58,7 @@ function RecentChart() {
                 />
                 <VictoryBar
                     style={{data: {fill: "#5cb5e1"}}}
-                    data={memoedData}
+                    data={memoedData as any[]}
                     // scale={{ x: "time" }}
 
                     cornerRadius={4}
