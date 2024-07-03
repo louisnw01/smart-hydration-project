@@ -56,6 +56,31 @@ export const unlinkJugFromUserMAtom = atomWithMutation((get) => ({
     },
 }));
 
+
+export const updateJugNameMAtom = atomWithMutation((get) => ({
+    mutationKey: ["update-jug-name", get(authTokenAtom)],
+    enabled: !!get(authTokenAtom),
+    mutationFn: async (formData: { jugId: string; name: string }) => {
+        const token = get(authTokenAtom);
+        const response = await request(ENDPOINTS.UPDATE_JUG_NAME, {
+            method: "post",
+            body: formData,
+            auth: token as string,
+        });
+
+        if (!response.ok) {
+            throw new Error("Could not update jug name");
+        }
+
+        return;
+    },
+
+    onSuccess: () => {
+        const queryClient = get(queryClientAtom);
+        void queryClient.invalidateQueries({ queryKey: ["get-jug-data"] });
+    },
+}));
+
 export const getJugDataQAtom = atomWithQuery((get) => ({
     queryKey: ["get-jug-data", get(authTokenAtom)],
     queryFn: async ({ queryKey: [, token] }): Promise<DeviceInfo[]> => {
