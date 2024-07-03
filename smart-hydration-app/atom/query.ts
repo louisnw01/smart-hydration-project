@@ -92,23 +92,6 @@ export const updateMAtom = atomWithMutation((get) => ({
     },
 }));
 
-// export const updateMAtom = atomWithMutation((get) => ({
-//     mutationKey: ['update'],
-//     mutationFn: async (formData: {id: number, key: string, value: string}) => {
-//         const response = await request(ENDPOINTS.UPDATE, {
-//             method: 'post',
-//             body: formData,
-//             })
-//
-//         if (!response.ok) {
-//             return 'failure';
-//         }
-//
-//         const object = await response.json()
-//         return object.access_token;
-//     },
-// }));
-
 export const getUserQAtom = atomWithQuery((get) => ({
     queryKey: ["user", get(authTokenAtom)],
     queryFn: async ({ queryKey: [, token] }): Promise<string> => {
