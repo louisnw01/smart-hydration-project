@@ -19,3 +19,6 @@ class JugLink(BaseModel):
 
 class LinkJugsForm(BaseModel):
     jugIds: List[str]
+
+class UserIds(BaseModel):
+    userIds: List[str]
