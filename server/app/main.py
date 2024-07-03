@@ -14,7 +14,7 @@ from .schemas import LinkJugsForm, UserLogin, UserRegister, JugLink, JugUserUpda
 from .services import (create_user, get_jug_ids_by_community, get_user_hash, user_exists, get_jug_name_by_id,
                        get_user_by_email, get_user_by_id,
                        unlink_jug_from_user_s,
-                       link_jugs_to_user_s, update_jug_user_data, get_user_name, get_users_jugs)
+                       link_jugs_to_user_s, update_jug_user_data, get_user_name, get_users_jugs, create_jug_user)
 
 load_dotenv()
 
@@ -76,6 +76,11 @@ async def register(form: UserRegister):
 
     hashed_password = get_hash(form.password)
     user = create_user(form.name, form.email, hashed_password)
+    # if not user.jug_user:
+    #     create_jug_user(user)
+    # jug_user_id = user.jug_user.id
+    # if form.dob:
+    #     update_jug_user_data(jug_user_id, "dob", form.dob)
     token = generate_auth_token(user.id)
     return {"access_token": token, "token_type": "bearer"}
 
