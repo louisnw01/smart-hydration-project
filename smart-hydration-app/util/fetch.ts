@@ -1,8 +1,8 @@
 // TODO server_url should be in .env
 
 
-// const SERVER_URL = "http://localhost:8085";
-const SERVER_URL = "http://18.133.247.202";
+ const SERVER_URL = "http://localhost:8085";
+//const SERVER_URL = "http://18.133.247.202";
 
 export const ENDPOINTS = {
     HELLO_WORLD: "/",
