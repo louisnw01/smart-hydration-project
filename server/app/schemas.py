@@ -11,7 +11,10 @@ class UserRegister(BaseModel):
     name: str
     email: str
     password: str
-    dob: Optional[str]
+    dob: Optional[str] = None
+
+    class Config:
+        arbitrary_types_allowed = False
 
 
 class JugLink(BaseModel):
