@@ -2,11 +2,13 @@ import React, { useState } from "react";
 import { Text, TextInput, View, Pressable } from "react-native";
 import { useAtomValue, useAtom } from "jotai";
 import { linkJugToUserMAtom } from "@/atom/query";
+import { selectedDeviceAtom } from "@/atom/device";
 
 interface TextInputProperties {
     name: string;
     label?: string;
     placeholder?: string;
+    onPress: Function;
 }
 
 //add validation to ensure only text can be entered?
@@ -14,9 +16,10 @@ export default function TextInputWithButton({
     name,
     label,
     placeholder,
+    onPress,
 }: TextInputProperties) {
     const [text, setText] = useState("");
-    const { mutate } = useAtomValue(linkJugToUserMAtom);
+    const currentJug = useAtomValue(selectedDeviceAtom);
 
     return (
         <View className="flex justify-center">
@@ -32,10 +35,7 @@ export default function TextInputWithButton({
             <View className="py-5">
                 <Pressable
                     className="bg-gray-200 py-1 rounded-2xl flex flex-row justify-center"
-                    onPress={() => {
-                        mutate(text);
-                        setPopup("none");
-                    }}
+                    onPress={onPress(currentJug?.id, text)}
                 >
                     <Text className="text-xl">Click to add</Text>
                 </Pressable>
