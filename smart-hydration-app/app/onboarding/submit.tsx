@@ -40,10 +40,7 @@ export default function SubmitPage() {
                         text="Submit & Register"
                         color={colors.green}
                         onPress={() => {
-                            console.log("button pressed");
-                            console.log("jug user dob", jugUserDob);
                             if (jugUserDob !== null) {
-                                console.log("dob not null");
                                 updateJugUser({ id: 1, key: "dob", value: jugUserDob });
                             }
                             submitAndRegister();
