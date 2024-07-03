@@ -1,12 +1,6 @@
-import useColorPalette from "@/util/palette";
 import { Link } from "expo-router";
 import {
-    GestureResponderEvent,
-    Pressable,
-    StyleProp,
-    Text,
     View,
-    ViewStyle,
 } from "react-native";
 
 interface ButtonProps {

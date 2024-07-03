@@ -1,5 +1,5 @@
 import { Pressable, Text, View } from "react-native";
-import { useAtomValue, useSetAtom } from "jotai";
+import { useAtomValue } from "jotai";
 import { updateJugNameMAtom } from "@/atom/query";
 import { selectedDeviceAtom } from "@/atom/device";
 import TextInputBox from "@/components/text-input-box";

@@ -1,5 +1,3 @@
-import { Text, Pressable } from "react-native";
-import { useSetAtom } from "jotai";
 import { Link } from "expo-router";
 
 export default function SettingsButton() {

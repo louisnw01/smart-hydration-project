@@ -5,15 +5,11 @@
     "owner": "smart-hydration-app",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": {
-      "image": "./assets/water-drop-svgrepo-com.svg",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
+    "icon": "assets/images/icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/water-drop-svgrepo-com.svg",
+      "image": "./assets/images/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
