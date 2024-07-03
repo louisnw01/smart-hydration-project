@@ -1,11 +1,7 @@
-import PageHeading from "@/components/common/page-heading";
 import PageWrapper from "@/components/common/page-wrapper";
 import {
-    ActivityIndicator,
-    Pressable,
     RefreshControl,
     ScrollView,
-    Text,
     View,
 } from "react-native";
 import { useAtomValue } from "jotai";
@@ -13,8 +9,6 @@ import { getJugDataQAtom } from "@/atom/query";
 import DeviceRow from "@/components/devices/device-row";
 import { useState } from "react";
 import StyledButton from "@/components/common/button";
-import { DeviceInfo } from "@/interfaces/device";
-import { useNavigation } from "expo-router";
 import Loading from "@/components/common/loading";
 
 export default function DevicesPage() {

@@ -2,10 +2,8 @@ import colors from "@/colors";
 import { DeviceInfo } from "@/interfaces/device";
 import { ReactNode } from "react";
 import { View, Text, Pressable } from "react-native";
-import PopupPage from "@/components/popup-page";
-import { useAtom, useSetAtom } from "jotai";
-import PageHeading from "@/components/common/page-heading";
-import { Link, useNavigation, useRouter } from "expo-router";
+import { useSetAtom } from "jotai";
+import { useRouter } from "expo-router";
 import { selectedDeviceAtom } from "@/atom/device";
 
 export default function DeviceRow({ device }: { device: DeviceInfo }) {

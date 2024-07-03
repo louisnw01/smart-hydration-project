@@ -2,18 +2,10 @@ import { ReactNode } from "react";
 import { View, Text, Pressable } from "react-native";
 import { useAtomValue } from "jotai";
 import { unlinkJugFromUserMAtom } from "@/atom/query";
-import { useNavigation, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import { selectedDeviceAtom } from "@/atom/device";
 import colors from "@/colors";
 
-import {
-    ClipPath,
-    Defs,
-    Rect,
-    Svg,
-    Text as SvgText,
-    TSpan,
-} from "react-native-svg";
 
 function Container({
     children,
@@ -36,6 +28,7 @@ function Container({
     className += right ? " ml-2" : " mr-2";
 
     const scaleAmount = fillVertical ? 150 : 100;
+    
     return (
         <View className={className}>
             {amount !== null && (

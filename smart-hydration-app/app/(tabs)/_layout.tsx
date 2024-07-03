@@ -7,7 +7,6 @@ import {
     MaterialIcons,
 } from "@expo/vector-icons";
 import { Link, Tabs } from "expo-router";
-import { useColorScheme } from "react-native";
 
 export default function TabLayout() {
     const palette = useColorPalette();
@@ -37,7 +36,7 @@ export default function TabLayout() {
                     tabBarIcon: ({ color }) => (
                         <FontAwesome size={28} name="home" color={color} />
                     ),
-                    headerRight: (props) => (
+                    headerRight: () => (
                         <Link className="px-5" href="settings-modal">
                             <Entypo name="cog" size={30} color={palette.fg} />
                         </Link>
@@ -64,7 +63,7 @@ export default function TabLayout() {
                             color={color}
                         />
                     ),
-                    headerRight: (props) => (
+                    headerRight: () => (
                         <Link className="px-5" href="add-device-modal">
                             <Entypo
                                 name="circle-with-plus"
