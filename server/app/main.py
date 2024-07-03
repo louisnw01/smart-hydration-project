@@ -165,7 +165,6 @@ async def get_historical_jug_data(juguser_id: int, timestamp: int):
 
         return sorted(big_list, key=lambda x: x['time'])
 
-# Endpoint for updating jug user data
 @app.post("/update")
 async def update(form: JugUserUpdate, user_id: str = Depends(auth_user)):
     user = get_user_by_id(user_id)
@@ -173,7 +172,6 @@ async def update(form: JugUserUpdate, user_id: str = Depends(auth_user)):
         raise HTTPException(status_code=400, detail='user not found')
     update_jug_user_data(form.id, form.key, form.value)
     return {"message": "Jug user data updated successfully"}
-
 
 @app.get("/todays-total-intake")
 async def get_todays_total_intake(user_id: str = Depends(auth_user)):

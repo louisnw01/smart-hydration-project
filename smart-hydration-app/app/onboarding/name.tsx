@@ -8,7 +8,7 @@ export default function NamePage() {
     return (
         <GenericOnboardContent
             title="What is your name?"
-            nextHref="onboarding/submit"
+            nextHref="onboarding/dob"
         >
             <TextInputBox
                 placeholder="Enter your name"
