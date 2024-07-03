@@ -69,21 +69,21 @@ async def unlink_jug_from_user(body: JugLink, user_id: str = Depends(auth_user))
     unlink_jug_from_user_s(user_id, body.jugId)
 
 
-# @db_session is needed to fix "pony.orm.core.TransactionError: An attempt to mix objects belonging to different transactions"
+# @db_session is needed to fix "pony.orm.core.TransactionError: An attempt to mix objects belonging to different
+# transactions"
 @app.post("/register")
 @db_session
 async def register(form: UserRegister):
     if user_exists(form.email):
         raise HTTPException(status_code=400, detail="email already registered")
-
     hashed_password = get_hash(form.password)
     user = create_user(form.name, form.email, hashed_password)
     if not user.jug_user:
         create_jug_user(user)
-    jug_user_id = user.jug_user.id
-    if form.dob:
-        update_jug_user_data(jug_user_id, "dob", form.dob)
-    token = generate_auth_token(jug_user_id)
+        jug_user_id = user.jug_user.id
+        if form.dob:
+            update_jug_user_data(jug_user_id, "dob", form.dob)
+    token = generate_auth_token(user.id)
     return {"access_token": token, "token_type": "bearer"}
 
 
