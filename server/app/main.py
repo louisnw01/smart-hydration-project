@@ -10,7 +10,7 @@ from starlette.middleware.cors import CORSMiddleware
 from .api import login_and_get_session, fetch_data_for_jug, get_jug_data, get_all_jug_ids, get_todays_intake
 from .auth import get_hash, decode_auth_token, generate_auth_token
 from .models import db, User, JugUser, Jug
-from .schemas import LinkJugsForm, UserLogin, UserRegister, JugLink, UpdateJugForm
+from .schemas import LinkJugsForm, UserLogin, UserRegister, JugLink, UpdateJugForm, JugUserUpdate
 from .services import (create_user, get_user_hash, user_exists, get_user_by_email, get_user_by_id,
                        unlink_jug_from_user_s,
                        link_jugs_to_user_s, get_user_name, get_users_jugs, update_jug_name_s, create_jug_user,
@@ -85,6 +85,17 @@ async def register(form: UserRegister):
         update_jug_user_data(jug_user_id, "dob", form.dob)
     token = generate_auth_token(jug_user_id)
     return {"access_token": token, "token_type": "bearer"}
+
+
+# Endpoint for updating jug user data
+# Currently unused, but keeping this for when we need to edit jug user data (e.g. weight) via settings
+@app.post("/update")
+async def update(form: JugUserUpdate, user_id: str = Depends(auth_user)):
+    user = get_user_by_id(user_id)
+    if not user:
+        raise HTTPException(status_code=400, detail='user not found')
+    update_jug_user_data(form.id, form.key, form.value)
+    return {"message": "Jug user data updated successfully"}
 
 
 @app.post("/login")
