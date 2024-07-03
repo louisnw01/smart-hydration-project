@@ -4,7 +4,7 @@ from typing import Optional
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException, Depends
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
-from pony.orm.core import db_session, TransactionError, rollback
+from pony.orm.core import db_session
 from starlette.middleware.cors import CORSMiddleware
 
 from .api import login_and_get_session, fetch_data_for_jug, get_jug_data, get_all_jug_ids, get_todays_intake
@@ -74,7 +74,7 @@ async def unlink_jug_from_user(body: JugLink, user_id: str = Depends(auth_user))
 @db_session
 async def register(form: UserRegister):
     if user_exists(form.email):
-        raise HTTPException(status_code=400, detail='Email already registered')
+        raise HTTPException(status_code=400, detail="email already registered")
 
     hashed_password = get_hash(form.password)
     user = create_user(form.name, form.email, hashed_password)

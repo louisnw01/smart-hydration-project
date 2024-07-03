@@ -1,4 +1,4 @@
-import { registerMAtom, updateMAtom } from "@/atom/query";
+import { registerMAtom } from "@/atom/query";
 import { authTokenAtom } from "@/atom/user";
 import colors from "@/colors";
 import Loading from "@/components/common/loading";
@@ -33,9 +33,7 @@ export default function SubmitPage() {
                     <OnboardingButton
                         text="Submit & Register"
                         color={colors.green}
-                        onPress={() => {
-                            submitAndRegister();
-                        }}
+                        onPress={() => submitAndRegister()}
                     />
                 )}
             </>
