@@ -16,8 +16,12 @@ const drinkTypes: {
     customcup: 220,
 }
 
+interface DrinkButtonProps {
+    drinkName: string,
+}
+
 // TODO define the object before pushing to prod
-function DrinkButton( { drinkName, type }) {
+function DrinkButton( { drinkName }:DrinkButtonProps) {
     return (
         <Pressable className="bg-gray-200 py-2 w-40 px-3 h-40 rounded-3xl">
             <View className="bg-blue w-30 h-32 rounded-2xl"></View>
@@ -27,14 +31,14 @@ function DrinkButton( { drinkName, type }) {
 }
 
 
-export default function AddDrinkPane() {
-    return (
-        <View className="flex flex-row flex-wrap justify-evenly gap-6">
-            <DrinkButton drinkName="Can (330ml)" type={drinkTypes.can} />
-            <DrinkButton drinkName="Bottle (500ml)" type={drinkTypes.bottle} />
-            <DrinkButton drinkName="Mug (220ml)" type={drinkTypes.mug}/>
-            <DrinkButton drinkName="Pint (568ml)" type={drinkTypes.pint}/>
-            <DrinkButton drinkName="Custom Cup" type={drinkTypes.customcup}/>
-        </View>
-    )
-}
+// export default function AddDrinkPane() {
+//     return (
+//         <View className="flex flex-row flex-wrap justify-evenly gap-6">
+//             <DrinkButton drinkName="Can (330ml)" type={drinkTypes.can} />
+//             <DrinkButton drinkName="Bottle (500ml)" type={drinkTypes.bottle} />
+//             <DrinkButton drinkName="Mug (220ml)" type={drinkTypes.mug}/>
+//             <DrinkButton drinkName="Pint (568ml)" type={drinkTypes.pint}/>
+//             <DrinkButton drinkName="Custom Cup" type={drinkTypes.customcup}/>
+//         </View>
+//     )
+// }

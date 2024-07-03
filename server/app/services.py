@@ -4,8 +4,8 @@ from .models import User, Jug, JugUser, Community
 
 
 @db_session
-def create_user(name, email, hash):
-    user = User(name=name, email=email, hash=hash)
+def create_user(name, email, hashcode):
+    user = User(name=name, email=email, hash=hashcode)
     commit()
     return user
 
@@ -118,7 +118,7 @@ def has_access_to_jug(user, sh_jug_id):
     relevant_jug = getattr(get(j for j in Jug if j.smart_hydration_id == sh_jug_id), 'owner')
     jug_community = relevant_jug.community
     user_community = find_user(user).community
-    if (jug_community == user_community):
+    if jug_community == user_community:
         return True
     return False
 
