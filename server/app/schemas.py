@@ -11,6 +11,7 @@ class UserRegister(BaseModel):
     name: str
     email: str
     password: str
+    dob: Optional[str]
 
 
 class JugLink(BaseModel):
