@@ -3,7 +3,6 @@ import { Text, View } from "react-native";
 export default function PageHeading({
     children,
     text,
-    marginTop,
 }: {
     children?: JSX.Element | JSX.Element[];
     text: string;

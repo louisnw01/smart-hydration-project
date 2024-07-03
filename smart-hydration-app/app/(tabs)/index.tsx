@@ -1,14 +1,10 @@
 import PageWrapper from "@/components/common/page-wrapper";
-import PageHeading from "@/components/common/page-heading";
 import HydrationPercentage from "@/components/hydration-pct";
 import HydrationStatus from "@/components/hydration-status";
-import SettingsButton from "@/components/settings-button";
 import { useAtomValue, useSetAtom } from "jotai";
 import Droplet from "@/components/droplet";
 import {
     View,
-    Text,
-    Pressable,
     RefreshControl,
     ScrollView,
 } from "react-native";
@@ -18,7 +14,7 @@ import { useState } from "react";
 import { hydrationAtom } from "@/atom/hydration";
 
 export default function HomePage() {
-    const { data, isLoading, refetch } = useAtomValue(getTodaysIntakeAtom);
+    const { isLoading, refetch } = useAtomValue(getTodaysIntakeAtom);
     const [refreshing, setRefreshing] = useState(false);
     const setHydration = useSetAtom(hydrationAtom);
     var total_intake;
@@ -53,7 +49,7 @@ export default function HomePage() {
 
                     <HydrationStatus />
                     <StyledButton
-                        // text="+ add a drink"
+                        text="+ add a drink"
                         textSize="xl"
                         href="home"
                     />

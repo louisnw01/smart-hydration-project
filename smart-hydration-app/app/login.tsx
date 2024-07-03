@@ -21,6 +21,7 @@ export default function LoginPage() {
     if (data) {
         setAuthToken(data);
         router.replace("(tabs)");
+        return;
     }
 
     const handleSubmit = () => {
