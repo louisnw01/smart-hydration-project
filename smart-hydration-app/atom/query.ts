@@ -88,6 +88,9 @@ export const updateMAtom = atomWithMutation((get) => ({
 
         const object = await response.json()
         return object.access_token;
+    },
+    enabled: !!get(authTokenAtom),
+}));
 
 export const getUserQAtom = atomWithQuery((get) => ({
     queryKey: ["user", get(authTokenAtom)],
