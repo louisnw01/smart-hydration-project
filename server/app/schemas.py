@@ -25,3 +25,9 @@ class JugUserUpdate(BaseModel):
     id: int
     key: str
     value: str
+
+      
+class UpdateJugForm(BaseModel):
+    jugId: str
+    name: str
+
