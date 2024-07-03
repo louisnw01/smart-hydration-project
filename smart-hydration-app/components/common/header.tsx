@@ -1,9 +1,9 @@
-import { Text, useColorScheme } from "react-native";
+import { Text } from "react-native";
 
 export default function PageHeader({ children }: { children: string }) {
     return (
         <Text className="font-semibold text-3xl ml-1 dark:text-white">
-            {children == "Home" ? "smart hydration" : children}
+            {children === "Home" ? "smart hydration" : children}
         </Text>
     );
 }

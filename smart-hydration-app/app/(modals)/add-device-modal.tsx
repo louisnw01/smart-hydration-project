@@ -1,21 +1,14 @@
 import { useState } from "react";
 // import PageHeading from "../common/page-heading";
 // import PopupPage from "../popup-page";
-import { start } from "react-native-esp-smartconfig";
 import {
-    Button,
     View,
     Text,
-    TextInput,
     SectionList,
     Pressable,
-    ActivityIndicator,
 } from "react-native";
-import { ScrollView } from "react-native";
-import { useAtomValue, useSetAtom } from "jotai";
+import { useAtomValue } from "jotai";
 import { getAllJugsQAtom, linkJugToUserMAtom } from "@/atom/query";
-import colors from "@/colors";
-import StyledButton from "../../components/common/button";
 import { useNavigation } from "expo-router";
 import Loading from "@/components/common/loading";
 
@@ -38,7 +31,7 @@ export default function MVPAddDeviceModal() {
         //     `todo: add jugs ${Array.from(selectedJugs).join(", ")} to account`,
         // );
 
-        linkJugsToUser(Array.from(selectedJugs));
+        linkJugsToUser(Array.from(selectedJugs) as string[]);
 
         // code to add to account here
         navigation.goBack();
@@ -57,7 +50,7 @@ export default function MVPAddDeviceModal() {
             {data && (
                 <SectionList
                     sections={Object.entries(data).map(([name, list]) => ({
-                        title: name == "real" ? "Real Jugs" : "Test Jugs",
+                        title: name === "real" ? "Real Jugs" : "Test Jugs",
                         data: list,
                     }))}
                     renderItem={({ item }) => (

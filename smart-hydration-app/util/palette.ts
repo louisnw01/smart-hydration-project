@@ -14,5 +14,5 @@ const lightColorScheme = {
 
 export default function useColorPalette() {
     const scheme = useColorScheme();
-    return scheme == "dark" ? darkColorScheme : lightColorScheme;
+    return scheme === "dark" ? darkColorScheme : lightColorScheme;
 }

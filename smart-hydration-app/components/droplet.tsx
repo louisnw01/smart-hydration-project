@@ -1,4 +1,4 @@
-import { Appearance, View } from "react-native";
+import { View } from "react-native";
 import Svg, { Defs, Mask, Path, Rect } from "react-native-svg";
 import Drop from "../assets/svgs/water-drop-svgrepo-com.svg";
 import { useAtomValue } from "jotai";
