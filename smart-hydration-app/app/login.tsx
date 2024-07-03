@@ -27,6 +27,7 @@ export default function LoginPage() {
         mutate({ email, password });
     };
 
+
     return (
         <PageWrapper>
             <ScrollView className="flex mt-20 gap-10">
@@ -38,6 +39,8 @@ export default function LoginPage() {
                     <TextInputBox
                         placeholder="Enter your email address"
                         onChange={setEmail}
+                        autoCapitalize="none"
+                        keyboardType="email-address"
                     />
                     <TextInputBox
                         placeholder="Enter your password"
