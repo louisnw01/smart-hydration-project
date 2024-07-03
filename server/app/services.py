@@ -176,3 +176,9 @@ def get_users_jugs(user_id):
     jugs = User.get(id=user_id).jug_user.jugs
     # jug_list = select(j.smart_hydration_id for j in Jug if (jug_user == j.owner))
     return jugs
+
+
+@db_session
+def update_jug_name_s(jug_id, name):
+    Jug.get(smart_hydration_id=jug_id).name = name
+    commit()
