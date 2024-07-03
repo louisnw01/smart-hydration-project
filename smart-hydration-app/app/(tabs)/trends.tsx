@@ -58,8 +58,7 @@ function RecentChart() {
                 />
                 <VictoryBar
                     style={{data: {fill: "#5cb5e1"}}}
-                    data={memoedData as any[]}
-                    // scale={{ x: "time" }}
+                    data={memoedData || undefined}
 
                     cornerRadius={4}
                 />
