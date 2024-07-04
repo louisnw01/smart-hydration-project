@@ -280,7 +280,7 @@ function InsightsPane() {
             <Text style={{
                 fontWeight: "bold",
             }}>
-                Compared to your average daily intake, you have drunk:
+                Compared to your average intake over this period, you have drunk:
             </Text>
             <View className="flex-row">
             <Text style={{
