@@ -28,7 +28,6 @@ export default function SubmitPage() {
                 Tap the button to set up your Smart Hydration profile.
             </Text>
             <Loading isLoading={isPending} message="registering.." />
-
             <>
                 {!isPending && (
                     <OnboardingButton

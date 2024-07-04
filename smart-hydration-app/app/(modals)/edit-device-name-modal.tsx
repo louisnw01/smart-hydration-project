@@ -6,27 +6,33 @@ import TextInputBox from "@/components/text-input-box";
 import { useState } from "react";
 import { useRouter } from "expo-router";
 
-
 export default function EditDeviceName() {
-    const {mutate} = useAtomValue(updateJugNameMAtom)
-    const currentJug = useAtomValue(selectedDeviceAtom)
+    const { mutate } = useAtomValue(updateJugNameMAtom);
+    const currentJug = useAtomValue(selectedDeviceAtom);
     const [jugName, setJugName] = useState("");
-    const router = useRouter()
+    const router = useRouter();
 
     const handleSubmit = () => {
-        const jugId = currentJug?.id as string;
+        const jugId = currentJug?.id;
+        if (!jugId) return;
         mutate({ jugId, name: jugName });
         router.back();
     };
 
-    return(
+    return (
         <View className="mx-16 gap-5 mt-16 items-center">
-            <TextInputBox placeholder={currentJug?.name} onChange={setJugName} />
-            <Pressable onPress={handleSubmit} className="bg-blue px-4 py-2 rounded-xl mt-10">
+            <TextInputBox
+                placeholder={currentJug?.name}
+                onChange={setJugName}
+            />
+            <Pressable
+                onPress={handleSubmit}
+                className="bg-blue px-4 py-2 rounded-xl mt-10"
+            >
                 <Text className="text-2xl font-semibold text-white">
-                   Submit
+                    Submit
                 </Text>
             </Pressable>
         </View>
-    )
+    );
 }
