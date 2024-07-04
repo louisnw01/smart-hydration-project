@@ -110,13 +110,13 @@ export default function DeviceInfoModal() {
                 <Container fillVertical amount={0.3} color="orange">
                     <Text>Temperature</Text>
                     <Text className="text-4xl">
-                        {device.temperature.toFixed(1)}C
+                        {device.temperature && device.temperature.toFixed(1)}C
                     </Text>
                 </Container>
                 <Container
                     right
                     fillVertical
-                    amount={device.water_level / device.capacity}
+                    amount={(device.water_level && device.capacity) && (device.water_level / device.capacity)}
                     color={colors.blue}
                 >
                     <Text>Water Level</Text>
@@ -127,7 +127,7 @@ export default function DeviceInfoModal() {
                 <Container fillHorizontal amount={0.5} color={colors.green}>
                     <Text>Battery</Text>
                     <Text className="text-4xl">
-                        {(device.battery * 100).toFixed(0)}%
+                        {device.battery && (device.battery * 100).toFixed(0)}%
                     </Text>
                 </Container>
                 <Container right>
@@ -157,7 +157,7 @@ export default function DeviceInfoModal() {
                 <Pressable
                     className="bg-gray-100 px-4 py-3 rounded-xl items-center mt-5"
                     onPress={() => {
-                        unlinkJugFromUser(device.id);
+                        device.id && unlinkJugFromUser(device.id);
                         router.back();
                     }}
                 >
