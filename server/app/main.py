@@ -13,7 +13,7 @@ from .models import db, User, JugUser, Jug
 from .schemas import LinkJugsForm, UserLogin, UserRegister, JugLink, UpdateJugForm
 from .services import (create_user, get_user_hash, user_exists, get_user_by_email, get_user_by_id,
                        unlink_jug_from_user_s,
-                       link_jugs_to_user_s, get_user_name, get_users_jugs, update_jug_name_s, update_jug_user_data)
+                       link_jugs_to_user_s, get_user_name, get_users_jugs, update_jug_name_s)
 
 load_dotenv()
 
