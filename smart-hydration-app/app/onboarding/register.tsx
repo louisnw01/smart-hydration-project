@@ -13,7 +13,7 @@ export default function RegisterPage() {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [passwordError, setPasswordError] = useState('');
-
+  
     useEffect(() => {
         if (password !== confirmPassword) {
             setPasswordError("Passwords don't match");
@@ -63,7 +63,7 @@ export default function RegisterPage() {
                 </View>
                 <Pressable
                     onPress={() => router.push("login")}
-                    className="bg-blue px-4 py-2 rounded-xl mt-16"
+                    className="px-4 py-2 rounded-xl mt-16"
                 >
                     <Text className="font-semibold text-white">
                         already have an account? Login

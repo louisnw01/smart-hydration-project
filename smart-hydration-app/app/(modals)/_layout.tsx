@@ -1,5 +1,8 @@
 import useColorPalette from "@/util/palette";
-import { Stack } from "expo-router";
+import { Stack, useRouter } from "expo-router";
+import { Pressable, View } from "react-native";
+import { Entypo } from "@expo/vector-icons";
+import colors from "@/colors";
 
 export default function ModalLayout() {
     const palette = useColorPalette();
@@ -16,20 +19,30 @@ export default function ModalLayout() {
                 headerStyle: {
                     backgroundColor: palette.bg,
                 },
+                headerLeft: () => {
+                    const router = useRouter();
+                    const palette = useColorPalette();
+                    return (
+                        <Pressable onPress={() => router.back()}>
+                            <Entypo
+                                name="circle-with-cross"
+                                size={24}
+                                color="rgb(80, 80, 80)"
+                            />
+                        </Pressable>
+                    );
+                },
             }}
         >
             <Stack.Screen
                 name="settings-modal"
-                options={{ title: "Settings" }}
+                options={{ title: "Settings", headerBackVisible: true }}
             />
             <Stack.Screen
                 name="add-device-modal"
                 options={{ title: "Add a Device" }}
             />
-            <Stack.Screen
-                name="device-info-modal"
-                options={{ headerShown: false }}
-            />
+            <Stack.Screen name="device-info-modal" options={{ title: "" }} />
             <Stack.Screen
                 name="edit-device-name-modal"
                 options={{
