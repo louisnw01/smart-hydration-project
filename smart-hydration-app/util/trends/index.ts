@@ -1,7 +1,7 @@
-import {chartTimeWindowAtom} from "@/atom/nav";
-import {getHydrationAtom} from "@/atom/query";
-import {atom} from "jotai";
-import {atomEffect} from "jotai-effect";
+import { chartTimeWindowAtom } from "@/atom/nav";
+import { getHydrationAtom } from "@/atom/query";
+import { atom } from "jotai";
+import { atomEffect } from "jotai-effect";
 
 export function getAggregates(data: any[], type: string) {
     const MS_HOUR = 60 * 60 * 1000;

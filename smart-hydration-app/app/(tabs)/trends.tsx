@@ -1,6 +1,6 @@
 import PageWrapper from "@/components/common/page-wrapper";
 import React, { useMemo } from "react";
-import {ActivityIndicator, Pressable, ScrollView, Text, View} from "react-native";
+import { ActivityIndicator, Pressable, ScrollView, Text, View } from "react-native";
 import {
     VictoryContainer,
     VictoryChart,
@@ -11,7 +11,7 @@ import {
 } from "victory-native";
 // import SFPro from "../../assets/fonts/SF-Pro-Display-Regular.otf";
 // import { useFont } from "@shopify/react-native-skia";
-import {useAtom, useAtomValue, useSetAtom} from "jotai";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { chartTimeWindowAtom } from "@/atom/nav";
 import { custom } from "@/constants/chart-theme";
 import {
@@ -21,8 +21,8 @@ import {
     formattedDataEAtom,
     getMostProductiveDay,
 } from "@/util/trends";
-import {Entypo} from "@expo/vector-icons";
-import {isLoading} from "expo-font";
+import { Entypo } from "@expo/vector-icons";
+import { isLoading } from "expo-font";
 
 const tickFormatMap: { [key: string]: (t: number) => string } = {
     D: (t: number) => {
