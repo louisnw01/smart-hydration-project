@@ -1,6 +1,6 @@
 import PageWrapper from "@/components/common/page-wrapper";
 import React, { useMemo } from "react";
-import { Pressable, ScrollView, Text, View } from "react-native";
+import {ActivityIndicator, Pressable, ScrollView, Text, View} from "react-native";
 import {
     VictoryContainer,
     VictoryChart,
@@ -11,7 +11,7 @@ import {
 } from "victory-native";
 // import SFPro from "../../assets/fonts/SF-Pro-Display-Regular.otf";
 // import { useFont } from "@shopify/react-native-skia";
-import { useAtomValue, useSetAtom } from "jotai";
+import {useAtom, useAtomValue, useSetAtom} from "jotai";
 import { chartTimeWindowAtom } from "@/atom/nav";
 import { custom } from "@/constants/chart-theme";
 import {
@@ -56,8 +56,9 @@ function RecentChart() {
     const memoedData = useMemo(() => data, [data]);
     //alert(data)
     if (!data || data.length === 0) { return (
-        <View>
-            <Text>Loading Insights, Please Wait...</Text>
+        <View className="h-full justify-center text-center">
+            <ActivityIndicator />
+            <Text className="text-center">Loading Analytics, Please Wait...</Text>
         </View>
     );
     }
@@ -150,8 +151,9 @@ function InsightsPane() {
     if (!data || data.length === 0) {
 
     return (
-        <View>
-            <Text>Loading Insights, Please Wait...</Text>
+        <View className="h-3/4 justify-center text-center">
+            <ActivityIndicator />
+            <Text className="text-center">Loading Insights, Please Wait...</Text>
         </View>
     );
     }
@@ -213,7 +215,7 @@ function InsightsPane() {
                     fontWeight: "bold",
                     color: displayedPercentage > 0 ? "green" : "orange"
                     }}>
-                    {displayedPercentage.toString() === "Infinity" ? "Well Done!" : Math.abs(displayedPercentage).toFixed(0) + " "}
+                    {displayedPercentage.toString() === "Infinity" ? "Well Done!" : Math.abs(displayedPercentage).toFixed(0) + "% "}
                 </Text>
                 <Entypo className="py-2" name={displayedPercentage > 0 ? "arrow-long-up" : "arrow-long-down"} size={24} color={displayedPercentage > 0 ? "green" : "orange"} />
                 </View>
@@ -264,12 +266,12 @@ function InsightsPane() {
             }}>You drank the most on:</Text>
             <View className="flex-row justify-between">
             <Text style={{
-                fontSize: mostProdConsumption > 99999 ? 28 : 32,
+                fontSize: mostProdConsumption > 9999 ? 28 : 32,
                 fontWeight: "bold",
                 color: "#5cb5e1"
             }}>{mostProductiveDay}{timeframe != "W" ? "s" : ""}</Text>
                 <Text style={{
-                    fontSize: mostProdConsumption > 99999 ? 28 : 32,
+                    fontSize: mostProdConsumption > 9999 ? 28 : 32,
                     fontWeight: "bold",
                     color: "#5bb450",
                 }}>{mostProdConsumption}ml</Text>
@@ -307,6 +309,8 @@ function InsightsPane() {
 
 export default function TrendsPage() {
     const setChartTimeWindow = useSetAtom(chartTimeWindowAtom);
+    const data = useAtomValue(formattedDataAtom)
+
 
     return (
         <PageWrapper>
