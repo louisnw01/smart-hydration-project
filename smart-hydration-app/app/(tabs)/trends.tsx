@@ -201,8 +201,8 @@ function InsightsPane() {
                     flexWrap: 'wrap',
                     fontWeight: "bold"
                 }}>
-                    You seem to be drinking {Math.abs(displayedPercentage).toFixed(0)}
-                    % {displayedPercentage > 0 ? "more" : "less"}{" "}
+                    You seem to be drinking {displayedPercentage.toString() === "Infinity" ? "much " : Math.abs(displayedPercentage).toFixed(0) + "% "}
+                    {displayedPercentage > 0 ? "more" : "less"}{" "}
                     {getCorrectTimeframeWord(timeframe)}
                 </Text>
                 <View className="flex-row top-1">
@@ -213,7 +213,7 @@ function InsightsPane() {
                     fontWeight: "bold",
                     color: displayedPercentage > 0 ? "green" : "orange"
                     }}>
-                    {Math.abs(displayedPercentage).toFixed(0)}%
+                    {displayedPercentage.toString() === "Infinity" ? "Well Done!" : Math.abs(displayedPercentage).toFixed(0) + " "}
                 </Text>
                 <Entypo className="py-2" name={displayedPercentage > 0 ? "arrow-long-up" : "arrow-long-down"} size={24} color={displayedPercentage > 0 ? "green" : "orange"} />
                 </View>
