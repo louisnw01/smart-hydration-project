@@ -46,6 +46,10 @@ def query(session, endpoint):
     return response.json() if response.ok else None
 
 
+def convert_timestamp(timestamp: str):
+    return dt.datetime.fromisoformat(timestamp.replace('Z', '')).timestamp()
+
+
 def fetch_data_for_jug(session, jug_id):
     result = query(session, f'/data/device/{jug_id}')
     if result is None:
@@ -57,6 +61,7 @@ def fetch_data_for_jug(session, jug_id):
         'battery': result['telemetry']['battery'],
         'temperature': round(result['telemetry']['temperature'], 3),
         'water_level': result['water_level']['d'],
+        'last_seen': convert_timestamp(result['telemetry']['timestamp']),
     }
 
 

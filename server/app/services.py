@@ -157,7 +157,6 @@ def get_user_by_id(user_id):
 def get_user_by_email(email):
     return User.get(email=email)
 
-
 @db_session
 def get_user_name(user_id):
     return User.get(id=user_id).name
