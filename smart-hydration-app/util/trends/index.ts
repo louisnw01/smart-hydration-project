@@ -60,7 +60,7 @@ export const formattedDataAtom = atom<any[] | null>(null);
 
 export const formattedDataEAtom = atomEffect((get, set) => {
     const type = get(chartTimeWindowAtom);
-    const {data, isLoading, isError} = get(getHydrationAtom);
+    const {data, isLoading} = get(getHydrationAtom);
     if (isLoading || !data) {
         set(formattedDataAtom, []);
         return;
@@ -88,7 +88,7 @@ function avgOfNumberList(list: number[]) {
 export function averageDailyHydrationComparison(data: FormattedData[]) {
     let howMuchWaterDrankToday = 0;
 
-    const timeNow = new Date().getHours() + new Date().getMinutes() / 60;
+    //const timeNow = new Date().getHours() + new Date().getMinutes() / 60;
 
     // TODO: do this all with bit shifting
     const dayInMS = 1000 * 60 * 60 * 24;
