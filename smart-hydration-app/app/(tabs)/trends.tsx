@@ -135,7 +135,7 @@ function getAmountBetween(data: FormattedData[], start: number, end: number): nu
         }
         if (timestamp >= startTimestamp && timestamp <= endTimestamp) {
             amount += row.y;
-            console.log("Match found")
+            //console.log("Match found")
             //alert("match")
         }
     }
@@ -308,7 +308,7 @@ function InsightsPane() {
 }
 
 export default function TrendsPage() {
-    const setChartTimeWindow = useSetAtom(chartTimeWindowAtom);
+    const [timewindow, setChartTimeWindow] = useAtom(chartTimeWindowAtom);
     const data = useAtomValue(formattedDataAtom)
 
 
@@ -326,7 +326,9 @@ export default function TrendsPage() {
                         <RecentChart/>
                     </View>
                     <View className="flex flex-row justify-evenly mt-4">
-                        <Pressable className="bg-gray-200 rounded-3xl">
+                        <Pressable style={{
+                            backgroundColor: timewindow === "D" ? "#5cb5e1" : "#E5E7EB"
+                        }} className="rounded-3xl">
                             <Text
                                 className="text-lg px-4"
                                 onPress={() => setChartTimeWindow("D")}
@@ -334,7 +336,9 @@ export default function TrendsPage() {
                                 D
                             </Text>
                         </Pressable>
-                        <Pressable className="bg-gray-200 rounded-3xl">
+                        <Pressable style={{
+                            backgroundColor: timewindow === "W" ? "#5cb5e1" : "#E5E7EB"
+                        }} className="rounded-3xl">
                             <Text
                                 className="text-lg px-4"
                                 onPress={() => setChartTimeWindow("W")}
@@ -342,7 +346,9 @@ export default function TrendsPage() {
                                 W
                             </Text>
                         </Pressable>
-                        <Pressable className="bg-gray-200 rounded-3xl">
+                        <Pressable style={{
+                            backgroundColor: timewindow === "M" ? "#5cb5e1" : "#E5E7EB"
+                        }} className="rounded-3xl">
                             <Text
                                 className="text-lg px-4"
                                 onPress={() => setChartTimeWindow("M")}
@@ -350,7 +356,9 @@ export default function TrendsPage() {
                                 M
                             </Text>
                         </Pressable>
-                        <Pressable className="bg-gray-200 rounded-3xl">
+                        <Pressable style={{
+                            backgroundColor: timewindow === "Y" ? "#5cb5e1" : "#E5E7EB"
+                        }} className="rounded-3xl">
                             <Text
                                 className="text-lg px-4"
                                 onPress={() => setChartTimeWindow("Y")}
