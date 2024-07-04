@@ -6,6 +6,7 @@ export interface DeviceInfo {
     battery: number;
     temperature: number;
     water_level: number;
+    last_seen: number;
 }
 
 export interface TrendsInfo {

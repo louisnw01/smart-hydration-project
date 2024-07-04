@@ -6,7 +6,6 @@ import { useRouter } from "expo-router";
 import { selectedDeviceAtom } from "@/atom/device";
 import colors from "@/colors";
 
-
 function Container({
     children,
     right,
@@ -23,12 +22,12 @@ function Container({
     amount?: number;
 }) {
     let className =
-        "bg-gray-100 flex-1 justify-between h-24 rounded-xl my-2 overflow-hidden px-4 py-4";
+        "bg-gray-100 flex-1 justify-between h-24 rounded-xl my-2 overflow-hidden px-4 py-4 dark:bg-neutral-800";
     // removed px-4 py-4
     className += right ? " ml-2" : " mr-2";
 
     const scaleAmount = fillVertical ? 150 : 100;
-    
+
     return (
         <View className={className}>
             {amount !== null && (
@@ -88,21 +87,22 @@ export default function DeviceInfoModal() {
 
     if (!device) return;
     return (
-        <View className="mt-16 mx-5">
+        <View className="mt-8 mx-5">
             <View className="flex-row justify-between">
                 <View className="flex-row">
                     {/* <Text className="text-xs">jug icon</Text> */}
-                    <Text className="text-3xl font-semibold">
+                    <Text className="text-3xl font-semibold dark:text-white">
                         {device.name}
                     </Text>
                 </View>
-                <Text>pen</Text>
+                {/* <Text>pen</Text> */}
             </View>
 
             <View className="flex flex-row mt-12">
                 <Container fillVertical amount={0.3} color="orange">
-                    <Text>Temperature</Text>
-                    <Text className="text-4xl">
+
+                    <Text className="dark:text-white">Temperature</Text>
+                    <Text className="text-4xl dark:text-white">
                         {device.temperature && device.temperature.toFixed(1)}C
                     </Text>
                 </Container>
@@ -112,24 +112,39 @@ export default function DeviceInfoModal() {
                     amount={(device.water_level && device.capacity) && (device.water_level / device.capacity)}
                     color={colors.blue}
                 >
-                    <Text>Water Level</Text>
-                    <Text className="text-4xl">{device.water_level}ml</Text>
+                    <Text className="dark:text-white">Water Level</Text>
+                    <Text className="text-4xl dark:text-white">
+                        {device.water_level}ml
+                    </Text>
                 </Container>
             </View>
             <View className="flex flex-row">
                 <Container fillHorizontal amount={0.5} color={colors.green}>
-                    <Text>Battery</Text>
-                    <Text className="text-4xl">
+                    <Text className="dark:text-white">Battery</Text>
+                    <Text className="text-4xl dark:text-white">
                         {device.battery && (device.battery * 100).toFixed(0)}%
                     </Text>
                 </Container>
                 <Container right>
-                    <Text>Last Connected</Text>
-                    <Text className="text-3xl">todo</Text>
+                    <Text className="dark:text-white">Last Seen</Text>
+                    <Text className="text-1xl dark:text-white">
+                        {new Date(device.last_seen * 1000).toLocaleString(
+                            "en-gb",
+                            {
+                                // year: "numeric",
+                                month: "long",
+                                day: "numeric",
+                                hour: "2-digit",
+                                minute: "2-digit",
+                                hour12: true,
+                                // timeStyle: "medium",
+                            },
+                        )}
+                    </Text>
                 </Container>
             </View>
 
-            <View className="flex mt-72 gap-3">
+            <View className="flex mt-56 gap-3">
                 <Pressable
                     className="bg-gray-100 px-4 py-3 rounded-xl items-center"
                     onPress={() => {
