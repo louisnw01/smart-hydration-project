@@ -44,16 +44,17 @@ export const unlinkJugFromUserMAtom = atomWithMutation((get) => ({
         if (!response.ok) {
             throw new Error("Jug could not be unlinked from user");
         }
-
-        return;
     },
 
-    onSuccess: () => {
+    onSuccess: (data, jugId) => {
         const queryClient = get(queryClientAtom);
-        void queryClient.invalidateQueries({ queryKey: ["get-jug-data"] });
+        void queryClient.setQueryData(
+            ["get-jug-data", get(authTokenAtom)],
+            (prev: DeviceInfo[]) => prev.filter((device) => device.id != jugId),
+        );
+        // void queryClient.invalidateQueries({ queryKey: ["get-jug-data"] });
     },
 }));
-
 
 export const updateJugNameMAtom = atomWithMutation((get) => ({
     mutationKey: ["update-jug-name", get(authTokenAtom)],

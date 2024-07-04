@@ -1,9 +1,5 @@
 import PageWrapper from "@/components/common/page-wrapper";
-import {
-    RefreshControl,
-    ScrollView,
-    View,
-} from "react-native";
+import { RefreshControl, ScrollView, View } from "react-native";
 import { useAtomValue } from "jotai";
 import { getJugDataQAtom } from "@/atom/query";
 import DeviceRow from "@/components/devices/device-row";
