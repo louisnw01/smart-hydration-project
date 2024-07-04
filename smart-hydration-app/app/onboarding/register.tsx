@@ -30,7 +30,7 @@ export default function RegisterPage() {
             <View className="gap-5 mt-16 items-center">
                 <View style={{ width: 350 }}>
                     <TextInputBox
-                        placeholder="Enter your email address (*)"
+                        placeholder="Enter your email address (required)"
 
                         onChange={(val) => {
                             setInfo((prev) => ({ ...prev, email: val }));
@@ -41,7 +41,7 @@ export default function RegisterPage() {
                 </View>
                 <View style={{ width: 350 }}>
                     <TextInputBox
-                        placeholder="Enter your password (*)"
+                        placeholder="Enter your password (required)"
                         autoCapitalize="none"
                         onChange={(val) => {
                             setPassword(val);
@@ -52,7 +52,7 @@ export default function RegisterPage() {
                 </View>
                 <View style={{ width: 350 }}>
                     <TextInputBox
-                        placeholder="Confirm your password (*)"
+                        placeholder="Confirm your password (required)"
                         autoCapitalize="none"
                         onChange={(val) => setConfirmPassword(val)}
                         textContentType="password"
