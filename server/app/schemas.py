@@ -20,7 +20,8 @@ class JugLink(BaseModel):
 class LinkJugsForm(BaseModel):
     jugIds: List[str]
 
-
+      
 class UpdateJugForm(BaseModel):
     jugId: str
     name: str
+
