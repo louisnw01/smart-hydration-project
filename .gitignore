@@ -21,5 +21,6 @@ web-build/
 eas.json
 pyrightconfig.json
 __pycache__/
-
+/ios
+/android
 sh-key-pair.pem
