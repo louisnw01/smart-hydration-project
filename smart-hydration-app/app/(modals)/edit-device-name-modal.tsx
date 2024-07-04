@@ -1,5 +1,5 @@
 import { Pressable, Text, View } from "react-native";
-import { useAtomValue } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 import { updateJugNameMAtom } from "@/atom/query";
 import { selectedDeviceAtom } from "@/atom/device";
 import TextInputBox from "@/components/text-input-box";
@@ -7,8 +7,9 @@ import { useState } from "react";
 import { useRouter } from "expo-router";
 
 export default function EditDeviceName() {
-    const { mutate } = useAtomValue(updateJugNameMAtom);
-    const currentJug = useAtomValue(selectedDeviceAtom);
+    const {mutate} = useAtomValue(updateJugNameMAtom);
+    const [currentJug, setJugInfo] = useAtom(selectedDeviceAtom);
+
     const [jugName, setJugName] = useState("");
     const router = useRouter();
 
@@ -16,7 +17,10 @@ export default function EditDeviceName() {
         const jugId = currentJug?.id;
         if (!jugId) return;
         mutate({ jugId, name: jugName });
+
+        setJugInfo((prev) => ({...prev, name:jugName }));
         router.back();
+        
     };
 
     return (

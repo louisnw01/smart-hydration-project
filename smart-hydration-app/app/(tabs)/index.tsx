@@ -43,7 +43,7 @@ export default function HomePage() {
                 refreshControl={
                     <RefreshControl
                         refreshing={refreshing}
-                        onRefresh={handleRefresh}
+                        onRefresh={() => handleRefresh()}
                     />
                 }
             >
