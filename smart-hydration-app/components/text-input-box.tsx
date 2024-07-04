@@ -9,7 +9,7 @@ export interface TextInputProperties {
 }
 
 //add validation to ensure only text can be entered?
-const TextInputBox = ({ placeholder, onChange, textContentType, keyboardType, autoCapitalize }: TextInputProperties) => {
+export default function TextInputBox ({ placeholder, onChange, textContentType, keyboardType, autoCapitalize }: TextInputProperties) {
     return (
         <TextInput
             placeholder={placeholder}
@@ -23,5 +23,3 @@ const TextInputBox = ({ placeholder, onChange, textContentType, keyboardType, au
         />
     );
 };
-
-export default TextInputBox;
