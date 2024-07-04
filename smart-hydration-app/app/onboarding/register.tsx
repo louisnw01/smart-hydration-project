@@ -10,38 +10,35 @@ export default function RegisterPage() {
     const router = useRouter();
     const setInfo = useSetAtom(registerInfoAtom);
 
-
-
     return (
         <GenericOnboardContent
             title="Enter your email and password"
             nextHref="onboarding/name"
         >
             <View className="gap-5 mt-16 items-center">
-                <View style={{width: 350}}>
-                <TextInputBox
-                    placeholder="Enter your email address"
-
-                    onChange={(val) =>
-                        setInfo((prev) => ({ ...prev, email: val }))
-                    }
-                    keyboardType="email-address"
-                    autoCapitalize="none"
-                />
+                <View style={{ width: 350 }}>
+                    <TextInputBox
+                        placeholder="Enter your email address"
+                        onChange={(val) =>
+                            setInfo((prev) => ({ ...prev, email: val }))
+                        }
+                        keyboardType="email-address"
+                        autoCapitalize="none"
+                    />
                 </View>
-                <View style={{width: 350}}>
-                <TextInputBox
-                    placeholder="Enter your password"
-                    autoCapitalize="none"
-                    onChange={(val) =>
-                        setInfo((prev) => ({ ...prev, password: val }))
-                    }
-                    textContentType="password"
-                />
+                <View style={{ width: 350 }}>
+                    <TextInputBox
+                        placeholder="Enter your password"
+                        autoCapitalize="none"
+                        onChange={(val) =>
+                            setInfo((prev) => ({ ...prev, password: val }))
+                        }
+                        textContentType="password"
+                    />
                 </View>
                 <Pressable
                     onPress={() => router.push("login")}
-                    className="bg-blue px-4 py-2 rounded-xl mt-16"
+                    className="px-4 py-2 rounded-xl mt-16"
                 >
                     <Text className="font-semibold text-white">
                         already have an account? Login
