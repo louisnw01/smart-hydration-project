@@ -17,7 +17,7 @@ import { userNameAtom } from "@/atom/user";
 
 const queryClient = new QueryClient();
 
-const HydrateAtoms = ({ children } : {children : React.ReactNode})  => {
+const HydrateAtoms = ({ children }: { children: React.ReactNode }) => {
     useHydrateAtoms([[queryClientAtom, queryClient]]);
     return children;
 };
@@ -52,7 +52,7 @@ function WrappedIndex() {
 
     useEffect(() => {
         getTokenFromStorage();
-    });
+    }, []);
 
     return (
         <Stack>
