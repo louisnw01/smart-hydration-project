@@ -1,6 +1,6 @@
 import { View, Pressable, Text, ScrollView } from "react-native";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAtomValue, useSetAtom } from "jotai";
 import { loginMAtom } from "@/atom/query";
 
@@ -16,17 +16,18 @@ export default function LoginPage() {
     const [password, setPassword] = useState("");
     const setAuthToken = useSetAtom(authTokenAtom);
 
-    const { mutate, data, isPending, isError } = useAtomValue(loginMAtom);
-
-    if (data) {
-        setAuthToken(data);
-        router.replace("(tabs)");
-        return;
-    }
+    const { mutate, data, isPending, isError, isSuccess } = useAtomValue(loginMAtom);
 
     const handleSubmit = () => {
         mutate({ email, password });
     };
+
+    useEffect(()=> {
+        if(isSuccess){
+            setAuthToken(data);
+            router.replace("(tabs)");
+        }
+    }, [isSuccess])
 
 
     return (

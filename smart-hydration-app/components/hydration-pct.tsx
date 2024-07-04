@@ -7,7 +7,7 @@ export default function HydrationPercentage() {
     return (
         <View className="items-center">
             <Text className="text-8xl font-semibold dark:text-white">
-                {hydration}%
+                {hydration}ml
             </Text>
 
             <Text className="text-lg">of your target</Text>
