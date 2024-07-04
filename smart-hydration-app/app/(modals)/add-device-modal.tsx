@@ -22,7 +22,7 @@ import Loading from "@/components/common/loading";
 export default function MVPAddDeviceModal() {
     const { data, isLoading } = useAtomValue(getAllJugsQAtom);
     const navigation = useNavigation();
-    const [selectedJugs, setSelectedJugs] = useState(new Set());
+    const [selectedJugs, setSelectedJugs] = useState(new Set<string>());
     const { mutate: linkJugsToUser } = useAtomValue(linkJugToUserMAtom);
     const handleSelect = (jug_id: string) => {
         if (selectedJugs.has(jug_id)) {
@@ -37,6 +37,8 @@ export default function MVPAddDeviceModal() {
         // alert(
         //     `todo: add jugs ${Array.from(selectedJugs).join(", ")} to account`,
         // );
+
+
 
         linkJugsToUser(Array.from(selectedJugs));
 

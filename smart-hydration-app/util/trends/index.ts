@@ -111,6 +111,7 @@ export function averageDailyHydrationComparison(data: FormattedData[]) {
     return [howMuchWaterDrankToday || 0, avgAmount || 0];
 }
 
+
 export function averageHydrationMonthComparison(data: FormattedData[]) {
     const startOfMonth = new Date(
         new Date().getFullYear(),
@@ -149,6 +150,7 @@ export function getMostProductiveDay(data) {
 
     const maxConsumption = Math.max(...dayConsumption);
     const mostProductiveDayIndex = dayConsumption.indexOf(maxConsumption);
+    const highestConsumption = dayConsumption[mostProductiveDayIndex];
     const dayNames = [
         "Sunday",
         "Monday",
@@ -159,5 +161,5 @@ export function getMostProductiveDay(data) {
         "Saturday",
     ];
 
-    return dayNames[mostProductiveDayIndex];
+    return [ dayNames[mostProductiveDayIndex], highestConsumption ];
 }
