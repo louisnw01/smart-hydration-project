@@ -7,8 +7,6 @@ import { authTokenAtom, registerInfoAtom } from "./user";
 import { ENDPOINTS, request } from "@/util/fetch";
 import { DeviceInfo, TrendsInfo } from "@/interfaces/device";
 
-import { useAtomValue, useSetAtom } from "jotai";
-
 export const linkJugToUserMAtom = atomWithMutation((get) => ({
     mutationKey: ["link-jug-to-user", get(authTokenAtom)],
     enabled: !!get(authTokenAtom),

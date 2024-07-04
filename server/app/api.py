@@ -1,10 +1,10 @@
+import datetime as dt
 import json
 import os
-import requests
 import re
+
+import requests
 from dotenv import load_dotenv
-import json
-import datetime as dt
 
 load_dotenv()
 
@@ -121,4 +121,3 @@ def get_todays_intake(session, jug):
         total_intake -= row['water_delta']
 
     return total_intake
-
