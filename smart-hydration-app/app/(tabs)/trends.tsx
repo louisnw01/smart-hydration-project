@@ -320,7 +320,7 @@ export default function TrendsPage() {
 
             {/*</ScrollView>*/}
 
-            <ScrollView className="flex flex-1 mt-4">
+            <ScrollView className="flex flex-1">
                 <View className="flex mx-8 mt-8">
                     <View className="w-full h-72 bg-gray-100 rounded-3xl overflow-hidden">
                         <RecentChart/>
