@@ -1,4 +1,4 @@
-import { View, Pressable, Text, ScrollView } from "react-native";
+import { View, Pressable, Text, ScrollView, TextInput } from "react-native";
 
 import { useEffect, useState } from "react";
 import { useAtomValue, useSetAtom } from "jotai";
@@ -6,7 +6,6 @@ import { loginMAtom } from "@/atom/query";
 
 import { authTokenAtom } from "@/atom/user";
 import PageWrapper from "@/components/common/page-wrapper";
-import TextInputBox from "@/components/text-input-box";
 import Drop from "@/assets/svgs/water-drop-svgrepo-com.svg";
 import { useRouter } from "expo-router";
 
@@ -38,16 +37,20 @@ export default function LoginPage() {
                     <Drop width={100} height={100} />
                 </View>
                 <View className="mx-16 gap-5 mt-16 items-center">
-                    <TextInputBox
+                    <TextInput
                         placeholder="Enter your email address"
-                        onChange={setEmail}
+                        onChangeText={setEmail}
+                        textContentType="emailAddress"
                         autoCapitalize="none"
                         keyboardType="email-address"
+                        className="bg-gray-200 w-full h-14 placeholder-black text-xl rounded-xl px-3"
                     />
-                    <TextInputBox
+                    <TextInput
                         placeholder="Enter your password"
-                        onChange={setPassword}
+                        onChangeText={setPassword}
                         textContentType="password"
+                        secureTextEntry={true}
+                        className="bg-gray-200 w-full h-14 placeholder-black text-xl rounded-xl px-3"
                     />
                     {isPending && <Text>Logging in..</Text>}
                     {isError && (

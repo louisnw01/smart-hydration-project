@@ -1,7 +1,6 @@
-import { View, Pressable, Text } from "react-native";
+import { View, Pressable, Text, TextInput } from "react-native";
 
 import { useSetAtom } from "jotai";
-import TextInputBox from "@/components/text-input-box";
 import { registerInfoAtom } from "@/atom/user";
 import GenericOnboardContent from "@/components/generic-onboard-content";
 import { useRouter } from "expo-router";
@@ -29,33 +28,39 @@ export default function RegisterPage() {
         >
             <View className="gap-5 mt-16 items-center">
                 <View style={{ width: 350 }}>
-                    <TextInputBox
+                    <TextInput
                         placeholder="Enter your email address (required)"
 
-                        onChange={(val) => {
+                        onChangeText={(val) => {
                             setInfo((prev) => ({ ...prev, email: val }));
                         }}
                         keyboardType="email-address"
                         autoCapitalize="none"
+                        textContentType="emailAddress"
+                        className="bg-gray-200 w-full h-14 placeholder-black text-xl rounded-xl px-3"
                     />
                 </View>
                 <View style={{ width: 350 }}>
-                    <TextInputBox
+                    <TextInput
                         placeholder="Enter your password (required)"
                         autoCapitalize="none"
-                        onChange={(val) => {
+                        onChangeText={(val) => {
                             setPassword(val);
                             setInfo((prev) => ({ ...prev, password: val }));
                         }}
                         textContentType="password"
+                        secureTextEntry={true}
+                        className="bg-gray-200 w-full h-14 placeholder-black text-xl rounded-xl px-3"
                     />
                 </View>
                 <View style={{ width: 350 }}>
-                    <TextInputBox
+                    <TextInput
                         placeholder="Confirm your password (required)"
                         autoCapitalize="none"
-                        onChange={(val) => setConfirmPassword(val)}
+                        onChangeText={(val) => setConfirmPassword(val)}
                         textContentType="password"
+                        secureTextEntry={true}
+                        className="bg-gray-200 w-full h-14 placeholder-black text-xl rounded-xl px-3"
                     />
                 </View>
                 <View style={{ width: 350 }}>

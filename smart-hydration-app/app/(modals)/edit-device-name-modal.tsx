@@ -1,8 +1,7 @@
-import { Pressable, Text, View } from "react-native";
+import { Pressable, Text, TextInput, View } from "react-native";
 import { useAtom, useAtomValue } from "jotai";
 import { updateJugNameMAtom } from "@/atom/query";
 import { selectedDeviceAtom } from "@/atom/device";
-import TextInputBox from "@/components/text-input-box";
 import { useState } from "react";
 import { useRouter } from "expo-router";
 
@@ -25,9 +24,10 @@ export default function EditDeviceName() {
 
     return (
         <View className="mx-16 gap-5 mt-16 items-center">
-            <TextInputBox
+            <TextInput
                 placeholder={currentJug?.name}
-                onChange={setJugName}
+                onChangeText={setJugName}
+                className="bg-gray-200 w-full h-14 placeholder-black text-xl rounded-xl px-3"
             />
             <Pressable
                 onPress={handleSubmit}
