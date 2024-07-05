@@ -3,26 +3,30 @@ import HydrationPercentage from "@/components/hydration-pct";
 import HydrationStatus from "@/components/hydration-status";
 import { useAtomValue, useSetAtom } from "jotai";
 import Droplet from "@/components/droplet";
-import {
-    View,
-    RefreshControl,
-    ScrollView,
-} from "react-native";
-import StyledButton from "@/components/common/button";
-import { getTodaysIntakeAtom } from "@/atom/query";
-import { useState } from "react";
+import { View, RefreshControl, ScrollView, Text } from "react-native";
+import { getJugDataQAtom, getTodaysIntakeAtom } from "@/atom/query";
+import { useEffect, useState } from "react";
 import { hydrationAtom } from "@/atom/hydration";
+import StyledButton from "@/components/common/button";
+import Loading from "@/components/common/loading";
 
 export default function HomePage() {
-    const { isLoading, refetch } = useAtomValue(getTodaysIntakeAtom);
+    const { data: jugInfoData, isLoading: isLoadingJugInfo } =
+        useAtomValue(getJugDataQAtom);
+    const { data, isLoading, refetch, isSuccess, isPending } =
+        useAtomValue(getTodaysIntakeAtom);
+
     const [refreshing, setRefreshing] = useState(false);
     const setHydration = useSetAtom(hydrationAtom);
-    var total_intake;
+
+    useEffect(() => {
+        if (!isSuccess) return;
+        setHydration(data);
+    }, [isSuccess]);
 
     const handleRefresh = async () => {
         setRefreshing(true);
-        total_intake = (await refetch()).data;
-        setHydration((total_intake as number) / 2000);
+        refetch();
     };
 
     if (!isLoading && refreshing) {
@@ -39,21 +43,33 @@ export default function HomePage() {
                 refreshControl={
                     <RefreshControl
                         refreshing={refreshing}
-                        onRefresh={handleRefresh}
+                        onRefresh={() => handleRefresh()}
                     />
                 }
             >
-                <View className="flex flex-1 justify-evenly pt-3 h-full items-center">
-                    <HydrationPercentage />
-                    <Droplet />
+                <Loading
+                    isLoading={isLoading || isPending}
+                    message="Loading your information.."
+                />
+                {!isLoading && !isPending && !isLoadingJugInfo && (
+                    <View className="flex flex-1 justify-evenly pt-3 h-full items-center">
+                        {!jugInfoData || jugInfoData.length == 0 ? (
+                            <Text>You haven't linked any jugs yet.</Text>
+                        ) : (
+                            <>
+                                <HydrationPercentage />
+                                <Droplet />
 
-                    <HydrationStatus />
-                    <StyledButton
-                        text="+ add a drink"
-                        textSize="xl"
-                        href="home"
-                    />
-                </View>
+                                <HydrationStatus />
+                                <StyledButton
+                                    // text="+ add a drink"
+                                    textSize="xl"
+                                    href="index"
+                                />
+                            </>
+                        )}
+                    </View>
+                )}
             </ScrollView>
         </PageWrapper>
     );

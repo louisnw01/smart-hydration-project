@@ -6,6 +6,8 @@ import re
 import requests
 from dotenv import load_dotenv
 
+from .services import get_users_jugs_sh_ids
+
 load_dotenv()
 
 
@@ -44,6 +46,10 @@ def query(session, endpoint):
     return response.json() if response.ok else None
 
 
+def convert_timestamp(timestamp: str):
+    return dt.datetime.fromisoformat(timestamp.replace('Z', '')).timestamp()
+
+
 def fetch_data_for_jug(session, jug_id):
     result = query(session, f'/data/device/{jug_id}')
     if result is None:
@@ -55,13 +61,16 @@ def fetch_data_for_jug(session, jug_id):
         'battery': result['telemetry']['battery'],
         'temperature': round(result['telemetry']['temperature'], 3),
         'water_level': result['water_level']['d'],
+        'last_seen': convert_timestamp(result['telemetry']['timestamp']),
     }
 
 
 # Temporary for MVP
-def get_all_jug_ids(session):
+def get_all_jug_ids(user_id, session):
     real_id = 5
     fake_id = 2
+
+    owned_jugs = get_users_jugs_sh_ids(user_id)
 
     real_jugs = query(session, f'/data/organisation/{real_id}/device/list')
     fake_jugs = query(session, f'/data/organisation/{fake_id}/device/list')
@@ -72,8 +81,8 @@ def get_all_jug_ids(session):
     print(json.dumps(real_jugs, indent=4))
 
     return {
-        "real": [x['identifier'] for x in real_jugs],
-        "fake": [x['identifier'] for x in fake_jugs]
+        "real": [x['identifier'] for x in real_jugs if x['identifier'] not in owned_jugs],
+        "fake": [x['identifier'] for x in fake_jugs if x['identifier'] not in owned_jugs]
     }
 
 
