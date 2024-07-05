@@ -20,14 +20,6 @@ load_dotenv()
 
 app = FastAPI()
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
 db.bind(
     provider='postgres',
     user=os.getenv("DB_USERNAME"),
@@ -145,7 +137,7 @@ async def check_token(user_id: str = Depends(auth_user)):
 @app.get("/get-all-jugs")
 async def get_all_jugs(user_id: str = Depends(auth_user)):
     session = login_and_get_session()
-    return get_all_jug_ids(session)
+    return get_all_jug_ids(user_id, session)
 
 
 @app.get("/user")

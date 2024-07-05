@@ -1,3 +1,4 @@
+*.vscode
 *.idea
 *.apk
 *.aab
@@ -17,8 +18,9 @@ npm-debug.*
 *.mobileprovision
 *.orig.*
 web-build/
-
+eas.json
 pyrightconfig.json
 __pycache__/
-
+/ios
+/android
 sh-key-pair.pem

@@ -12,12 +12,10 @@ import "react-native-reanimated";
 import { deleteItemAsync, getItemAsync } from "expo-secure-store";
 import { request } from "@/util/fetch";
 import { useEffect } from "react";
-import { getUserQAtom } from "@/atom/query";
-import { userNameAtom } from "@/atom/user";
 
 const queryClient = new QueryClient();
 
-const HydrateAtoms = ({ children } : {children : React.ReactNode})  => {
+const HydrateAtoms = ({ children }: { children: React.ReactNode }) => {
     useHydrateAtoms([[queryClientAtom, queryClient]]);
     return children;
 };
@@ -26,9 +24,7 @@ function WrappedIndex() {
     useAtomValue(colorSchemeEAtom);
 
     const setAuthToken = useSetAtom(authTokenAtom);
-    const setUserName = useSetAtom(userNameAtom);
     const router = useRouter();
-    const { refetch } = useAtomValue(getUserQAtom);
 
     const getTokenFromStorage = async () => {
         const token = await getItemAsync("auth_token");
@@ -42,8 +38,6 @@ function WrappedIndex() {
         });
         if (result.ok) {
             setAuthToken(token);
-            const name = (await refetch()).data;
-            setUserName(name as string);
         } else {
             deleteItemAsync("auth_token");
             router.replace("onboarding/login-register");
@@ -52,7 +46,7 @@ function WrappedIndex() {
 
     useEffect(() => {
         getTokenFromStorage();
-    });
+    }, []);
 
     return (
         <Stack>

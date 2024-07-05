@@ -157,6 +157,7 @@ def get_user_by_id(user_id):
 def get_user_by_email(email):
     return User.get(email=email)
 
+
 # Key is column heading in JugUser table e.g. "dob"
 @db_session
 def update_jug_user_data(user_id: int, key: str, new_value: str):
@@ -165,6 +166,7 @@ def update_jug_user_data(user_id: int, key: str, new_value: str):
         return False
     setattr(jug_user, key, new_value)
     return getattr(jug_user, key) == new_value
+
 
 @db_session
 def get_user_name(user_id):
@@ -176,6 +178,16 @@ def get_users_jugs(user_id):
     jugs = User.get(id=user_id).jug_user.jugs
     # jug_list = select(j.smart_hydration_id for j in Jug if (jug_user == j.owner))
     return jugs
+
+
+@db_session
+def get_users_jugs_sh_ids(user_id):
+    jugs = User.get(id=user_id).jug_user.jugs
+    jug_list = set()
+
+    for jug in jugs:
+        jug_list.add(jug.smart_hydration_id)
+    return jug_list
 
 
 @db_session

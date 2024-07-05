@@ -1,12 +1,11 @@
-import { View, Pressable, Text, ScrollView } from "react-native";
+import { View, Pressable, Text, ScrollView, TextInput } from "react-native";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAtomValue, useSetAtom } from "jotai";
 import { loginMAtom } from "@/atom/query";
 
 import { authTokenAtom } from "@/atom/user";
 import PageWrapper from "@/components/common/page-wrapper";
-import TextInputBox from "@/components/text-input-box";
 import Drop from "@/assets/svgs/water-drop-svgrepo-com.svg";
 import { useRouter } from "expo-router";
 
@@ -16,17 +15,18 @@ export default function LoginPage() {
     const [password, setPassword] = useState("");
     const setAuthToken = useSetAtom(authTokenAtom);
 
-    const { mutate, data, isPending, isError } = useAtomValue(loginMAtom);
-
-    if (data) {
-        setAuthToken(data);
-        router.replace("(tabs)");
-        return;
-    }
+    const { mutate, data, isPending, isError, isSuccess } = useAtomValue(loginMAtom);
 
     const handleSubmit = () => {
         mutate({ email, password });
     };
+
+    useEffect(()=> {
+        if(isSuccess){
+            setAuthToken(data);
+            router.replace("(tabs)");
+        }
+    }, [isSuccess])
 
 
     return (
@@ -37,16 +37,20 @@ export default function LoginPage() {
                     <Drop width={100} height={100} />
                 </View>
                 <View className="mx-16 gap-5 mt-16 items-center">
-                    <TextInputBox
+                    <TextInput
                         placeholder="Enter your email address"
-                        onChange={setEmail}
+                        onChangeText={setEmail}
+                        textContentType="emailAddress"
                         autoCapitalize="none"
                         keyboardType="email-address"
+                        className="bg-gray-200 w-full h-14 placeholder-black text-xl rounded-xl px-3"
                     />
-                    <TextInputBox
+                    <TextInput
                         placeholder="Enter your password"
-                        onChange={setPassword}
+                        onChangeText={setPassword}
                         textContentType="password"
+                        secureTextEntry={true}
+                        className="bg-gray-200 w-full h-14 placeholder-black text-xl rounded-xl px-3"
                     />
                     {isPending && <Text>Logging in..</Text>}
                     {isError && (
@@ -76,30 +80,3 @@ export default function LoginPage() {
     );
 }
 
-// <PageWrapper>
-//            <View className='bg-gray-100 p-10 h-screen block'>
-//                <PageProgressBar currentPage={pageIndex + 1} totalPages={pages.length}></PageProgressBar>
-//                <View className='flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0'></View>
-//                <View className='items-center justify-center p-9 space-y-7 md:space-y-9 sm:p-8'>
-//                    <>
-//                        {pageIndex === 0 &&
-//                            <View className="flex gap-6">
-//                                <Text className='text-4xl font-bold'>Smart Hydration</Text>
-//                                <View className="flex flex-row justify-center">
-//                                    <Drop width={100} height={100} />
-//                                </View>
-//                            </View>
-//                        }
-//                    </>
-//                    <View>
-//                        <GenericOnboardContent title={currentPageContent.title}>
-//                            {currentPageContent.content}
-//                        </GenericOnboardContent>
-//                    </View>
-//                </View>
-//            </View>
-//            <>{pageIndex < maxPageIndex - 1 && <NextButton onPress={handleNext} />}</>
-//            <>{pageIndex === maxPageIndex - 1 && <SubmitButton onPress={handleSubmit} />}</>
-//            <>{pageIndex > 0 && <BackButton onPress={handleBack} />}</>
-//            <>{currentPageContent.skippable != 0 && <SkipButton onPress={handleSkip} />}</>
-//        </PageWrapper>
