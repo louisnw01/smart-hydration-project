@@ -1,8 +1,7 @@
 import useColorPalette from "@/util/palette";
 import { Stack, useRouter } from "expo-router";
-import { Pressable, View } from "react-native";
+import { Pressable } from "react-native";
 import { Entypo } from "@expo/vector-icons";
-import colors from "@/colors";
 
 export default function ModalLayout() {
     const palette = useColorPalette();

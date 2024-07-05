@@ -8,7 +8,6 @@ import { useHydrateAtoms } from "jotai/react/utils";
 import { queryClientAtom } from "jotai-tanstack-query";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { colorSchemeEAtom } from "@/atom/effect/user";
-import "react-native-reanimated";
 import { deleteItemAsync, getItemAsync } from "expo-secure-store";
 import { request } from "@/util/fetch";
 import { useEffect } from "react";
