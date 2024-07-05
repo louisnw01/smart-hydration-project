@@ -24,6 +24,8 @@ export default function MVPAddDeviceModal() {
         //     `todo: add jugs ${Array.from(selectedJugs).join(", ")} to account`,
         // );
 
+
+
         linkJugsToUser(Array.from(selectedJugs));
 
         // code to add to account here
