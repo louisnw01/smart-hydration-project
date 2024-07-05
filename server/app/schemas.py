@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 from pydantic import BaseModel
 
 
@@ -11,6 +11,10 @@ class UserRegister(BaseModel):
     name: str
     email: str
     password: str
+    dob: Optional[str] = None
+
+    class Config:
+        arbitrary_types_allowed = False
 
 
 class JugLink(BaseModel):
@@ -20,6 +24,12 @@ class JugLink(BaseModel):
 class LinkJugsForm(BaseModel):
     jugIds: List[str]
 
+
+class JugUserUpdate(BaseModel):
+    id: int
+    key: str
+    value: str
+      
       
 class UpdateJugForm(BaseModel):
     jugId: str

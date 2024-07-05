@@ -1,5 +1,5 @@
 import { registerMAtom } from "@/atom/query";
-import { authTokenAtom } from "@/atom/user";
+import { authTokenAtom, registerInfoAtom } from "@/atom/user";
 import colors from "@/colors";
 import Loading from "@/components/common/loading";
 import GenericOnboardContent from "@/components/generic-onboard-content";
@@ -11,6 +11,7 @@ import { Text } from "react-native";
 export default function SubmitPage() {
     const router = useRouter();
     const setAuthToken = useSetAtom(authTokenAtom);
+    const clearRegisterInfo = useSetAtom(registerInfoAtom);
     const {
         mutate: submitAndRegister,
         data,
@@ -20,6 +21,7 @@ export default function SubmitPage() {
 
     if (isSuccess) {
         setAuthToken(data);
+        clearRegisterInfo({});
         router.replace("(tabs)");
     }
     return (

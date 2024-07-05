@@ -34,6 +34,12 @@ export default function OnboardingLayout() {
                 }}
             />
             <Stack.Screen
+                name="dob"
+                options={{
+                    title: "What is your date of birth?",
+                }}
+            />
+            <Stack.Screen
                 name="submit"
                 options={{
                     title: "You're almost there!",
