@@ -48,7 +48,7 @@ export default function RegisterPage() {
                             setPassword(val);
                             setInfo((prev) => ({ ...prev, password: val }));
                         }}
-                        textContentType="password"
+                        textContentType="newPassword"
                         secureTextEntry={true}
                         className="bg-gray-200 w-full h-14 placeholder-black text-xl rounded-xl px-3"
                     />
@@ -58,7 +58,6 @@ export default function RegisterPage() {
                         placeholder="Confirm your password (required)"
                         autoCapitalize="none"
                         onChangeText={(val) => setConfirmPassword(val)}
-                        textContentType="password"
                         secureTextEntry={true}
                         className="bg-gray-200 w-full h-14 placeholder-black text-xl rounded-xl px-3"
                     />
