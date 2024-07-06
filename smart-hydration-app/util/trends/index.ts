@@ -17,64 +17,73 @@ export function getAggregates(data: any[], type: string) {
         Y: MS_MONTH,
     };
 
-    let delta;
+    let timeRange = 0;
+    let interval = MS_DAY;
     switch (type) {
         case "W":
-            delta = new Date(new Date().getTime() - MS_WEEK);
+            timeRange = MS_WEEK;
             break;
         case "D":
-            delta = new Date(new Date().getTime() - MS_DAY);
+            timeRange = MS_DAY;
+            interval = MS_HOUR;
             break;
         case "Y":
-            delta = new Date(new Date().getTime() - MS_YEAR);
+            timeRange = MS_YEAR;
+            interval = MS_MONTH;
             break;
         case "M":
-            delta = new Date(new Date().getTime() - MS_MONTH);
+            timeRange = MS_MONTH;
             break;
-        default:
-            delta = new Date();
     }
+    const roundedTimeNow =
+        Math.floor(Date.now() / timeWindowMap[type]) * timeWindowMap[type];
 
     const aggs: Map<number, {}> = new Map();
+    for (let i = 0; i < timeRange; i += interval) {
+        aggs.set(roundedTimeNow - i, 0);
+    }
 
     for (const row of data) {
         const roundedTime =
-            Math.floor((row.time * 1000) / timeWindowMap[type]) * timeWindowMap[type];
+            Math.floor((row.time * 1000) / timeWindowMap[type]) *
+            timeWindowMap[type];
 
-        if (roundedTime < delta.getTime()) continue;
+        // if (roundedTime < delta.getTime()) continue;
 
         if (aggs.has(roundedTime)) {
-            const existing = aggs.get(roundedTime);
-            existing.y += row.value;
-        } else {
-            aggs.set(roundedTime, {x: roundedTime, y: row.value});
+            aggs.set(roundedTime, aggs.get(roundedTime) + row.value);
+
+            // } else {
+            // aggs.set(roundedTime, { x: roundedTime, y: row.value });
+            // }
         }
     }
+    return Array.from(aggs, ([x, y]) => ({ x, y }));
 
     const arr = Array.from(aggs.values());
     arr.sort((a, b) => a.x - b.x);
     return arr;
 }
 
-export const formattedDataAtom = atom<any[] | null>(null);
-
-export const formattedDataEAtom = atomEffect((get, set) => {
+export const formattedDataAtom = atom((get) => {
     const type = get(chartTimeWindowAtom);
-    const {data, isLoading} = get(getHydrationAtom);
+    const { data, isLoading } = get(getHydrationAtom);
     if (isLoading || !data) {
-        set(formattedDataAtom, []);
-        return;
+        return [];
     }
-    const formattedData = getAggregates(data, type);
-
-    set(
-        formattedDataAtom,
-        formattedData.map((row) => ({
-            x: new Date(row.x),
-            y: row.y,
-        })),
-    );
+    return getAggregates(data, type);
 });
+
+// export const formattedDataEAtom = atomEffect((get, set) => {
+
+//     set(
+//         formattedDataAtom,
+//         formattedData.map((row) => ({
+//             x: new Date(row.x),
+//             y: row.y,
+//         })),
+//     );
+// });
 
 export interface FormattedData {
     x: number;
@@ -111,7 +120,6 @@ export function averageDailyHydrationComparison(data: FormattedData[]) {
     return [howMuchWaterDrankToday || 0, avgAmount || 0];
 }
 
-
 export function averageHydrationMonthComparison(data: FormattedData[]) {
     const startOfMonth = new Date(
         new Date().getFullYear(),
@@ -132,9 +140,11 @@ export function averageHydrationMonthComparison(data: FormattedData[]) {
     );
 
     const thisMonthAvg =
-        thisMonthData.reduce((curr, row) => curr + row.y, 0) / thisMonthData.length;
+        thisMonthData.reduce((curr, row) => curr + row.y, 0) /
+        thisMonthData.length;
     const prevMonthAvg =
-        prevMonthData.reduce((curr, row) => curr + row.y, 0) / prevMonthData.length;
+        prevMonthData.reduce((curr, row) => curr + row.y, 0) /
+        prevMonthData.length;
 
     return [thisMonthAvg || 0, prevMonthAvg || 0];
 }
@@ -161,5 +171,5 @@ export function getMostProductiveDay(data) {
         "Saturday",
     ];
 
-    return [ dayNames[mostProductiveDayIndex], highestConsumption ];
+    return [dayNames[mostProductiveDayIndex], highestConsumption];
 }

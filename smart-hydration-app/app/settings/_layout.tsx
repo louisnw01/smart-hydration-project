@@ -3,7 +3,7 @@ import { Stack, useRouter } from "expo-router";
 import { Pressable } from "react-native";
 import { Entypo } from "@expo/vector-icons";
 
-export default function ModalLayout() {
+export default function SettingsLayout() {
     const palette = useColorPalette();
     return (
         <Stack
@@ -33,22 +33,11 @@ export default function ModalLayout() {
                 },
             }}
         >
-            {/* <Stack.Screen
+            <Stack.Screen
                 name="settings-modal"
                 options={{ title: "Settings", headerBackVisible: true }}
-            /> */}
-            <Stack.Screen
-                name="add-device-modal"
-                options={{ title: "Add a Device" }}
             />
-            <Stack.Screen name="device-info-modal" options={{ title: "" }} />
-            <Stack.Screen
-                name="edit-device-name-modal"
-                options={{
-                    title: "Enter a New Device Name",
-                    headerBackVisible: false,
-                }}
-            />
+            <Stack.Screen name="theme" options={{ title: "Theme" }} />
         </Stack>
     );
 }
