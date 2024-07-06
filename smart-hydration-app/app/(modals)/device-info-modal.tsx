@@ -100,7 +100,6 @@ export default function DeviceInfoModal() {
 
             <View className="flex flex-row mt-12">
                 <Container fillVertical amount={0.3} color="orange">
-
                     <Text className="dark:text-white">Temperature</Text>
                     <Text className="text-4xl dark:text-white">
                         {device.temperature && device.temperature.toFixed(1)}C
@@ -109,7 +108,11 @@ export default function DeviceInfoModal() {
                 <Container
                     right
                     fillVertical
-                    amount={(device.water_level && device.capacity) && (device.water_level / device.capacity)}
+                    amount={
+                        device.water_level &&
+                        device.capacity &&
+                        device.water_level / device.capacity
+                    }
                     color={colors.blue}
                 >
                     <Text className="dark:text-white">Water Level</Text>
@@ -119,7 +122,11 @@ export default function DeviceInfoModal() {
                 </Container>
             </View>
             <View className="flex flex-row">
-                <Container fillHorizontal amount={0.5} color={colors.green}>
+                <Container
+                    fillHorizontal
+                    amount={device.battery}
+                    color={colors.green}
+                >
                     <Text className="dark:text-white">Battery</Text>
                     <Text className="text-4xl dark:text-white">
                         {device.battery && (device.battery * 100).toFixed(0)}%
