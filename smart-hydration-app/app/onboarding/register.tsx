@@ -70,11 +70,11 @@ export default function RegisterPage() {
                 <Pressable
                     onPress={() => router.push("login")}
                     style={{ marginTop: 24 }}
-                   accessibilityRole="link"
-                  accessibilityLabel="Navigate to login"
+                   //accessibilityRole="link"
+                  //accessibilityLabel="Navigate to login"
                     >
                   {({ pressed }) => (
-                      <Text style={{ fontWeight: '600', color: pressed ? 'darkblue' : 'blue', textDecorationLine: 'underline' }}>
+                      <Text style={{ fontWeight: '700', color: pressed ? 'darkblue' : 'blue', textDecorationLine: 'underline' }}>
                     Already have an account? Login
                       </Text>
                       )}
