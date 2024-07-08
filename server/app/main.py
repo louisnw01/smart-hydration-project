@@ -154,15 +154,15 @@ async def get_user(user_id: str = Depends(auth_user)):
 #     return f"name={user.name} email={user.email}"
 
 @app.get("/historical-jug-data")
-async def get_historical_jug_data(juguser_id: int, timestamp: int):
+async def get_historical_jug_data(timestamp: int, user_id: str = Depends(auth_user)):
     # atm only works for one jug per user
     # check if the user_id OWNS or follows the jugusers community
 
     with db_session:
-        juguser = JugUser.get(id=juguser_id)
-        user = juguser.community.followers.order_by(User.id).first()  # TODO fix
-        if user.community != juguser.community:
-            raise HTTPException(status_code=400, detail='unauthorized')
+        user = User.get(id=user_id)
+        juguser = user.jug_user
+        # if user.community != juguser.community:
+            # raise HTTPException(status_code=400, detail='unauthorized')
         jugs = juguser.jugs
 
         session = login_and_get_session()
