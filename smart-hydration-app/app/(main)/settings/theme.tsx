@@ -31,15 +31,13 @@ const settingsList: ISettingsSection[] = [
         title: "",
         data: [
             {
-                name: "Dark",
+                name: "Light",
                 component: (name, isFirst, isLast) => {
                     return (
                         <MultiSelectOptionBlock
                             text={name}
                             atom={colorSchemeAtom}
-                            icon={
-                                <Feather name="moon" size={18} color="gray" />
-                            }
+                            icon={<Feather name="sun" size={18} color="gray" />}
                             isFirst={isFirst}
                             isLast={isLast}
                         />
@@ -47,7 +45,7 @@ const settingsList: ISettingsSection[] = [
                 },
             },
             {
-                name: "Light",
+                name: "Dark",
                 component: (name, isFirst, isLast) => {
                     return (
                         <MultiSelectOptionBlock
@@ -70,7 +68,11 @@ const settingsList: ISettingsSection[] = [
                             text={name}
                             atom={colorSchemeAtom}
                             icon={
-                                <Feather name="moon" size={18} color="gray" />
+                                <MaterialCommunityIcons
+                                    name="theme-light-dark"
+                                    size={18}
+                                    color="gray"
+                                />
                             }
                             isFirst={isFirst}
                             isLast={isLast}

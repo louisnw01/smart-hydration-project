@@ -67,8 +67,8 @@ export default function TabLayout() {
                         <Link className="px-5" href="add-device-modal">
                             <Entypo
                                 name="circle-with-plus"
-                                size={24}
-                                color="black"
+                                size={26}
+                                color={palette.fg}
                             />
                         </Link>
                     ),

@@ -55,7 +55,7 @@ const settingsList: ISettingsSection[] = [
                         <OptionBlock
                             tw={isLast ? "rounded-b-xl" : undefined}
                             text={name}
-                            onPress={() => router.navigate("add-device-modal")}
+                            onPress={() => router.navigate("settings/mode")}
                             icon={
                                 <MaterialCommunityIcons
                                     name="cards-playing-heart-multiple-outline"

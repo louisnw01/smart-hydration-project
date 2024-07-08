@@ -3,8 +3,6 @@ import { getItem, setItem, deleteItemAsync } from "expo-secure-store";
 
 import { atomWithStorage, createJSONStorage } from "jotai/vanilla/utils";
 
-export const isLoggedInAtom = atom((get) => get(authTokenAtom) != null);
-
 export const userNameAtom = atom<string | null>(null);
 export const registerInfoAtom = atom<Partial<RegistrationInfo>>({});
 
