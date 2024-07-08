@@ -1,18 +1,22 @@
 import { View } from "react-native";
 import Svg, { Defs, Mask, Path, Rect } from "react-native-svg";
-import Drop from "../assets/svgs/water-drop-svgrepo-com.svg";
+import Drop from "@/assets/svgs/water-drop-svgrepo-com.svg";
 import { useAtomValue } from "jotai";
 import { hydrationAtom } from "@/atom/hydration";
 import useColorPalette from "@/util/palette";
+import { amountDrankTodayAtom } from "@/util/trends";
+import { AVERAGE_HYDRATION_PER_DAY } from "@/constants/person";
 
 const dropFillPath =
     "M132.281,264.564c51.24,0,92.931-41.681,92.931-92.918c0-50.18-87.094-164.069-90.803-168.891L132.281,0l-2.128,2.773c-3.704,4.813-90.802,118.71-90.802,168.882C39.352,222.883,81.042,264.564,132.281,264.564z";
 
 export default function Droplet() {
-    const hydration = useAtomValue(hydrationAtom);
+    const amountDrankToday = useAtomValue(amountDrankTodayAtom);
     const palette = useColorPalette();
 
-    const scaledHydrationAmount = ((100 - hydration) / 100) * 252;
+    const percent = (amountDrankToday / AVERAGE_HYDRATION_PER_DAY) * 100;
+
+    const scaledHydrationAmount = ((100 - percent) / 100) * 252;
     const y = 8 + scaledHydrationAmount;
     const height = 252 - scaledHydrationAmount;
 
