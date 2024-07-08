@@ -57,6 +57,7 @@ function useSession() {
 }
 
 export default function MainLayout() {
+    clearStorage();
     useAtomValue(colorSchemeEAtom);
     const { isLoading, isSuccess } = useSession();
 
