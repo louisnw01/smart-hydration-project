@@ -7,7 +7,7 @@ import { loginMAtom } from "@/atom/query";
 import { authTokenAtom } from "@/atom/user";
 import PageWrapper from "@/components/common/page-wrapper";
 import Drop from "@/assets/svgs/water-drop-svgrepo-com.svg";
-import { useRouter } from "expo-router";
+import { Redirect, useRouter } from "expo-router";
 
 export default function LoginPage() {
     const router = useRouter();
@@ -15,19 +15,17 @@ export default function LoginPage() {
     const [password, setPassword] = useState("");
     const setAuthToken = useSetAtom(authTokenAtom);
 
-    const { mutate, data, isPending, isError, isSuccess } = useAtomValue(loginMAtom);
+    const { mutate, data, isPending, isError, isSuccess } =
+        useAtomValue(loginMAtom);
 
     const handleSubmit = () => {
         mutate({ email, password });
     };
 
-    useEffect(()=> {
-        if(isSuccess){
-            setAuthToken(data);
-            router.replace("(tabs)");
-        }
-    }, [isSuccess])
-
+    if (isSuccess && data) {
+        setAuthToken(data);
+        return <Redirect href="(tabs)" />;
+    }
 
     return (
         <PageWrapper>
@@ -79,4 +77,3 @@ export default function LoginPage() {
         </PageWrapper>
     );
 }
-

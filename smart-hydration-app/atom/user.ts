@@ -1,24 +1,7 @@
 import { atom } from "jotai";
-import {
-    getItem,
-    setItem,
-    setItemAsync,
-    deleteItemAsync,
-} from "expo-secure-store";
+import { getItem, setItem, deleteItemAsync } from "expo-secure-store";
 
 import { atomWithStorage, createJSONStorage } from "jotai/vanilla/utils";
-
-const _authTokenAtom = atom<string | null>(null);
-
-export const authTokenAtom = atom(
-    (get) => get(_authTokenAtom),
-    async (get, set, update: string) => {
-        set(_authTokenAtom, update);
-        setItemAsync("auth_token", update);
-    },
-);
-
-export const isLoggedInAtom = atom((get) => get(authTokenAtom) != null);
 
 export const userNameAtom = atom<string | null>(null);
 export const registerInfoAtom = atom<Partial<RegistrationInfo>>({});
@@ -30,4 +13,10 @@ const storage = createJSONStorage(() => ({
     removeItem: deleteItemAsync,
 }));
 
-export const colorSchemeAtom = atomWithStorage("color-scheme", false, storage);
+export const colorSchemeAtom = atomWithStorage(
+    "color-scheme",
+    "Light",
+    storage,
+);
+
+export const authTokenAtom = atomWithStorage("auth-token", "", storage);

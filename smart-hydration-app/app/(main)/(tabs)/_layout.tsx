@@ -37,7 +37,7 @@ export default function TabLayout() {
                         <FontAwesome size={28} name="home" color={color} />
                     ),
                     headerRight: () => (
-                        <Link className="px-5" href="settings-modal">
+                        <Link className="px-5" href="settings/settings-modal">
                             <Entypo name="cog" size={30} color={palette.fg} />
                         </Link>
                     ),
@@ -67,8 +67,8 @@ export default function TabLayout() {
                         <Link className="px-5" href="add-device-modal">
                             <Entypo
                                 name="circle-with-plus"
-                                size={24}
-                                color="black"
+                                size={26}
+                                color={palette.fg}
                             />
                         </Link>
                     ),

@@ -5,14 +5,15 @@ import { registerInfoAtom } from "@/atom/user";
 import GenericOnboardContent from "@/components/generic-onboard-content";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
+import { textInputStyle } from "@/constants/styles";
 
 export default function RegisterPage() {
     const router = useRouter();
     const setInfo = useSetAtom(registerInfoAtom);
-    const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
-    const [passwordError, setPasswordError] = useState('');
-  
+    const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const [passwordError, setPasswordError] = useState("");
+
     useEffect(() => {
         if (password !== confirmPassword) {
             setPasswordError("Passwords don't match");
@@ -30,14 +31,13 @@ export default function RegisterPage() {
                 <View style={{ width: 350 }}>
                     <TextInput
                         placeholder="Enter your email address (required)"
-
                         onChangeText={(val) => {
                             setInfo((prev) => ({ ...prev, email: val }));
                         }}
                         keyboardType="email-address"
                         autoCapitalize="none"
                         textContentType="emailAddress"
-                        className="bg-gray-200 w-full h-14 placeholder-black text-xl rounded-xl px-3"
+                        className={textInputStyle}
                     />
                 </View>
                 <View style={{ width: 350 }}>
@@ -50,7 +50,7 @@ export default function RegisterPage() {
                         }}
                         textContentType="newPassword"
                         secureTextEntry={true}
-                        className="bg-gray-200 w-full h-14 placeholder-black text-xl rounded-xl px-3"
+                        className={textInputStyle}
                     />
                 </View>
                 <View style={{ width: 350 }}>
@@ -59,11 +59,13 @@ export default function RegisterPage() {
                         autoCapitalize="none"
                         onChangeText={(val) => setConfirmPassword(val)}
                         secureTextEntry={true}
-                        className="bg-gray-200 w-full h-14 placeholder-black text-xl rounded-xl px-3"
+                        className={textInputStyle}
                     />
                 </View>
                 <View style={{ width: 350 }}>
-                    <Text style={{ color: "red", fontSize: 18 }}>{passwordError}</Text>
+                    <Text style={{ color: "red", fontSize: 18 }}>
+                        {passwordError}
+                    </Text>
                 </View>
                 <Pressable
                     onPress={() => router.push("login")}
