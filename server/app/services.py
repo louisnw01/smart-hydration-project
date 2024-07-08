@@ -4,8 +4,8 @@ from .models import User, Jug, JugUser, Community
 
 
 @db_session
-def create_user(name, email, hash):
-    user = User(name=name, email=email, hash=hash)
+def create_user(name, email, hashcode):
+    user = User(name=name, email=email, hash=hashcode)
     commit()
     return user
 
@@ -142,7 +142,7 @@ def has_access_to_jug(user, sh_jug_id):
     relevant_jug = getattr(get(j for j in Jug if j.smart_hydration_id == sh_jug_id), 'owner')
     jug_community = relevant_jug.community
     user_community = find_user(user).community
-    if (jug_community == user_community):
+    if jug_community == user_community:
         return True
     return False
 
@@ -182,6 +182,16 @@ def get_user_by_email(email):
     return User.get(email=email)
 
 
+# Key is column heading in JugUser table e.g. "dob"
+@db_session
+def update_jug_user_data(user_id: int, key: str, new_value: str):
+    jug_user = JugUser.get(id=user_id)
+    if jug_user is None:
+        return False
+    setattr(jug_user, key, new_value)
+    return getattr(jug_user, key) == new_value
+
+
 @db_session
 def get_user_name(user_id):
     return User.get(id=user_id).name
@@ -192,3 +202,19 @@ def get_users_jugs(user_id):
     jugs = User.get(id=user_id).jug_user.jugs
     # jug_list = select(j.smart_hydration_id for j in Jug if (jug_user == j.owner))
     return jugs
+
+
+@db_session
+def get_users_jugs_sh_ids(user_id):
+    jugs = User.get(id=user_id).jug_user.jugs
+    jug_list = set()
+
+    for jug in jugs:
+        jug_list.add(jug.smart_hydration_id)
+    return jug_list
+
+
+@db_session
+def update_jug_name_s(jug_id, name):
+    Jug.get(smart_hydration_id=jug_id).name = name
+    commit()

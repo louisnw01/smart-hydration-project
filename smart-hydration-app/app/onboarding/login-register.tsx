@@ -6,7 +6,7 @@ import GenericOnboardContent from "@/components/generic-onboard-content";
 export default function LoginRegister() {
     const router = useRouter();
     return (
-        <GenericOnboardContent>
+        <GenericOnboardContent title={""}>
             <Drop width={100} height={100} />
             <View className="items-center gap-4 mt-20">
                 <Pressable

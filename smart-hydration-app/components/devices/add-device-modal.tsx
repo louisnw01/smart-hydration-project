@@ -1,8 +1,8 @@
 import { useState } from "react";
 import PageHeading from "../common/page-heading";
-import PopupPage from "../popup-page";
 import { start } from "react-native-esp-smartconfig";
 import { Button, View, Text, TextInput } from "react-native";
+import PageWrapper from "../common/page-wrapper";
 
 export default function AddDeviceModal() {
     const [log, setLog] = useState('log here');
@@ -27,8 +27,8 @@ export default function AddDeviceModal() {
             .catch((error) => setLog(`error: ${error['message']}`));
     }
     return (
-     <PopupPage>
-        <PageHeading text="Add a device" />
+     <PageWrapper>
+        <PageHeading text="Add a device" marginTop={0} />
 
          <Text className="mt-10">Wifi Name:</Text>
          <TextInput className='border mx-16 rounded-md py-1'
@@ -51,6 +51,6 @@ export default function AddDeviceModal() {
             <Text className="text-xs font-bold">{log}</Text>
         </View>
 
-    </PopupPage>
+    </PageWrapper>
     )
 }
