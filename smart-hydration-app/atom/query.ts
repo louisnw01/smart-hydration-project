@@ -59,11 +59,10 @@ export const unlinkJugFromUserMAtom = atomWithMutation((get) => ({
 export const deleteUser = atomWithMutation((get) => ({
   mutationKey: ["delete-user-s", get(authTokenAtom)],
   enabled: !!get(authTokenAtom),
-  mutationFn: async (userIds: string[]) => {
+  mutationFn: async () => {
       const token = get(authTokenAtom);
       const response = await request(ENDPOINTS.DELETE_USER, {
           method: "post",
-          body: { userIds: userIds },
           auth: token as string,
       });
 
@@ -74,6 +73,7 @@ export const deleteUser = atomWithMutation((get) => ({
       return;
   },
   onSuccess: () => {
+    
       const queryClient = get(queryClientAtom);
       //void queryClient.invalidateQueries({ queryKey: ["get-jug-data"] });
   },

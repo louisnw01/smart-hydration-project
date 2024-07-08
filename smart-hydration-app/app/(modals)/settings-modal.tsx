@@ -1,15 +1,18 @@
 import { authTokenAtom, colorSchemeAtom } from "@/atom/user";
 import OptionBlock from "@/components/common/option-block";
 import { useRouter } from "expo-router";
-import { atom, useSetAtom } from "jotai";
+import { atom, useAtomValue, useSetAtom } from "jotai";
 import { Appearance, Pressable, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { getItemAsync, setItemAsync, deleteItemAsync } from "expo-secure-store";
 import { atomWithStorage, createJSONStorage } from "jotai/vanilla/utils";
+import { deleteUser } from "@/atom/query";
 
 export default function SettingsModal() {
     const insets = useSafeAreaInsets();
     const setAuthAtom = useSetAtom(authTokenAtom);
+
+    const { mutate: submitDeleteUser } = useAtomValue(deleteUser);
     const router = useRouter();
 
     return (
@@ -32,6 +35,14 @@ export default function SettingsModal() {
                     }}
                 >
                     <Text className="text-xl mt-1 text-white">Log Out</Text>
+                </Pressable>
+                <Pressable
+                    className="items-center bg-red rounded-xl px-7 py-3"
+                    onPress={() => {
+                        submitDeleteUser();
+                    }}
+                >
+                    <Text className="text-xl mt-1 text-white">Delete Account</Text>
                 </Pressable>
             </View>
         </View>
