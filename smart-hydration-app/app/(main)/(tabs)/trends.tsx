@@ -8,7 +8,7 @@ import {
     View,
 } from "react-native";
 import { CartesianChart, Bar } from "victory-native";
-import SFPro from "../../assets/fonts/SF-Pro-Display-Regular.otf";
+import SFPro from "../../../assets/fonts/SF-Pro-Display-Regular.otf";
 // import { useFont } from "@shopify/react-native-skia";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { chartTimeWindowAtom } from "@/atom/nav";

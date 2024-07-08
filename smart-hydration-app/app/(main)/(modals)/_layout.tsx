@@ -20,7 +20,6 @@ export default function ModalLayout() {
                 },
                 headerLeft: () => {
                     const router = useRouter();
-                    const palette = useColorPalette();
                     return (
                         <Pressable onPress={() => router.back()}>
                             <Entypo
@@ -47,6 +46,18 @@ export default function ModalLayout() {
                 options={{
                     title: "Enter a New Device Name",
                     headerBackVisible: false,
+                    headerLeft: () => {
+                        const router = useRouter();
+                        return (
+                            <Pressable onPress={() => router.back()}>
+                                <Entypo
+                                    name="chevron-left"
+                                    size={24}
+                                    color="rgb(80, 80, 80)"
+                                />
+                            </Pressable>
+                        );
+                    },
                 }}
             />
         </Stack>
