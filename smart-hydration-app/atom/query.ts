@@ -7,8 +7,6 @@ import { authTokenAtom, registerInfoAtom } from "./user";
 import { ENDPOINTS, request } from "@/util/fetch";
 import { DeviceInfo, TrendsInfo } from "@/interfaces/device";
 
-import { useAtomValue, useSetAtom } from "jotai";
-
 export const linkJugToUserMAtom = atomWithMutation((get) => ({
     mutationKey: ["link-jug-to-user", get(authTokenAtom)],
     enabled: !!get(authTokenAtom),
@@ -45,6 +43,32 @@ export const unlinkJugFromUserMAtom = atomWithMutation((get) => ({
 
         if (!response.ok) {
             throw new Error("Jug could not be unlinked from user");
+        }
+    },
+
+    onSuccess: (data, jugId) => {
+        const queryClient = get(queryClientAtom);
+        void queryClient.setQueryData(
+            ["get-jug-data", get(authTokenAtom)],
+            (prev: DeviceInfo[]) => prev.filter((device) => device.id != jugId),
+        );
+        // void queryClient.invalidateQueries({ queryKey: ["get-jug-data"] });
+    },
+}));
+
+export const updateJugNameMAtom = atomWithMutation((get) => ({
+    mutationKey: ["update-jug-name", get(authTokenAtom)],
+    enabled: !!get(authTokenAtom),
+    mutationFn: async (formData: { jugId: string; name: string }) => {
+        const token = get(authTokenAtom);
+        const response = await request(ENDPOINTS.UPDATE_JUG_NAME, {
+            method: "post",
+            body: formData,
+            auth: token as string,
+        });
+
+        if (!response.ok) {
+            throw new Error("Could not update jug name");
         }
 
         return;
@@ -103,6 +127,26 @@ export const getJugDataQAtom = atomWithQuery((get) => ({
         return await response.json();
     },
     enabled: !!get(authTokenAtom),
+}));
+
+export const updateMAtom = atomWithMutation((get) => ({
+    mutationKey: ['update', get(authTokenAtom)],
+    enabled: !!get(authTokenAtom),
+    mutationFn: async (formData: {id: number, key: string, value: string}) => {
+        const token = get(authTokenAtom);
+        const response = await request(ENDPOINTS.UPDATE, {
+            method: 'post',
+            body: formData,
+            auth: token as string,
+            })
+
+        if (!response.ok) {
+            return 'failure';
+        }
+
+        const object = await response.json()
+        return object.access_token;
+    },
 }));
 
 export const getUserQAtom = atomWithQuery((get) => ({
@@ -210,3 +254,4 @@ export const getAllJugsQAtom = atomWithQuery((get) => ({
         return await response.json();
     },
 }));
+

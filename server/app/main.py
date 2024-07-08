@@ -1,32 +1,24 @@
 import os
 from typing import Optional
-from pony.orm.core import db_session
 
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException, Depends
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from pony.orm.core import db_session
 from starlette.middleware.cors import CORSMiddleware
 
 from .api import login_and_get_session, fetch_data_for_jug, get_jug_data, get_all_jug_ids, get_todays_intake
 from .auth import get_hash, decode_auth_token, generate_auth_token
-from .models import db, User, JugUser
-from .schemas import LinkJugsForm, UserLogin, UserRegister, JugLink, UserIds
-from .services import (create_user, get_jug_ids_by_community, get_user_hash, user_exists, get_jug_name_by_id,
-                       get_user_by_email, get_user_by_id,
+from .models import db, User, JugUser, Jug
+from .schemas import LinkJugsForm, UserLogin, UserRegister, JugLink, UpdateJugForm, JugUserUpdate
+from .services import (create_user, get_user_hash, user_exists, get_user_by_email, get_user_by_id,
                        unlink_jug_from_user_s,
-                       link_jugs_to_user_s, get_user_name, get_users_jugs, delete_user)
+                       link_jugs_to_user_s, get_user_name, get_users_jugs, update_jug_name_s, create_jug_user,
+                       update_jug_user_data,delete_user)
 
 load_dotenv()
 
 app = FastAPI()
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
 
 db.bind(
     provider='postgres',
@@ -76,15 +68,33 @@ async def delete_user_s(user_id: str = Depends(auth_user)):
 #to do fill body
 
 
+# @db_session is needed to fix "pony.orm.core.TransactionError: An attempt to mix objects belonging to different
+# transactions"
 @app.post("/register")
+@db_session
 async def register(form: UserRegister):
     if user_exists(form.email):
         raise HTTPException(status_code=400, detail="email already registered")
-
     hashed_password = get_hash(form.password)
     user = create_user(form.name, form.email, hashed_password)
+    if not user.jug_user:
+        create_jug_user(user)
+        jug_user_id = user.jug_user.id
+        if form.dob:
+            update_jug_user_data(jug_user_id, "dob", form.dob)
     token = generate_auth_token(user.id)
     return {"access_token": token, "token_type": "bearer"}
+
+
+# Endpoint for updating jug user data
+# Currently unused, but keeping this for when we need to edit jug user data (e.g. weight) via settings
+@app.post("/update")
+async def update(form: JugUserUpdate, user_id: str = Depends(auth_user)):
+    user = get_user_by_id(user_id)
+    if not user:
+        raise HTTPException(status_code=400, detail='user not found')
+    update_jug_user_data(form.id, form.key, form.value)
+    return {"message": "Jug user data updated successfully"}
 
 
 @app.post("/login")
@@ -107,9 +117,8 @@ async def login(form: UserLogin):
 async def get_community_jug_status(user_id: str = Depends(auth_user)):
     # TODO perhaps this logic should be in auth_user, and it returns user rather than user_id
 
-
     with db_session:
-    # community = user.community
+        # community = user.community
         user = User.get(id=user_id)
         if not user:
             raise HTTPException(status_code=400, detail='user not found')
@@ -135,7 +144,7 @@ async def check_token(user_id: str = Depends(auth_user)):
 @app.get("/get-all-jugs")
 async def get_all_jugs(user_id: str = Depends(auth_user)):
     session = login_and_get_session()
-    return get_all_jug_ids(session)
+    return get_all_jug_ids(user_id, session)
 
 
 @app.get("/user")
@@ -186,3 +195,16 @@ async def get_todays_total_intake(user_id: str = Depends(auth_user)):
             intake_total += get_todays_intake(session, jug.smart_hydration_id)
 
     return intake_total
+
+
+@app.post("/update-jug-name")
+async def update_jug_name(form: UpdateJugForm, user_id: str = Depends(auth_user)):
+    with db_session:
+        jugs = get_users_jugs(user_id)
+
+        jug = Jug.get(smart_hydration_id=form.jugId)
+
+        if jug not in jugs:
+            raise HTTPException(status_code=401, detail='Unauthorized')
+
+        update_jug_name_s(form.jugId, form.name)

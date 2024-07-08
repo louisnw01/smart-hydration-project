@@ -1,5 +1,5 @@
-import os
 from uuid import UUID
+
 from pony.orm.core import *
 
 db = Database()
@@ -46,9 +46,11 @@ class Medication(db.Entity):
     id = PrimaryKey(int, auto=True)
     name = Required(str)
 
+
 class Test1(db.Entity):
     id = PrimaryKey(int, auto=True)
     my_test_2s = Set('Test2')
+
 
 class Test2(db.Entity):
     id = PrimaryKey(int, auto=True)

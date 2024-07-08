@@ -1,7 +1,7 @@
 import { useColorScheme } from "react-native";
 
 const darkColorScheme = {
-    bg: "black",
+    bg: "rgb(10, 10, 10)",
     fg: "white",
     border: "rgb(110, 110, 110)",
 };
@@ -14,5 +14,5 @@ const lightColorScheme = {
 
 export default function useColorPalette() {
     const scheme = useColorScheme();
-    return scheme == "dark" ? darkColorScheme : lightColorScheme;
+    return scheme === "dark" ? darkColorScheme : lightColorScheme;
 }

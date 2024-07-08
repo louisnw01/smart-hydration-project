@@ -1,7 +1,7 @@
-import {chartTimeWindowAtom} from "@/atom/nav";
-import {getHydrationAtom} from "@/atom/query";
-import {atom} from "jotai";
-import {atomEffect} from "jotai-effect";
+import { chartTimeWindowAtom } from "@/atom/nav";
+import { getHydrationAtom } from "@/atom/query";
+import { atom } from "jotai";
+import { atomEffect } from "jotai-effect";
 
 export function getAggregates(data: any[], type: string) {
     const MS_HOUR = 60 * 60 * 1000;
@@ -17,64 +17,73 @@ export function getAggregates(data: any[], type: string) {
         Y: MS_MONTH,
     };
 
-    let delta;
+    let timeRange = 0;
+    let interval = MS_DAY;
     switch (type) {
         case "W":
-            delta = new Date(new Date().getTime() - MS_WEEK);
+            timeRange = MS_WEEK;
             break;
         case "D":
-            delta = new Date(new Date().getTime() - MS_DAY);
+            timeRange = MS_DAY;
+            interval = MS_HOUR;
             break;
         case "Y":
-            delta = new Date(new Date().getTime() - MS_YEAR);
+            timeRange = MS_YEAR;
+            interval = MS_MONTH;
             break;
         case "M":
-            delta = new Date(new Date().getTime() - MS_MONTH);
+            timeRange = MS_MONTH;
             break;
-        default:
-            delta = new Date();
     }
+    const roundedTimeNow =
+        Math.floor(Date.now() / timeWindowMap[type]) * timeWindowMap[type];
 
     const aggs: Map<number, {}> = new Map();
+    for (let i = 0; i < timeRange; i += interval) {
+        aggs.set(roundedTimeNow - i, 0);
+    }
 
     for (const row of data) {
         const roundedTime =
-            Math.floor((row.time * 1000) / timeWindowMap[type]) * timeWindowMap[type];
+            Math.floor((row.time * 1000) / timeWindowMap[type]) *
+            timeWindowMap[type];
 
-        if (roundedTime < delta.getTime()) continue;
+        // if (roundedTime < delta.getTime()) continue;
 
         if (aggs.has(roundedTime)) {
-            const existing = aggs.get(roundedTime);
-            existing.y += row.value;
-        } else {
-            aggs.set(roundedTime, {x: roundedTime, y: row.value});
+            aggs.set(roundedTime, aggs.get(roundedTime) + row.value);
+
+            // } else {
+            // aggs.set(roundedTime, { x: roundedTime, y: row.value });
+            // }
         }
     }
+    return Array.from(aggs, ([x, y]) => ({ x, y }));
 
     const arr = Array.from(aggs.values());
     arr.sort((a, b) => a.x - b.x);
     return arr;
 }
 
-export const formattedDataAtom = atom<any[] | null>(null);
-
-export const formattedDataEAtom = atomEffect((get, set) => {
+export const formattedDataAtom = atom((get) => {
     const type = get(chartTimeWindowAtom);
-    const {data, isLoading, isError} = get(getHydrationAtom);
+    const { data, isLoading } = get(getHydrationAtom);
     if (isLoading || !data) {
-        set(formattedDataAtom, []);
-        return;
+        return [];
     }
-    const formattedData = getAggregates(data, type);
-
-    set(
-        formattedDataAtom,
-        formattedData.map((row) => ({
-            x: new Date(row.x),
-            y: row.y,
-        })),
-    );
+    return getAggregates(data, type);
 });
+
+// export const formattedDataEAtom = atomEffect((get, set) => {
+
+//     set(
+//         formattedDataAtom,
+//         formattedData.map((row) => ({
+//             x: new Date(row.x),
+//             y: row.y,
+//         })),
+//     );
+// });
 
 export interface FormattedData {
     x: number;
@@ -88,7 +97,7 @@ function avgOfNumberList(list: number[]) {
 export function averageDailyHydrationComparison(data: FormattedData[]) {
     let howMuchWaterDrankToday = 0;
 
-    const timeNow = new Date().getHours() + new Date().getMinutes() / 60;
+    //const timeNow = new Date().getHours() + new Date().getMinutes() / 60;
 
     // TODO: do this all with bit shifting
     const dayInMS = 1000 * 60 * 60 * 24;
@@ -131,9 +140,11 @@ export function averageHydrationMonthComparison(data: FormattedData[]) {
     );
 
     const thisMonthAvg =
-        thisMonthData.reduce((curr, row) => curr + row.y, 0) / thisMonthData.length;
+        thisMonthData.reduce((curr, row) => curr + row.y, 0) /
+        thisMonthData.length;
     const prevMonthAvg =
-        prevMonthData.reduce((curr, row) => curr + row.y, 0) / prevMonthData.length;
+        prevMonthData.reduce((curr, row) => curr + row.y, 0) /
+        prevMonthData.length;
 
     return [thisMonthAvg || 0, prevMonthAvg || 0];
 }
@@ -149,6 +160,7 @@ export function getMostProductiveDay(data) {
 
     const maxConsumption = Math.max(...dayConsumption);
     const mostProductiveDayIndex = dayConsumption.indexOf(maxConsumption);
+    const highestConsumption = dayConsumption[mostProductiveDayIndex];
     const dayNames = [
         "Sunday",
         "Monday",
@@ -159,5 +171,5 @@ export function getMostProductiveDay(data) {
         "Saturday",
     ];
 
-    return dayNames[mostProductiveDayIndex];
+    return [dayNames[mostProductiveDayIndex], highestConsumption];
 }

@@ -1,16 +1,26 @@
-import { View, Pressable, Text } from "react-native";
+import { View, Pressable, Text, TextInput } from "react-native";
 
 import { useSetAtom } from "jotai";
-import TextInputBox from "@/components/text-input-box";
 import { registerInfoAtom } from "@/atom/user";
 import GenericOnboardContent from "@/components/generic-onboard-content";
 import { useRouter } from "expo-router";
+import { useEffect, useState } from "react";
+import { textInputStyle } from "@/constants/styles";
 
 export default function RegisterPage() {
     const router = useRouter();
     const setInfo = useSetAtom(registerInfoAtom);
+    const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const [passwordError, setPasswordError] = useState("");
 
-
+    useEffect(() => {
+        if (password !== confirmPassword) {
+            setPasswordError("Passwords don't match");
+        } else {
+            setPasswordError("");
+        }
+    }, [password, confirmPassword]);
 
     return (
         <GenericOnboardContent
@@ -18,30 +28,48 @@ export default function RegisterPage() {
             nextHref="onboarding/name"
         >
             <View className="gap-5 mt-16 items-center">
-                <View style={{width: 350}}>
-                <TextInputBox
-                    placeholder="Enter your email address"
-
-                    onChange={(val) =>
-                        setInfo((prev) => ({ ...prev, email: val }))
-                    }
-                    keyboardType="email-address"
-                    autoCapitalize="none"
-                />
+                <View style={{ width: 350 }}>
+                    <TextInput
+                        placeholder="Enter your email address (required)"
+                        onChangeText={(val) => {
+                            setInfo((prev) => ({ ...prev, email: val }));
+                        }}
+                        keyboardType="email-address"
+                        autoCapitalize="none"
+                        textContentType="emailAddress"
+                        className={textInputStyle}
+                    />
                 </View>
-                <View style={{width: 350}}>
-                <TextInputBox
-                    placeholder="Enter your password"
-                    autoCapitalize="none"
-                    onChange={(val) =>
-                        setInfo((prev) => ({ ...prev, password: val }))
-                    }
-                    textContentType="password"
-                />
+                <View style={{ width: 350 }}>
+                    <TextInput
+                        placeholder="Enter your password (required)"
+                        autoCapitalize="none"
+                        onChangeText={(val) => {
+                            setPassword(val);
+                            setInfo((prev) => ({ ...prev, password: val }));
+                        }}
+                        textContentType="newPassword"
+                        secureTextEntry={true}
+                        className={textInputStyle}
+                    />
+                </View>
+                <View style={{ width: 350 }}>
+                    <TextInput
+                        placeholder="Confirm your password (required)"
+                        autoCapitalize="none"
+                        onChangeText={(val) => setConfirmPassword(val)}
+                        secureTextEntry={true}
+                        className={textInputStyle}
+                    />
+                </View>
+                <View style={{ width: 350 }}>
+                    <Text style={{ color: "red", fontSize: 18 }}>
+                        {passwordError}
+                    </Text>
                 </View>
                 <Pressable
                     onPress={() => router.push("login")}
-                    className="bg-blue px-4 py-2 rounded-xl mt-16"
+                    className="px-4 py-2 rounded-xl mt-16"
                 >
                     <Text className="font-semibold text-white">
                         already have an account? Login

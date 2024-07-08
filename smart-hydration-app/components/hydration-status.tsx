@@ -1,14 +1,29 @@
 import { View, Text } from "react-native";
 import { hydrationAtom } from "@/atom/hydration";
-import { useAtomValue } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 import { HYDRATION_MESSAGE } from "@/constants/hydration-status";
 import colors from '../colors'
 import { userNameAtom } from "@/atom/user";
+import { getUserQAtom } from "@/atom/query";
+import { useEffect } from "react";
 
 export default function HydrationStatus () {
     const hydration = useAtomValue(hydrationAtom);
-    const hydrated = hydration >= 70;
-    const userName = useAtomValue(userNameAtom);
+    const hydrated = hydration >= 1600;
+    const { refetch, isSuccess, data } = useAtomValue(getUserQAtom);
+    const [userName, setUserName] = useAtom(userNameAtom);
+
+
+
+    useEffect(() => {
+        refetch()
+        if(isSuccess) {
+            setUserName(data);
+        }
+    }, [isSuccess])
+
+    
+    
 
     return (
         <View className="mx-6 px-7 bg-gray-200 py-4 flex flex-row rounded-xl"

@@ -1,4 +1,4 @@
-import { Text, View } from "react-native";
+import { View } from "react-native";
 
 import { useRouter } from "expo-router";
 import OnboardingButton from "./onboarding-button";
@@ -12,7 +12,6 @@ interface PageContent {
 
 export default function GenericOnboardContent({
     children,
-    title,
     nextHref,
 }: PageContent) {
     const router = useRouter();
