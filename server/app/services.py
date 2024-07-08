@@ -48,14 +48,14 @@ def get_auth_token(email):
 def delete_user(user_id):
     user = User.get(id=user_id)
     #if user is found get community associated with user in user.community
-    # if user:
-    #     community = Community.get(id=user.community.id)
-    #     if community:
-    #         jug_user = JugUser.get(id=user.community.id)
-    #         if jug_user:
-    #             jug_user.delete()
-    #         community.delete()
-    #     user.delete()
+    if user:
+        community = Community.get(id=user.community.id)
+        if community:
+            jug_user = JugUser.get(id=user.community.id)
+            if jug_user:
+                jug_user.delete()
+                community.delete()
+                user.delete()
 
 
 @db_session
