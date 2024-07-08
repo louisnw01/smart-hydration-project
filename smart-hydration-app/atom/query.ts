@@ -97,21 +97,25 @@ export const getJugDataQAtom = atomWithQuery((get) => ({
 }));
 
 export const updateMAtom = atomWithMutation((get) => ({
-    mutationKey: ['update', get(authTokenAtom)],
+    mutationKey: ["update", get(authTokenAtom)],
     enabled: !!get(authTokenAtom),
-    mutationFn: async (formData: {id: number, key: string, value: string}) => {
+    mutationFn: async (formData: {
+        id: number;
+        key: string;
+        value: string;
+    }) => {
         const token = get(authTokenAtom);
         const response = await request(ENDPOINTS.UPDATE, {
-            method: 'post',
+            method: "post",
             body: formData,
             auth: token as string,
-            })
+        });
 
         if (!response.ok) {
-            return 'failure';
+            return "failure";
         }
 
-        const object = await response.json()
+        const object = await response.json();
         return object.access_token;
     },
 }));
@@ -138,9 +142,9 @@ export const getHydrationAtom = atomWithQuery((get) => ({
         const ts = new Date(2024, 5, 26).getTime();
         const response = await request(ENDPOINTS.FETCH_HISTORICAL_JUG_DATA, {
             query: {
-                juguser_id: 1,
                 timestamp: ts / 1000,
             },
+            auth: token,
         });
         return await response.json();
     },
@@ -221,4 +225,3 @@ export const getAllJugsQAtom = atomWithQuery((get) => ({
         return await response.json();
     },
 }));
-

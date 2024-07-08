@@ -2,7 +2,7 @@ import { View, Pressable, Text, TextInput } from "react-native";
 
 import { useSetAtom } from "jotai";
 import { registerInfoAtom } from "@/atom/user";
-import GenericOnboardContent from "@/components/generic-onboard-content";
+import GenericOnboardContent from "@/components/onboarding/generic-onboard-content";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { textInputStyle } from "@/constants/styles";
