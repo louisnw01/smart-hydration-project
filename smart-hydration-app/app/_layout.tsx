@@ -3,7 +3,7 @@ import "../global.css";
 import { Provider, useAtomValue, useSetAtom } from "jotai";
 import { authTokenAtom } from "@/atom/user";
 
-import { Stack, useRouter } from "expo-router";
+import { Slot, Stack, useRootNavigationState, useRouter } from "expo-router";
 import { useHydrateAtoms } from "jotai/react/utils";
 import { queryClientAtom } from "jotai-tanstack-query";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
@@ -19,54 +19,9 @@ const HydrateAtoms = ({ children }: { children: React.ReactNode }) => {
     return children;
 };
 
-function WrappedIndex() {
-    useAtomValue(colorSchemeEAtom);
-
-    const setAuthToken = useSetAtom(authTokenAtom);
-    const router = useRouter();
-
-    const getTokenFromStorage = async () => {
-        const token = await getItemAsync("auth_token");
-        if (!token) {
-            router.replace("onboarding/login-register");
-            return;
-        }
-        const result = await request("/check-token", {
-            method: "post",
-            auth: token,
-        });
-        if (result.ok) {
-            setAuthToken(token);
-        } else {
-            deleteItemAsync("auth_token");
-            router.replace("onboarding/login-register");
-        }
-    };
-
-    useEffect(() => {
-        getTokenFromStorage();
-    }, []);
-
-    return (
-        <Stack>
-            <Stack.Screen
-                name="(tabs)"
-                options={{ headerShown: false, animation: "fade" }}
-            />
-            <Stack.Screen
-                name="(modals)"
-                options={{
-                    headerShown: false,
-                    presentation: "formSheet",
-                }}
-            />
-            <Stack.Screen name="login" options={{ headerShown: false }} />
-            <Stack.Screen
-                name="onboarding"
-                options={{ headerShown: false, animation: "slide_from_bottom" }}
-            />
-        </Stack>
-    );
+// Add this function to the top of wrappedIndex for one run if needed
+async function clearStorage() {
+    await deleteItemAsync("color-scheme");
 }
 
 export default function Index() {
@@ -74,7 +29,7 @@ export default function Index() {
         <QueryClientProvider client={queryClient}>
             <Provider>
                 <HydrateAtoms>
-                    <WrappedIndex />
+                    <Slot />
                 </HydrateAtoms>
             </Provider>
         </QueryClientProvider>
