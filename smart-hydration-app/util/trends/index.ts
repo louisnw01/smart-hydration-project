@@ -119,28 +119,34 @@ export const avgAmountDrankThisMonthAtom = atom<number | null>(null);
 export const avgAmountDrankLastMonthAtom = atom<number | null>(null);
 export const mostHydratedDayOfWeekAtom = atom<{} | null>({});
 
-function getAmountDrankToday(data) {
+export function getAmountDrankToday(data) {
     const todayStartMS = Math.floor(Date.now() / MS_DAY) * MS_DAY;
     let amountDrankToday = 0;
     for (const row of data) {
         if (row.time < todayStartMS) continue;
         amountDrankToday += row.amount;
+        console.log("adding:" + amountDrankToday)
     }
     return amountDrankToday;
 }
 
-function getAvgAmountDrankByNow(data) {
+export function getAvgAmountDrankByNow(data) {
     const timeNow = getTimeInMins(Date.now());
     const todayStartMS = Math.floor(Date.now() / MS_DAY) * MS_DAY;
-
+    console.log(data)
+    console.log(todayStartMS)
     const dailyAggregatesBeforeTime = data.filter(
         (row) => getTimeInMins(row.time) < timeNow && row.time < todayStartMS,
     );
+
+    console.log(dailyAggregatesBeforeTime);
 
     const totalDrankFromDailyAggs = dailyAggregatesBeforeTime.reduce(
         (curr, row) => curr + row.value,
         0,
     );
+
+    console.log(totalDrankFromDailyAggs)
 
     return totalDrankFromDailyAggs / dailyAggregatesBeforeTime.length;
 }
