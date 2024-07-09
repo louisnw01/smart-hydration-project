@@ -1,4 +1,5 @@
 import { chartTimeWindowAtom } from "@/atom/nav";
+import useColorPalette from "@/util/palette";
 import { useAtom, useAtomValue } from "jotai";
 import { useEffect } from "react";
 import { Pressable, View, Text } from "react-native";
@@ -15,11 +16,13 @@ const switcherValues = ["D", "W", "M", "Y"];
 export default function Switcher() {
     const selected = useAtomValue(chartTimeWindowAtom);
     const animatedLeft = useSharedValue(0);
+    const palette = useColorPalette();
 
     const newLeft = switcherValues.indexOf(selected) * 63;
 
     const animatedStyle = useAnimatedStyle(() => ({
         left: animatedLeft.value,
+        backgroundColor: palette.fg,
     }));
 
     animatedLeft.value = withTiming(newLeft, {
@@ -29,9 +32,9 @@ export default function Switcher() {
 
     return (
         <View className="flex flex-row justify-evenly mt-4">
-            <View className="flex-row border border-gray-200 rounded-3xl gap-6 h-8 items-center">
+            <View className="flex-row border border-gray-200 dark:border-neutral-900 rounded-3xl gap-6 h-8 items-center">
                 <Animated.View
-                    className="absolute bg-black rounded-3xl h-full w-12"
+                    className="absolute rounded-3xl h-full w-12"
                     style={animatedStyle}
                 />
                 <SwitcherElement name="D" />
@@ -46,6 +49,7 @@ export default function Switcher() {
 function SwitcherElement({ name }) {
     const [selected, setSelected] = useAtom(chartTimeWindowAtom);
     const isSelected = selected == name;
+    const palette = useColorPalette();
 
     const animation = useSharedValue(0);
 
@@ -57,7 +61,11 @@ function SwitcherElement({ name }) {
     }, [isSelected]);
 
     const animatedStyle = useAnimatedStyle(() => ({
-        color: interpolateColor(animation.value, [0, 1], ["black", "white"]),
+        color: interpolateColor(
+            animation.value,
+            [0, 1],
+            [palette.fg, palette.bg],
+        ),
     }));
 
     return (
@@ -70,7 +78,7 @@ function SwitcherElement({ name }) {
             onPress={() => setSelected(name)}
         >
             <Animated.Text
-                className="text-lg px-4 font-semibold"
+                className="text-lg px-4 font-semibold dark:text-white"
                 style={animatedStyle}
             >
                 {name}
