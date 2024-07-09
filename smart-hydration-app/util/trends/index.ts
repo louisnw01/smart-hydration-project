@@ -176,8 +176,6 @@ export function getMostHydratedDayOfWeek(data: any[]) {
         dayConsumption[day].push(row.value);
     });
 
-    console.log(dayConsumption);
-
     // not a one liner for readability
     const summedHydrationData = new Array(7).fill(0);
 
