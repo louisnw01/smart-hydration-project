@@ -117,7 +117,7 @@ export function getAmountDrankToday(data) {
     let amountDrankToday = 0;
     for (const row of data) {
         if (row.time < todayStartMS) continue;
-        amountDrankToday += row.amount;
+        amountDrankToday += row.value;
     }
     return amountDrankToday;
 }
