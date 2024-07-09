@@ -4,6 +4,7 @@ import { MS_DAY, MS_HOUR, MS_MONTH, MS_WEEK, MS_YEAR } from "@/constants/data";
 import { TrendsInfo } from "@/interfaces/device";
 import { atom } from "jotai";
 import { atomEffect } from "jotai-effect";
+import values from "ajv/lib/vocabularies/jtd/values";
 
 // returns the floor of a number based on an interval.
 // eg 8 jul 13:49 returns 8 jul 00:00 if interval is MS_DAY
@@ -169,14 +170,14 @@ export function averageHydrationMonthComparison(data: FormattedData[]) {
 
 export function getMostHydratedDayOfWeek(data: any[]) {
     const dayConsumption = Array.from({ length: 7 }, () => []);
-
+    if (!data || data.length === 0) {
+        return { name: "No data", value: 0 };
+    }
     data.forEach((row) => {
         const date = new Date(row.time);
         const day = date.getDay();
         dayConsumption[day].push(row.value);
     });
-
-    console.log(dayConsumption);
 
     // not a one liner for readability
     const summedHydrationData = new Array(7).fill(0);
