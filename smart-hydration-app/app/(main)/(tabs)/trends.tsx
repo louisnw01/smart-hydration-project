@@ -42,7 +42,6 @@ function formatDateToDayMonth(date) {
 
 function RecentChart() {
     const font = useFont(SFPro);
-    // font?.setEmbolden(400);
     const timeframe = useAtomValue(chartTimeWindowAtom);
     const data = useAtomValue(formattedDataAtom);
     const palette = useColorPalette();
@@ -60,7 +59,7 @@ function RecentChart() {
         return (
             <View className="h-full justify-center text-center">
                 <ActivityIndicator />
-                <Text className="text-center">
+                <Text className="text-center dark:text-white">
                     Loading Analytics, Please Wait...
                 </Text>
             </View>
@@ -76,7 +75,9 @@ function RecentChart() {
     if (hasNoData) {
         return (
             <View className="h-72 justify-center items-center">
-                <Text>No data for this period.</Text>
+                <Text className="dark:text-white">
+                    No data for this period.
+                </Text>
             </View>
         );
     }

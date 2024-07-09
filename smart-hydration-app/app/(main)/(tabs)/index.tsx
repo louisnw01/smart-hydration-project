@@ -50,13 +50,13 @@ export default function HomePage() {
                 }
             >
                 <Loading
-                    isLoading={isLoading || isPending}
-                    message="Loading your information..."
+                    isLoading={isLoading}
+                    message="Loading your information.."
                 />
                 {!isLoading && (
-                    <View className="flex flex-1 justify-evenly pt-3 h-full items-center">
+                    <View className="flex flex-1 justify-evenly pt-3 h-full items-center dark:text-white">
                         {!hasJugs ? (
-                            <Text className="text-2xl">You haven't linked any jugs yet.</Text>
+                            <Text>You haven't linked any jugs yet.</Text>
                         ) : (
                             <>
                                 <HydrationPercentage />
