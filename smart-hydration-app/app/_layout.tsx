@@ -25,7 +25,6 @@ async function clearStorage() {
 }
 
 export default function Index() {
-   // clearStorage();
     return (
         <QueryClientProvider client={queryClient}>
             <Provider>
