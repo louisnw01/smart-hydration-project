@@ -1,6 +1,6 @@
+import { hydrationInsightsEAtom } from "@/atom/effect/hydration";
 import PageHeader from "@/components/common/header";
 import useColorPalette from "@/util/palette";
-import { hydrationInsightsEAtom } from "@/util/trends";
 import {
     Entypo,
     FontAwesome,

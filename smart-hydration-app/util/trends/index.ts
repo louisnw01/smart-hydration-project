@@ -16,7 +16,7 @@ export function getTodaysStartMS() {
     return getFloorOf(Date.now(), MS_DAY);
 }
 
-function getAllAggregates(
+export function getAllAggregates(
     data: any[],
     interval: number,
     conditional?: (row: {}) => boolean,
@@ -37,7 +37,7 @@ function getAllAggregates(
     return Array.from(aggs, ([time, value]) => ({ time, value }));
 }
 
-function getTimeInMins(timestamp: number) {
+export function getTimeInMins(timestamp: number) {
     const datetime = new Date(timestamp);
     return datetime.getHours() * 60 + datetime.getMinutes();
 }
@@ -112,14 +112,7 @@ function avgOfNumberList(list: number[]) {
     return list.reduce((curr, num) => curr + num, 0) / list.length;
 }
 
-export const amountDrankTodayAtom = atom<number | null>(null);
-export const avgAmountDrankByTimeNowAtom = atom<number | null>(null);
-
-export const avgAmountDrankThisMonthAtom = atom<number | null>(null);
-export const avgAmountDrankLastMonthAtom = atom<number | null>(null);
-export const mostHydratedDayOfWeekAtom = atom<{} | null>({});
-
-function getAmountDrankToday(data) {
+export function getAmountDrankToday(data) {
     const todayStartMS = Math.floor(Date.now() / MS_DAY) * MS_DAY;
     let amountDrankToday = 0;
     for (const row of data) {
@@ -129,7 +122,7 @@ function getAmountDrankToday(data) {
     return amountDrankToday;
 }
 
-function getAvgAmountDrankByNow(data) {
+export function getAvgAmountDrankByNow(data) {
     const timeNow = getTimeInMins(Date.now());
     const todayStartMS = Math.floor(Date.now() / MS_DAY) * MS_DAY;
 
@@ -144,58 +137,6 @@ function getAvgAmountDrankByNow(data) {
 
     return totalDrankFromDailyAggs / dailyAggregatesBeforeTime.length;
 }
-
-export const hydrationInsightsEAtom = atomEffect((get, set) => {
-    const { data, isLoading } = get(getHydrationAtom);
-
-    if (isLoading || !data) return;
-
-    const dailyAggregates = getAllAggregates(data, MS_DAY);
-
-    set(amountDrankTodayAtom, getAmountDrankToday(data));
-    set(avgAmountDrankByTimeNowAtom, getAvgAmountDrankByNow(dailyAggregates));
-
-    set(mostHydratedDayOfWeekAtom, getMostHydratedDayOfWeek(dailyAggregates));
-
-    // avgAmountDrankThisMonth
-
-    const startOfMonthMS = new Date(
-        new Date().getFullYear(),
-        new Date().getMonth(),
-        1,
-    ).getTime();
-
-    const startOfPrevMonthMS = new Date(
-        new Date().getFullYear(),
-        new Date().getMonth() - 1,
-        1,
-    ).getTime();
-
-    const dailyAggregatesThisMonth = getAllAggregates(
-        data,
-        MS_DAY,
-        (row) => row.time * 1000 >= startOfMonthMS,
-    );
-
-    const dailyAggregatesLastMonth = getAllAggregates(
-        data,
-        MS_DAY,
-        (row) =>
-            row.time * 1000 >= startOfPrevMonthMS &&
-            row.time * 1000 < startOfMonthMS,
-    );
-
-    set(
-        avgAmountDrankThisMonthAtom,
-        dailyAggregatesThisMonth.reduce((curr, row) => curr + row.value, 0) /
-            dailyAggregatesThisMonth.length,
-    );
-    set(
-        avgAmountDrankLastMonthAtom,
-        dailyAggregatesLastMonth.reduce((curr, row) => curr + row.value, 0) /
-            dailyAggregatesLastMonth.length,
-    );
-});
 
 export function averageHydrationMonthComparison(data: FormattedData[]) {
     const startOfMonth = new Date(

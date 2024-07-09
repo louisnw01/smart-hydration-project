@@ -4,7 +4,7 @@ import { CartesianChart, Bar } from "victory-native";
 import SFPro from "@/assets/fonts/SF-Pro-Display-Regular.otf";
 import { useAtomValue } from "jotai";
 import { chartTimeWindowAtom } from "@/atom/nav";
-import { formattedDataAtom, mostHydratedDayOfWeekAtom } from "@/util/trends";
+import { formattedDataAtom } from "@/util/trends";
 import { useFont } from "@shopify/react-native-skia";
 import Switcher from "@/components/trends/switcher";
 import InsightsPane from "@/components/trends/insights-pane";
@@ -12,6 +12,8 @@ import TodayVsAvgInsight from "@/components/trends/today-vs-avg";
 import MonthVsLastMonthInsight from "@/components/trends/month-vs-month";
 import WaterAmount from "@/components/common/water-amount";
 import useColorPalette from "@/util/palette";
+import { mostHydratedDayOfWeekAtom, userHasJugsAtom } from "@/atom/hydration";
+import Loading from "@/components/common/loading";
 
 const tickFormatMap: { [key: string]: (t: Date) => string } = {
     D: (t) => {
@@ -65,10 +67,24 @@ function RecentChart() {
         );
     }
 
+    const zeroCount = memoedData.reduce(
+        (curr, row) => curr + (row.y == 0 ? 1 : 0),
+        0,
+    );
+    const hasNoData = zeroCount == memoedData.length;
+
+    if (hasNoData) {
+        return (
+            <View className="h-72 justify-center items-center">
+                <Text>No data for this period.</Text>
+            </View>
+        );
+    }
+
     return (
         <View className="h-72">
             <CartesianChart
-                data={memoedData.toReversed()}
+                data={hasNoData ? [] : memoedData.toReversed()}
                 xKey="x"
                 yKeys={["y"]}
                 // theme={custom}
@@ -159,6 +175,20 @@ function Insights() {
 }
 
 export default function TrendsPage() {
+    const { hasJugs, isLoading } = useAtomValue(userHasJugsAtom);
+
+    if (isLoading) {
+        return <Loading isLoading message="Loading your information..." />;
+    } else if (!hasJugs) {
+        return (
+            <View className="flex flex-1 justify-center items-center">
+                <Text className="dark:text-white text-2xl">
+                    You haven't linked any jugs yet.
+                </Text>
+            </View>
+        );
+    }
+
     return (
         <ScrollView className="bg-gray-100 dark:bg-black">
             <View className="flex px-4 pb-5 bg-white dark:bg-black">

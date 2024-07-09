@@ -1,8 +1,7 @@
 import { Text, View } from "react-native";
-import { hydrationAtom } from "@/atom/hydration";
 import { useAtomValue } from "jotai";
-import { amountDrankTodayAtom } from "@/util/trends";
 import { AVERAGE_HYDRATION_PER_DAY } from "@/constants/person";
+import { amountDrankTodayAtom } from "@/atom/hydration";
 
 export default function HydrationPercentage() {
     const amountDrankToday = useAtomValue(amountDrankTodayAtom);
