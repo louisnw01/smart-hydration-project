@@ -43,8 +43,9 @@ export default function DevicesPage() {
 
                     <View className="flex flex-row justify-center">
                         <StyledButton
-                            text="+ add a new device"
+                            text="+ Add a new device"
                             href="add-device-modal"
+                            textSize="lg"
                         />
                     </View>
                 </View>
