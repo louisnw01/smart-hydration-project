@@ -54,7 +54,7 @@ export default function HomePage() {
                 {!isLoading && !isPending && !isLoadingJugInfo && (
                     <View className="flex flex-1 justify-evenly pt-3 h-full items-center">
                         {!jugInfoData || jugInfoData.length == 0 ? (
-                            <Text>You haven't linked any jugs yet.</Text>
+                            <Text className="text-xl">You haven't linked any jugs yet.</Text>
                         ) : (
                             <>
                                 <HydrationPercentage />
