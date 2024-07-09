@@ -124,7 +124,7 @@ export function getAmountDrankToday(data) {
     let amountDrankToday = 0;
     for (const row of data) {
         if (row.time < todayStartMS) continue;
-        amountDrankToday += row.amount;
+        amountDrankToday += row.value;
         console.log("adding:" + amountDrankToday)
     }
     return amountDrankToday;
@@ -228,6 +228,8 @@ export function averageHydrationMonthComparison(data: FormattedData[]) {
     const prevMonthAvg =
         prevMonthData.reduce((curr, row) => curr + row.y, 0) /
         prevMonthData.length;
+
+    console.log("Divinding " + thisMonthAvg + " by " + thisMonthData.length);
 
     return [thisMonthAvg || 0, prevMonthAvg || 0];
 }

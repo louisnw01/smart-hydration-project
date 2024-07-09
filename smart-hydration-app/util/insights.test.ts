@@ -43,11 +43,11 @@ describe("insights", () => {
             const day = new Date(newTS).getDay();
             aggs.push({
                 time: todayStartMS + i * MS_HOUR,
-                amount: 500,
+                value: 500,
             });
 
         }
-        aggs[6].amount = 700;
+        aggs[6].value = 700;
         console.log(aggs);
         const amount = getAmountDrankToday(aggs);
         expect(amount).toEqual(3700);
@@ -79,24 +79,36 @@ describe("insights", () => {
     })
     test("average hydration month comparison", () => {
         const testData = [];
-        const thisMonthStart = Math.floor(Date.now() / MS_MONTH) * MS_MONTH;
-        const prevMonthStart = Math.floor(Date.now() / MS_MONTH) * MS_MONTH - MS_MONTH;
+        const startOfMonth = new Date(
+            new Date().getFullYear(),
+            new Date().getMonth(),
+            1,
+        ).getTime();
+
+        const startOfPrevMonth = new Date(
+            new Date().getFullYear(),
+            new Date().getMonth() - 1,
+            1,
+        ).getTime();
 
         for (let i = 0; i < 31; i++) {
-            const newTS = thisMonthStart + i * MS_DAY;
+            const newTS = startOfMonth + i * MS_DAY;
             const day = new Date(newTS).getDay();
             testData.push({
-                x: thisMonthStart + i * MS_DAY,
+                x: newTS,
                 y: 1500,
             })
         }
-        for (let i = 0; i < 29; i++) {
-            const newTS = prevMonthStart + i * MS_DAY;
+        for (let i = 0; i < 31; i++) {
+            const newTS = startOfPrevMonth + i * MS_DAY;
             const day = new Date(newTS).getDay();
             testData.push({
-                x: prevMonthStart + i * MS_DAY,
+                x: newTS,
                 y: 2000,
             })
+        }
+        for (let row of testData) {
+            console.log(new Date(row.x).getMonth());
         }
         const [firstAvg, nextAvg] = averageHydrationMonthComparison(testData)
         expect(firstAvg).toEqual(1500);
