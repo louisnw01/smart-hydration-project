@@ -17,7 +17,7 @@ export default function Loading({
                 className="justify-center top-2/4"
                 size={large ? "large" : "small"}
             />
-            <Text className="mt-16 flex justify-center text-center">
+            <Text className="mt-16 flex justify-center text-center text-2xl dark:text-white">
                 {message}
             </Text>
         </View>

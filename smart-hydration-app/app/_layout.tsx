@@ -26,6 +26,7 @@ async function clearStorage() {
 
 export default function Index() {
     return (
+
         <QueryClientProvider client={queryClient}>
             <Provider>
                 <HydrateAtoms>

@@ -1,3 +1,4 @@
+import { hydrationInsightsEAtom } from "@/atom/effect/hydration";
 import PageHeader from "@/components/common/header";
 import useColorPalette from "@/util/palette";
 import {
@@ -7,6 +8,7 @@ import {
     MaterialIcons,
 } from "@expo/vector-icons";
 import { Link, Tabs } from "expo-router";
+import { useAtomValue } from "jotai";
 
 export default function TabLayout() {
     const palette = useColorPalette();

@@ -1,27 +1,27 @@
 import { authTokenAtom, colorSchemeAtom } from "@/atom/user";
 import { OptionBlock } from "@/components/common/option-block";
 import { useRouter } from "expo-router";
-import { useAtomValue, useSetAtom } from "jotai";
-import { ReactElement, ReactNode, useEffect } from "react";
+import { useSetAtom } from "jotai";
+import { ReactElement, ReactNode } from "react";
 import { Pressable, SectionList, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Feather, MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
-import { deleteUser } from "@/atom/query";
 import { ISettingsSection } from "@/interfaces/settings";
 
 const settingsList: ISettingsSection[] = [
     {
-        title: "Account",
+        title: "",
         data: [
             {
-                name: "Profile",
+                name: "Change email",
                 component: (name, isFirst, isLast) => {
                     const router = useRouter();
                     return (
                         <OptionBlock
                             isLast={isLast}
+                            isFirst={isFirst}
                             text={name}
-                            onPress={() => router.navigate("settings/profile")}
+                            // onPress={() => router.navigate("add-device-modal")}
                             icon={
                                 <Feather name="user" size={18} color="gray" />
                             }
@@ -30,45 +30,17 @@ const settingsList: ISettingsSection[] = [
                 },
             },
             {
-                name: "User Mode",
+                name: "Change password",
                 component: (name, isFirst, isLast) => {
                     const router = useRouter();
                     return (
                         <OptionBlock
                             isLast={isLast}
+                            isFirst={isFirst}
                             text={name}
-                            onPress={() => router.navigate("settings/mode")}
+                            // onPress={() => router.navigate("add-device-modal")}
                             icon={
-                                <MaterialCommunityIcons
-                                    name="cards-playing-heart-multiple-outline"
-                                    size={16}
-                                    color="gray"
-                                />
-                            }
-                        />
-                    );
-                },
-            },
-        ],
-    },
-    {
-        title: "Appearance",
-        data: [
-            {
-                name: "Theme",
-                component: (name, isFirst, isLast) => {
-                    const router = useRouter();
-                    return (
-                        <OptionBlock
-                            isLast={isLast}
-                            text={name}
-                            onPress={() => router.navigate("settings/theme")}
-                            icon={
-                                <Ionicons
-                                    name="color-palette"
-                                    size={19}
-                                    color="gray"
-                                />
+                                <Feather name="user" size={18} color="gray" />
                             }
                         />
                     );
@@ -82,24 +54,10 @@ export default function SettingsModal() {
     const insets = useSafeAreaInsets();
     const setAuthAtom = useSetAtom(authTokenAtom);
     const router = useRouter();
-    const { mutate: submitDeleteUser, isPending, isSuccess, isError } = useAtomValue(deleteUser);
-
-    useEffect(() => {
-      if (isSuccess) {
-        router.replace("onboarding/login-register");
-      }
-    }, [isSuccess]);
-
-    useEffect(() => {
-      if (isError) {
-        //router.navigate("settings/theme");
-       console.error('error')
-      }
-    }, [isError]);
 
     return (
         <View
-            className="flex flex-1 justify-between mx-4"
+            className="flex flex-1 justify-between mx-4 mt-4"
             style={{
                 paddingBottom: insets.bottom + 20,
             }}
@@ -113,13 +71,6 @@ export default function SettingsModal() {
                         index == section.data.length - 1,
                     )
                 }
-                renderSectionHeader={({ section }) => (
-                    <View className="bg-gray-100 dark:bg-neutral-900 py-4 px-4 rounded-t-xl mt-6">
-                        <Text className="font-bold dark:text-white">
-                            {section.title}
-                        </Text>
-                    </View>
-                )}
                 keyExtractor={(item) => `settings-${item.name}`}
                 stickySectionHeadersEnabled={false}
             />
@@ -137,15 +88,6 @@ export default function SettingsModal() {
                     }}
                 >
                     <Text className="text-xl mt-1 text-white">Log Out</Text>
-                </Pressable>
-                <Pressable
-                    className="items-center bg-blue rounded-xl px-7 py-3"
-                    disabled={isPending}
-                    onPress={() => {
-                        submitDeleteUser();
-                    }}
-                >
-                    <Text className="text-xl mt-1 text-white">{isPending ? 'Deleting account...' : 'Delete Account'}</Text>
                 </Pressable>
             </View>
         </View>
