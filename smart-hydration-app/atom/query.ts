@@ -153,6 +153,7 @@ export const getHydrationAtom = atomWithQuery((get) => ({
         });
         return await response.json();
     },
+    enabled: !!get(authTokenAtom),
 }));
 
 export const getTodaysIntakeAtom = atomWithQuery((get) => ({
