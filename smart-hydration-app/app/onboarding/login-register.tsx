@@ -1,7 +1,7 @@
 import { View, Pressable, Text } from "react-native";
 import Drop from "@/assets/svgs/water-drop-svgrepo-com.svg";
 import { useRouter } from "expo-router";
-import GenericOnboardContent from "@/components/generic-onboard-content";
+import GenericOnboardContent from "@/components/onboarding/generic-onboard-content";
 
 export default function LoginRegister() {
     const router = useRouter();
