@@ -51,7 +51,7 @@ export default function HomePage() {
             >
                 <Loading
                     isLoading={isLoading}
-                    message="Loading your information.."
+                    message="Loading your information..."
                 />
                 {!isLoading && (
                     <View className="flex flex-1 justify-evenly pt-3 h-full items-center dark:text-white">

@@ -12,9 +12,6 @@ export const SelectInputBox = (props: SelectInputBoxProperties) => {
     const [selected, setSelected] = useState<string | undefined>();
     const [selectedMultiple, setSelectedMultiple] = useState<string[]>([]);
 
-    useEffect(() => {
-        console.log(selected, selectedMultiple);
-    })
 
     return (
         <>
