@@ -1,17 +1,19 @@
-import {
-    amountDrankTodayAtom,
-    avgAmountDrankByTimeNowAtom,
-} from "@/util/trends";
 import { useAtomValue } from "jotai";
 import InsightsPane from "./insights-pane";
 import { View, Text } from "react-native";
 import WaterAmount from "../common/water-amount";
+import {
+    amountDrankTodayAtom,
+    avgAmountDrankByTimeNowAtom,
+} from "@/atom/hydration";
 
 export default function TodayVsAvgInsight() {
     const amountDrankToday = useAtomValue(amountDrankTodayAtom);
     const avgAmountDrankByNow = useAtomValue(avgAmountDrankByTimeNowAtom);
 
-    if (amountDrankToday == null || avgAmountDrankByNow == null) return null;
+    if (Number.isNaN(amountDrankToday) || Number.isNaN(avgAmountDrankByNow)) {
+        return null;
+    }
 
     const dailyAvgDiff = amountDrankToday - avgAmountDrankByNow;
 

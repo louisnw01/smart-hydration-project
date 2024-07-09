@@ -1,18 +1,20 @@
 import { getMonthName } from "@/util/time";
-import {
-    avgAmountDrankLastMonthAtom,
-    avgAmountDrankThisMonthAtom,
-} from "@/util/trends";
+
 import { useAtomValue } from "jotai";
 import InsightsPane from "./insights-pane";
 import WaterAmount from "../common/water-amount";
 import { View, Text } from "react-native";
+import {
+    avgAmountDrankLastMonthAtom,
+    avgAmountDrankThisMonthAtom,
+} from "@/atom/hydration";
 
 export default function MonthVsLastMonthInsight() {
     const avgAmountThisMonth = useAtomValue(avgAmountDrankThisMonthAtom);
     const avgAmountLastMonth = useAtomValue(avgAmountDrankLastMonthAtom);
-
-    if (avgAmountLastMonth == null || avgAmountThisMonth == null) return null;
+    if (Number.isNaN(avgAmountLastMonth) || Number.isNaN(avgAmountThisMonth)) {
+        return null;
+    }
 
     const date = new Date();
     const thisMonthName = getMonthName(date);
