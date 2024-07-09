@@ -78,9 +78,9 @@ describe("insights", () => {
     })
     test('mixed weeks', () => {
         const data = [
-            { time: '2024-07-01T00:00:00Z', value: 1000 },
-            { time: '2024-07-02T00:00:00Z', value: 1500 },
-            { time: '2024-07-02T12:00:00Z', value: 500 },
+            { time: new Date('2024-07-01T00:00:00Z').getTime(), value: 1000 },
+            { time: new Date('2024-07-02T00:00:00Z').getTime(), value: 1500 },
+            { time: new Date('2024-07-02T12:00:00Z').getTime(), value: 500 },
             { time: new Date().getTime() - MS_DAY * 8, value: 1000 },
             { time: new Date(), value: 1000 },
             ]
