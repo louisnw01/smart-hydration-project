@@ -48,7 +48,6 @@ describe("insights", () => {
 
         }
         aggs[6].value = 700;
-        console.log(aggs);
         const amount = getAmountDrankToday(aggs);
         expect(amount).toEqual(3700);
     })
@@ -77,6 +76,25 @@ describe("insights", () => {
         const amount = getAvgAmountDrankByNow(aggs);
         expect(amount).toEqual(500);
     })
+    test('mixed weeks', () => {
+        const data = [
+            { time: '2024-07-01T00:00:00Z', value: 1000 },
+            { time: '2024-07-02T00:00:00Z', value: 1500 },
+            { time: '2024-07-02T12:00:00Z', value: 500 },
+            { time: new Date().getTime() - MS_DAY * 8, value: 1000 },
+            { time: new Date(), value: 1000 },
+            ]
+        const dayNames = [
+            "Sunday",
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday",
+        ];
+        expect(getMostHydratedDayOfWeek(data)).toEqual({ name: dayNames[new Date().getDay()], value: 1000 });
+    });
     test("average hydration month comparison", () => {
         const testData = [];
         const startOfMonth = new Date(
@@ -106,9 +124,6 @@ describe("insights", () => {
                 x: newTS,
                 y: 2000,
             })
-        }
-        for (let row of testData) {
-            console.log(new Date(row.x).getMonth());
         }
         const [firstAvg, nextAvg] = averageHydrationMonthComparison(testData)
         expect(firstAvg).toEqual(1500);
