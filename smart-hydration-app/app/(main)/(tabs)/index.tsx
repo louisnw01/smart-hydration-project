@@ -50,7 +50,7 @@ export default function HomePage() {
                 }
             >
                 <Loading
-                    isLoading={isLoading || isPending}
+                    isLoading={isLoading}
                     message="Loading your information..."
                 />
                 {!isLoading && (
