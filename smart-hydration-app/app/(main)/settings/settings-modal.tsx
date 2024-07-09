@@ -123,7 +123,8 @@ export default function SettingsModal() {
 
     useEffect(() => {
       if (isError) {
-        router.navigate("settings/theme");
+        //router.navigate("settings/theme");
+       console.error('error')
       }
     }, [isError]);
 
