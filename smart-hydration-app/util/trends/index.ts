@@ -125,7 +125,6 @@ export function getAmountDrankToday(data) {
     for (const row of data) {
         if (row.time < todayStartMS) continue;
         amountDrankToday += row.value;
-        console.log("adding:" + amountDrankToday)
     }
     return amountDrankToday;
 }
@@ -139,14 +138,11 @@ export function getAvgAmountDrankByNow(data) {
         (row) => getTimeInMins(row.time) < timeNow && row.time < todayStartMS,
     );
 
-    console.log(dailyAggregatesBeforeTime);
-
     const totalDrankFromDailyAggs = dailyAggregatesBeforeTime.reduce(
         (curr, row) => curr + row.value,
         0,
     );
 
-    console.log(totalDrankFromDailyAggs)
 
     return totalDrankFromDailyAggs / dailyAggregatesBeforeTime.length;
 }
@@ -229,7 +225,6 @@ export function averageHydrationMonthComparison(data: FormattedData[]) {
         prevMonthData.reduce((curr, row) => curr + row.y, 0) /
         prevMonthData.length;
 
-    console.log("Divinding " + thisMonthAvg + " by " + thisMonthData.length);
 
     return [thisMonthAvg || 0, prevMonthAvg || 0];
 }
@@ -243,7 +238,6 @@ export function getMostHydratedDayOfWeek(data: any[]) {
         dayConsumption[day].push(row.value);
     });
 
-    console.log(dayConsumption);
 
     // not a one liner for readability
     const summedHydrationData = new Array(7).fill(0);
