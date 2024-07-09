@@ -27,6 +27,9 @@ export const linkJugToUserMAtom = atomWithMutation((get) => ({
     onSuccess: () => {
         const queryClient = get(queryClientAtom);
         void queryClient.invalidateQueries({ queryKey: ["get-jug-data"] });
+        void queryClient.invalidateQueries({
+            queryKey: ["historical-jug-data"],
+        });
     },
 }));
 
@@ -52,7 +55,9 @@ export const unlinkJugFromUserMAtom = atomWithMutation((get) => ({
             ["get-jug-data", get(authTokenAtom)],
             (prev: DeviceInfo[]) => prev.filter((device) => device.id != jugId),
         );
-        // void queryClient.invalidateQueries({ queryKey: ["get-jug-data"] });
+        void queryClient.invalidateQueries({
+            queryKey: ["historical-jug-data"],
+        });
     },
 }));
 
@@ -130,21 +135,25 @@ export const getJugDataQAtom = atomWithQuery((get) => ({
 }));
 
 export const updateMAtom = atomWithMutation((get) => ({
-    mutationKey: ['update', get(authTokenAtom)],
+    mutationKey: ["update", get(authTokenAtom)],
     enabled: !!get(authTokenAtom),
-    mutationFn: async (formData: {id: number, key: string, value: string}) => {
+    mutationFn: async (formData: {
+        id: number;
+        key: string;
+        value: string;
+    }) => {
         const token = get(authTokenAtom);
         const response = await request(ENDPOINTS.UPDATE, {
-            method: 'post',
+            method: "post",
             body: formData,
             auth: token as string,
-            })
+        });
 
         if (!response.ok) {
-            return 'failure';
+            return "failure";
         }
 
-        const object = await response.json()
+        const object = await response.json();
         return object.access_token;
     },
 }));
@@ -166,17 +175,18 @@ export const getUserQAtom = atomWithQuery((get) => ({
 }));
 
 export const getHydrationAtom = atomWithQuery((get) => ({
-    queryKey: ["historial-jug-data", get(authTokenAtom)],
+    queryKey: ["historical-jug-data", get(authTokenAtom)],
     queryFn: async ({ queryKey: [, token] }): Promise<TrendsInfo[]> => {
         const ts = new Date(2024, 5, 26).getTime();
         const response = await request(ENDPOINTS.FETCH_HISTORICAL_JUG_DATA, {
             query: {
-                juguser_id: 1,
                 timestamp: ts / 1000,
             },
+            auth: token,
         });
         return await response.json();
     },
+    enabled: !!get(authTokenAtom),
 }));
 
 export const getTodaysIntakeAtom = atomWithQuery((get) => ({

@@ -73,17 +73,17 @@ async def delete_user_s():
 # @db_session is needed to fix "pony.orm.core.TransactionError: An attempt to mix objects belonging to different
 # transactions"
 @app.post("/register")
-@db_session
 async def register(form: UserRegister):
     if user_exists(form.email):
         raise HTTPException(status_code=400, detail="email already registered")
     hashed_password = get_hash(form.password)
-    user = create_user(form.name, form.email, hashed_password)
-    if not user.jug_user:
-        create_jug_user(user)
-        jug_user_id = user.jug_user.id
-        if form.dob:
-            update_jug_user_data(jug_user_id, "dob", form.dob)
+    with db_session:
+        user = create_user(form.name, form.email, hashed_password)
+        if not user.jug_user:
+            create_jug_user(user)
+            jug_user_id = user.jug_user.id
+            if form.dob:
+                update_jug_user_data(jug_user_id, "dob", form.dob)
     token = generate_auth_token(user.id)
     return {"access_token": token, "token_type": "bearer"}
 
@@ -163,15 +163,15 @@ async def get_user(user_id: str = Depends(auth_user)):
 #     return f"name={user.name} email={user.email}"
 
 @app.get("/historical-jug-data")
-async def get_historical_jug_data(juguser_id: int, timestamp: int):
+async def get_historical_jug_data(timestamp: int, user_id: str = Depends(auth_user)):
     # atm only works for one jug per user
     # check if the user_id OWNS or follows the jugusers community
 
     with db_session:
-        juguser = JugUser.get(id=juguser_id)
-        user = juguser.community.followers.order_by(User.id).first()  # TODO fix
-        if user.community != juguser.community:
-            raise HTTPException(status_code=400, detail='unauthorized')
+        user = User.get(id=user_id)
+        juguser = user.jug_user
+        # if user.community != juguser.community:
+            # raise HTTPException(status_code=400, detail='unauthorized')
         jugs = juguser.jugs
 
         session = login_and_get_session()

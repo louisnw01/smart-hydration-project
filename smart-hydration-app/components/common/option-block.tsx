@@ -10,36 +10,38 @@ interface OptionBlockProps {
 }
 
 export function MultiSelectOptionBlock({ text, atom, icon, isFirst, isLast }) {
-    let className = isLast
-        ? "rounded-b-xl"
-        : "border-b border-gray-200 dark:border-neutral-800";
-    className += isFirst ? " rounded-t-xl" : "";
     const setValue = useSetAtom(atom);
     return (
         <OptionBlock
             multiSelect
-            tw={className}
             text={text}
             icon={icon}
             atom={atom}
             onPress={() => {
                 setValue(text);
             }}
+            isFirst={isFirst}
+            isLast={isLast}
         />
     );
 }
 
 export function OptionBlock({
-    tw,
     text,
     atom,
     onPress,
     icon,
     multiSelect,
+    isFirst,
+    isLast,
 }: OptionBlockProps) {
+    let className = isLast
+        ? "rounded-b-xl"
+        : "border-b border-gray-200 dark:border-neutral-800";
+    className += isFirst ? " rounded-t-xl" : "";
     return (
         <Pressable
-            className={`flex-row items-center justify-between h-14 bg-gray-100 px-4 dark:bg-neutral-900 ${tw}`}
+            className={`flex-row items-center justify-between h-14 bg-gray-100 px-4 dark:bg-neutral-900 ${className}`}
             onPress={onPress}
         >
             <View className="flex flex-row items-center gap-3">

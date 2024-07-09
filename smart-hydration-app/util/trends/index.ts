@@ -1,15 +1,48 @@
 import { chartTimeWindowAtom } from "@/atom/nav";
 import { getHydrationAtom } from "@/atom/query";
+import { MS_DAY, MS_HOUR, MS_MONTH, MS_WEEK, MS_YEAR } from "@/constants/data";
+import { TrendsInfo } from "@/interfaces/device";
 import { atom } from "jotai";
 import { atomEffect } from "jotai-effect";
 
-export function getAggregates(data: any[], type: string) {
-    const MS_HOUR = 60 * 60 * 1000;
-    const MS_DAY = MS_HOUR * 24;
-    const MS_WEEK = MS_DAY * 7;
-    const MS_MONTH = MS_WEEK * 4;
-    const MS_YEAR = MS_MONTH * 12;
+// returns the floor of a number based on an interval.
+// eg 8 jul 13:49 returns 8 jul 00:00 if interval is MS_DAY
+// eg 8 jul 13:49 returns 8 jul 13:00 if interval is MS_HOUR
+export function getFloorOf(number: number, interval: number) {
+    return Math.floor(number / interval) * interval;
+}
 
+export function getTodaysStartMS() {
+    return getFloorOf(Date.now(), MS_DAY);
+}
+
+export function getAllAggregates(
+    data: any[],
+    interval: number,
+    conditional?: (row: {}) => boolean,
+) {
+    const aggs: Map<number, number> = new Map();
+
+    for (const row of data) {
+        if (conditional && !conditional(row)) continue;
+
+        const rowStartMS = getFloorOf(row.time * 1000, interval);
+
+        if (aggs.has(rowStartMS)) {
+            aggs.set(rowStartMS, aggs.get(rowStartMS) + row.value);
+        } else {
+            aggs.set(rowStartMS, row.value);
+        }
+    }
+    return Array.from(aggs, ([time, value]) => ({ time, value }));
+}
+
+export function getTimeInMins(timestamp: number) {
+    const datetime = new Date(timestamp);
+    return datetime.getHours() * 60 + datetime.getMinutes();
+}
+
+export function getAggregates(data: any[], type: string) {
     const timeWindowMap = {
         D: MS_HOUR,
         W: MS_DAY,
@@ -52,10 +85,6 @@ export function getAggregates(data: any[], type: string) {
 
         if (aggs.has(roundedTime)) {
             aggs.set(roundedTime, aggs.get(roundedTime) + row.value);
-
-            // } else {
-            // aggs.set(roundedTime, { x: roundedTime, y: row.value });
-            // }
         }
     }
     return Array.from(aggs, ([x, y]) => ({ x, y }));
@@ -74,17 +103,6 @@ export const formattedDataAtom = atom((get) => {
     return getAggregates(data, type);
 });
 
-// export const formattedDataEAtom = atomEffect((get, set) => {
-
-//     set(
-//         formattedDataAtom,
-//         formattedData.map((row) => ({
-//             x: new Date(row.x),
-//             y: row.y,
-//         })),
-//     );
-// });
-
 export interface FormattedData {
     x: number;
     y: number;
@@ -94,30 +112,30 @@ function avgOfNumberList(list: number[]) {
     return list.reduce((curr, num) => curr + num, 0) / list.length;
 }
 
-export function averageDailyHydrationComparison(data: FormattedData[]) {
-    let howMuchWaterDrankToday = 0;
-
-    //const timeNow = new Date().getHours() + new Date().getMinutes() / 60;
-
-    // TODO: do this all with bit shifting
-    const dayInMS = 1000 * 60 * 60 * 24;
-    const day = Math.floor(new Date().getTime() / dayInMS) * dayInMS;
-
-    const validVals = [];
+export function getAmountDrankToday(data) {
+    const todayStartMS = Math.floor(Date.now() / MS_DAY) * MS_DAY;
+    let amountDrankToday = 0;
     for (const row of data) {
-        const rowDT = new Date(row.x);
-        const rowTime = rowDT.getHours() + rowDT.getMinutes() / 60;
-
-        if (rowTime > day) {
-            howMuchWaterDrankToday += row.y;
-        }
-
-        validVals.push(row.y);
+        if (row.time * 1000 < todayStartMS) continue;
+        amountDrankToday += row.value;
     }
+    return amountDrankToday;
+}
 
-    const avgAmount = avgOfNumberList(validVals);
+export function getAvgAmountDrankByNow(data) {
+    const timeNow = getTimeInMins(Date.now());
+    const todayStartMS = Math.floor(Date.now() / MS_DAY) * MS_DAY;
 
-    return [howMuchWaterDrankToday || 0, avgAmount || 0];
+    const dailyAggregatesBeforeTime = data.filter(
+        (row) => getTimeInMins(row.time) < timeNow && row.time < todayStartMS,
+    );
+
+    const totalDrankFromDailyAggs = dailyAggregatesBeforeTime.reduce(
+        (curr, row) => curr + row.value,
+        0,
+    );
+
+    return totalDrankFromDailyAggs / dailyAggregatesBeforeTime.length;
 }
 
 export function averageHydrationMonthComparison(data: FormattedData[]) {
@@ -149,18 +167,27 @@ export function averageHydrationMonthComparison(data: FormattedData[]) {
     return [thisMonthAvg || 0, prevMonthAvg || 0];
 }
 
-export function getMostProductiveDay(data) {
-    const dayConsumption = new Array(7).fill(0);
+export function getMostHydratedDayOfWeek(data: any[]) {
+    const dayConsumption = Array.from({ length: 7 }, () => []);
 
-    data.forEach((item) => {
-        const date = new Date(item.x);
+    data.forEach((row) => {
+        const date = new Date(row.time);
         const day = date.getDay();
-        dayConsumption[day] += item.y;
+        dayConsumption[day].push(row.value);
     });
 
-    const maxConsumption = Math.max(...dayConsumption);
-    const mostProductiveDayIndex = dayConsumption.indexOf(maxConsumption);
-    const highestConsumption = dayConsumption[mostProductiveDayIndex];
+    // not a one liner for readability
+    const summedHydrationData = new Array(7).fill(0);
+
+    for (let i = 0; i < summedHydrationData.length; i++) {
+        summedHydrationData[i] = dayConsumption[i].reduce(
+            (curr, row) => curr + row,
+            0,
+        );
+    }
+    const maxConsumption = Math.max(...summedHydrationData);
+    const dayIndex = summedHydrationData.indexOf(maxConsumption);
+
     const dayNames = [
         "Sunday",
         "Monday",
@@ -171,5 +198,8 @@ export function getMostProductiveDay(data) {
         "Saturday",
     ];
 
-    return [dayNames[mostProductiveDayIndex], highestConsumption];
+    return {
+        name: dayNames[dayIndex],
+        value: maxConsumption / dayConsumption[dayIndex].length,
+    };
 }
