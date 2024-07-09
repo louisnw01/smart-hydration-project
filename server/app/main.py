@@ -63,8 +63,10 @@ async def unlink_jug_from_user(body: JugLink, user_id: str = Depends(auth_user))
 
 
 @app.post('/delete-user-s')
-async def delete_user_s(user_id: str = Depends(auth_user)):
+async def delete_user_s():
     delete_user(user_id)
+    return {"access_token": token, "token_type": "bearer"}
+
 #to do fill body
 
 
