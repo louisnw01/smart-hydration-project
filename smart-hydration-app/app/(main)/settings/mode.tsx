@@ -9,22 +9,7 @@ import { ReactElement, ReactNode } from "react";
 import { Pressable, SectionList, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Ionicons, FontAwesome6, Fontisto } from "@expo/vector-icons";
-
-type ActionComponentFunction = (
-    name: string,
-    isFirst?: boolean,
-    isLast?: boolean,
-) => ReactElement;
-
-interface ISettingsActions {
-    name: string;
-    component: ActionComponentFunction;
-}
-
-interface ISettingsSection {
-    title: string;
-    data: ISettingsActions[];
-}
+import { ISettingsSection } from "@/interfaces/settings";
 
 const tempAtom = atom("");
 
@@ -97,9 +82,6 @@ const settingsList: ISettingsSection[] = [
 ];
 
 export default function Theme() {
-    const setAuthAtom = useSetAtom(authTokenAtom);
-    const router = useRouter();
-
     return (
         <View className="flex flex-1 justify-between mx-4 mt-4">
             <SectionList
