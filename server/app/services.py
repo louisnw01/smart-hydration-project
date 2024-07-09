@@ -54,8 +54,8 @@ def delete_user(user_id):
             jug_user = JugUser.get(id=user.community.id)
             if jug_user:
                 jug_user.delete()
-                community.delete()
-                user.delete()
+            community.delete()
+        user.delete()
 
 
 @db_session
