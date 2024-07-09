@@ -12,7 +12,6 @@ import { useAtomValue } from "jotai";
 
 export default function TabLayout() {
     const palette = useColorPalette();
-    useAtomValue(hydrationInsightsEAtom);
     return (
         <Tabs
             screenOptions={{
