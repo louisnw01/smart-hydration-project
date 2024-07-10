@@ -65,17 +65,6 @@ def find_user(name):
     result = get(u for u in User if u.name == name)
     return result
 
-@db_session
-def create_community(name,id):
-    community = Community(name=name,id=id)
-    commit()
-    return community
-
-@db_session
-def find_community(name):
-    result = select(c for c in Community if c.name == name)
-    show(result)
-    return result
 
 @db_session
 def create_jug_user(user):
