@@ -46,6 +46,7 @@ export default function DobPage() {
         <GenericOnboardContent
             title="What is your date of birth?"
             nextHref="onboarding/submit"
+            proceed={proceed}
         >
             <TextInput
                 placeholder="dd-mm-yyyy"
