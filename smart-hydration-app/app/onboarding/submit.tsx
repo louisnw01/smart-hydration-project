@@ -28,7 +28,7 @@ export default function SubmitPage() {
     }, [isSuccess, data]);
 
     return (
-        <GenericOnboardContent title="You're nearly there!">
+        <GenericOnboardContent title="You're nearly there!" proceed={true}>
             <Text className="text-xl font-light">
                 Tap the button to set up your Smart Hydration profile.
             </Text>

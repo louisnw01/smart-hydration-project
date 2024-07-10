@@ -4,53 +4,88 @@ import { useSetAtom } from "jotai";
 import { registerInfoAtom } from "@/atom/user";
 import GenericOnboardContent from "@/components/onboarding/generic-onboard-content";
 import { useRouter } from "expo-router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { textInputStyle } from "@/constants/styles";
 
 export default function RegisterPage() {
     const router = useRouter();
     const setInfo = useSetAtom(registerInfoAtom);
     const [password, setPassword] = useState("");
+    const [email, setEmail] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [passwordError, setPasswordError] = useState("");
+    const [emailError, setEmailErrorMessage] = useState('');
+    const [proceed, setProceed] = useState(false);
+    const [passwordValid, setPasswordValid] = useState(false);
+    const [emailValid, setEmailValid] = useState(false);
 
-    useEffect(() => {
+    const validatePassword = () => {
         if (password !== confirmPassword) {
-            setPasswordError("Passwords don't match");
-        } else {
+            setPasswordError("Passwords don't match\n");
+            setPasswordValid(false);
+            setProceed(false);
+        } else if(password.length == 0){
+            setPasswordError("You must enter a password\n");
+            setPasswordValid(false);
+            setProceed(false);
+        } else{
             setPasswordError("");
+            setInfo((prev) => ({ ...prev, password: password }));
+            setPasswordValid(true);
+            setProceed(true && emailValid);
         }
-    }, [password, confirmPassword]);
+    };
+
+
+    const validateEmail = () => {
+        const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+        if (!regex.test(email)) {
+          setEmailErrorMessage('Invalid email format.');
+          setEmailValid(false);
+          setProceed(false);
+        } else if(email.length == 0){
+            setEmailErrorMessage("You must enter your email");
+            setEmailValid(false);
+            setProceed(false)
+        } else {
+          setEmailErrorMessage('');
+          setInfo((prev) => ({ ...prev, email: email }));
+          setEmailValid(true);
+          setProceed(true && passwordValid);
+        }
+      };
+
 
     return (
         <GenericOnboardContent
             title="Enter your email and password"
             nextHref="onboarding/name"
+            proceed={proceed}
         >
             <View className="gap-5 mt-16 items-center">
                 <View style={{ width: 350 }}>
                     <TextInput
                         placeholder="Enter your email address (required)"
-                        onChangeText={(val) => {
-                            setInfo((prev) => ({ ...prev, email: val }));
-                        }}
+                        onChangeText={(val) => setEmail(val)}
                         keyboardType="email-address"
                         autoCapitalize="none"
                         textContentType="emailAddress"
                         className={textInputStyle}
+                        onSubmitEditing={validateEmail}
+                        onEndEditing={validateEmail}
                     />
                 </View>
                 <View style={{ width: 350 }}>
                     <TextInput
                         placeholder="Enter your password (required)"
                         autoCapitalize="none"
-                        onChangeText={(val) => {
-                            setPassword(val);
-                            setInfo((prev) => ({ ...prev, password: val }));
-                        }}
+                        onChangeText={(val) => setPassword(val)}
                         textContentType="newPassword"
                         secureTextEntry={true}
                         className={textInputStyle}
+                        onSubmitEditing={validatePassword}
+                        onEndEditing={validatePassword}
                     />
                 </View>
                 <View style={{ width: 350 }}>
@@ -60,11 +95,14 @@ export default function RegisterPage() {
                         onChangeText={(val) => setConfirmPassword(val)}
                         secureTextEntry={true}
                         className={textInputStyle}
+                        onSubmitEditing={validatePassword}
+                        onEndEditing={validatePassword}
                     />
                 </View>
                 <View style={{ width: 350 }}>
                     <Text style={{ color: "red", fontSize: 18 }}>
                         {passwordError}
+                        {emailError}
                     </Text>
                 </View>
                 <Pressable
