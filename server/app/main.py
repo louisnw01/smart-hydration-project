@@ -68,7 +68,7 @@ async def delete_user_s(user_id: str = Depends(auth_user)):
     token = generate_auth_token(user_id)
     return {"access_token": token, "token_type": "bearer"}
 
-#to do fill body
+
 
 
 # @db_session is needed to fix "pony.orm.core.TransactionError: An attempt to mix objects belonging to different
