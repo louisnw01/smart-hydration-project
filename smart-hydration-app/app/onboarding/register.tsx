@@ -77,7 +77,7 @@ export default function RegisterPage() {
                 <View style={{ width: 350 }}>
                     <TextInput
                         placeholder="Enter your email address (required)"
-                        onChangeText={(val) => setEmail(val)}
+                        onChangeText={(val) => setEmail(val.toLowerCase())}
                         keyboardType="email-address"
                         autoCapitalize="none"
                         textContentType="emailAddress"
