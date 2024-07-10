@@ -1,35 +1,18 @@
-import { Provider, useAtom, useAtomValue, useSetAtom } from "jotai";
-import { authTokenAtom } from "@/atom/user";
+import { useAtomValue } from "jotai";
 
 import {
     Redirect,
     Stack,
-    useRootNavigationState,
-    useRouter,
 } from "expo-router";
-import { useHydrateAtoms } from "jotai/react/utils";
-import { queryClientAtom } from "jotai-tanstack-query";
-import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { colorSchemeEAtom } from "@/atom/effect/user";
-import { deleteItemAsync, getItemAsync } from "expo-secure-store";
+import { getItemAsync } from "expo-secure-store";
 import { request } from "@/util/fetch";
 import { useEffect, useState } from "react";
 import Loading from "@/components/common/loading";
 import { View } from "react-native";
 
-const queryClient = new QueryClient();
-
-const HydrateAtoms = ({ children }: { children: React.ReactNode }) => {
-    useHydrateAtoms([[queryClientAtom, queryClient]]);
-    return children;
-};
 
 // Add this function to the top of wrappedIndex for one run if needed
-async function clearStorage() {
-    await deleteItemAsync("color-scheme");
-    await deleteItemAsync("auth_token");
-    await deleteItemAsync("auth-token");
-}
 
 function useSession() {
     const [isLoading, setIsLoading] = useState(true);
