@@ -55,6 +55,7 @@ def fetch_data_for_jug(session, jug_id):
     if result is None:
         return None
 
+
     return {
         'capacity': result['device_model']['capacity_ml'],
         'charging': result['telemetry']['charging'],
@@ -111,6 +112,7 @@ def get_jug_data(session, jug, start_timestamp):
             'value': -row['water_delta'],
             'name': jug.name,
         })
+
     return aggs
 
 

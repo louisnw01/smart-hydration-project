@@ -16,6 +16,7 @@ export const ENDPOINTS = {
     FETCH_USER: "/user",
     GET_TODAYS_INTAKE: "/todays-total-intake",
     UPDATE_JUG_NAME: "/update-jug-name",
+    ALL_EMAILS: "/all-emails",
 };
 
 interface RequestOptions {

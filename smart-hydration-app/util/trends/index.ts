@@ -117,7 +117,7 @@ export function getAmountDrankToday(data) {
     const todayStartMS = Math.floor(Date.now() / MS_DAY) * MS_DAY;
     let amountDrankToday = 0;
     for (const row of data) {
-        if (row.time < todayStartMS) continue;
+        if (row.time * 1000 < todayStartMS) continue;
         amountDrankToday += row.value;
     }
     return amountDrankToday;

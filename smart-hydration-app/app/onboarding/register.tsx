@@ -1,11 +1,12 @@
 import { View, Pressable, Text, TextInput } from "react-native";
 
-import { useSetAtom } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import { registerInfoAtom } from "@/atom/user";
 import GenericOnboardContent from "@/components/onboarding/generic-onboard-content";
 import { useRouter } from "expo-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { textInputStyle } from "@/constants/styles";
+import { getAllEmailsQAtom } from "@/atom/query";
 
 export default function RegisterPage() {
     const router = useRouter();
@@ -18,6 +19,11 @@ export default function RegisterPage() {
     const [proceed, setProceed] = useState(false);
     const [passwordValid, setPasswordValid] = useState(false);
     const [emailValid, setEmailValid] = useState(false);
+    const { data, refetch }  = useAtomValue(getAllEmailsQAtom);
+
+    useEffect(() => {
+        refetch();
+    }, [data]);
 
     const validatePassword = () => {
         if (password !== confirmPassword) {
@@ -49,10 +55,14 @@ export default function RegisterPage() {
             setEmailValid(false);
             setProceed(false)
         } else {
-          setEmailErrorMessage('');
-          setInfo((prev) => ({ ...prev, email: email }));
-          setEmailValid(true);
-          setProceed(true && passwordValid);
+            if(data?.includes(email)){
+                setEmailErrorMessage("This email is already linked to an account. Either go to login or use a different email.");
+                return;
+            }
+            setInfo((prev) => ({ ...prev, email: email }));
+            setEmailErrorMessage('');
+            setEmailValid(true);
+            setProceed(true && passwordValid);
         }
       };
 
