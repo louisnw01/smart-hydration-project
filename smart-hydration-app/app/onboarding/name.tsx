@@ -16,6 +16,8 @@ export default function NamePage() {
                     setInfo((prev) => ({ ...prev, name: val }))
                 }
                 className="bg-gray-200 w-full h-14 placeholder-black text-xl rounded-xl px-3"
+                textContentType="name"
+                returnKeyType="done"
             />
         </GenericOnboardContent>
     );

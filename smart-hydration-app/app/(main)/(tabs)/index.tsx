@@ -10,8 +10,10 @@ import { useEffect, useState } from "react";
 import StyledButton from "@/components/common/button";
 import { amountDrankTodayAtom, userHasJugsAtom } from "@/atom/hydration";
 import Loading from "@/components/common/loading";
+import { hydrationInsightsEAtom } from "@/atom/effect/hydration";
 
 export default function HomePage() {
+    useAtomValue(hydrationInsightsEAtom);
     const { hasJugs, isLoading } = useAtomValue(userHasJugsAtom);
 
     const { refetch } = useAtomValue(getHydrationAtom);
