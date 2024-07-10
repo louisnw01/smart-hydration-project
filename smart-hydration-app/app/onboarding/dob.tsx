@@ -8,11 +8,11 @@ export default function DobPage() {
     const setInfo = useSetAtom(registerInfoAtom);
     const [dob, setDob] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
-    const [proceed, setProceed] = useState(true);
+    const [proceed, setProceed] = useState(false);
 
     const validateDob = () => {
         const regex = /^(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[0-2])-(19|20)\d{2}$/;
-        ;
+        
         if (!regex.test(dob)) {
           setErrorMessage('Invalid date format. Use dd-mm-yyyy.');
           setProceed(false);
@@ -49,7 +49,7 @@ export default function DobPage() {
             proceed={proceed}
         >
             <TextInput
-                placeholder="dd-mm-yyyy"
+                placeholder="dd-mm-yyyy (required)"
                 value={dob}
                 onChangeText={formatDob}
                 className="bg-gray-200 w-full h-14 placeholder-black text-xl rounded-xl px-3"
@@ -57,6 +57,8 @@ export default function DobPage() {
                 returnKeyType="done"
                 keyboardType="decimal-pad"
                 onSubmitEditing={validateDob}
+                onEndEditing={validateDob}
+                
             />
             <View style={{ width: 350 }}>
                 <Text style={{ color: "red", fontSize: 18 }}>
