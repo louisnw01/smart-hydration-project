@@ -141,7 +141,7 @@ export const getUserQAtom = atomWithQuery((get) => ({
     enabled: !!get(authTokenAtom),
 }));
 
-export const getHydrationAtom = atomWithQuery((get) => ({
+export const getHydrationQAtom = atomWithQuery((get) => ({
     queryKey: ["historical-jug-data", get(authTokenAtom)],
     queryFn: async ({ queryKey: [, token] }): Promise<TrendsInfo[]> => {
         const ts = new Date(2024, 5, 26).getTime();
