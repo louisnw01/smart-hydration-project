@@ -101,11 +101,6 @@ export const deleteUser = atomWithMutation((get) => ({
 
       return;
   },
-  onSuccess: () => {
-
-      const queryClient = get(queryClientAtom);
-      //void queryClient.invalidateQueries({ queryKey: ["get-jug-data"] });
-  },
 }));
 
 
