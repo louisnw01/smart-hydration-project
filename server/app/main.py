@@ -65,8 +65,6 @@ async def unlink_jug_from_user(body: JugLink, user_id: str = Depends(auth_user))
 # transactions"
 @app.post("/register")
 async def register(form: UserRegister):
-    if user_exists(form.email):
-        raise HTTPException(status_code=400, detail="email already registered")
     hashed_password = get_hash(form.password)
     with db_session:
         user = create_user(form.name, form.email, hashed_password)

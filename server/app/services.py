@@ -202,5 +202,5 @@ def update_jug_name_s(jug_id, name):
 def get_all_emails():
     emails = set()
     for user in select(user for user in User):
-        emails.add(user.email)
+        emails.add(user.email.lower())
     return emails

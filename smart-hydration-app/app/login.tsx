@@ -37,7 +37,7 @@ export default function LoginPage() {
                 <View className="mx-16 gap-5 mt-16 items-center">
                     <TextInput
                         placeholder="Enter your email address"
-                        onChangeText={setEmail}
+                        onChangeText={(val)=>setEmail(val.toLowerCase())}
                         textContentType="emailAddress"
                         autoCapitalize="none"
                         keyboardType="email-address"
