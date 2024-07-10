@@ -8,11 +8,13 @@ interface PageContent {
     title: string;
     children: JSX.Element | JSX.Element[];
     nextHref?: string;
+    proceed: boolean;
 }
 
 export default function GenericOnboardContent({
     children,
     nextHref,
+    proceed,
 }: PageContent) {
     const router = useRouter();
     return (
@@ -25,7 +27,7 @@ export default function GenericOnboardContent({
                 <OnboardingButton
                     text="Next"
                     color={colors.blue}
-                    onPress={() => router.push(nextHref)}
+                    onPress={() => {proceed && router.push(nextHref)}}
                 />
             )}
         </View>
