@@ -136,6 +136,8 @@ def get_jug_name_by_id(sh_jug_id):
     return name
 
 
+
+
 # def get_community_jug_data(user_id):
 #     print('Getting data for ' + user_id)
 #     community = find_user(user_id).community
@@ -194,3 +196,11 @@ def get_users_jugs_sh_ids(user_id):
 def update_jug_name_s(jug_id, name):
     Jug.get(smart_hydration_id=jug_id).name = name
     commit()
+
+
+@db_session
+def get_all_emails():
+    emails = set()
+    for user in select(user for user in User):
+        emails.add(user.email)
+    return emails

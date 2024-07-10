@@ -231,3 +231,17 @@ export const getAllJugsQAtom = atomWithQuery((get) => ({
         return await response.json();
     },
 }));
+
+export const getAllEmailsQAtom = atomWithQuery((get) => ({
+    queryKey: ["all-emails"],
+    queryFn: async (): Promise<string[]>  => {
+        const response = await request(ENDPOINTS.ALL_EMAILS, {
+            method: "get",
+        });
+
+        if (!response.ok) {
+            throw new Error("Get all emails request failed");
+        }
+        return await response.json();
+    },
+}));

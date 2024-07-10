@@ -14,7 +14,7 @@ from .schemas import LinkJugsForm, UserLogin, UserRegister, JugLink, UpdateJugFo
 from .services import (create_user, get_user_hash, user_exists, get_user_by_email, get_user_by_id,
                        unlink_jug_from_user_s,
                        link_jugs_to_user_s, get_user_name, get_users_jugs, update_jug_name_s, create_jug_user,
-                       update_jug_user_data)
+                       update_jug_user_data, get_all_emails)
 
 load_dotenv()
 
@@ -201,3 +201,8 @@ async def update_jug_name(form: UpdateJugForm, user_id: str = Depends(auth_user)
             raise HTTPException(status_code=401, detail='Unauthorized')
 
         update_jug_name_s(form.jugId, form.name)
+
+
+@app.get("/all-emails")
+async def all_emails():
+    return get_all_emails()
