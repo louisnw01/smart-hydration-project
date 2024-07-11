@@ -29,7 +29,7 @@ jobs:
           SH_KEY_PAIR: ${{ secrets.SH_KEY_PAIR }}      
         run: |
           file=$(mktemp)
-          echo "random_string" > "$file"
+          echo "$SH_KEY_PAIR" > "$file"
           chmod 600 "$file"
           ./deploy.sh "$file"
         working-directory: ./server
