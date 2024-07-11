@@ -22,5 +22,10 @@ export const colorSchemeAtom = atomWithStorage(
 
 export const authTokenAtom = atomWithStorage("auth-token", "", storage);
 
-
 export const nonSecureStorage = createJSONStorage(() => AsyncStorage);
+
+export const drinkListAtom = atomWithStorage(
+  "drink-list",
+  [],
+  nonSecureStorage,
+);
