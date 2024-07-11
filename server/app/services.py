@@ -198,9 +198,3 @@ def update_jug_name_s(jug_id, name):
     commit()
 
 
-@db_session
-def get_all_emails():
-    emails = set()
-    for user in select(user for user in User):
-        emails.add(user.email.lower())
-    return emails
