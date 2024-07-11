@@ -29,9 +29,13 @@ class JugUserUpdate(BaseModel):
     id: int
     key: str
     value: str
-      
-      
+
+
 class UpdateJugForm(BaseModel):
     jugId: str
     name: str
 
+class AddDrinkForm(BaseModel):
+    timestamp: int
+    name: str
+    capacity: int

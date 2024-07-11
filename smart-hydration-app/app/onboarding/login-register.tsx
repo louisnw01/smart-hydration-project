@@ -9,7 +9,7 @@ export default function LoginRegister() {
             <Drop width={100} height={100} />
             <View className="items-center gap-4 mt-20">
                 <Pressable
-                    onPress={() => router.push("login")}
+                    onPress={() => router.push("/login")}
                     className="bg-blue px-2 py-2 rounded-lg w-32"
                 >
                     <Text className="text-white text-2xl font-semibold text-center">
