@@ -6,7 +6,7 @@ import GenericOnboardContent from "@/components/onboarding/generic-onboard-conte
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { textInputStyle } from "@/constants/styles";
-import { getAllEmailsQAtom } from "@/atom/query";
+import { getUserExistsQAtom } from "@/atom/query";
 
 export default function RegisterPage() {
     const router = useRouter();
@@ -19,10 +19,12 @@ export default function RegisterPage() {
     const [proceed, setProceed] = useState(false);
     const [passwordValid, setPasswordValid] = useState(false);
     const [emailValid, setEmailValid] = useState(false);
-    const { data, refetch }  = useAtomValue(getAllEmailsQAtom);
+    const { isLoading, data, refetch }  = useAtomValue(getUserExistsQAtom);
 
     useEffect(() => {
-        refetch();
+        if(!isLoading && data != undefined){
+            validateEmail();
+        }
     }, [data]);
 
     const validatePassword = () => {
@@ -55,11 +57,10 @@ export default function RegisterPage() {
             setEmailValid(false);
             setProceed(false)
         } else {
-            if(data?.includes(email)){
+            if(data){
                 setEmailErrorMessage("This email is already linked to an account. Either go to login or use a different email.");
                 return;
             }
-            setInfo((prev) => ({ ...prev, email: email }));
             setEmailErrorMessage('');
             setEmailValid(true);
             setProceed(true && passwordValid);
@@ -82,8 +83,12 @@ export default function RegisterPage() {
                         autoCapitalize="none"
                         textContentType="emailAddress"
                         className={textInputStyle}
-                        onSubmitEditing={validateEmail}
-                        onEndEditing={validateEmail}
+                        onSubmitEditing={()=>{
+                            setInfo((prev) => ({ ...prev, email: email }));
+                            refetch()}}
+                        onEndEditing={()=>{
+                            setInfo((prev) => ({ ...prev, email: email }));
+                            refetch()}}
                     />
                 </View>
                 <View style={{ width: 350 }}>

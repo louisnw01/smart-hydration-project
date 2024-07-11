@@ -232,16 +232,19 @@ export const getAllJugsQAtom = atomWithQuery((get) => ({
     },
 }));
 
-export const getAllEmailsQAtom = atomWithQuery((get) => ({
-    queryKey: ["all-emails"],
-    queryFn: async (): Promise<string[]>  => {
-        const response = await request(ENDPOINTS.ALL_EMAILS, {
+export const getUserExistsQAtom = atomWithQuery((get) => ({
+    enabled: !!get(registerInfoAtom).email,
+    queryKey: ["user-exists", get(registerInfoAtom).email],
+    queryFn: async ({ queryKey: [, email] }): Promise<boolean[]>  => {
+        const response = await request(ENDPOINTS.USER_EXISTS, {
             method: "get",
+            query: {email},
         });
 
         if (!response.ok) {
-            throw new Error("Get all emails request failed");
+            throw new Error("Get user exists request failed");
         }
         return await response.json();
     },
 }));
+
