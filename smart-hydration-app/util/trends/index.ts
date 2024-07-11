@@ -1,9 +1,10 @@
 import { chartTimeWindowAtom } from "@/atom/nav";
-import { getHydrationAtom } from "@/atom/query";
+import { getHydrationQAtom } from "@/atom/query";
 import { MS_DAY, MS_HOUR, MS_MONTH, MS_WEEK, MS_YEAR } from "@/constants/data";
 import { TrendsInfo } from "@/interfaces/device";
 import { atom } from "jotai";
 import { atomEffect } from "jotai-effect";
+import values from "ajv/lib/vocabularies/jtd/values";
 
 // returns the floor of a number based on an interval.
 // eg 8 jul 13:49 returns 8 jul 00:00 if interval is MS_DAY
@@ -97,7 +98,7 @@ export function getAggregates(data: any[], type: string) {
 
 export const formattedDataAtom = atom((get) => {
     const type = get(chartTimeWindowAtom);
-    const { data, isLoading } = get(getHydrationAtom);
+    const { data, isLoading } = get(getHydrationQAtom);
     if (isLoading || !data) {
         return [];
     }
@@ -126,7 +127,8 @@ export function getAmountDrankToday(data) {
 export function getAvgAmountDrankByNow(data) {
     const timeNow = getTimeInMins(Date.now());
     const todayStartMS = Math.floor(Date.now() / MS_DAY) * MS_DAY;
-
+    console.log(data)
+    console.log(todayStartMS)
     const dailyAggregatesBeforeTime = data.filter(
         (row) => getTimeInMins(row.time) < timeNow && row.time < todayStartMS,
     );
@@ -135,6 +137,7 @@ export function getAvgAmountDrankByNow(data) {
         (curr, row) => curr + row.value,
         0,
     );
+
 
     return totalDrankFromDailyAggs / dailyAggregatesBeforeTime.length;
 }
@@ -165,12 +168,15 @@ export function averageHydrationMonthComparison(data: FormattedData[]) {
         prevMonthData.reduce((curr, row) => curr + row.y, 0) /
         prevMonthData.length;
 
+
     return [thisMonthAvg || 0, prevMonthAvg || 0];
 }
 
 export function getMostHydratedDayOfWeek(data: any[]) {
     const dayConsumption = Array.from({ length: 7 }, () => []);
-
+    if (!data || data.length === 0) {
+        return { name: "No data", value: 0 };
+    }
     data.forEach((row) => {
         const date = new Date(row.time);
         const day = date.getDay();

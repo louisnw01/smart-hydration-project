@@ -50,7 +50,7 @@ def convert_timestamp(timestamp: str):
     return dt.datetime.fromisoformat(timestamp.replace('Z', '')).timestamp()
 
 
-def fetch_data_for_jug(session, jug_id):
+def get_jug_latest(session, jug_id):
     result = query(session, f'/data/device/{jug_id}')
     if result is None:
         return None
@@ -87,7 +87,7 @@ def get_all_jug_ids(user_id, session):
     }
 
 
-def get_jug_data(session, jug, start_timestamp):
+def get_hydration_events(session, jug, start_timestamp):
     # get a list of all hydration events for the jug for the past year
     # TODO convert start_timestamp to datetime. fromTimestamp
     start_date = dt.datetime.fromtimestamp(start_timestamp)

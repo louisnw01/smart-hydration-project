@@ -10,7 +10,7 @@ import { Link, Tabs } from "expo-router";
 
 export default function TabLayout() {
     const palette = useColorPalette();
-    
+
     return (
         <Tabs
             screenOptions={{

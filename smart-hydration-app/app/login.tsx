@@ -66,11 +66,19 @@ export default function LoginPage() {
                     </Pressable>
                     <Pressable
                         onPress={() => router.push("onboarding/register")}
-                        className="bg-blue px-4 py-2 rounded-xl mt-10"
+                        className="mt-10"
                     >
-                        <Text className="text-xl font-semibold text-white">
-                            Register new account
-                        </Text>
+                        {({ pressed }) => (
+                            <Text
+                                style={{
+                                    fontWeight: "600",
+                                    color: pressed ? "darkblue" : "blue",
+                                    textDecorationLine: "underline",
+                                }}
+                            >
+                                Register new account
+                            </Text>
+                        )}
                     </Pressable>
                 </View>
             </ScrollView>

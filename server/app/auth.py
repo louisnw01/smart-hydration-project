@@ -5,7 +5,7 @@ from uuid import UUID
 
 import jwt
 
-AUTH_TOKEN_EXPIRATION_SECS = 86_400  # 1 day, for now
+AUTH_TOKEN_EXPIRATION_SECS = 86_400 * 30
 
 
 def get_hash(string: str):
