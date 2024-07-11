@@ -1,12 +1,11 @@
 import { View, Text } from "react-native";
-import { hydrationAtom } from "@/atom/hydration";
 import { useAtom, useAtomValue } from "jotai";
 import { HYDRATION_MESSAGE } from "@/constants/hydration-status";
 import colors from "@/colors";
 import { userNameAtom } from "@/atom/user";
 import { getUserQAtom } from "@/atom/query";
 import { useEffect } from "react";
-import { amountDrankTodayAtom } from "@/util/trends";
+import { amountDrankTodayAtom } from "@/atom/hydration";
 
 export default function HydrationStatus() {
     const hydration = useAtomValue(amountDrankTodayAtom);

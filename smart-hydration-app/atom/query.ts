@@ -27,6 +27,9 @@ export const linkJugToUserMAtom = atomWithMutation((get) => ({
     onSuccess: () => {
         const queryClient = get(queryClientAtom);
         void queryClient.invalidateQueries({ queryKey: ["get-jug-data"] });
+        void queryClient.invalidateQueries({
+            queryKey: ["historical-jug-data"],
+        });
     },
 }));
 
@@ -52,7 +55,9 @@ export const unlinkJugFromUserMAtom = atomWithMutation((get) => ({
             ["get-jug-data", get(authTokenAtom)],
             (prev: DeviceInfo[]) => prev.filter((device) => device.id != jugId),
         );
-        // void queryClient.invalidateQueries({ queryKey: ["get-jug-data"] });
+        void queryClient.invalidateQueries({
+            queryKey: ["historical-jug-data"],
+        });
     },
 }));
 
@@ -136,8 +141,8 @@ export const getUserQAtom = atomWithQuery((get) => ({
     enabled: !!get(authTokenAtom),
 }));
 
-export const getHydrationAtom = atomWithQuery((get) => ({
-    queryKey: ["historial-jug-data", get(authTokenAtom)],
+export const getHydrationQAtom = atomWithQuery((get) => ({
+    queryKey: ["historical-jug-data", get(authTokenAtom)],
     queryFn: async ({ queryKey: [, token] }): Promise<TrendsInfo[]> => {
         const ts = new Date(2024, 5, 26).getTime();
         const response = await request(ENDPOINTS.FETCH_HISTORICAL_JUG_DATA, {
@@ -148,6 +153,7 @@ export const getHydrationAtom = atomWithQuery((get) => ({
         });
         return await response.json();
     },
+    enabled: !!get(authTokenAtom),
 }));
 
 export const getTodaysIntakeAtom = atomWithQuery((get) => ({

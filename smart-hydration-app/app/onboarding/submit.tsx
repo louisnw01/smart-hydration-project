@@ -6,6 +6,7 @@ import GenericOnboardContent from "@/components/onboarding/generic-onboard-conte
 import OnboardingButton from "@/components/onboarding/onboarding-button";
 import { useRouter } from "expo-router";
 import { useAtomValue, useSetAtom } from "jotai";
+import { useEffect } from "react";
 import { Text } from "react-native";
 
 export default function SubmitPage() {
@@ -19,11 +20,13 @@ export default function SubmitPage() {
         isSuccess,
     } = useAtomValue(registerMAtom);
 
-    if (isSuccess) {
+    useEffect(() => {
+        if (!isSuccess || !data) return;
         setAuthToken(data);
         clearRegisterInfo({});
         router.replace("(tabs)");
-    }
+    }, [isSuccess, data]);
+
     return (
         <GenericOnboardContent title="You're nearly there!">
             <Text className="text-xl font-light">

@@ -4,16 +4,19 @@ import HydrationStatus from "@/components/home/hydration-status";
 import { useAtomValue, useSetAtom } from "jotai";
 import Droplet from "@/components/home/droplet";
 import { View, RefreshControl, ScrollView, Text } from "react-native";
-import { getJugDataQAtom, getTodaysIntakeAtom } from "@/atom/query";
+import { getHydrationQAtom, getJugDataQAtom } from "@/atom/query";
 import { useEffect, useState } from "react";
-import { hydrationAtom } from "@/atom/hydration";
+
 import StyledButton from "@/components/common/button";
+import { amountDrankTodayAtom, userHasJugsAtom } from "@/atom/hydration";
 import Loading from "@/components/common/loading";
-import { amountDrankTodayAtom } from "@/util/trends";
+import { hydrationInsightsEAtom } from "@/atom/effect/hydration";
 
 export default function HomePage() {
-    const { data: jugInfoData, isLoading: isLoadingJugInfo } =
-        useAtomValue(getJugDataQAtom);
+    useAtomValue(hydrationInsightsEAtom);
+    const { hasJugs, isLoading } = useAtomValue(userHasJugsAtom);
+
+    const { refetch } = useAtomValue(getHydrationQAtom);
 
     const amountDrankToday = useAtomValue(amountDrankTodayAtom);
 
@@ -25,10 +28,10 @@ export default function HomePage() {
     //     setHydration(data);
     // }, [isSuccess]);
 
-    // const handleRefresh = async () => {
-    //     setRefreshing(true);
-    //     refetch();
-    // };
+    const handleRefresh = async () => {
+        setRefreshing(true);
+        refetch();
+    };
 
     // if (!isLoading && refreshing) {
     //     setRefreshing(false);
@@ -48,13 +51,13 @@ export default function HomePage() {
                     />
                 }
             >
-                {/* <Loading
-                    isLoading={isLoading || isPending}
-                    message="Loading your information.."
-                /> */}
-                {amountDrankToday != null && !isLoadingJugInfo && (
-                    <View className="flex flex-1 justify-evenly pt-3 h-full items-center">
-                        {!jugInfoData || jugInfoData.length == 0 ? (
+                <Loading
+                    isLoading={isLoading}
+                    message="Loading your information..."
+                />
+                {!isLoading && (
+                    <View className="flex flex-1 justify-evenly pt-3 h-full items-center dark:text-white">
+                        {!hasJugs ? (
                             <Text>You haven't linked any jugs yet.</Text>
                         ) : (
                             <>
