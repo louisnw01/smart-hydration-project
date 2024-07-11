@@ -37,7 +37,7 @@ def get_user_hash(email: str):
 
 @db_session
 def user_exists(email):
-    return True if User.get(email=email) else False
+    return True if User.get(email=email.lower()) else False
 
 
 @db_session
