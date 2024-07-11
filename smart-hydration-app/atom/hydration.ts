@@ -1,7 +1,7 @@
 import { atom, useAtomValue } from "jotai";
 import { getHydrationQAtom, getJugDataQAtom } from "./query";
 
-export const amountDrankTodayAtom = atom<number | null>(null);
+export const amountDrankTodayAtom = atom<number>(0);
 export const avgAmountDrankByTimeNowAtom = atom<number | null>(null);
 
 export const avgAmountDrankThisMonthAtom = atom<number | null>(null);
