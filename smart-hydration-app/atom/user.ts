@@ -1,7 +1,8 @@
-import { atom } from "jotai";
-import { getItem, setItem, deleteItemAsync } from "expo-secure-store";
+import {atom} from "jotai";
+import {getItem, setItem, deleteItemAsync} from "expo-secure-store";
 
-import { atomWithStorage, createJSONStorage } from "jotai/vanilla/utils";
+import {atomWithStorage, createJSONStorage} from "jotai/vanilla/utils";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const userNameAtom = atom<string>("");
 export const registerInfoAtom = atom<Partial<RegistrationInfo>>({});
@@ -20,3 +21,11 @@ export const colorSchemeAtom = atomWithStorage(
 );
 
 export const authTokenAtom = atomWithStorage("auth-token", "", storage);
+
+export const nonSecureStorage = createJSONStorage(() => AsyncStorage);
+
+export const drinkListAtom = atomWithStorage(
+    "drink-list",
+    [],
+    nonSecureStorage,
+);

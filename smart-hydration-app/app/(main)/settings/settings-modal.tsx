@@ -1,4 +1,4 @@
-import { authTokenAtom, colorSchemeAtom, userNameAtom } from "@/atom/user";
+import { authTokenAtom, colorSchemeAtom, userNameAtom, drinkListAtom } from "@/atom/user";
 import { OptionBlock } from "@/components/common/option-block";
 import { useRouter } from "expo-router";
 import { useSetAtom } from "jotai";
@@ -83,6 +83,7 @@ export default function SettingsModal() {
     const setAuthAtom = useSetAtom(authTokenAtom);
     const setUserNameAtom = useSetAtom(userNameAtom);
     const setAmounDrankTodayAtom = useSetAtom(amountDrankTodayAtom);
+    const setDrinksList = useSetAtom(drinkListAtom);
     const router = useRouter();
 
     return (
@@ -123,6 +124,7 @@ export default function SettingsModal() {
                         setAuthAtom("");
                         setUserNameAtom("");
                         setAmounDrankTodayAtom(0);
+                        setDrinksList([]);
                         router.replace("onboarding/login-register");
                     }}
                 >
