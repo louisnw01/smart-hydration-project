@@ -18,14 +18,27 @@ import Loading from "@/components/common/loading";
 const tickFormatMap: { [key: string]: (t: Date) => string } = {
     D: (t) => {
         const hours = t.getHours();
-        return `${hours === 12 ? 12 : hours % 12}${hours > 12 ? "pm" : "am"}`;
+        const period = hours >= 12 ? "am" : "pm";
+        const formattedHour = hours % 12 || 12;
+        return `${formattedHour}${period}`;
     },
-    W: (t) => ["S", "M", "T", "W", "T", "F", "S"][t.getDay()],
+    W: (t) => ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"][t.getDay()],
     M: (t) => t.getDate().toString(),
     Y: (t) =>
-        ["J", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D"][
-            t.getMonth()
-        ],
+        [
+            "Jan",
+            "Feb",
+            "Mar",
+            "Apr",
+            "May",
+            "Jun",
+            "Jul",
+            "Aug",
+            "Sep",
+            "Oct",
+            "Nov",
+            "Dec",
+        ][t.getMonth()],
 };
 
 function formatDateToDayMonth(date) {
