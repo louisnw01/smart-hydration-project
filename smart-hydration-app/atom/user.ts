@@ -3,7 +3,7 @@ import { getItem, setItem, deleteItemAsync } from "expo-secure-store";
 
 import { atomWithStorage, createJSONStorage } from "jotai/vanilla/utils";
 
-export const userNameAtom = atom<string | null>(null);
+export const userNameAtom = atom<string>("");
 export const registerInfoAtom = atom<Partial<RegistrationInfo>>({});
 
 // Stored values that persist between open/closing the app
