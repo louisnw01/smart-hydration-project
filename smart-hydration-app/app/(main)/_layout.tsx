@@ -16,7 +16,6 @@ function useSession() {
 
     const getTokenFromStorage = async () => {
         const authToken = JSON.parse((await getItemAsync("auth-token")) || "");
-        console.log(authToken);
         if (!authToken) {
             setIsSuccess(false);
             setIsLoading(false);

@@ -127,8 +127,6 @@ export function getAmountDrankToday(data) {
 export function getAvgAmountDrankByNow(data) {
     const timeNow = getTimeInMins(Date.now());
     const todayStartMS = Math.floor(Date.now() / MS_DAY) * MS_DAY;
-    console.log(data)
-    console.log(todayStartMS)
     const dailyAggregatesBeforeTime = data.filter(
         (row) => getTimeInMins(row.time) < timeNow && row.time < todayStartMS,
     );
