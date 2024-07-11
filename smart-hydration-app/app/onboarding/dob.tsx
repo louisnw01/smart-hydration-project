@@ -15,6 +15,7 @@ export default function DobPage() {
                 onChangeText={(val) =>
                     setInfo((prev) => ({ ...prev, dob: val }))
                 }
+                className="bg-gray-200 w-full h-14 placeholder-black text-xl rounded-xl px-3"
             />
         </GenericOnboardContent>
     );

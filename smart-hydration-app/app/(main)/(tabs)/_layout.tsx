@@ -1,6 +1,6 @@
+import { hydrationInsightsEAtom } from "@/atom/effect/hydration";
 import PageHeader from "@/components/common/header";
 import useColorPalette from "@/util/palette";
-import { hydrationInsightsEAtom } from "@/util/trends";
 import {
     Entypo,
     FontAwesome,
@@ -12,7 +12,6 @@ import { useAtomValue } from "jotai";
 
 export default function TabLayout() {
     const palette = useColorPalette();
-    useAtomValue(hydrationInsightsEAtom);
     return (
         <Tabs
             screenOptions={{

@@ -7,7 +7,7 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from pony.orm.core import db_session
 from starlette.middleware.cors import CORSMiddleware
 
-from .api import login_and_get_session, fetch_data_for_jug, get_jug_data, get_all_jug_ids, get_todays_intake
+from .api import login_and_get_session, get_jug_latest, get_hydration_events, get_all_jug_ids, get_todays_intake
 from .auth import get_hash, decode_auth_token, generate_auth_token
 from .models import db, User, JugUser, Jug
 from .schemas import LinkJugsForm, UserLogin, UserRegister, JugLink, UpdateJugForm, JugUserUpdate
@@ -64,17 +64,17 @@ async def unlink_jug_from_user(body: JugLink, user_id: str = Depends(auth_user))
 # @db_session is needed to fix "pony.orm.core.TransactionError: An attempt to mix objects belonging to different
 # transactions"
 @app.post("/register")
-@db_session
 async def register(form: UserRegister):
     if user_exists(form.email):
         raise HTTPException(status_code=400, detail="email already registered")
     hashed_password = get_hash(form.password)
-    user = create_user(form.name, form.email, hashed_password)
-    if not user.jug_user:
-        create_jug_user(user)
-        jug_user_id = user.jug_user.id
-        if form.dob:
-            update_jug_user_data(jug_user_id, "dob", form.dob)
+    with db_session:
+        user = create_user(form.name, form.email, hashed_password)
+        if not user.jug_user:
+            create_jug_user(user)
+            jug_user_id = user.jug_user.id
+            if form.dob:
+                update_jug_user_data(jug_user_id, "dob", form.dob)
     token = generate_auth_token(user.id)
     return {"access_token": token, "token_type": "bearer"}
 
@@ -119,7 +119,7 @@ async def get_community_jug_status(user_id: str = Depends(auth_user)):
         devices_info = []
         session = login_and_get_session()
         for jug in jugs:
-            jug_data = fetch_data_for_jug(session, jug.id)
+            jug_data = get_jug_latest(session, jug.smart_hydration_id)
             if jug_data is None:
                 continue
             jug_data['name'] = jug.name
@@ -166,11 +166,10 @@ async def get_historical_jug_data(timestamp: int, user_id: str = Depends(auth_us
         jugs = juguser.jugs
 
         session = login_and_get_session()
-        # sorry neill
 
         big_list = []
         for jug in jugs:
-            big_list.extend(get_jug_data(session, jug, timestamp))
+            big_list.extend(get_hydration_events(session, jug, timestamp))
 
         return sorted(big_list, key=lambda x: x['time'])
 

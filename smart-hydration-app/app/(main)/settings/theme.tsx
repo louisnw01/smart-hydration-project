@@ -1,30 +1,10 @@
 import { authTokenAtom, colorSchemeAtom } from "@/atom/user";
-import {
-    MultiSelectOptionBlock,
-    OptionBlock,
-} from "@/components/common/option-block";
+import { MultiSelectOptionBlock } from "@/components/common/option-block";
 import { useRouter } from "expo-router";
-import { atom, useSetAtom } from "jotai";
-import { ReactElement, ReactNode } from "react";
-import { Pressable, SectionList, Text, View } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { Feather, MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
-
-type ActionComponentFunction = (
-    name: string,
-    isFirst?: boolean,
-    isLast?: boolean,
-) => ReactElement;
-
-interface ISettingsActions {
-    name: string;
-    component: ActionComponentFunction;
-}
-
-interface ISettingsSection {
-    title: string;
-    data: ISettingsActions[];
-}
+import { useSetAtom } from "jotai";
+import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
+import { ISettingsSection } from "@/interfaces/settings";
+import { SectionList, View } from "react-native";
 
 const settingsList: ISettingsSection[] = [
     {

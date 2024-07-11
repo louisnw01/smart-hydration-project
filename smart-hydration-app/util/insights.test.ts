@@ -1,4 +1,5 @@
 import {MS_DAY, MS_HOUR, MS_MONTH} from "@/constants/data";
+
 import {
     averageHydrationMonthComparison,
     getAmountDrankToday, getAvgAmountDrankByNow,
@@ -6,6 +7,7 @@ import {
     getMostHydratedDayOfWeek,
     getTodaysStartMS,
 } from "./trends";
+
 
 describe("insights", () => {
     test("highest day of week", () => {
@@ -83,7 +85,8 @@ describe("insights", () => {
             { time: new Date('2024-07-02T12:00:00Z').getTime(), value: 500 },
             { time: new Date().getTime() - MS_DAY * 8, value: 1000 },
             { time: new Date(), value: 1000 },
-            ]
+        ]
+
         const dayNames = [
             "Sunday",
             "Monday",
