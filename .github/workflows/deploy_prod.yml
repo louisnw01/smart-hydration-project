@@ -13,7 +13,6 @@ jobs:
         
       - name: Create .env
         run: |
-          pwd
           touch .env
           echo DB_USERNAME=${{ Secrets.DB_USERNAME }} >> .env
           echo DB_PASSWORD=${{ Secrets.DB_PASSWORD }} >> .env
@@ -25,6 +24,11 @@ jobs:
         working-directory: ./server
 
       - name: Run deploy deploy.sh
+        shell: bash
+        env:
+          SH_KEY_PAIR: ${{ secrets.SH_KEY_PAIR }}      
         run: |
+          file=$(mktemp)
+          echo $KEY_PAIR_PATH >> $file
           ./deploy.sh
         working-directory: ./server
