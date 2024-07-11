@@ -1,5 +1,5 @@
 import { chartTimeWindowAtom } from "@/atom/nav";
-import { getHydrationAtom } from "@/atom/query";
+import { getHydrationQAtom } from "@/atom/query";
 import { MS_DAY, MS_HOUR, MS_MONTH, MS_WEEK, MS_YEAR } from "@/constants/data";
 import { TrendsInfo } from "@/interfaces/device";
 import { atom } from "jotai";
@@ -96,7 +96,7 @@ export function getAggregates(data: any[], type: string) {
 
 export const formattedDataAtom = atom((get) => {
     const type = get(chartTimeWindowAtom);
-    const { data, isLoading } = get(getHydrationAtom);
+    const { data, isLoading } = get(getHydrationQAtom);
     if (isLoading || !data) {
         return [];
     }

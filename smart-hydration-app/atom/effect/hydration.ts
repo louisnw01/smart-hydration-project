@@ -1,5 +1,5 @@
 import { atomEffect } from "jotai-effect";
-import { getHydrationAtom } from "../query";
+import { getHydrationQAtom } from "../query";
 import {
     getAllAggregates,
     getAmountDrankToday,
@@ -16,7 +16,7 @@ import {
 } from "../hydration";
 
 export const hydrationInsightsEAtom = atomEffect((get, set) => {
-    const { data, isLoading } = get(getHydrationAtom);
+    const { data, isLoading } = get(getHydrationQAtom);
 
     if (isLoading || !data) return;
 
