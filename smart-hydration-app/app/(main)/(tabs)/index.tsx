@@ -4,7 +4,7 @@ import HydrationStatus from "@/components/home/hydration-status";
 import { useAtomValue, useSetAtom } from "jotai";
 import Droplet from "@/components/home/droplet";
 import { View, RefreshControl, ScrollView, Text } from "react-native";
-import { getHydrationAtom, getJugDataQAtom } from "@/atom/query";
+import { getHydrationQAtom, getJugDataQAtom } from "@/atom/query";
 import { useEffect, useState } from "react";
 
 import StyledButton from "@/components/common/button";
@@ -16,7 +16,7 @@ export default function HomePage() {
     useAtomValue(hydrationInsightsEAtom);
     const { hasJugs, isLoading } = useAtomValue(userHasJugsAtom);
 
-    const { refetch } = useAtomValue(getHydrationAtom);
+    const { refetch } = useAtomValue(getHydrationQAtom);
 
     const amountDrankToday = useAtomValue(amountDrankTodayAtom);
 
