@@ -82,21 +82,21 @@ export default function SettingsModal() {
     const insets = useSafeAreaInsets();
     const setAuthAtom = useSetAtom(authTokenAtom);
     const router = useRouter();
-    const { mutate: submitDeleteUser, isPending, isSuccess, isError } = useAtomValue(deleteUser);
-
-    useEffect(() => {
-      if (isSuccess) {
+    //const { mutate: submitDeleteUser, isPending, isSuccess, isError } = useAtomValue(deleteUser);
+    //useEffect(() => {
+      {/*if (isSuccess) {
         router.replace("onboarding/login-register");
       }
     }, [isSuccess]);
 
     useEffect(() => {
       if (isError) {
+
         //router.navigate("settings/theme");
        console.error('error')
       }
     }, [isError]);
-
+  */}
     return (
         <View
             className="flex flex-1 justify-between mx-4"
@@ -138,6 +138,7 @@ export default function SettingsModal() {
                 >
                     <Text className="text-xl mt-1 text-white">Log Out</Text>
                 </Pressable>
+                {/*
                 <Pressable
                     className="items-center bg-blue rounded-xl px-7 py-3"
                     disabled={isPending}
@@ -147,6 +148,7 @@ export default function SettingsModal() {
                 >
                     <Text className="text-xl mt-1 text-white">{isPending ? 'Deleting account...' : 'Delete Account'}</Text>
                 </Pressable>
+                  */}
             </View>
         </View>
     );
