@@ -7,6 +7,7 @@ import {
     getMostHydratedDayOfWeek,
     getTodaysStartMS,
 } from "./trends";
+import {any} from "prop-types";
 
 
 describe("insights", () => {
@@ -53,6 +54,11 @@ describe("insights", () => {
         const amount = getAmountDrankToday(aggs);
         expect(amount).toEqual(3700);
     })
+    test("pass undefined to amount drank today", () => {
+        const testData = []
+        const result = getAmountDrankToday(testData);
+        expect(result).toEqual(0);
+    })
     test("average amount of water to a certain point in the day", () => {
         const aggs = [];
         const todayStartMS = Math.floor(Date.now() / MS_DAY) * MS_DAY;
@@ -98,6 +104,21 @@ describe("insights", () => {
         ];
         expect(getMostHydratedDayOfWeek(data)).toEqual({ name: dayNames[new Date().getDay()], value: 1000 });
     });
+    test('no data in day of week', () => {
+        const data = [
+
+        ]
+        const dayNames = [
+            "Sunday",
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday",
+        ];
+        expect(getMostHydratedDayOfWeek(data)).toEqual({ name: "No data", value: 0 });
+    });
     test("average hydration month comparison", () => {
         const testData = [];
         const startOfMonth = new Date(
@@ -131,5 +152,11 @@ describe("insights", () => {
         const [firstAvg, nextAvg] = averageHydrationMonthComparison(testData)
         expect(firstAvg).toEqual(1500);
         expect(nextAvg).toEqual(2000);
+    })
+    test("passing undefined to average hydration month comparison", () => {
+        const testData = [];
+        const [firstAvg, nextAvg] = averageHydrationMonthComparison(testData);
+        expect(firstAvg).toEqual(0);
+        expect(nextAvg).toEqual(0);
     })
 });
