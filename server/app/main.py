@@ -4,13 +4,13 @@ from typing import Optional
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException, Depends
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
-from pony.orm.core import db_session
+from pony.orm.core import db_session, commit
 from starlette.middleware.cors import CORSMiddleware
 
 from .api import login_and_get_session, fetch_data_for_jug, get_jug_data, get_all_jug_ids, get_todays_intake
 from .auth import get_hash, decode_auth_token, generate_auth_token
-from .models import db, User, JugUser, Jug
-from .schemas import LinkJugsForm, UserLogin, UserRegister, JugLink, UpdateJugForm, JugUserUpdate
+from .models import db, User, JugUser, Jug, OtherDrink
+from .schemas import LinkJugsForm, UserLogin, UserRegister, JugLink, UpdateJugForm, JugUserUpdate, AddDrinkForm
 from .services import (create_user, get_user_hash, user_exists, get_user_by_email, get_user_by_id,
                        unlink_jug_from_user_s,
                        link_jugs_to_user_s, get_user_name, get_users_jugs, update_jug_name_s, create_jug_user,
@@ -201,3 +201,12 @@ async def update_jug_name(form: UpdateJugForm, user_id: str = Depends(auth_user)
             raise HTTPException(status_code=401, detail='Unauthorized')
 
         update_jug_name_s(form.jugId, form.name)
+
+@app.post("/add-drink-event")
+async def add_drink_event(form: AddDrinkForm, user_id: str = Depends(auth_user)):
+    with db_session:
+        user = User.get(id=user_id)
+        juguser = user.jug_user
+        print(AddDrinkForm)
+        OtherDrink(juguser=juguser, timestamp=form.timestamp, name=form.name, capacity=form.capacity)
+        commit()
