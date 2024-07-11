@@ -18,9 +18,6 @@ export default function HomePage() {
     const { hasJugs, isLoading } = useAtomValue(userHasJugsAtom);
 
     const { refetch } = useAtomValue(getHydrationQAtom);
-
-    const amountDrankToday = useAtomValue(amountDrankTodayAtom);
-
     const [refreshing, setRefreshing] = useState(false);
 
     const handleRefresh = async () => {
@@ -49,6 +46,7 @@ export default function HomePage() {
                 <Loading
                     isLoading={isLoading}
                     message="Loading your information..."
+                    mysterious
                 />
                 {!isLoading && (
                     <View className="flex flex-1 justify-evenly pt-3 h-full items-center dark:text-white">
