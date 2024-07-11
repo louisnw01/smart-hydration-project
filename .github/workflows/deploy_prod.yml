@@ -28,7 +28,6 @@ jobs:
         env:
           SH_KEY_PAIR: ${{ secrets.SH_KEY_PAIR }}      
         run: |
-          echo "$SH_KEY_PAIR"
           file=$(mktemp)
           echo "$SH_KEY_PAIR" >> "$file"
           ./deploy.sh "$file"
