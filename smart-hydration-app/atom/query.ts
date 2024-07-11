@@ -231,3 +231,20 @@ export const getAllJugsQAtom = atomWithQuery((get) => ({
         return await response.json();
     },
 }));
+
+export const getUserExistsQAtom = atomWithQuery((get) => ({
+    enabled: !!get(registerInfoAtom).email,
+    queryKey: ["user-exists", get(registerInfoAtom).email],
+    queryFn: async ({ queryKey: [, email] }): Promise<boolean[]>  => {
+        const response = await request(ENDPOINTS.USER_EXISTS, {
+            method: "get",
+            query: {email},
+        });
+
+        if (!response.ok) {
+            throw new Error("Get user exists request failed");
+        }
+        return await response.json();
+    },
+}));
+

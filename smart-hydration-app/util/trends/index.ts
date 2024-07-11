@@ -22,6 +22,7 @@ export function getAllAggregates(
     interval: number,
     conditional?: (row: {}) => boolean,
 ) {
+    if(!data) return [];
     const aggs: Map<number, number> = new Map();
 
     for (const row of data) {
