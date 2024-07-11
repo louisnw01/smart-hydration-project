@@ -200,3 +200,8 @@ async def update_jug_name(form: UpdateJugForm, user_id: str = Depends(auth_user)
             raise HTTPException(status_code=401, detail='Unauthorized')
 
         update_jug_name_s(form.jugId, form.name)
+
+
+@app.get("/user-exists")
+async def email_exists(email: str):
+    return user_exists(email)

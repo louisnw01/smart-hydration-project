@@ -1,12 +1,11 @@
 import { View, Pressable, Text } from "react-native";
 import Drop from "@/assets/svgs/water-drop-svgrepo-com.svg";
 import { useRouter } from "expo-router";
-import GenericOnboardContent from "@/components/onboarding/generic-onboard-content";
 
 export default function LoginRegister() {
     const router = useRouter();
     return (
-        <GenericOnboardContent title={""}>
+        <View className="flex flex-1 gap-8 mx-16 items-center mt-10">
             <Drop width={100} height={100} />
             <View className="items-center gap-4 mt-20">
                 <Pressable
@@ -26,7 +25,7 @@ export default function LoginRegister() {
                     </Text>
                 </Pressable>
             </View>
-        </GenericOnboardContent>
+        </View>
     );
 }
 
