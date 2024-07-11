@@ -194,3 +194,4 @@ def get_users_jugs_sh_ids(user_id):
 def update_jug_name_s(jug_id, name):
     Jug.get(smart_hydration_id=jug_id).name = name
     commit()
+
