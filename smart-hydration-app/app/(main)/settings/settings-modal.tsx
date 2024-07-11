@@ -1,4 +1,4 @@
-import { authTokenAtom, colorSchemeAtom } from "@/atom/user";
+import {authTokenAtom, colorSchemeAtom, drinkListAtom} from "@/atom/user";
 import { OptionBlock } from "@/components/common/option-block";
 import { useRouter } from "expo-router";
 import { useSetAtom } from "jotai";
@@ -80,6 +80,7 @@ const settingsList: ISettingsSection[] = [
 export default function SettingsModal() {
     const insets = useSafeAreaInsets();
     const setAuthAtom = useSetAtom(authTokenAtom);
+    const setDrinksList = useSetAtom(drinkListAtom);
     const router = useRouter();
 
     return (
@@ -118,6 +119,7 @@ export default function SettingsModal() {
                     className="items-center bg-red rounded-xl px-7 py-3"
                     onPress={() => {
                         setAuthAtom("");
+                        setDrinksList([]);
                         router.replace("onboarding/login-register");
                     }}
                 >
