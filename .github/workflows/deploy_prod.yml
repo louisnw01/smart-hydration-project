@@ -24,7 +24,7 @@ jobs:
         working-directory: ./server
 
       - name: Run deploy deploy.sh
-      - shell: bash
+        shell: bash
         env:
           SH_KEY_PAIR: ${{ secrets.SH_KEY_PAIR }}      
         run: |
