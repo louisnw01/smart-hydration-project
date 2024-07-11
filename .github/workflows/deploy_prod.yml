@@ -29,6 +29,6 @@ jobs:
           SH_KEY_PAIR: ${{ secrets.SH_KEY_PAIR }}      
         run: |
           file=$(mktemp)
-          echo "$KEY_PAIR_PATH" >> "$file"
+          echo "$SH_KEY_PAIR" >> "$file"
           ./deploy.sh "$file"
         working-directory: ./server
