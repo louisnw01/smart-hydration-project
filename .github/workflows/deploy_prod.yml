@@ -23,18 +23,13 @@ jobs:
           echo JWT_ALGORITHM=${{ Secrets.JWT_ALGORITHM }} >> .env
         working-directory: ./server
 
-      - name: Add SSH key and known hosts
+      - name: Run deploy deploy.sh
+        shell: bash
+        env:
+          SH_KEY_PAIR: ${{ secrets.SH_KEY_PAIR }}      
         run: |
           file=$(mktemp)
           echo "$SH_KEY_PAIR" > "$file"
-          chmod 600 "$file"  # Ensure the SSH key has the correct permissions
-          ssh-keyscan -H ec2-18-133-247-202.eu-west-2.compute.amazonaws.com >> ~/.ssh/known_hosts
-        env:
-          SH_KEY_PAIR: ${{ Secrets.SH_KEY_PAIR }}
-
-      - name: Run deploy script
-        run: |
+          chmod 600 "$file"
           ./deploy.sh "$file"
         working-directory: ./server
-        env:
-          SH_KEY_PAIR: ${{ Secrets.SH_KEY_PAIR }}
