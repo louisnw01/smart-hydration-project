@@ -2,18 +2,13 @@ import { useAtomValue } from "jotai";
 
 import { Redirect, Stack } from "expo-router";
 import { colorSchemeEAtom } from "@/atom/effect/user";
-import { deleteItemAsync, getItemAsync } from "expo-secure-store";
+import { getItemAsync } from "expo-secure-store";
 import { request } from "@/util/fetch";
 import { useEffect, useState } from "react";
 import Loading from "@/components/common/loading";
 import { View } from "react-native";
 
 // Add this function to the top of wrappedIndex for one run if needed
-async function clearStorage() {
-    await deleteItemAsync("color-scheme");
-    await deleteItemAsync("auth_token");
-    await deleteItemAsync("auth-token");
-}
 
 function useSession() {
     const [isLoading, setIsLoading] = useState(true);
@@ -21,7 +16,6 @@ function useSession() {
 
     const getTokenFromStorage = async () => {
         const authToken = JSON.parse((await getItemAsync("auth-token")) || "");
-        console.log(authToken);
         if (!authToken) {
             setIsSuccess(false);
             setIsLoading(false);

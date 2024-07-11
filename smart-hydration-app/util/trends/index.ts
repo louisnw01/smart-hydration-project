@@ -22,6 +22,7 @@ export function getAllAggregates(
     interval: number,
     conditional?: (row: {}) => boolean,
 ) {
+    if(!data) return [];
     const aggs: Map<number, number> = new Map();
 
     for (const row of data) {
@@ -126,8 +127,6 @@ export function getAmountDrankToday(data) {
 export function getAvgAmountDrankByNow(data) {
     const timeNow = getTimeInMins(Date.now());
     const todayStartMS = Math.floor(Date.now() / MS_DAY) * MS_DAY;
-    console.log(data)
-    console.log(todayStartMS)
     const dailyAggregatesBeforeTime = data.filter(
         (row) => getTimeInMins(row.time) < timeNow && row.time < todayStartMS,
     );
