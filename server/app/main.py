@@ -1,10 +1,11 @@
 import os
+import pprint
 from typing import Optional
 
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException, Depends
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
-from pony.orm.core import db_session, commit
+from pony.orm.core import db_session, commit, select
 from starlette.middleware.cors import CORSMiddleware
 
 from .api import login_and_get_session, fetch_data_for_jug, get_jug_data, get_all_jug_ids, get_todays_intake
@@ -171,6 +172,12 @@ async def get_historical_jug_data(timestamp: int, user_id: str = Depends(auth_us
         big_list = []
         for jug in jugs:
             big_list.extend(get_jug_data(session, jug, timestamp))
+
+        other_drinks = select(o for o in OtherDrink if (o.juguser == juguser))
+
+        for drink in other_drinks:
+            print(drink.timestamp , " " , drink.capacity)
+            big_list.append({"time": drink.timestamp, "value": drink.capacity})
 
         return sorted(big_list, key=lambda x: x['time'])
 
