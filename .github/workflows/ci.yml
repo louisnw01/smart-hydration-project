@@ -25,3 +25,4 @@ jobs:
       - name: Run test
         run: |
           yarn test
+        working-directory: smart-hydration-project/smart-hydration-app
