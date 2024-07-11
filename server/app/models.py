@@ -25,7 +25,7 @@ class JugUser(db.Entity):
     jugs = Set('Jug')
     community = Optional('Community')
     user = Optional(User)
-
+    otherdrinks = Set('OtherDrink')
 
 class Jug(db.Entity):
     id = PrimaryKey(int, auto=True)
@@ -40,6 +40,13 @@ class Community(db.Entity):
     name = Required(str)
     jug_users = Set(JugUser)
     followers = Set(User)
+
+class OtherDrink(db.Entity):
+    id = PrimaryKey(int, auto=True)
+    juguser = Required('JugUser')
+    timestamp = Required(int)
+    name = Required(str)
+    capacity = Required(int)
 
 
 class Medication(db.Entity):

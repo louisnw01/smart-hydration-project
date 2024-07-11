@@ -40,6 +40,10 @@ export default function ModalLayout() {
                 name="add-device-modal"
                 options={{ title: "Add a Device" }}
             />
+            <Stack.Screen
+                name="add-drink-modal"
+                options={{ title: "Add a Drink" }}
+            />
             <Stack.Screen name="device-info-modal" options={{ title: "" }} />
             <Stack.Screen
                 name="edit-device-name-modal"
