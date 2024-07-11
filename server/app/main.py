@@ -31,7 +31,7 @@ db.generate_mapping(create_tables=True)
 
 get_bearer_token = HTTPBearer(auto_error=False)
 
-print("This is a ci test, which hopefully now works!!!!!!")
+print("This is a ci test, which hopefully now works!!!!!!!!")
 
 
 async def auth_user(
