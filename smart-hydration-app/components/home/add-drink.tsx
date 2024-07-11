@@ -27,7 +27,7 @@ const drinkTypes: DrinkType[] = [
 
 
 interface DrinkButtonProps {
-    drinkName: string;
+    drinkType: DrinkType;
 }
 
 function constructDrinkEvent(drinkName) {
@@ -40,7 +40,7 @@ function constructDrinkEvent(drinkName) {
 }
 
 // TODO define the object before pushing to prod
-const DrinkButton: React.FC<DrinkButtonProps> = ({drinkName}) => {
+const DrinkButton: React.FC<DrinkButtonProps> = ({drinkType}) => {
     const [drinkList, setDrinkList] = useAtom(drinkListAtom);
     const {mutate, isSuccess, isPending} = useAtomValue(addDrinkMAtom);
     const router = useRouter();
@@ -55,9 +55,9 @@ const DrinkButton: React.FC<DrinkButtonProps> = ({drinkName}) => {
     }
 
     function handleAddDrink() {
-        const drinkJSON = constructDrinkEvent(drinkName);
+        const drinkJSON = constructDrinkEvent(drinkType.name);
         drinkList.push(drinkJSON);
-        postDrinkToDB(drinkJSON, drinkName);
+        postDrinkToDB(drinkJSON, drinkType.name);
         setDrinkList(drinkList);
         alert(drinkList)
         return;
@@ -71,36 +71,35 @@ const DrinkButton: React.FC<DrinkButtonProps> = ({drinkName}) => {
         return (
 
             <Pressable
-                className="bg-gray-200 py-2 w-40 px-3 h-40 rounded-3xl"
+                className="justify-between bg-gray-200 px-4 pt-3 pb-1 m-2 w-32 h-32 rounded-3xl"
                 onPress={handleAddDrink}
             >
-                <View className=" w-30 h-32 rounded-2xl">
-                    {drinkName == "Bottle" &&
-                        <MaterialCommunityIcons className="justify-center items-center text-center"
-                                                name="bottle-soda-classic-outline" size={110}
+
+                    {drinkType.name == "Bottle" &&
+                        <MaterialCommunityIcons className="-ml-3" name="bottle-soda-classic-outline" size={39}
                                                 color="rgb(180, 180, 180)"/>
                     }
-                    {drinkName == "Pint" &&
-                        <Ionicons className="justify-center items-center text-center top-2" name="pint-outline"
-                                  size={100} color="rgb(180, 180, 180)"/>
+                    {drinkType.name == "Pint" &&
+                        <Ionicons name="pint-outline" className="-mx-1.5"
+                                  size={32} color="rgb(180, 180, 180)"/>
                     }
-                    {drinkName == "Mug" &&
-                        <SimpleLineIcons className="justify-center items-center text-center top-3 left-2" name="cup"
-                                         size={80} color="rgb(180, 180, 180)"/>
+                    {drinkType.name == "Mug" &&
+                        <SimpleLineIcons name="cup"
+                                         size={32} color="rgb(180, 180, 180)"/>
                     }
-                    {drinkName == "Wine Glass" &&
-                        <MaterialCommunityIcons className="justify-center items-center text-center top-2 left-0.5"
-                                                name="glass-wine" size={100} color="rgb(180, 180, 180)"/>
+                    {drinkType.name == "Wine Glass" &&
+                        <MaterialCommunityIcons className="-mx-3" name="glass-wine" size={39} color="rgb(180, 180, 180)"/>
                     }
-                    {drinkName == "Can" &&
-                        <SodaCan fill="rgb(180, 180, 180)" width="100" height="100" style={{
-                            left: 10,
-                        }}/>
+                    {drinkType.name == "Can" &&
+                        <View className="-ml-2">
+                        <SodaCan className="" fill="rgb(180, 180, 180)" width="34" height="34" />
+                        </View>
                     }
 
-
+                <View className=" ">
+                    <Text className={`bottom-2 font-bold ${drinkType.name.length < 10 ? 'text-xl' : 'text-md'}`}>{drinkType.name}</Text>
+                    <Text className="text-xl bottom-2 font-semibold text-gray-500">{drinkType.capacity}ml</Text>
                 </View>
-                <Text className="text-center text-xl bottom-2">{drinkName}</Text>
             </Pressable>
         );
     }
@@ -108,23 +107,17 @@ const DrinkButton: React.FC<DrinkButtonProps> = ({drinkName}) => {
 
 export default function AddDrinkPane() {
     return (
-        <View className="flex flex-row flex-wrap justify-evenly gap-6">
+        <View className="items-center">
             <FlatList
                 data={drinkTypes}
                 renderItem={({item}) => (
-                    <View style={{flex: 1, margin: 6}}>
-                        <DrinkButton drinkName={item.name}/>
+                    <View>
+                        <DrinkButton drinkType={item}/>
                     </View>
                 )}
                 keyExtractor={(item) => item.name}
-                style={{flex: 1}}
-                contentContainerStyle={{padding: 10}}
-                columnWrapperStyle={{
-                    justifyContent: "space-evenly",
-                    marginBottom: 12,
-                    marginLeft: 36,
-                }}
-                numColumns={2} // Adjust this value as needed for your layout
+                contentContainerStyle={{}}
+                numColumns={3} // Adjust this value as needed for your layout
             />
         </View>
     );
