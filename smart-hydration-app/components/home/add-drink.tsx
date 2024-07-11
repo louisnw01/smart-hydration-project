@@ -1,17 +1,15 @@
-import {View, Text, Pressable, FlatList, ActivityIndicator} from "react-native";
-import {useAtom} from "jotai";
-import {drinkListAtom} from "@/atom/user";
-import {useAtomValue} from "jotai/index";
-import {addDrinkMAtom, updateJugNameMAtom} from "@/atom/query";
+import { View, Text, Pressable, FlatList, ActivityIndicator } from "react-native";
+import { useAtom } from "jotai";
+import { drinkListAtom } from "@/atom/user";
+import { useAtomValue } from "jotai/index";
+import { addDrinkMAtom, updateJugNameMAtom } from "@/atom/query";
 import {selectedDeviceAtom} from "@/atom/device";
-import {useEffect, useState} from "react";
-import {useRouter} from "expo-router";
+import { useEffect, useState } from "react";
+import { useRouter } from "expo-router";
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import SimpleLineIcons from '@expo/vector-icons/SimpleLineIcons';
 import SodaCan from '@/assets/svgs/soda-can-svgrepo-com.svg';
-
-
 
 
 interface DrinkType {
@@ -28,47 +26,9 @@ const drinkTypes: DrinkType[] = [
 ];
 
 
-
 interface DrinkButtonProps {
     drinkName: string;
 }
-
-// const storeDrink = async (value) => {
-//   try {
-//     const key = value.timestamp.toString();
-//     const storedValue = JSON.stringify({
-//       drinkName: value.drinkName,
-//       value: value.value,
-//     });
-//     await AsyncStorage.setItem(key, storedValue);
-//     //alert("Drink stored successfully");
-//   } catch (error) {
-//     alert("Error storing drink: ");
-//   }
-// };
-
-// const getDrinks = async () => {
-//   try {
-//     const keys = await AsyncStorage.getAllKeys();
-
-//     if (keys.length === 0) {
-//       return;
-//     }
-//     const drinks = await AsyncStorage.multiGet(keys);
-//     const formattedDrinks = drinks.map(([key, value]) => {
-//       try {
-//         const parsedValue = JSON.parse(value);
-//         return { key, ...parsedValue };
-//       } catch (error) {
-//         alert("Error parsing value for key " + key + ": " + error.message);
-//         return { key, value: null };
-//       }
-//     });
-//     alert("Formatted drinks: " + JSON.stringify(formattedDrinks));
-//   } catch (error) {
-//     alert("Error getting drinks: " + error.message);
-//   }
-// };
 
 function constructDrinkEvent(drinkName) {
     const drinkType = drinkTypes.find((drink) => drink.name === drinkName);
@@ -84,10 +44,10 @@ const DrinkButton: React.FC<DrinkButtonProps> = ({drinkName}) => {
     const [drinkList, setDrinkList] = useAtom(drinkListAtom);
     const {mutate, isSuccess, isPending} = useAtomValue(addDrinkMAtom);
     const router = useRouter();
-        useEffect(() => {
-            if (!isSuccess) return;
-            router.back();
-        }, [isSuccess]);
+    useEffect(() => {
+        if (!isSuccess) return;
+        router.back();
+    }, [isSuccess]);
 
     function postDrinkToDB(drinkJSON, drinkName: string) {
         if (!drinkJSON) return;
@@ -116,16 +76,21 @@ const DrinkButton: React.FC<DrinkButtonProps> = ({drinkName}) => {
             >
                 <View className=" w-30 h-32 rounded-2xl">
                     {drinkName == "Bottle" &&
-                        <MaterialCommunityIcons className="justify-center items-center text-center" name="bottle-soda-classic-outline" size={110} color="rgb(180, 180, 180)" />
+                        <MaterialCommunityIcons className="justify-center items-center text-center"
+                                                name="bottle-soda-classic-outline" size={110}
+                                                color="rgb(180, 180, 180)"/>
                     }
                     {drinkName == "Pint" &&
-                        <Ionicons className="justify-center items-center text-center top-2" name="pint-outline" size={100} color="rgb(180, 180, 180)" />
+                        <Ionicons className="justify-center items-center text-center top-2" name="pint-outline"
+                                  size={100} color="rgb(180, 180, 180)"/>
                     }
                     {drinkName == "Mug" &&
-                        <SimpleLineIcons className="justify-center items-center text-center top-3 left-2" name="cup" size={80} color="rgb(180, 180, 180)" />
+                        <SimpleLineIcons className="justify-center items-center text-center top-3 left-2" name="cup"
+                                         size={80} color="rgb(180, 180, 180)"/>
                     }
                     {drinkName == "Wine Glass" &&
-                        <MaterialCommunityIcons className="justify-center items-center text-center top-2 left-0.5" name="glass-wine" size={100} color="rgb(180, 180, 180)" />
+                        <MaterialCommunityIcons className="justify-center items-center text-center top-2 left-0.5"
+                                                name="glass-wine" size={100} color="rgb(180, 180, 180)"/>
                     }
                     {drinkName == "Can" &&
                         <SodaCan fill="rgb(180, 180, 180)" width="100" height="100" style={{
