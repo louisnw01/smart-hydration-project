@@ -130,8 +130,8 @@ function RecentChart() {
                 /> */}
             </CartesianChart>
             <Text className="absolute top-3 right-4 dark:text-white">
-                {formatDateToDayMonth(new Date(data[0].x))}-
-                {formatDateToDayMonth(new Date(data[data.length - 1].x))}
+                {formatDateToDayMonth(new Date(data[data.length - 1].x))}-
+                {formatDateToDayMonth(new Date(data[0].x))}
             </Text>
         </View>
     );

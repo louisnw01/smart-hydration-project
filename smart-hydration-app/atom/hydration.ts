@@ -1,5 +1,5 @@
-import { atom } from "jotai";
-import { getJugDataQAtom } from "./query";
+import { atom, useAtomValue } from "jotai";
+import { getHydrationQAtom, getJugDataQAtom } from "./query";
 
 export const amountDrankTodayAtom = atom<number | null>(null);
 export const avgAmountDrankByTimeNowAtom = atom<number | null>(null);
