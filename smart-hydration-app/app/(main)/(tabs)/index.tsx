@@ -11,6 +11,7 @@ import StyledButton from "@/components/common/button";
 import { amountDrankTodayAtom, userHasJugsAtom } from "@/atom/hydration";
 import Loading from "@/components/common/loading";
 import { hydrationInsightsEAtom } from "@/atom/effect/hydration";
+import WaterScreen from "@/components/home/water-screen";
 
 export default function HomePage() {
     useAtomValue(hydrationInsightsEAtom);
@@ -21,21 +22,15 @@ export default function HomePage() {
     const amountDrankToday = useAtomValue(amountDrankTodayAtom);
 
     const [refreshing, setRefreshing] = useState(false);
-    // const setHydration = useSetAtom(hydrationAtom);
-
-    // useEffect(() => {
-    //     if (!isSuccess) return;
-    //     setHydration(data);
-    // }, [isSuccess]);
 
     const handleRefresh = async () => {
         setRefreshing(true);
         refetch();
     };
 
-    // if (!isLoading && refreshing) {
-    //     setRefreshing(false);
-    // }
+    if (!isLoading && refreshing) {
+        setRefreshing(false);
+    }
 
     return (
         <PageWrapper>
@@ -61,8 +56,9 @@ export default function HomePage() {
                             <Text>You haven't linked any jugs yet.</Text>
                         ) : (
                             <>
+                                <WaterScreen />
                                 <HydrationPercentage />
-                                <Droplet />
+                                {/* <Droplet /> */}
 
                                 <HydrationStatus />
                                 <StyledButton

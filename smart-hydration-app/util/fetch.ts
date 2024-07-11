@@ -1,7 +1,7 @@
 // TODO server_url should be in .env
 
-const SERVER_URL = "http://localhost:8085";
-// const SERVER_URL = "https://hydrationapi.louisnw.com";
+// const SERVER_URL = "http://localhost:8085";
+const SERVER_URL = "https://hydrationapi.louisnw.com";
 
 export const ENDPOINTS = {
     HELLO_WORLD: "/",
