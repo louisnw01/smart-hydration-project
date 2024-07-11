@@ -58,7 +58,11 @@ export default function WaterScreen() {
 export function useWaterLevel() {
     const waterLevel = useAtomValue(screenWaterLevelAtom);
     const route = useRouteInfo();
-    if (route.pathname != "/" && !route.pathname.startsWith("/settings")) {
+    if (
+        route.pathname != "/" &&
+        !route.pathname.startsWith("/settings") &&
+        route.pathname != "add-drink-modal"
+    ) {
         return null;
     } else {
         return waterLevel;

@@ -14,7 +14,7 @@ export const linkJugToUserMAtom = atomWithMutation((get) => ({
         const token = get(authTokenAtom);
         const response = await request(ENDPOINTS.LINK_JUG_TO_USER, {
             method: "post",
-            body: {jugIds: jugIds},
+            body: { jugIds: jugIds },
             auth: token as string,
         });
 
@@ -26,7 +26,7 @@ export const linkJugToUserMAtom = atomWithMutation((get) => ({
     },
     onSuccess: () => {
         const queryClient = get(queryClientAtom);
-        void queryClient.invalidateQueries({queryKey: ["get-jug-data"]});
+        void queryClient.invalidateQueries({ queryKey: ["get-jug-data"] });
         void queryClient.invalidateQueries({
             queryKey: ["historical-jug-data"],
         });
@@ -40,7 +40,7 @@ export const unlinkJugFromUserMAtom = atomWithMutation((get) => ({
         const token = get(authTokenAtom);
         const response = await request(ENDPOINTS.UNLINK_JUG_FROM_USER, {
             method: "post",
-            body: {jugId: jugId},
+            body: { jugId: jugId },
             auth: token as string,
         });
 
@@ -81,13 +81,13 @@ export const updateJugNameMAtom = atomWithMutation((get) => ({
 
     onSuccess: () => {
         const queryClient = get(queryClientAtom);
-        void queryClient.invalidateQueries({queryKey: ["get-jug-data"]});
+        void queryClient.invalidateQueries({ queryKey: ["get-jug-data"] });
     },
 }));
 
 export const getJugDataQAtom = atomWithQuery((get) => ({
     queryKey: ["get-jug-data", get(authTokenAtom)],
-    queryFn: async ({queryKey: [, token]}): Promise<DeviceInfo[]> => {
+    queryFn: async ({ queryKey: [, token] }): Promise<DeviceInfo[]> => {
         const response = await request(ENDPOINTS.FETCH_COMMUNITY, {
             auth: token as string,
         });
@@ -104,7 +104,11 @@ export const getJugDataQAtom = atomWithQuery((get) => ({
 export const updateMAtom = atomWithMutation((get) => ({
     mutationKey: ["update", get(authTokenAtom)],
     enabled: !!get(authTokenAtom),
-    mutationFn: async (formData: { id: number; key: string; value: string }) => {
+    mutationFn: async (formData: {
+        id: number;
+        key: string;
+        value: string;
+    }) => {
         const token = get(authTokenAtom);
         const response = await request(ENDPOINTS.UPDATE, {
             method: "post",
@@ -123,7 +127,7 @@ export const updateMAtom = atomWithMutation((get) => ({
 
 export const getUserQAtom = atomWithQuery((get) => ({
     queryKey: ["user", get(authTokenAtom)],
-    queryFn: async ({queryKey: [, token]}): Promise<string> => {
+    queryFn: async ({ queryKey: [, token] }): Promise<string> => {
         const response = await request(ENDPOINTS.FETCH_USER, {
             auth: token as string,
         });
@@ -139,7 +143,7 @@ export const getUserQAtom = atomWithQuery((get) => ({
 
 export const getHydrationQAtom = atomWithQuery((get) => ({
     queryKey: ["historical-jug-data", get(authTokenAtom)],
-    queryFn: async ({queryKey: [, token]}): Promise<ITimeSeries[]> => {
+    queryFn: async ({ queryKey: [, token] }): Promise<ITimeSeries[]> => {
         const ts = new Date(2024, 5, 26).getTime();
         const response = await request(ENDPOINTS.FETCH_HISTORICAL_JUG_DATA, {
             query: {
@@ -154,7 +158,7 @@ export const getHydrationQAtom = atomWithQuery((get) => ({
 
 export const getTodaysIntakeAtom = atomWithQuery((get) => ({
     queryKey: ["todays-total-intake", get(authTokenAtom)],
-    queryFn: async ({queryKey: [, token]}): Promise<number> => {
+    queryFn: async ({ queryKey: [, token] }): Promise<number> => {
         const response = await request(ENDPOINTS.GET_TODAYS_INTAKE, {
             auth: token as string,
         });
@@ -215,7 +219,7 @@ export const registerMAtom = atomWithMutation((get) => ({
 // TODO temporary, for linking during MVP
 export const getAllJugsQAtom = atomWithQuery((get) => ({
     queryKey: ["temp-get-jugs", get(authTokenAtom)],
-    queryFn: async ({queryKey: [, token]}) => {
+    queryFn: async ({ queryKey: [, token] }) => {
         const response = await request(ENDPOINTS.GET_ALL_JUGS, {
             auth: token as string,
         });
@@ -228,14 +232,13 @@ export const getAllJugsQAtom = atomWithQuery((get) => ({
     },
 }));
 
-
 export const getUserExistsQAtom = atomWithQuery((get) => ({
     enabled: !!get(registerInfoAtom).email,
     queryKey: ["user-exists", get(registerInfoAtom).email],
-    queryFn: async ({ queryKey: [, email] }): Promise<boolean[]>  => {
+    queryFn: async ({ queryKey: [, email] }): Promise<boolean[]> => {
         const response = await request(ENDPOINTS.USER_EXISTS, {
             method: "get",
-            query: {email},
+            query: { email },
         });
 
         if (!response.ok) {
@@ -245,11 +248,14 @@ export const getUserExistsQAtom = atomWithQuery((get) => ({
     },
 }));
 
-
 export const addDrinkMAtom = atomWithMutation((get) => ({
     mutationKey: ["add-drink", get(authTokenAtom)],
     enabled: !!get(authTokenAtom),
-    mutationFn: async (formData: { timestamp: number; name: string; capacity: number }) => {
+    mutationFn: async (formData: {
+        timestamp: number;
+        name: string;
+        capacity: number;
+    }) => {
         const token = get(authTokenAtom);
         const response = await request(ENDPOINTS.ADD_DRINK, {
             method: "post",
@@ -260,7 +266,15 @@ export const addDrinkMAtom = atomWithMutation((get) => ({
         if (!response.ok) {
             return "failure";
         }
-        return;
+    },
+    onSuccess: (data, formData) => {
+        const queryClient = get(queryClientAtom);
+        void queryClient.setQueryData(
+            ["historical-jug-data", get(authTokenAtom)],
+            (prev: DeviceInfo[]) => [
+                ...prev,
+                { time: formData.timestamp * 1000, value: formData.capacity },
+            ],
+        );
     },
 }));
-
