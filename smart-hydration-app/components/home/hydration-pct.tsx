@@ -12,7 +12,7 @@ export default function HydrationPercentage() {
                 {amountDrankToday}ml
             </Text>
 
-            <Text className="text-lg dark:text-white">of your target</Text>
+            <Text className="text-lg dark:text-white">of your daily target</Text>
         </View>
     );
 }

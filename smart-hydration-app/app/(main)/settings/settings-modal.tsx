@@ -7,6 +7,7 @@ import { Pressable, SectionList, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Feather, MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
 import { ISettingsSection } from "@/interfaces/settings";
+import { amountDrankTodayAtom } from "@/atom/hydration";
 
 const settingsList: ISettingsSection[] = [
     {
@@ -81,6 +82,7 @@ export default function SettingsModal() {
     const insets = useSafeAreaInsets();
     const setAuthAtom = useSetAtom(authTokenAtom);
     const setUserNameAtom = useSetAtom(userNameAtom);
+    const setAmounDrankTodayAtom = useSetAtom(amountDrankTodayAtom);
     const router = useRouter();
 
     return (
@@ -120,6 +122,7 @@ export default function SettingsModal() {
                     onPress={() => {
                         setAuthAtom("");
                         setUserNameAtom("");
+                        setAmounDrankTodayAtom(0);
                         router.replace("onboarding/login-register");
                     }}
                 >
