@@ -30,6 +30,5 @@ jobs:
         run: |
           file=$(mktemp)
           echo $KEY_PAIR_PATH >> "$file"
-          echo cat "$file"
           ./deploy.sh "$file"
         working-directory: ./server
