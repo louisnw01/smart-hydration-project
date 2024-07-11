@@ -1,0 +1,30 @@
+name: Deploy Production
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        
+      - name: Create .env
+        run: |
+          pwd
+          touch .env
+          echo DB_USERNAME=${{ Secrets.DB_USERNAME }} >> .env
+          echo DB_PASSWORD=${{ Secrets.DB_PASSWORD }} >> .env
+          echo DB_HOST=${{ Secrets.DB_HOST }} >> .env
+          echo SMART_HYDRATION_EMAIL=${{ Secrets.SMART_HYDRATION_EMAIL }} >> .env
+          echo SMART_HYDRATION_PASSWORD=${{ Secrets.SMART_HYDRATION_PASSWORD }} >> .env
+          echo JWT_SECRET=${{ Secrets.JWT_SECRET }} >> .env
+          echo JWT_ALGORITHM=${{ Secrets.JWT_ALGORITHM }} >> .env
+        working-directory: ./server
+
+      - name: Run deploy deploy.sh
+        run: |
+          ./deploy.sh
+        working-directory: ./server

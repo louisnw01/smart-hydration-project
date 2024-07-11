@@ -37,7 +37,7 @@ def get_user_hash(email: str):
 
 @db_session
 def user_exists(email):
-    return True if User.get(email=email) else False
+    return True if User.get(email=email.lower()) else False
 
 
 @db_session
@@ -136,6 +136,8 @@ def get_jug_name_by_id(sh_jug_id):
     return name
 
 
+
+
 # def get_community_jug_data(user_id):
 #     print('Getting data for ' + user_id)
 #     community = find_user(user_id).community
@@ -194,3 +196,5 @@ def get_users_jugs_sh_ids(user_id):
 def update_jug_name_s(jug_id, name):
     Jug.get(smart_hydration_id=jug_id).name = name
     commit()
+
+
