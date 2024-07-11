@@ -1,4 +1,5 @@
-import { MS_DAY, MS_HOUR } from "@/constants/data";
+import {MS_DAY, MS_HOUR, MS_MONTH} from "@/constants/data";
+
 import {
     averageHydrationMonthComparison,
     getAmountDrankToday, getAvgAmountDrankByNow,
@@ -85,6 +86,7 @@ describe("insights", () => {
             { time: new Date().getTime() - MS_DAY * 8, value: 1000 },
             { time: new Date(), value: 1000 },
         ]
+
         const dayNames = [
             "Sunday",
             "Monday",

@@ -125,7 +125,8 @@ export function getAmountDrankToday(data) {
 export function getAvgAmountDrankByNow(data) {
     const timeNow = getTimeInMins(Date.now());
     const todayStartMS = Math.floor(Date.now() / MS_DAY) * MS_DAY;
-
+    console.log(data)
+    console.log(todayStartMS)
     const dailyAggregatesBeforeTime = data.filter(
         (row) => getTimeInMins(row.time) < timeNow && row.time < todayStartMS,
     );
@@ -134,6 +135,7 @@ export function getAvgAmountDrankByNow(data) {
         (curr, row) => curr + row.value,
         0,
     );
+
 
     return totalDrankFromDailyAggs / dailyAggregatesBeforeTime.length;
 }
@@ -163,6 +165,7 @@ export function averageHydrationMonthComparison(data: FormattedData[]) {
     const prevMonthAvg =
         prevMonthData.reduce((curr, row) => curr + row.y, 0) /
         prevMonthData.length;
+
 
     return [thisMonthAvg || 0, prevMonthAvg || 0];
 }
