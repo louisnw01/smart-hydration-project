@@ -3,9 +3,9 @@ import {
     atomWithMutation,
     queryClientAtom,
 } from "jotai-tanstack-query";
-import {authTokenAtom, registerInfoAtom} from "./user";
-import {ENDPOINTS, request} from "@/util/fetch";
-import {DeviceInfo, ITimeSeries} from "@/interfaces/device";
+import { authTokenAtom, registerInfoAtom } from "./user";
+import { ENDPOINTS, request } from "@/util/fetch";
+import { DeviceInfo, ITimeSeries } from "@/interfaces/device";
 
 export const linkJugToUserMAtom = atomWithMutation((get) => ({
     mutationKey: ["link-jug-to-user", get(authTokenAtom)],
