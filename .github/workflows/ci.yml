@@ -16,13 +16,14 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 18
+          cache: 'yarn'
 
       - name: Install node modules
         run: |
           yarn install --frozen-lockfile
-        working-directory: smart-hydration-project/smart-hydration-app
+        working-directory: /smart-hydration-app
           
       - name: Run test
         run: |
           yarn test
-        working-directory: smart-hydration-project/smart-hydration-app
+        working-directory: /smart-hydration-app
