@@ -17,6 +17,7 @@ export const ENDPOINTS = {
     GET_TODAYS_INTAKE: "/todays-total-intake",
     UPDATE_JUG_NAME: "/update-jug-name",
     USER_EXISTS: "/user-exists",
+    ADD_DRINK: "/add-drink-event",
 };
 
 interface RequestOptions {

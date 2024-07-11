@@ -66,9 +66,9 @@ export default function HomePage() {
 
                                 <HydrationStatus />
                                 <StyledButton
-                                    // text="+ add a drink"
+                                    text="+ add a drink"
                                     textSize="xl"
-                                    href="index"
+                                    href="add-drink-modal"
                                 />
                             </>
                         )}
