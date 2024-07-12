@@ -16,7 +16,7 @@ jobs:
           touch .env
           echo DB_USERNAME=$(echo "${{ Secrets.DB_USERNAME }}" | xargs) >> .env
           echo DB_PASSWORD=$(echo "${{ Secrets.DB_PASSWORD }}" | xargs)  >> .env
-          echo DB_HOST=$(echo "${{ Secrets.DB_HOST }}" | xargs)" >> .env
+          echo DB_HOST=$(echo "${{ Secrets.DB_HOST }}" | xargs) >> .env
           echo SMART_HYDRATION_EMAIL=$(echo "${{ Secrets.SMART_HYDRATION_EMAIL }}" | xargs)  >> .env
           echo SMART_HYDRATION_PASSWORD=$(echo "${{ Secrets.SMART_HYDRATION_PASSWORD }}" | xargs)  >> .env
           echo JWT_SECRET=$(echo "${{ Secrets.JWT_SECRET }}" | xargs)  >> .env
