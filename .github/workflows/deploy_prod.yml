@@ -14,13 +14,13 @@ jobs:
       - name: Create .env
         run: |
           touch .env
-          echo DB_USERNAME=${{ Secrets.DB_USERNAME }} >> .env
-          echo DB_PASSWORD=${{ Secrets.DB_PASSWORD }} >> .env
-          echo DB_HOST=${{ Secrets.DB_HOST }} >> .env
-          echo SMART_HYDRATION_EMAIL=${{ Secrets.SMART_HYDRATION_EMAIL }} >> .env
-          echo SMART_HYDRATION_PASSWORD=${{ Secrets.SMART_HYDRATION_PASSWORD }} >> .env
-          echo JWT_SECRET=${{ Secrets.JWT_SECRET }} >> .env
-          echo JWT_ALGORITHM=${{ Secrets.JWT_ALGORITHM }} >> .env
+          echo DB_USERNAME=$(echo "${{ Secrets.DB_USERNAME }}" | xargs) >> .env
+          echo DB_PASSWORD=$(echo "${{ Secrets.DB_PASSWORD }}" | xargs)  >> .env
+          echo DB_HOST=$(echo "${{ Secrets.DB_HOST }}" | xargs)" >> .env
+          echo SMART_HYDRATION_EMAIL=$(echo "${{ Secrets.SMART_HYDRATION_EMAIL }}" | xargs)  >> .env
+          echo SMART_HYDRATION_PASSWORD=$(echo "${{ Secrets.SMART_HYDRATION_PASSWORD }}" | xargs)  >> .env
+          echo JWT_SECRET=$(echo "${{ Secrets.JWT_SECRET }}" | xargs)  >> .env
+          echo JWT_ALGORITHM=$(echo "${{ Secrets.JWT_ALGORITHM }}" | xargs)  >> .env
         working-directory: ./server
 
       - name: Run deploy deploy.sh
@@ -29,7 +29,7 @@ jobs:
           SH_KEY_PAIR: ${{ secrets.SH_KEY_PAIR }}      
         run: |
           file=$(mktemp)
-          printf '%s' "$SH_KEY_PAIR" >> "$file"
+          printf '%s' $(echo "$SH_KEY_PAIR" | xargs)" >> "$file"
           chmod 600 "$file"
           ./deploy.sh "$file"
         working-directory: ./server
