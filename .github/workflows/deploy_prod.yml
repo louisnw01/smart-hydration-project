@@ -24,12 +24,10 @@ jobs:
         working-directory: ./server
 
       - name: Run deploy deploy.sh
-        shell: bash
-        env:
-          SH_KEY_PAIR: ${{ secrets.SH_KEY_PAIR }}      
+        shell: bash     
         run: |
           file=$(mktemp)
-          printf '%s' "$(echo "$SH_KEY_PAIR" | xargs)" >> "$file"
+          echo $(echo "${{ Secrets.SH_KEY_PAIR }}" | xargs) >> "$file"
           chmod 600 "$file"
           ./deploy.sh "$file"
         working-directory: ./server
