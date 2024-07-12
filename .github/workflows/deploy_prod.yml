@@ -1,34 +1,34 @@
 name: Deploy Production
 
 on:
-  workflow_dispatch:
+    workflow_dispatch:
 
 jobs:
-  deploy:
-    name: Deploy
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        
-      - name: Create .env
-        run: |
-          touch .env
-          echo DB_USERNAME=$(echo "${{ Secrets.DB_USERNAME }}" | xargs) >> .env
-          echo DB_PASSWORD=$(echo "${{ Secrets.DB_PASSWORD }}" | xargs)  >> .env
-          echo DB_HOST=$(echo "${{ Secrets.DB_HOST }}" | xargs) >> .env
-          echo SMART_HYDRATION_EMAIL=$(echo "${{ Secrets.SMART_HYDRATION_EMAIL }}" | xargs)  >> .env
-          echo SMART_HYDRATION_PASSWORD=$(echo "${{ Secrets.SMART_HYDRATION_PASSWORD }}" | xargs)  >> .env
-          echo JWT_SECRET=$(echo "${{ Secrets.JWT_SECRET }}" | xargs)  >> .env
-          echo JWT_ALGORITHM=$(echo "${{ Secrets.JWT_ALGORITHM }}" | xargs)  >> .env
-          chmod 777 .env
-        working-directory: ./server
+    deploy:
+        name: Deploy
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
 
-      - name: Run deploy deploy.sh
-        shell: bash     
-        run: |
-          file=$(mktemp)
-          echo -n "${{ Secrets.SH_KEY_PAIR }}" >> "$file"
-          chmod 777 "$file"
-          ./deploy.sh "$file"
-        working-directory: ./server
+            - name: Create .env
+              run: |
+                  touch .env
+                  echo DB_USERNAME=$(echo "${{ Secrets.DB_USERNAME }}" | xargs) >> .env
+                  echo DB_PASSWORD=$(echo "${{ Secrets.DB_PASSWORD }}" | xargs)  >> .env
+                  echo DB_HOST=$(echo "${{ Secrets.DB_HOST }}" | xargs) >> .env
+                  echo SMART_HYDRATION_EMAIL=$(echo "${{ Secrets.SMART_HYDRATION_EMAIL }}" | xargs)  >> .env
+                  echo SMART_HYDRATION_PASSWORD=$(echo "${{ Secrets.SMART_HYDRATION_PASSWORD }}" | xargs)  >> .env
+                  echo JWT_SECRET=$(echo "${{ Secrets.JWT_SECRET }}" | xargs)  >> .env
+                  echo JWT_ALGORITHM=$(echo "${{ Secrets.JWT_ALGORITHM }}" | xargs)  >> .env
+                  chmod 777 .env
+              working-directory: ./server
+
+            - name: Run deploy deploy.sh
+              shell: bash
+              run: |
+                  file=$(mktemp)
+                  echo -n "${{ Secrets.SH_KEY_PAIR }}" >> "$file"
+                  chmod 600 "$file"
+                  ./deploy.sh "$file"
+              working-directory: ./server
