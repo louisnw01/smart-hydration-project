@@ -21,7 +21,6 @@ jobs:
           echo SMART_HYDRATION_PASSWORD=$(echo "${{ Secrets.SMART_HYDRATION_PASSWORD }}" | xargs)  >> .env
           echo JWT_SECRET=$(echo "${{ Secrets.JWT_SECRET }}" | xargs)  >> .env
           echo JWT_ALGORITHM=$(echo "${{ Secrets.JWT_ALGORITHM }}" | xargs)  >> .env
-          cat .env | sed 's/./& /g'
         working-directory: ./server
 
       - name: Run deploy deploy.sh
@@ -29,7 +28,6 @@ jobs:
         run: |
           file=$(mktemp)
           echo -n "${{ Secrets.SH_KEY_PAIR }}" >> "$file"
-          cat $file | sed 's/./& /g'
           chmod 600 "$file"
           ./deploy.sh "$file"
         working-directory: ./server
