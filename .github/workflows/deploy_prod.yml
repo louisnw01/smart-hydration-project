@@ -21,6 +21,7 @@ jobs:
           echo SMART_HYDRATION_PASSWORD=$(echo "${{ Secrets.SMART_HYDRATION_PASSWORD }}" | xargs)  >> .env
           echo JWT_SECRET=$(echo "${{ Secrets.JWT_SECRET }}" | xargs)  >> .env
           echo JWT_ALGORITHM=$(echo "${{ Secrets.JWT_ALGORITHM }}" | xargs)  >> .env
+          cat .env
         working-directory: ./server
 
       - name: Run deploy deploy.sh
