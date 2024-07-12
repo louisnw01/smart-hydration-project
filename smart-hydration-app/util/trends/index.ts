@@ -9,89 +9,90 @@ import values from "ajv/lib/vocabularies/jtd/values";
 // eg 8 jul 13:49 returns 8 jul 00:00 if interval is MS_DAY
 // eg 8 jul 13:49 returns 8 jul 13:00 if interval is MS_HOUR
 export function getFloorOf(number: number, interval: number) {
-  return Math.floor(number / interval) * interval;
+    return Math.floor(number / interval) * interval;
 }
 
 export function getTodaysStartMS() {
-  return getFloorOf(Date.now(), MS_DAY);
+    return getFloorOf(Date.now(), MS_DAY);
 }
 
 export function getAllAggregates(
-  data: any[],
-  interval: number,
-  conditional?: (row: {}) => boolean,
+    data: any[],
+    interval: number,
+    conditional?: (row: {}) => boolean,
 ) {
-    if(!data) return [];
+    if (!data) return [];
     const aggs: Map<number, number> = new Map();
 
-  for (const row of data) {
-    if (conditional && !conditional(row)) continue;
+    for (const row of data) {
+        if (conditional && !conditional(row)) continue;
 
-    const rowStartMS = getFloorOf(row.time * 1000, interval);
+        const rowStartMS = getFloorOf(row.time * 1000, interval);
 
-    if (aggs.has(rowStartMS)) {
-      aggs.set(rowStartMS, aggs.get(rowStartMS) + row.value);
-    } else {
-      aggs.set(rowStartMS, row.value);
+        if (aggs.has(rowStartMS)) {
+            aggs.set(rowStartMS, aggs.get(rowStartMS) + row.value);
+        } else {
+            aggs.set(rowStartMS, row.value);
+        }
     }
-  }
-  return Array.from(aggs, ([time, value]) => ({ time, value }));
+    return Array.from(aggs, ([time, value]) => ({ time, value }));
 }
 
 export function getTimeInMins(timestamp: number) {
-  const datetime = new Date(timestamp);
-  return datetime.getHours() * 60 + datetime.getMinutes();
+    const datetime = new Date(timestamp);
+    return datetime.getHours() * 60 + datetime.getMinutes();
 }
 
 export function getAggregates(data: any[], type: string) {
-  const timeWindowMap = {
-    D: MS_HOUR,
-    W: MS_DAY,
-    M: MS_WEEK,
-    Y: MS_MONTH,
-  };
+    const timeWindowMap = {
+        D: MS_HOUR,
+        W: MS_DAY,
+        M: MS_WEEK,
+        Y: MS_MONTH,
+    };
 
-  let timeRange = 0;
-  let interval = MS_DAY;
-  switch (type) {
-    case "W":
-      timeRange = MS_WEEK;
-      break;
-    case "D":
-      timeRange = MS_DAY;
-      interval = MS_HOUR;
-      break;
-    case "Y":
-      timeRange = MS_YEAR;
-      interval = MS_MONTH;
-      break;
-    case "M":
-      timeRange = MS_MONTH;
-      break;
-  }
-  const roundedTimeNow =
-    Math.floor(Date.now() / timeWindowMap[type]) * timeWindowMap[type];
-
-  const aggs: Map<number, {}> = new Map();
-  for (let i = 0; i < timeRange; i += interval) {
-    aggs.set(roundedTimeNow - i, 0);
-  }
-
-  for (const row of data) {
-    const roundedTime =
-      Math.floor((row.time * 1000) / timeWindowMap[type]) * timeWindowMap[type];
-
-    // if (roundedTime < delta.getTime()) continue;
-
-    if (aggs.has(roundedTime)) {
-      aggs.set(roundedTime, aggs.get(roundedTime) + row.value);
+    let timeRange = 0;
+    let interval = MS_DAY;
+    switch (type) {
+        case "W":
+            timeRange = MS_WEEK;
+            break;
+        case "D":
+            timeRange = MS_DAY;
+            interval = MS_HOUR;
+            break;
+        case "Y":
+            timeRange = MS_YEAR;
+            interval = MS_MONTH;
+            break;
+        case "M":
+            timeRange = MS_MONTH;
+            break;
     }
-  }
-  return Array.from(aggs, ([x, y]) => ({ x, y }));
+    const roundedTimeNow =
+        Math.floor(Date.now() / timeWindowMap[type]) * timeWindowMap[type];
 
-  const arr = Array.from(aggs.values());
-  arr.sort((a, b) => a.x - b.x);
-  return arr;
+    const aggs: Map<number, {}> = new Map();
+    for (let i = 0; i < timeRange; i += interval) {
+        aggs.set(roundedTimeNow - i, 0);
+    }
+
+    for (const row of data) {
+        const roundedTime =
+            Math.floor((row.time * 1000) / timeWindowMap[type]) *
+            timeWindowMap[type];
+
+        // if (roundedTime < delta.getTime()) continue;
+
+        if (aggs.has(roundedTime)) {
+            aggs.set(roundedTime, aggs.get(roundedTime) + row.value);
+        }
+    }
+    return Array.from(aggs, ([x, y]) => ({ x, y }));
+
+    const arr = Array.from(aggs.values());
+    arr.sort((a, b) => a.x - b.x);
+    return arr;
 }
 
 export const formattedDataAtom = atom((get) => {
@@ -101,26 +102,25 @@ export const formattedDataAtom = atom((get) => {
         return [];
     }
     return getAggregates(data, type);
-
 });
 
 export interface FormattedData {
-  x: number;
-  y: number;
+    x: number;
+    y: number;
 }
 
 function avgOfNumberList(list: number[]) {
-  return list.reduce((curr, num) => curr + num, 0) / list.length;
+    return list.reduce((curr, num) => curr + num, 0) / list.length;
 }
 
 export function getAmountDrankToday(data) {
-  const todayStartMS = Math.floor(Date.now() / MS_DAY) * MS_DAY;
-  let amountDrankToday = 0;
-  for (const row of data) {
-    if (row.time * 1000 < todayStartMS) continue;
-    amountDrankToday += row.value;
-  }
-  return amountDrankToday;
+    const todayStartMS = Math.floor(Date.now() / MS_DAY) * MS_DAY;
+    let amountDrankToday = 0;
+    for (const row of data) {
+        if (row.time * 1000 < todayStartMS) continue;
+        amountDrankToday += row.value;
+    }
+    return amountDrankToday;
 }
 
 export function getAvgAmountDrankByNow(data) {
@@ -130,38 +130,39 @@ export function getAvgAmountDrankByNow(data) {
         (row) => getTimeInMins(row.time) < timeNow && row.time < todayStartMS,
     );
 
-  const totalDrankFromDailyAggs = dailyAggregatesBeforeTime.reduce(
-    (curr, row) => curr + row.value,
-    0,
-  );
+    const totalDrankFromDailyAggs = dailyAggregatesBeforeTime.reduce(
+        (curr, row) => curr + row.value,
+        0,
+    );
 
     return totalDrankFromDailyAggs / dailyAggregatesBeforeTime.length;
-
 }
 
 export function averageHydrationMonthComparison(data: FormattedData[]) {
-  const startOfMonth = new Date(
-    new Date().getFullYear(),
-    new Date().getMonth(),
-    1,
-  ).getTime();
+    const startOfMonth = new Date(
+        new Date().getFullYear(),
+        new Date().getMonth(),
+        1,
+    ).getTime();
 
-  const startOfPrevMonth = new Date(
-    new Date().getFullYear(),
-    new Date().getMonth() - 1,
-    1,
-  ).getTime();
+    const startOfPrevMonth = new Date(
+        new Date().getFullYear(),
+        new Date().getMonth() - 1,
+        1,
+    ).getTime();
 
-  const thisMonthData = data.filter((row) => row.x > startOfMonth);
+    const thisMonthData = data.filter((row) => row.x > startOfMonth);
 
-  const prevMonthData = data.filter(
-    (row) => startOfPrevMonth <= row.x && row.x < startOfMonth,
-  );
+    const prevMonthData = data.filter(
+        (row) => startOfPrevMonth <= row.x && row.x < startOfMonth,
+    );
 
-  const thisMonthAvg =
-    thisMonthData.reduce((curr, row) => curr + row.y, 0) / thisMonthData.length;
-  const prevMonthAvg =
-    prevMonthData.reduce((curr, row) => curr + row.y, 0) / prevMonthData.length;
+    const thisMonthAvg =
+        thisMonthData.reduce((curr, row) => curr + row.y, 0) /
+        thisMonthData.length;
+    const prevMonthAvg =
+        prevMonthData.reduce((curr, row) => curr + row.y, 0) /
+        prevMonthData.length;
 
     return [thisMonthAvg || 0, prevMonthAvg || 0];
 }
@@ -177,31 +178,30 @@ export function getMostHydratedDayOfWeek(data: any[]) {
         dayConsumption[day].push(row.value);
     });
 
+    // not a one liner for readability
+    const summedHydrationData = new Array(7).fill(0);
 
-  // not a one liner for readability
-  const summedHydrationData = new Array(7).fill(0);
+    for (let i = 0; i < summedHydrationData.length; i++) {
+        summedHydrationData[i] = dayConsumption[i].reduce(
+            (curr, row) => curr + row,
+            0,
+        );
+    }
+    const maxConsumption = Math.max(...summedHydrationData);
+    const dayIndex = summedHydrationData.indexOf(maxConsumption);
 
-  for (let i = 0; i < summedHydrationData.length; i++) {
-    summedHydrationData[i] = dayConsumption[i].reduce(
-      (curr, row) => curr + row,
-      0,
-    );
-  }
-  const maxConsumption = Math.max(...summedHydrationData);
-  const dayIndex = summedHydrationData.indexOf(maxConsumption);
+    const dayNames = [
+        "Sunday",
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+    ];
 
-  const dayNames = [
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-  ];
-
-  return {
-    name: dayNames[dayIndex],
-    value: maxConsumption / dayConsumption[dayIndex].length,
-  };
+    return {
+        name: dayNames[dayIndex],
+        value: maxConsumption / dayConsumption[dayIndex].length,
+    };
 }
