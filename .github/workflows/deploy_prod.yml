@@ -27,7 +27,7 @@ jobs:
         shell: bash     
         run: |
           file=$(mktemp)
-          echo $(echo "${{ Secrets.SH_KEY_PAIR }}" | xargs) >> "$file"
+          echo "${{ Secrets.SH_KEY_PAIR }}" >> "$file"
           chmod 600 "$file"
           ./deploy.sh "$file"
         working-directory: ./server
