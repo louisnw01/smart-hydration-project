@@ -11,6 +11,6 @@ zip -r deploy.zip app/ Dockerfile Makefile requirements.txt .env
 
 scp -i "$file" deploy.zip ${SSH_USER}@${SSH_SERVER}:~
 
-ssh -i "$file" ${SSH_USER}@${SSH_SERVER} '/home/ec2-user/server_deploy.sh' | tee /dev/tty
+ssh -o StrictHostKeyChecking=no -i "$file" ${SSH_USER}@${SSH_SERVER} '/home/ec2-user/server_deploy.sh' | tee /dev/tty
 
 rm deploy.zip
