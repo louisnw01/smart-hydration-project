@@ -3,7 +3,7 @@ export default function NamePage() {
     return (
         <Name
             isOnboarding={true}
-            pronoun="your"
+            pronoun="their"
             nextHref="onboarding/dob"
         />
     )

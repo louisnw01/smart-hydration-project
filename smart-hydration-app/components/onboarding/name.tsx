@@ -20,7 +20,7 @@ export default function Name({isOnboarding, pronoun, nextHref}:NameProps) {
     const validateName = () => {
     
         if (name.length == 0) {
-          setErrorMessage('You must enter ' + {pronoun} + ' name.');
+          setErrorMessage(`You must enter ${pronoun} name.`);
           setProceed(false);
         } else {
           setErrorMessage('');
@@ -31,12 +31,11 @@ export default function Name({isOnboarding, pronoun, nextHref}:NameProps) {
 
     return (
         <GenericOnboardContent
-            title={"What is " + {pronoun} +"your name?"}
             nextHref={nextHref}
             proceed={proceed}
         >
             <TextInput
-                placeholder={"Enter " + {pronoun} + " your name (required)"}
+                placeholder={`Enter ${pronoun} name (required)`}
                 onChangeText={(val) => setName(val)}
                 className="bg-gray-200 w-full h-14 placeholder-black text-xl rounded-xl px-3"
                 textContentType="name"

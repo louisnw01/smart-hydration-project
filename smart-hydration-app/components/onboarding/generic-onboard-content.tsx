@@ -5,7 +5,6 @@ import OnboardingButton from "./onboarding-button";
 import colors from "@/colors";
 
 interface PageContent {
-    title: string;
     children: JSX.Element | JSX.Element[];
     nextHref?: string;
     proceed: boolean;
