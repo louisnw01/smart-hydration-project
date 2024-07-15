@@ -8,9 +8,10 @@ import { jugUserInfoAtom } from "@/atom/jug-user";
 interface DobProps {
     isOnboarding: boolean,
     title: string,
+    nextHref: string,
 }
 
-export default function Dob({isOnboarding, title}:DobProps) {
+export default function Dob({isOnboarding, title, nextHref}:DobProps) {
     const setInfo = isOnboarding ? useSetAtom(registerInfoAtom) : useSetAtom(jugUserInfoAtom);
     const [dob, setDob] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
@@ -51,7 +52,7 @@ export default function Dob({isOnboarding, title}:DobProps) {
     return (
         <GenericOnboardContent
             title={title}
-            nextHref="onboarding/submit"
+            nextHref={nextHref}
             proceed={proceed}
         >
             <TextInput

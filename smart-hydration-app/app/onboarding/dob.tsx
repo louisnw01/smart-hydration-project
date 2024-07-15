@@ -6,6 +6,7 @@ export default function DobPage() {
       <Dob 
         title="What is your date of birth"
         isOnboarding={true}
+        nextHref="onboarding/submit"
       />
     )
 }
