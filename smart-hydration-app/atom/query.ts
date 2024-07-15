@@ -117,7 +117,7 @@ export const updateMAtom = atomWithMutation((get) => ({
         });
 
         if (!response.ok) {
-            return "failure";
+            return;
         }
 
         const object = await response.json();

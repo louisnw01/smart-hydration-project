@@ -15,7 +15,8 @@ function useSession() {
     const [isSuccess, setIsSuccess] = useState(false);
 
     const getTokenFromStorage = async () => {
-        const authToken = JSON.parse((await getItemAsync("auth-token")) || "");
+        const rawToken = await getItemAsync("auth-token");
+        const authToken = rawToken ? JSON.parse(rawToken) : null;
         if (!authToken) {
             setIsSuccess(false);
             setIsLoading(false);
