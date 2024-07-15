@@ -1,15 +1,40 @@
+import os
 from uuid import UUID
-
 from pony.orm.core import *
+from dotenv import load_dotenv
+
+load_dotenv()
 
 db = Database()
+
+
+def connect_to_database():
+    if os.getenv('USE_PRODUCTION_DB'):
+        user = os.getenv('PROD_DB_USERNAME')
+        password = os.getenv('PROD_DB_PASSWORD')
+        host = os.getenv('PROD_DB_HOST')
+    else:
+        user = os.getenv('STAGING_DB_USERNAME')
+        password = os.getenv('STAGING_DB_PASSWORD')
+        host = os.getenv('STAGING_DB_HOST')
+
+
+
+    db.bind(
+        provider='postgres',
+        user=user,
+        password=password,
+        host=host,
+        database='postgres'
+    )
+    db.generate_mapping(create_tables=True)
 
 
 class User(db.Entity):
     id = PrimaryKey(UUID, auto=True)
     email = Required(str)
     name = Required(str)
-    community = Optional('Community')
+    community_member = Optional('CommunityMember')
     hash = Required(str)
     jug_user = Optional('JugUser')
 
@@ -27,6 +52,7 @@ class JugUser(db.Entity):
     user = Optional(User)
     otherdrinks = Set('OtherDrink')
 
+
 class Jug(db.Entity):
     id = PrimaryKey(int, auto=True)
     smart_hydration_id = Required(str)
@@ -39,7 +65,15 @@ class Community(db.Entity):
     id = PrimaryKey(int, auto=True)
     name = Required(str)
     jug_users = Set(JugUser)
-    followers = Set(User)
+    followers = Set('CommunityMember')
+
+
+class CommunityMember(db.Entity):
+    id = PrimaryKey(int, auto=True)
+    community = Required(Community)
+    user = Required(User)
+    is_owner = Required(bool)
+
 
 class OtherDrink(db.Entity):
     id = PrimaryKey(int, auto=True)
@@ -52,13 +86,3 @@ class OtherDrink(db.Entity):
 class Medication(db.Entity):
     id = PrimaryKey(int, auto=True)
     name = Required(str)
-
-
-class Test1(db.Entity):
-    id = PrimaryKey(int, auto=True)
-    my_test_2s = Set('Test2')
-
-
-class Test2(db.Entity):
-    id = PrimaryKey(int, auto=True)
-    my_test_1s = Set('Test1')

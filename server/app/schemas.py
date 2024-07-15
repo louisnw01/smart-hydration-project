@@ -13,8 +13,8 @@ class UserRegister(BaseModel):
     password: str
     dob: Optional[str] = None
 
-    class Config:
-        arbitrary_types_allowed = False
+    # class Config:
+    #     arbitrary_types_allowed = False
 
 
 class JugLink(BaseModel):
@@ -35,7 +35,12 @@ class UpdateJugForm(BaseModel):
     jugId: str
     name: str
 
+
 class AddDrinkForm(BaseModel):
     timestamp: int
     name: str
     capacity: int
+
+
+class CreateCommunityForm(BaseModel):
+    name: str
