@@ -70,7 +70,6 @@ export default function RegisterPage() {
 
     return (
         <GenericOnboardContent
-            title="Enter your email and password"
             nextHref="onboarding/name"
             proceed={proceed}
         >

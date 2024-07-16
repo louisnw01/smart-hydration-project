@@ -1,5 +1,5 @@
-import { registerMAtom } from "@/atom/query";
-import { authTokenAtom, registerInfoAtom } from "@/atom/user";
+import { jugUserInfoAtom } from "@/atom/jug-user";
+import { createJugUserMAtom } from "@/atom/query";
 import colors from "@/colors";
 import Loading from "@/components/common/loading";
 import GenericOnboardContent from "@/components/onboarding/generic-onboard-content";
@@ -11,34 +11,31 @@ import { Text } from "react-native";
 
 export default function SubmitPage() {
     const router = useRouter();
-    const setAuthToken = useSetAtom(authTokenAtom);
-    const clearRegisterInfo = useSetAtom(registerInfoAtom);
+    const clearJugUserInfo = useSetAtom(jugUserInfoAtom);
     const {
-        mutate: submitAndRegister,
-        data,
+        mutate,
         isPending,
         isSuccess,
-    } = useAtomValue(registerMAtom);
+    } = useAtomValue(createJugUserMAtom);
 
     useEffect(() => {
-        if (!isSuccess || !data) return;
-        setAuthToken(data);
-        clearRegisterInfo({});
-        router.replace("(tabs)");
-    }, [isSuccess, data]);
+        if (!isSuccess) return;
+        clearJugUserInfo({});
+        router.replace("(tabs)/devices");
+    }, [isSuccess]);
 
     return (
         <GenericOnboardContent proceed={true}>
             <Text className="text-xl font-light">
-                Tap the button to set up your Smart Hydration profile.
+                Tap the button to finish setting up your new jug user.
             </Text>
-            <Loading isLoading={isPending} message="registering.." />
+            <Loading isLoading={isPending} message="Setting up.." />
             <>
                 {!isPending && (
                     <OnboardingButton
-                        text="Submit & Register"
+                        text="Submit"
                         color={colors.green}
-                        onPress={() => submitAndRegister()}
+                        onPress={() => mutate()}
                     />
                 )}
             </>
