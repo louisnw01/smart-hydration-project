@@ -51,7 +51,7 @@ export default function DevicesPage() {
                     <View className="flex flex-row justify-center">
                         <StyledButton
                             text="+ Add a new jug user"
-                            href="add-device-modal"
+                            href="add-jug-user"
                             textSize="lg"
                         />
                     </View>

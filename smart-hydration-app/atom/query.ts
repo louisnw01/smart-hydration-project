@@ -6,6 +6,7 @@ import {
 import { authTokenAtom, registerInfoAtom } from "./user";
 import { ENDPOINTS, request } from "@/util/fetch";
 import { DeviceInfo, ITimeSeries } from "@/interfaces/device";
+import { jugUserInfoAtom } from "./jug-user";
 
 export const linkJugToUserMAtom = atomWithMutation((get) => ({
     mutationKey: ["link-jug-to-user", get(authTokenAtom)],
@@ -213,6 +214,27 @@ export const registerMAtom = atomWithMutation((get) => ({
 
         const object = await response.json();
         return object.access_token;
+    },
+}));
+
+export const createJugUserMAtom = atomWithMutation((get) => ({
+    mutationKey: ["jug-user/create", get(authTokenAtom)],
+    enabled: !!get(authTokenAtom),
+    mutationFn: async () => {
+        const token = get(authTokenAtom);
+        const jugUserInfo = get(jugUserInfoAtom);
+        if (!jugUserInfo) return;
+
+        const response = await request(ENDPOINTS.CREATE_JUG_USER, {
+            method: "post",
+            body: jugUserInfo,
+            auth: token as string
+        });
+        if (!response.ok) {
+            throw new Error("Jug User could not be added");
+        }
+
+        return;
     },
 }));
 
