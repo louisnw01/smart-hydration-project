@@ -35,6 +35,7 @@ jobs:
 
       - name: Install python dependencies
         run: |
+          python3 -m venv .venv
           source .venv/bin/activate
           pip install -r requirements.txt
         working-directory: ./server
