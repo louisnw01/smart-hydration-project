@@ -1,6 +1,6 @@
 import useColorPalette from "@/util/palette";
 import { Stack, useRouter } from "expo-router";
-import { Pressable } from "react-native";
+import { Platform, Pressable } from "react-native";
 import { Entypo } from "@expo/vector-icons";
 
 export default function SettingsLayout() {
@@ -24,13 +24,12 @@ export default function SettingsLayout() {
                 name="settings-modal"
                 options={{
                     title: "Settings",
-                    headerBackVisible: true,
                     headerLeft: () => {
                         const router = useRouter();
                         return (
                             <Pressable onPress={() => router.back()}>
                                 <Entypo
-                                    name="circle-with-cross"
+                                    name= {Platform.OS == "android" ? "chevron-left" :"circle-with-cross"}
                                     size={24}
                                     color="rgb(80, 80, 80)"
                                 />
