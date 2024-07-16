@@ -16,7 +16,7 @@ router = APIRouter(
 @router.post("/create")
 async def add_jug_user(form: AddJugUserForm, user_id: str = Depends(auth_user)):
     with db_session:
-        comm = User.get(id=user_id).community
+        comm = User.get(id=user_id).community_member.community
         create_jug_user_no_owner(comm, form)
 
 
