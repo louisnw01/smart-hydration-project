@@ -14,7 +14,7 @@ router = APIRouter(
 )
 
 
-@app.post("/update-name")
+@router.post("/update-name")
 async def update_jug_name(form: UpdateJugForm, user_id: str = Depends(auth_user)):
     with db_session:
         jugs = get_users_jugs(user_id)
