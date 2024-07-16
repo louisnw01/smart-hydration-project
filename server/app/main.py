@@ -17,7 +17,7 @@ from .schemas import LinkJugsForm, UserLogin, UserRegister, JugLink, UpdateJugFo
 from .services import (create_user, get_user_hash, user_exists, get_user_by_email, get_user_by_id,
                        unlink_jug_from_user_s,
                        link_jugs_to_user_s, get_user_name, get_users_jugs, update_jug_name_s, create_jug_user,
-                       update_jug_user_data, create_jug_user_no_owner)
+                       update_jug_user_data, create_jug_user_no_owner, delete_user)
 
 load_dotenv()
 
@@ -57,6 +57,19 @@ async def link_jug_to_user(body: LinkJugsForm, user_id: str = Depends(auth_user)
 async def unlink_jug_from_user(body: JugLink, user_id: str = Depends(auth_user)):
     unlink_jug_from_user_s(user_id, body.jugId)
 
+
+
+@app.post('/delete-user-s')
+async def delete_user_s(user_id: str = Depends(auth_user)):
+    delete_user(user_id)
+    token = generate_auth_token(user_id)
+    return {"access_token": token, "token_type": "bearer"}
+
+
+
+
+# @db_session is needed to fix "pony.orm.core.TransactionError: An attempt to mix objects belonging to different
+# transactions"
 
 @app.post("/register")
 async def register(form: UserRegister):
