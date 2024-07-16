@@ -70,3 +70,8 @@ async def check_token(user_id: str = Depends(auth_user)):
 @router.get("/user-name")
 async def get_user(user_id: str = Depends(auth_user)):
     return get_user_name(user_id)
+
+
+@router.get("/exists")
+async def email_exists(email: str):
+    return user_exists(email)

@@ -3,8 +3,7 @@ from pony.orm.core import db_session, select
 
 from ..api import login_and_get_session, get_jug_latest, get_hydration_events
 from ..auth import auth_user
-from ..models import User
-from ..services import user_exists
+from ..models import User, OtherDrink
 
 router = APIRouter(
     prefix="/data",
@@ -62,9 +61,3 @@ async def get_historical_jug_data(timestamp: int, user_id: str = Depends(auth_us
             big_list.append({"time": drink.timestamp, "value": drink.capacity})
 
         return sorted(big_list, key=lambda x: x['time'])
-
-
-@router.get("/exists")
-async def email_exists(email: str):
-    return user_exists(email)
-
