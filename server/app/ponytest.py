@@ -5,16 +5,16 @@ from .models import User
 
 
 #
-# load_dotenv()
-#
-# db.bind(
-#     provider='postgres',
-#     user=os.getenv("DB_USERNAME"),
-#     password=os.getenv("DB_PASSWORD"),
-#     host=os.getenv("DB_HOST"),
-#     database='postgres'
-# )
-# db.generate_mapping(create_tables=True)
+#load_dotenv()
+
+#db.bind(
+    #provider='postgres',
+    #user=os.getenv("DB_USERNAME"),
+    #password=os.getenv("DB_PASSWORD"),
+    #host=os.getenv("DB_HOST"),
+    #database='postgres'
+ #)
+#db.generate_mapping(create_tables=True)
 
 @db_session
 def create_user(name, email, hashcode):

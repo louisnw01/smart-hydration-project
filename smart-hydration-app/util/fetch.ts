@@ -15,6 +15,7 @@ export const ENDPOINTS = {
     UPDATE: "/update",
     FETCH_USER: "/user",
     GET_TODAYS_INTAKE: "/todays-total-intake",
+    DELETE_USER: "/delete-user-s",
     UPDATE_JUG_NAME: "/update-jug-name",
     USER_EXISTS: "/user-exists",
     ADD_DRINK: "/add-drink-event",
