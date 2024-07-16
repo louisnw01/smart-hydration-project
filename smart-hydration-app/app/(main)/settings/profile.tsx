@@ -1,12 +1,13 @@
 import { authTokenAtom, colorSchemeAtom } from "@/atom/user";
 import { OptionBlock } from "@/components/common/option-block";
 import { useRouter } from "expo-router";
-import { useSetAtom } from "jotai";
-import { ReactElement, ReactNode } from "react";
+import {useAtomValue, useSetAtom } from "jotai";
+import { ReactElement, ReactNode, useEffect } from "react";
 import { Pressable, SectionList, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Feather, MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
 import { ISettingsSection } from "@/interfaces/settings";
+import { deleteUser } from "@/atom/query";
 
 const settingsList: ISettingsSection[] = [
     {
@@ -54,6 +55,21 @@ export default function SettingsModal() {
     const insets = useSafeAreaInsets();
     const setAuthAtom = useSetAtom(authTokenAtom);
     const router = useRouter();
+    const { mutate: submitDeleteUser, isPending, isSuccess, isError } = useAtomValue(deleteUser);
+
+    useEffect(() => {
+      if (isSuccess) {
+        router.replace("onboarding/login-register");
+      }
+    }, [isSuccess]);
+
+    useEffect(() => {
+      if (isError) {
+        //router.navigate("settings/theme");
+       console.error('error')
+      }
+    }, [isError]);
+
 
     return (
         <View
@@ -80,14 +96,23 @@ export default function SettingsModal() {
             </View> */}
             <View className="gap-5">
                 <View className="w-full h-[1px] bg-gray-300 dark:bg-neutral-800" />
-                <Pressable
+                {/*<Pressable
                     className="items-center bg-red rounded-xl px-7 py-3"
                     onPress={() => {
                         setAuthAtom("");
                         router.replace("onboarding/login-register");
                     }}
                 >
-                    <Text className="text-xl mt-1 text-white">Log Out</Text>
+                    {/*<Text className="text-xl mt-1 text-white">Delete Account</Text>
+                  </Pressable>*/}
+                <Pressable
+                    className="items-center bg-red rounded-xl px-7 py-3"
+                    disabled={isPending}
+                    onPress={() => {
+                        submitDeleteUser();
+                    }}
+                >
+                    <Text className="text-xl mt-1 text-white">{isPending ? 'Deleting account...' : 'Delete Account'}</Text>
                 </Pressable>
             </View>
         </View>
