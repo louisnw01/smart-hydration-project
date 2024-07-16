@@ -193,15 +193,16 @@ export default function TrendsPage() {
 
     if (isLoading) {
         return <Loading isLoading message="Loading your information..." />;
-    } else if (!hasJugs) {
-        return (
-            <View className="flex flex-1 justify-center items-center">
-                <Text className="dark:text-white text-2xl">
-                    You haven't linked any jugs yet.
-                </Text>
-            </View>
-        );
     }
+    // } else if (!hasJugs) {
+    //     return (
+    //         <View className="flex flex-1 justify-center items-center">
+    //             <Text className="dark:text-white text-2xl">
+    //                 You haven't linked any jugs yet.
+    //             </Text>
+    //         </View>
+    //     );
+    // }
 
     return (
         <ScrollView className="bg-gray-100 dark:bg-black">

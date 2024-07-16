@@ -4,7 +4,6 @@ export default function Loading({
     isLoading,
     message,
     large,
-    mysterious,
 }: {
     isLoading: boolean;
     message: string;
@@ -13,7 +12,7 @@ export default function Loading({
     if (!isLoading) return null;
 
     return (
-        <View className={mysterious ? "justify-center h-full" : ""}>
+        <View>
             <ActivityIndicator
                 className="justify-center top-2/4"
                 size={large ? "large" : "small"}
