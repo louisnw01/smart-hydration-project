@@ -5,6 +5,9 @@ SHELL := /bin/bash
 dev:
 	source .venv/bin/activate && fastapi dev --port 8085 app/main.py
 
+test:
+	source .venv/bin/activate && pytest
+
 run:
 	docker run -d --name $(CONTAINER_NAME) -p 8000:8000 $(IMAGE_NAME)
 

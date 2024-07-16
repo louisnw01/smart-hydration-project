@@ -22,11 +22,11 @@ const HydrateAtoms = ({ children }: { children: React.ReactNode }) => {
 // Add this function to the top of wrappedIndex for one run if needed
 async function clearStorage() {
     await deleteItemAsync("color-scheme");
+    await deleteItemAsync("auth-token");
 }
 
 export default function Index() {
     return (
-
         <QueryClientProvider client={queryClient}>
             <Provider>
                 <HydrateAtoms>

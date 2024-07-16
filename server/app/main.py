@@ -8,9 +8,10 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from pony.orm.core import db_session, commit, select
 from starlette.middleware.cors import CORSMiddleware
 
+from .routers import community
 from .api import login_and_get_session, get_jug_latest, get_hydration_events, get_all_jug_ids, get_todays_intake
 from .auth import get_hash, decode_auth_token, generate_auth_token
-from .models import db, User, JugUser, Jug, OtherDrink
+from .models import db, User, JugUser, Jug, OtherDrink, connect_to_database
 from .schemas import LinkJugsForm, UserLogin, UserRegister, JugLink, UpdateJugForm, JugUserUpdate, AddDrinkForm, \
     AddJugUserForm
 from .services import (create_user, get_user_hash, user_exists, get_user_by_email, get_user_by_id,
@@ -20,16 +21,10 @@ from .services import (create_user, get_user_hash, user_exists, get_user_by_emai
 
 load_dotenv()
 
-app = FastAPI()
+connect_to_database()
 
-db.bind(
-    provider='postgres',
-    user=os.getenv("DB_USERNAME"),
-    password=os.getenv("DB_PASSWORD"),
-    host=os.getenv("DB_HOST"),
-    database='postgres'
-)
-db.generate_mapping(create_tables=True)
+app = FastAPI()
+app.include_router(community.router)
 
 get_bearer_token = HTTPBearer(auto_error=False)
 
@@ -75,6 +70,7 @@ async def delete_user_s(user_id: str = Depends(auth_user)):
 
 # @db_session is needed to fix "pony.orm.core.TransactionError: An attempt to mix objects belonging to different
 # transactions"
+
 @app.post("/register")
 async def register(form: UserRegister):
     if user_exists(form.email):
@@ -125,7 +121,7 @@ async def get_community_jug_status(user_id: str = Depends(auth_user)):
     with db_session:
         # community = user.community
         user = User.get(id=user_id)
-        if not user:
+        if not user or not user.jug_user:
             raise HTTPException(status_code=400, detail='user not found')
         jugs = user.jug_user.jugs
         devices_info = []
@@ -175,6 +171,8 @@ async def get_historical_jug_data(timestamp: int, user_id: str = Depends(auth_us
         juguser = user.jug_user
         # if user.community != juguser.community:
             # raise HTTPException(status_code=400, detail='unauthorized')
+        if not juguser:
+            return []
         jugs = juguser.jugs
 
         session = login_and_get_session()

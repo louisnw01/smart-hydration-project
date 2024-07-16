@@ -69,7 +69,7 @@ def find_user(name):
 
 @db_session
 def create_jug_user(user):
-    JugUser(name=user.name, user=user, community=user.community)
+    JugUser(name=user.name, user=user)
     commit()
 
 
@@ -208,7 +208,10 @@ def get_users_jugs(user_id):
 
 @db_session
 def get_users_jugs_sh_ids(user_id):
-    jugs = User.get(id=user_id).jug_user.jugs
+    user = User.get(id=user_id)
+    if not user.jug_user:
+        return []
+    jugs = user.jug_user.jugs
     jug_list = set()
 
     for jug in jugs:

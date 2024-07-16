@@ -1,9 +1,16 @@
 import hashlib
 import os
 import time
+from typing import Optional
 from uuid import UUID
-
+from dotenv import load_dotenv
+from fastapi import HTTPException, Depends
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 import jwt
+
+from .services import get_user_by_id
+
+load_dotenv()
 
 AUTH_TOKEN_EXPIRATION_SECS = 86_400 * 30
 
@@ -24,3 +31,19 @@ def generate_auth_token(user_id: UUID):
 def decode_auth_token(token: str):
     result = jwt.decode(token, os.getenv('JWT_SECRET'), algorithms=[os.getenv('JWT_ALGORITHM')])
     return result['id'] if result['expires'] >= time.time() else None
+
+
+get_bearer_token = HTTPBearer(auto_error=False)
+
+async def auth_user(
+        auth: Optional[HTTPAuthorizationCredentials] = Depends(get_bearer_token),
+) -> str:
+    if auth is None:
+        raise HTTPException(status_code=401, detail='unauthorized token')
+
+    user_id = decode_auth_token(auth.credentials)
+
+    if user_id is None or not get_user_by_id(user_id):
+        raise HTTPException(status_code=401, detail='unauthorized token')
+
+    return user_id
