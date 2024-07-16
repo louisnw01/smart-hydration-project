@@ -1,11 +1,12 @@
 import { authTokenAtom, colorSchemeAtom, userNameAtom, drinkListAtom } from "@/atom/user";
 import { OptionBlock } from "@/components/common/option-block";
 import { useRouter } from "expo-router";
-import { useSetAtom } from "jotai";
-import { ReactElement, ReactNode } from "react";
+import { useAtomValue, useSetAtom } from "jotai";
+import { ReactElement, ReactNode, useEffect } from "react";
 import { Pressable, SectionList, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Feather, MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
+import { deleteUser } from "@/atom/query";
 import { ISettingsSection } from "@/interfaces/settings";
 import { amountDrankTodayAtom } from "@/atom/hydration";
 
@@ -85,7 +86,21 @@ export default function SettingsModal() {
     const setAmounDrankTodayAtom = useSetAtom(amountDrankTodayAtom);
     const setDrinksList = useSetAtom(drinkListAtom);
     const router = useRouter();
+    //const { mutate: submitDeleteUser, isPending, isSuccess, isError } = useAtomValue(deleteUser);
+    //useEffect(() => {
+      {/*if (isSuccess) {
+        router.replace("onboarding/login-register");
+      }
+    }, [isSuccess]);
 
+    useEffect(() => {
+      if (isError) {
+
+        //router.navigate("settings/theme");
+       console.error('error')
+      }
+    }, [isError]);
+  */}
     return (
         <View
             className="flex flex-1 justify-between mx-4"
@@ -130,6 +145,17 @@ export default function SettingsModal() {
                 >
                     <Text className="text-xl mt-1 text-white">Log Out</Text>
                 </Pressable>
+                {/*
+                <Pressable
+                    className="items-center bg-blue rounded-xl px-7 py-3"
+                    disabled={isPending}
+                    onPress={() => {
+                        submitDeleteUser();
+                    }}
+                >
+                    <Text className="text-xl mt-1 text-white">{isPending ? 'Deleting account...' : 'Delete Account'}</Text>
+                </Pressable>
+                  */}
             </View>
         </View>
     );
