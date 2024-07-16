@@ -41,3 +41,7 @@ class AddDrinkForm(BaseModel):
     name: str
     capacity: int
 
+
+class AddJugUserForm(BaseModel):
+    name: str
+    dob: Optional[str] = None

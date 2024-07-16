@@ -1,4 +1,9 @@
-import { authTokenAtom, colorSchemeAtom, userNameAtom, drinkListAtom } from "@/atom/user";
+import {
+    authTokenAtom,
+    colorSchemeAtom,
+    userNameAtom,
+    drinkListAtom,
+} from "@/atom/user";
 import { OptionBlock } from "@/components/common/option-block";
 import { useRouter } from "expo-router";
 import { useAtomValue, useSetAtom } from "jotai";
@@ -43,6 +48,31 @@ const settingsList: ISettingsSection[] = [
                                 <MaterialCommunityIcons
                                     name="cards-playing-heart-multiple-outline"
                                     size={16}
+                                    color="gray"
+                                />
+                            }
+                        />
+                    );
+                },
+            },
+        ],
+    },
+    {
+        title: "Data",
+        data: [
+            {
+                name: "Other Drinks",
+                component: (name, isFirst, isLast) => {
+                    const router = useRouter();
+                    return (
+                        <OptionBlock
+                            isLast={isLast}
+                            text={name}
+                            onPress={() => router.navigate("settings/theme")}
+                            icon={
+                                <MaterialCommunityIcons
+                                    name="cup-water"
+                                    size={19}
                                     color="gray"
                                 />
                             }
