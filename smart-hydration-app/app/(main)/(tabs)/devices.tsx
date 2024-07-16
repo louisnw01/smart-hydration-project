@@ -48,6 +48,13 @@ export default function DevicesPage() {
                             textSize="lg"
                         />
                     </View>
+                    <View className="flex flex-row justify-center">
+                        <StyledButton
+                            text="+ Add a new jug user"
+                            href="add-jug-user"
+                            textSize="lg"
+                        />
+                    </View>
                 </View>
             </ScrollView>
         </PageWrapper>
