@@ -1,6 +1,7 @@
 from pony.orm.core import commit, get, select, db_session
 
 from .models import User, Jug, JugUser, Community
+from .schemas import AddJugUserForm
 
 
 @db_session
@@ -54,6 +55,14 @@ def find_user(name):
 @db_session
 def create_jug_user(user):
     JugUser(name=user.name, user=user)
+    commit()
+
+
+@db_session
+def create_jug_user_no_owner(community, form: AddJugUserForm):
+    jug_user = JugUser(name=form.name, community=community)
+    jug_user.dob = form.dob
+    # TODO add functionality to fill out all JugUser parameters
     commit()
 
 

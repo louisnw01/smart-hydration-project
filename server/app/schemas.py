@@ -44,3 +44,8 @@ class AddDrinkForm(BaseModel):
 
 class CreateCommunityForm(BaseModel):
     name: str
+
+
+class AddJugUserForm(BaseModel):
+    name: str
+    dob: Optional[str] = None

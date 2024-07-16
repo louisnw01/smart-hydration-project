@@ -2,9 +2,9 @@ import Name from "@/components/onboarding/name";
 export default function NamePage() {
     return (
         <Name
-            isOnboarding={true}
-            pronoun="your"
-            nextHref="onboarding/dob"
+            isOnboarding={false}
+            pronoun="their"
+            nextHref="add-jug-user/dob"
         />
     )
 }

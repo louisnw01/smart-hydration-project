@@ -4,8 +4,8 @@ export default function DobPage() {
 
     return (
       <Dob 
-        isOnboarding={true}
-        nextHref="onboarding/submit"
+        isOnboarding={false}
+        nextHref="add-jug-user/submit"
       />
     )
 }

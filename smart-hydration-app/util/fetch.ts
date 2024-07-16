@@ -18,9 +18,12 @@ export const ENDPOINTS = {
     UPDATE_JUG_NAME: "/update-jug-name",
     USER_EXISTS: "/user-exists",
     ADD_DRINK: "/add-drink-event",
+  
     CREATE_COMMUNITY: "/community/create",
     UPDATE_COMMUNITY: "/community/update",
     DELETE_COMMUNITY: "/community/delete",
+
+    CREATE_JUG_USER: "/jug-user/create"
 };
 
 interface RequestOptions {
