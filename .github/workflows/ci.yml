@@ -26,3 +26,33 @@ jobs:
         run: |
           yarn test
         working-directory: ./smart-hydration-app
+
+      - name: Setup python
+        uses: actions/setup-python@v4
+        with:
+          python.version: '3.10'
+
+      - name: Install python dependencies
+        run: |
+          source .venv/bin/activate
+          pip install -r requirements.txt
+        working-directory: ./server
+
+      - name: Create .env
+        run: |
+          touch .env
+          echo STAGING_DB_USERNAME=$(echo "${{ Secrets.STAGING_DB_USERNAME }}" | xargs) >> .env
+          echo STAGING_DB_PASSWORD=$(echo "${{ Secrets.STAGING_DB_PASSWORD }}" | xargs)  >> .env
+          echo STAGING_DB_HOST=$(echo "${{ Secrets.STAGING_DB_HOST }}" | xargs) >> .env
+          echo SMART_HYDRATION_EMAIL=$(echo "${{ Secrets.SMART_HYDRATION_EMAIL }}" | xargs)  >> .env
+          echo SMART_HYDRATION_PASSWORD=$(echo "${{ Secrets.SMART_HYDRATION_PASSWORD }}" | xargs)  >> .env
+          echo JWT_SECRET=$(echo "${{ Secrets.JWT_SECRET }}" | xargs)  >> .env
+          echo JWT_ALGORITHM=$(echo "${{ Secrets.JWT_ALGORITHM }}" | xargs)  >> .env
+          echo TESTING_USER_ID=$(echo "${{ Secrets.TESTING_USER_ID }}" | xargs)  >> .env
+          chmod 777 .env
+        working-directory: ./server
+
+      - name: Run pytest
+        run: |
+          make test
+        working-directory: ./server
