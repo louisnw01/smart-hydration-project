@@ -107,6 +107,71 @@ const settingsList: ISettingsSection[] = [
             },
         ],
     },
+    {
+        title: "Community",
+        data: [
+            {
+                name: "Community Profile",
+                component: (name, isFirst, isLast) => {
+                    const router = useRouter();
+                    return (
+                        <OptionBlock
+                            isLast={isLast}
+                            text={name}
+                            onPress={() => router.navigate("settings/community/community-profile")}
+                            icon={
+                                <Ionicons
+                                    name="color-palette"
+                                    size={19}
+                                    color="gray"
+                                />
+                            }
+                        />
+                    );
+                },
+            },
+            {
+                name: "Remove Member",
+                component: (name, isFirst, isLast) => {
+                    const router = useRouter();
+                    return (
+                        <OptionBlock
+                            isLast={isLast}
+                            text={name}
+                            onPress={() => router.navigate("settings/theme")}
+                            icon={
+                                <Ionicons
+                                    name="color-palette"
+                                    size={19}
+                                    color="gray"
+                                />
+                            }
+                        />
+                    );
+                },
+            },
+            {
+                name: "Invite member",
+                component: (name, isFirst, isLast) => {
+                    const router = useRouter();
+                    return (
+                        <OptionBlock
+                            isLast={isLast}
+                            text={name}
+                            onPress={() => router.navigate("settings/theme")}
+                            icon={
+                                <Ionicons
+                                    name="color-palette"
+                                    size={19}
+                                    color="gray"
+                                />
+                            }
+                        />
+                    );
+                },
+            },
+        ],
+    },
 ];
 
 export default function SettingsModal() {
