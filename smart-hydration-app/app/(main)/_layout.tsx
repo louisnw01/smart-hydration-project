@@ -22,7 +22,7 @@ function useSession() {
             setIsLoading(false);
             return;
         }
-        const result = await request("/check-token", {
+        const result = await request("/user/check-token", {
             method: "post",
             auth: authToken,
         });
