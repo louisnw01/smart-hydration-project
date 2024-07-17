@@ -4,10 +4,12 @@ import useColorPalette from "@/util/palette";
 import {
     Entypo,
     FontAwesome,
+    FontAwesome6,
     Foundation,
     MaterialIcons,
 } from "@expo/vector-icons";
 import { Link, Tabs } from "expo-router";
+import React from "react";
 
 export default function TabLayout() {
     const palette = useColorPalette();
@@ -89,6 +91,15 @@ export default function TabLayout() {
                                 color={palette.fg}
                             />
                         </Link>
+                    ),
+                }}
+            />
+            <Tabs.Screen
+                name="community"
+                options={{
+                    title: "Community",
+                    tabBarIcon: ({ color }) => (
+                        <FontAwesome6 name="people-group" size={24} color={color} />
                     ),
                 }}
             />
