@@ -22,14 +22,30 @@ export default function CommunityPage() {
     const toggleCommunity = useSetAtom(userHasCommunityAtom); //toggle this when community created
     if (!hasCommunity) {
         return (
-            <View className="flex flex-1 justify-center items-center">
-                <Text className="dark:text-white text-2xl">
-                    You aren't in a community yet.
-                </Text>
+            <View className="mt-8 flex gap-6">
+                <View className="flex flex-row justify-center items-center">
+                    <Text className="dark:text-white text-2xl">
+                        You aren't in a community yet.
+                    </Text>
+                </View>
+                <View className="flex flex-row justify-center">
+                    <StyledButton
+                        text="+ Create a community"
+                        href="create-community-modal"
+                        textSize="lg"
+                    />
+                </View>
+                <View className="flex flex-row justify-center">
+                    <StyledButton
+                        text="+ Join a community"
+                        href="join-community-modal"
+                        textSize="lg"
+                    />
+                </View>
             </View>
         );
-    }  
-    else{
+    }
+    else {
         return (
             <View className="flex flex-1 justify-center items-center">
                 <Text className="dark:text-white text-2xl">
