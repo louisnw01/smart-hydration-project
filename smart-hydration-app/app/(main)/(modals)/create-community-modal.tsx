@@ -2,18 +2,21 @@ import { useState } from "react";
 import { View, Text, Pressable, TextInput } from "react-native";
 import { createCommunityMAtom } from "@/atom/query/community";
 import { useNavigation } from "expo-router";
-import { useAtomValue } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
+import { userHasCommunityAtom } from "@/atom/community";
 
 export default function CreateCommunityModal() {
     const navigation = useNavigation();
     const [communityName, setName] = useState('');
     const {mutate} = useAtomValue(createCommunityMAtom);
     const [showErrorMessage, setShowErrorMessage] = useState(false);
+    const [, setUserHasCommunity] = useAtom(userHasCommunityAtom);
 
     const handlePress = () => {
         //to do: check if community exists before allowing creation 
         if(communityName !== ''){
             mutate({ name: communityName });
+            setUserHasCommunity(true);
             navigation.goBack();
         }
         else{
