@@ -170,6 +170,9 @@ export const getHydrationQAtom = atomWithQuery((get) => ({
             },
             auth: token,
         });
+        if (!response.ok) {
+            throw new Error();
+        }
         return await response.json();
     },
     enabled: !!get(authTokenAtom),

@@ -13,6 +13,7 @@ import { View } from "react-native";
 function useSession() {
     const [isLoading, setIsLoading] = useState(true);
     const [isSuccess, setIsSuccess] = useState(false);
+    const [isEmailVerified, setIsEmailVerified] = useState(true)
 
     const getTokenFromStorage = async () => {
         const rawToken = await getItemAsync("auth-token");
@@ -27,23 +28,26 @@ function useSession() {
             auth: authToken,
         });
         setIsSuccess(result.ok);
+        setIsEmailVerified(result.status != 403)
         setIsLoading(false);
     };
 
     useEffect(() => {
         getTokenFromStorage();
     }, []);
-    return { isLoading, isSuccess };
+    return { isLoading, isSuccess, isEmailVerified };
 }
 
 export default function MainLayout() {
     useAtomValue(colorSchemeEAtom);
-    const { isLoading, isSuccess } = useSession();
+    const { isLoading, isSuccess, isEmailVerified } = useSession();
 
     if (isLoading) {
         <View className="flex flex-1 justify-center">
             <Loading isLoading large message="" />
         </View>;
+    } else if(!isEmailVerified) {
+        return <Redirect href="onboarding/email-verification" />;
     } else if (!isSuccess) {
         return <Redirect href="onboarding/login-register" />;
     }
