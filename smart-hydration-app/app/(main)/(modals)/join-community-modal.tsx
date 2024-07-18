@@ -1,13 +1,15 @@
 import { useState } from "react";
-import { View, Text, SectionList, Pressable, TextInput } from "react-native";
+import { View, Text, Pressable, TextInput } from "react-native";
 import { useAtomValue } from "jotai";
 import { getAllJugsQAtom, linkJugToUserMAtom } from "@/atom/query";
 import { useNavigation } from "expo-router";
-import Loading from "@/components/common/loading";
-import Button from "@/components/common/button";
 
+//to do: create atom to send invite link to backends
 export default function JoinCommunityModal() {
     const navigation = useNavigation();
+    const handlePress = () => {
+        navigation.goBack();
+    };
 
     return (
         <View className="mt-8 flex gap-6">
@@ -25,7 +27,12 @@ export default function JoinCommunityModal() {
                 />
             </View>
             <View className="flex flex-row justify-center items-center">
-                <Button text="Submit" href="community"></Button>
+                <Pressable
+                    onPress={handlePress}
+                    className="bg-blue px-4 py-2 rounded-xl mt-10"
+                ><Text className="text-2xl font-semibold text-white">
+                        Submit
+                    </Text></Pressable>
             </View>
         </View>
     );
