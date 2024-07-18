@@ -10,6 +10,7 @@ import {
 } from "@expo/vector-icons";
 import { Link, Tabs } from "expo-router";
 import React from "react";
+import { userHasCommunityAtom, communityNameAtom } from "@/atom/community";
 
 export default function TabLayout() {
     const palette = useColorPalette();
