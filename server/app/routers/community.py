@@ -1,11 +1,7 @@
 from typing import Optional
 import datetime as dt
-
 from fastapi import APIRouter, Depends, HTTPException
-from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
-
 from pony.orm.core import commit, db_session, delete
-
 from ..services import get_user_by_id
 from ..models import Community, CommunityMember, InviteLink, User
 from ..schemas import CreateCommunityForm, CreateInvitationForm
