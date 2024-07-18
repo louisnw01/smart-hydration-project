@@ -1,11 +1,12 @@
 from fastapi import APIRouter, Depends, HTTPException
 from pony.orm.core import db_session
 
-from ..auth import auth_user, generate_auth_token, get_hash
+from ..auth import auth_user, generate_auth_token, get_hash, generate_invite_link
+from ..models import User, VerifyEmail
 from ..schemas import LinkJugsForm, JugLink, UserRegister, UserLogin
 from ..services import link_jugs_to_user_s, unlink_jug_from_user_s, delete_user, user_exists, create_user, \
     create_jug_user, update_jug_user_data, get_user_hash, get_user_by_email, get_user_name
-
+import datetime as dt
 router = APIRouter(
     prefix="/user",
     tags=["user"],
@@ -75,3 +76,25 @@ async def get_user(user_id: str = Depends(auth_user)):
 @router.get("/exists")
 async def email_exists(email: str):
     return user_exists(email)
+
+
+@router.post("/send-verification-link")
+async def send_verification_link(user_id: str = Depends(auth_user)):
+    link = generate_invite_link(user_id)
+
+
+async def generate_verification_link(user_id):
+    with db_session:
+        user = User.get(id=user_id)
+
+        time_to_expire = dt.timedelta(days=1)
+
+        expire_time = (dt.datetime.now()+time_to_expire).timestamp()
+
+        link = VerifyEmail(
+            id=generate_invite_link(),
+            expire_time=int(expire_time),
+            user=user
+        )
+
+        return link.id

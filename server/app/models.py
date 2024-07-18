@@ -91,5 +91,5 @@ class Medication(db.Entity):
 
 class VerifyEmail(db.Entity):
     id = PrimaryKey(str)
-    expiration_time = Required(int)
+    expire_time = Required(int)
     user = Required(User)
