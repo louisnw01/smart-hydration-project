@@ -87,3 +87,9 @@ class OtherDrink(db.Entity):
 class Medication(db.Entity):
     id = PrimaryKey(int, auto=True)
     name = Required(str)
+
+
+class VerifyEmail(db.Entity):
+    id = PrimaryKey(str)
+    expiration_time = Required(int)
+    user = Required(User)
