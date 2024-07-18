@@ -37,6 +37,7 @@ class User(db.Entity):
     community_member = Optional('CommunityMember')
     hash = Required(str)
     jug_user = Optional('JugUser')
+    email_verified = Required(bool)
 
 
 class JugUser(db.Entity):

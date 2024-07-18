@@ -45,6 +45,12 @@ export default function OnboardingLayout() {
                     title: "You're almost there!",
                 }}
             />
+            <Stack.Screen
+                name="email-verification"
+                options={{
+                    title: "Verify your email",
+                }}
+            />
         </Stack>
     );
 }
