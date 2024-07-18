@@ -1,15 +1,10 @@
-from typing import Optional
-
 from fastapi import APIRouter, Depends, HTTPException
-from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
 from pony.orm.core import commit, db_session, delete
 
-from ..services import get_user_by_id
+from ..auth import auth_user
 from ..models import Community, CommunityMember, User
 from ..schemas import CreateCommunityForm
-from ..auth import auth_user
-
 
 router = APIRouter(
     prefix="/community",
