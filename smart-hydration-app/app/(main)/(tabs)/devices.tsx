@@ -6,8 +6,13 @@ import DeviceRow from "@/components/devices/device-row";
 import { useState } from "react";
 import StyledButton from "@/components/common/button";
 import Loading from "@/components/common/loading";
+import Jug from "@/assets/svgs/jug.svg";
+import useColorPalette from "@/util/palette";
+import { FontAwesome } from "@expo/vector-icons";
+import { authTokenAtom } from "@/atom/user";
 
 export default function DevicesPage() {
+    const palette = useColorPalette();
     const { data, isLoading, refetch } = useAtomValue(getJugDataQAtom);
     const [refreshing, setRefreshing] = useState(false);
 
@@ -41,20 +46,34 @@ export default function DevicesPage() {
                             <DeviceRow key={idx} device={device} />
                         ))}
 
-                    <View className="flex flex-row justify-center">
+                    <View className="flex flex-row justify-center mt-8">
                         <StyledButton
-                            text="+ Add a new device"
+                            text="add a new jug"
                             href="add-device-modal"
                             textSize="lg"
+                            textClass="mt-[1px]"
+                            icon={
+                                <View className="flex flex-row w-6">
+                                    <Jug width={16} fill={palette.fg} />
+                                    <View className="aboslute top-[13px] right-[9px] w-[8px] h-[8px] rounded-xl bg-black" />
+                                    <FontAwesome
+                                        name="plus-circle"
+                                        size={12}
+                                        left={-16}
+                                        top={12}
+                                        color={palette.fg}
+                                    />
+                                </View>
+                            }
                         />
                     </View>
-                    <View className="flex flex-row justify-center">
+                    {/* <View className="flex flex-row justify-center">
                         <StyledButton
-                            text="+ Add a new jug user"
+                            text="+ add a new jug user"
                             href="add-jug-user"
                             textSize="lg"
                         />
-                    </View>
+                    </View> */}
                 </View>
             </ScrollView>
         </PageWrapper>
