@@ -51,7 +51,7 @@ def test_community_invites():
         to_delete = User.get(email='testinvite@gmail.com')
         to_delete.delete() if to_delete else None
 
-    response = client.post(f'/register', json={
+    response = client.post('user/register', json={
         'name': 'TestInvite',
         'email': 'testinvite@gmail.com',
         'password': '1',
