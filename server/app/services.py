@@ -1,5 +1,6 @@
 from pony.orm.core import commit, get, select, db_session
 
+from .mail import send_email_with_ses
 from .models import User, Jug, JugUser, Community
 from .schemas import AddJugUserForm
 
@@ -57,6 +58,9 @@ def delete_user(user_id):
     if community_member:
         community_member.delete()
     if user:
+        email = user.email
+        name = user.name
+        send_email_with_ses(name, email, "delete")
         user.delete()
 
     #if user is found get community associated with user in user.community

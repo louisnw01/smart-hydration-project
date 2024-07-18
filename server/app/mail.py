@@ -40,4 +40,3 @@ def send_email_with_ses(name, to_address, email_type):
         print(e)
 
 
-send_email_with_ses("Hamish", "hamishpartington25@gmail.com", "delete")
