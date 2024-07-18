@@ -3,11 +3,12 @@ import { View, Text, Pressable, TextInput } from "react-native";
 import { createCommunityMAtom } from "@/atom/query/community";
 import { useNavigation } from "expo-router";
 import { useAtom, useAtomValue } from "jotai";
-import { userHasCommunityAtom } from "@/atom/community";
+import { userHasCommunityAtom, communityNameAtom } from "@/atom/community";
 
 export default function CreateCommunityModal() {
     const navigation = useNavigation();
-    const [communityName, setName] = useState('');
+    const [communityName, setCommunityName] = useState('');
+    const [, setCommunityNameAtom] = useAtom(communityNameAtom);
     const {mutate} = useAtomValue(createCommunityMAtom);
     const [showErrorMessage, setShowErrorMessage] = useState(false);
     const [, setUserHasCommunity] = useAtom(userHasCommunityAtom);
@@ -16,6 +17,7 @@ export default function CreateCommunityModal() {
         //to do: check if community exists before allowing creation 
         if(communityName !== ''){
             mutate({ name: communityName });
+            setCommunityNameAtom(communityName);
             setUserHasCommunity(true);
             navigation.goBack();
         }
@@ -36,7 +38,7 @@ export default function CreateCommunityModal() {
                     placeholder={`Community name (required)`}
                     className="bg-gray-200 h-14 placeholder-black text-xl rounded-xl px-3"
                     onChangeText={(val) => { 
-                        setName(val); 
+                        setCommunityName(val); 
                         setShowErrorMessage(false); 
                     }}
                     textContentType="name"
