@@ -4,7 +4,7 @@ import { useAtomValue, useSetAtom } from "jotai";
 import { registerInfoAtom } from "@/atom/user";
 import GenericOnboardContent from "@/components/onboarding/generic-onboard-content";
 import { useRouter } from "expo-router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { textInputStyle } from "@/constants/styles";
 import { getUserExistsQAtom } from "@/atom/query";
 import StyledTextInput from "@/components/common/text-input";
@@ -23,6 +23,8 @@ export default function RegisterPage() {
     const [passwordValid, setPasswordValid] = useState(false);
     const [emailValid, setEmailValid] = useState(false);
     const { isLoading, data, refetch } = useAtomValue(getUserExistsQAtom);
+    const passwordRef = useRef<TextInput>();
+    const confirmPasswordRef = useRef<TextInput>();
 
     useEffect(() => {
         if (isLoading || !data) return;
@@ -87,6 +89,7 @@ export default function RegisterPage() {
                         validateEmail();
                         setInfo((prev) => ({ ...prev, email: email }));
                         refetch();
+                        passwordRef.current?.focus();
                     }}
                     onEndEditing={() => {
                         validateEmail();
@@ -96,21 +99,29 @@ export default function RegisterPage() {
                 />
 
                 <StyledTextInput
+                    inputRef={passwordRef}
                     requiredIcon
                     title="Password"
                     autoCapitalize="none"
                     onChangeText={(val) => setPassword(val)}
                     textContentType="newPassword"
                     secureTextEntry={true}
-                    onSubmitEditing={validatePassword}
+                    onSubmitEditing={() => {
+                        validatePassword();
+                        confirmPasswordRef.current?.focus();
+                    }}
                 />
 
                 <StyledTextInput
+                    inputRef={confirmPasswordRef}
                     requiredIcon
                     title="Confirm Password"
                     autoCapitalize="none"
                     onChangeText={(val) => setConfirmPassword(val)}
                     secureTextEntry={true}
+                    onSubmitEditing={() => {
+                        if (proceed) router.push("onboarding/name");
+                    }}
                 />
 
                 <Text style={{ color: "red", fontSize: 18 }}>

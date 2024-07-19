@@ -5,6 +5,7 @@ import { View, Text } from "react-native";
 import GenericOnboardContent from "./generic-onboard-content";
 import { jugUserInfoAtom } from "@/atom/jug-user";
 import StyledTextInput from "../common/text-input";
+import { router } from "expo-router";
 
 interface DobProps {
     isOnboarding: boolean;
@@ -25,10 +26,12 @@ export default function Dob({ isOnboarding, nextHref }: DobProps) {
         if (!regex.test(dob)) {
             setErrorMessage("Invalid date format. Use dd-mm-yyyy.");
             setProceed(false);
+            return false;
         } else {
             setErrorMessage("");
             setProceed(true);
             setInfo((prev) => ({ ...prev, dob: dob }));
+            return true;
         }
     };
 
@@ -70,7 +73,9 @@ export default function Dob({ isOnboarding, nextHref }: DobProps) {
                 textContentType="birthdate"
                 returnKeyType="done"
                 keyboardType="decimal-pad"
-                onSubmitEditing={validateDob}
+                onSubmitEditing={() => {
+                    if (validateDob()) router.push(nextHref);
+                }}
                 onEndEditing={validateDob}
             />
 
