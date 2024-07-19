@@ -2,10 +2,14 @@
 import PageWrapper from "@/components/common/page-wrapper";
 import { ScrollView, RefreshControl, View, Text } from "react-native";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
-import { getJugDataQAtom } from "@/atom/query";
+import { getAllJugsQAtom, getJugDataQAtom } from "@/atom/query";
 import { useState } from "react";
 import StyledButton from "@/components/common/button";
-import { userHasCommunityAtom, communityNameAtom } from "@/atom/community";
+import { userHasCommunityAtom, communityNameAtom, membersAtom } from "@/atom/community";
+import Loading from "@/components/common/loading";
+import MemberRow from "@/components/community/member-row";
+
+
 
 //for now (basic user flow), Community tab is shown as 4th tab
 //to do: for care home mode, replace home screen with Community tab
@@ -16,14 +20,14 @@ import { userHasCommunityAtom, communityNameAtom } from "@/atom/community";
 export default function CommunityPage() {
     const [hasCommunity] = useAtom(userHasCommunityAtom);
     const [refreshing, setRefreshing] = useState(false);
-    const { data, isLoading, refetch } = useAtomValue(getJugDataQAtom); //create equivalent for getting members
+    const {  } = useAtomValue(membersAtom);
     const communityName = useAtomValue(communityNameAtom);
+    const [members] = useAtom(membersAtom);
     const handleRefresh = () => {
         setRefreshing(true);
-        refetch();
     };
 
-    if (!isLoading && refreshing) {
+    if (refreshing) {
         setRefreshing(false);
     }
     if (!hasCommunity) {
@@ -78,6 +82,15 @@ export default function CommunityPage() {
                                 {communityName}
                             </Text>
                         </View>
+
+                        {members.size === 0 && (
+                                <Text className="text-center dark:text-white text-lg">
+                                   This community has no members
+                                </Text>
+                            )}
+                            {Array.from(members.values()).map((member, idx) => (
+                                <MemberRow key={idx} member={member} />
+                            ))}
                     <View className="mt-8 flex gap-6">
                         <View className="flex flex-row justify-center">
                             <StyledButton
