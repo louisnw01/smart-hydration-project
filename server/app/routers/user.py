@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException
-from pony.orm.core import db_session
+from pony.orm.core import db_session, commit
 
 from ..auth import auth_user, generate_auth_token, get_hash, generate_invite_link, auth_user_no_email_verified
 from ..mail import send_email_with_ses
@@ -81,7 +81,7 @@ async def email_exists(email: str):
 
 @router.post("/send-verification-email")
 async def send_verification_link(user_id: str = Depends(auth_user_no_email_verified)):
-    link = generate_verification_link(user_id)
+    link = await generate_verification_link(user_id)
     with db_session:
         user = User.get(id=user_id)
         email = user.email
@@ -99,6 +99,9 @@ async def generate_verification_link(user_id):
 
         old_link = VerifyEmail.get(user=user)
         if old_link is not None:
+            time_since_last_request = expire_time - old_link.expire_time
+            if time_since_last_request < 60:
+                raise HTTPException(status_code=403, detail="Too many requests")
             old_link.delete()
 
         link = VerifyEmail(
@@ -106,5 +109,6 @@ async def generate_verification_link(user_id):
             expire_time=int(expire_time),
             user=user
         )
+        commit()
 
         return link.id
