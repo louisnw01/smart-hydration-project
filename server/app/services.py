@@ -7,7 +7,7 @@ from .schemas import AddJugUserForm
 
 @db_session
 def create_user(name, email, hashcode):
-    user = User(name=name, email=email, hash=hashcode)
+    user = User(name=name, email=email, hash=hashcode, email_verified=False)
     commit()
     return user
 
