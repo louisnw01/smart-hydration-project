@@ -1,4 +1,6 @@
 import { atom } from 'jotai'
+import { MemberInfo } from "@/interfaces/community";
+
 import {
     atomWithMutation,
     queryClientAtom,
@@ -11,6 +13,7 @@ export const userHasCommunityAtom = atom(false);
 export const communityNameAtom = atom('');
 export const membersAtom = atom(new Map());
 export const selectedJugsForMemberAtom = atom<Set<string>>(new Set<string>);
+export const selectedMemberAtom = atom<Partial<MemberInfo>>({});
 
 
 //update this so it only works on the front end for now

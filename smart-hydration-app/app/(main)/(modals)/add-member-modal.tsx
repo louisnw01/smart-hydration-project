@@ -2,32 +2,31 @@ import { useState } from "react";
 import { View, Text, Pressable, TextInput } from "react-native";
 import { useNavigation } from "expo-router";
 import { useAtom } from "jotai";
+import { MemberInfo } from "@/interfaces/community"
 import { membersAtom, selectedJugsForMemberAtom } from "@/atom/community";
 import StyledButton from "@/components/common/button";
+import { useEffect } from "react";
 
 //assume names are unique for now. later, will get unique id for each member from backend
-interface memberProps {
-    name: string,
-    devices: Set<string>,
-}
+
 
 export default function AddMemberModal() {
     const navigation = useNavigation();
     const [showErrorMessage, setShowErrorMessage] = useState(false);
     const [members, setMembers] = useAtom(membersAtom);
     const [memberName, setMemberName] = useState('');
-    const [memberDevices, setMemberDevices] = useState<Set<string>>(new Set());
-    const createMember = ({ name, devices }: memberProps) => ({
+    const createMember = ({ name, jugIDs }: MemberInfo) => ({
         name,
-        devices,
+        jugIDs,
     });
     const [selectedJugs, setSelectedJugs] = useAtom(selectedJugsForMemberAtom);
+    console.log("selected jugs:", selectedJugs);
 
     const handlePress = () => {
         //for now, must have member name and add devices. In future, probably just name should be required
-        if (memberName && memberDevices) {
-            setMemberDevices(selectedJugs);
-            const member = createMember({ name: memberName, devices: memberDevices });
+        if (memberName) {
+            //bug: can add member even if they have no devices
+            const member = createMember({ name: memberName, jugIDs: selectedJugs });
             setMembers((prevMembers) => {
                 const newMembers = new Map(prevMembers);
                 newMembers.set(memberName, member);
@@ -35,7 +34,8 @@ export default function AddMemberModal() {
             });
             //to do later: send member details to DB when each member added 
             setMemberName('');
-            setMemberDevices(new Set());
+            setShowErrorMessage(false);
+            navigation.goBack();
         }
         else {
             setShowErrorMessage(true);
