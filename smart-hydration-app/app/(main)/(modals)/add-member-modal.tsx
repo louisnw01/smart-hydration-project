@@ -3,24 +3,47 @@ import { View, Text, Pressable, TextInput } from "react-native";
 import { createCommunityMAtom } from "@/atom/query/community";
 import { useNavigation } from "expo-router";
 import { useAtom, useAtomValue } from "jotai";
-import { userHasCommunityAtom, memberNamesAtom } from "@/atom/community";
+import { userHasCommunityAtom, membersAtom } from "@/atom/community";
 import StyledButton from "@/components/common/button";
+
+//assume names are unique for now. later, will get unique id for each member from backend
+interface memberProps {
+    name: string,
+    devices: string[],
+}
 
 export default function AddMemberModal() {
     const navigation = useNavigation();
     const [communityName, setCommunityName] = useState('');
-    const [, setMemberNameAtom] = useAtom(memberNamesAtom);
-    const {mutate} = useAtomValue(createCommunityMAtom);
+    const { mutate } = useAtomValue(createCommunityMAtom);
     const [showErrorMessage, setShowErrorMessage] = useState(false);
     const [, setUserHasCommunity] = useAtom(userHasCommunityAtom);
+    const [members, setMembers] = useAtom(membersAtom);
+    const [memberName, setMemberName] = useState('');
+    const [memberDevices, setMemberDevices] = useState('');
+    const createMember = ({ name, devices }: memberProps) => ({
+        name,
+        devices,
+    });
 
     const handlePress = () => {
-        //button press logic
-        //don't allow press when no member name added or no jug added
-    
+        //only member name is required, can add a member without a jug
+        if (memberName) {
+            const newMember = createMember({ name: memberName, devices: memberDevices.split(',') });
+            setMembers((prevMembers) => {
+                const newMembers = new Map(prevMembers);
+                newMembers.set(memberName, newMember);
+                return newMembers;
+            });
+            //to do later: send member details to db when each member added 
+            setMemberName('');
+            setMemberDevices('');
+        }
+        else {
+            setShowErrorMessage(true);
+        }
     };
-    //need to store member name in array
-    //to do later: send member details to db when each member added 
+
 
     return (
         <View className="mt-8 flex gap-6">
@@ -33,28 +56,28 @@ export default function AddMemberModal() {
                 <TextInput
                     placeholder={`Member name (required)`}
                     className="bg-gray-200 h-14 placeholder-black text-xl rounded-xl px-3"
-                    onChangeText={(val) => { 
-                        setCommunityName(val); 
-                        setShowErrorMessage(false); 
+                    onChangeText={(val) => {
+                        setCommunityName(val);
+                        setShowErrorMessage(false);
                     }}
                     textContentType="name"
                     returnKeyType="done"
                 />
             </View>
             {showErrorMessage && (
-            <View className="flex flex-row justify-center items-center">
-                <Text className="dark:text-white text-2xl">
-                    You must enter a member name
-                </Text>
-            </View>
+                <View className="flex flex-row justify-center items-center">
+                    <Text className="dark:text-white text-2xl">
+                        You must enter a member name
+                    </Text>
+                </View>
             )}
             <View className="flex flex-row justify-center">
-                            <StyledButton
-                                text="+Add member's jug(s)"
-                                href="add-device-modal"
-                                textSize="lg"
-                            />
-                        </View>
+                <StyledButton
+                    text="+Add member's jug(s)"
+                    href="add-device-member-modal"
+                    textSize="lg"
+                />
+            </View>
             <View className="flex flex-row justify-center items-center">
                 <Pressable
                     onPress={handlePress}
