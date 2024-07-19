@@ -7,19 +7,18 @@ import { useRouter } from "expo-router";
 import { MemberInfo } from "@/interfaces/community"
 import { DeviceInfo } from "@/interfaces/device"
 import { selectedMemberAtom } from "@/atom/community";
-import { getAllJugsQAtom } from "@/atom/query";
+import { getAllJugsQAtom, getJugDataQAtom } from "@/atom/query";
 
 export default function MemberRow({ member }: { member: MemberInfo }) {
-    const setMember= useSetAtom(selectedMemberAtom);
-    const { data, isLoading } = useAtomValue(getAllJugsQAtom);
-    const router = useRouter();
+    const setMember = useSetAtom(selectedMemberAtom);
+    //const { data, isLoading } = useAtomValue(getAllJugsQAtom);
+    const {data } = useAtomValue(getJugDataQAtom);
     const devicesData: DeviceInfo[] = Array.isArray(data) ? data : [];
+    const router = useRouter();
 
-    const getFilteredJugs = () =>
-        devicesData.filter((device) => member.jugIDs.has(device.id));
-
-    const filteredJugs = getFilteredJugs();
-    console.log("Filtered jugs in add-member-row:", filteredJugs);
+    console.log("This is the data:", data);
+    console.log("This is devices data:", devicesData);
+    //console.log("Filtered jugs in add-member-row:", filteredJugs);
     console.log("Member's name in add-member-row:", member.name);
     console.log("Member's jug IDs in add-member-row:", member.jugIDs);
 
@@ -37,21 +36,19 @@ export default function MemberRow({ member }: { member: MemberInfo }) {
                 </Text>
             </View>
             <View className="mt-2">
-                            {filteredJugs.length > 0 ? (
-                                filteredJugs.map((jug) => (
-                                    <Text key={jug.id} className="text-lg dark:text-white">
-                                        {jug.name}
-                                    </Text>
-                                ))
-                            ) : (
-                                <Text className="text-lg dark:text-white">
-                                    No matching jugs
-                                </Text>
-                            )}
-                        </View>
+            {devicesData.length > 0 &&
+                    devicesData.filter(device => {
+                            Array.from(member.jugIDs).forEach(jugID => {
+                        });
+                    }).map((device, idx) => (
+                        <Text key={idx}>{device.name}</Text>
+                    ))
+                }
+            </View>
         </Pressable>
     );
 }
 
+//only displays devices that are added to user
 
 
