@@ -37,6 +37,7 @@ def decode_auth_token(token: str):
 
 get_bearer_token = HTTPBearer(auto_error=False)
 
+
 async def auth_user(
         auth: Optional[HTTPAuthorizationCredentials] = Depends(get_bearer_token),
 ) -> str:
@@ -53,6 +54,7 @@ async def auth_user(
         raise HTTPException(status_code=403, detail='email unverified')
 
     return user_id
+
 
 async def auth_user_no_email_verified(
         auth: Optional[HTTPAuthorizationCredentials] = Depends(get_bearer_token),
