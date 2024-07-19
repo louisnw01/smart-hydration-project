@@ -67,6 +67,7 @@ class Community(db.Entity):
     name = Required(str)
     jug_users = Set(JugUser)
     followers = Set('CommunityMember')
+    invite_links = Set('InviteLink')
 
 
 class CommunityMember(db.Entity):
@@ -87,3 +88,10 @@ class OtherDrink(db.Entity):
 class Medication(db.Entity):
     id = PrimaryKey(int, auto=True)
     name = Required(str)
+
+
+class InviteLink(db.Entity):
+    id = PrimaryKey(str)            # the id is the code at the end of the link.
+    expire_time = Required(int)     # unix timestamp
+    permission = Required(str)
+    community = Required(Community)
