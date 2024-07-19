@@ -76,6 +76,10 @@ export default function ModalLayout() {
                 name="add-member-modal"
                 options={{ title: "Add a community member" }}
             />
+            <Stack.Screen
+                name="add-device-member-modal"
+                options={{ title: "Add jug(s) to member" }}
+            />
         </Stack>
     );
 }
