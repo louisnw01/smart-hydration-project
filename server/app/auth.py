@@ -54,6 +54,20 @@ async def auth_user(
 
     return user_id
 
+async def auth_user_no_email_verified(
+        auth: Optional[HTTPAuthorizationCredentials] = Depends(get_bearer_token),
+) -> str:
+    if auth is None:
+        raise HTTPException(status_code=401, detail='unauthorized token')
+
+    user_id = decode_auth_token(auth.credentials)
+    user = get_user_by_id(user_id)
+
+    if user_id is None or not user:
+        raise HTTPException(status_code=401, detail='unauthorized token')
+
+    return user_id
+
 
 def generate_invite_link(length=10):
     characters = string.ascii_letters + string.digits

@@ -9,7 +9,7 @@ from string import Template
 load_dotenv()
 
 
-def send_email_with_ses(name, to_address, email_type):
+def send_email_with_ses(name, to_address, email_type, link=None):
     # getting the credentials from environment
     host = os.getenv("SES_HOST_ADDRESS")
     user = os.getenv("SES_USER_ID")
@@ -20,8 +20,12 @@ def send_email_with_ses(name, to_address, email_type):
         subject = "Confirmation of Account Deletion"
         with open("app/email_templates/delete_account.html", 'r', encoding='utf-8') as file:
             html_template = Template(file.read())
-
-    body = html_template.safe_substitute(name=name)
+        body = html_template.safe_substitute(name=name)
+    elif email_type == "verify":
+        subject = "Please verify your email"
+        with open("app/email_templates/verify_email.html", 'r', encoding='utf-8') as file:
+            html_template = Template(file.read())
+        body = html_template.safe_substitute(name=name, link=link)
 
     msg = MIMEMultipart()
     msg['Subject'] = subject

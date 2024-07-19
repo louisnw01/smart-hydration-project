@@ -104,6 +104,24 @@ export const deleteUser = atomWithMutation((get) => ({
   },
 }));
 
+export const sendVerificationEmailMAtom = atomWithMutation((get) => ({
+    mutationKey: ["/user/send-verification-email", get(authTokenAtom)],
+    enabled: !!get(authTokenAtom),
+    mutationFn: async () => {
+        const token = get(authTokenAtom);
+        const response = await request(ENDPOINTS.SEND_VERIFICATION_EMAIL, {
+            method: "post",
+            auth: token as string,
+        });
+  
+        if (!response.ok) {
+            throw new Error("Verification email could not be sent");
+        }
+  
+        return;
+    },
+  }));
+
 export const getJugDataQAtom = atomWithQuery((get) => ({
     queryKey: ["get-jug-data", get(authTokenAtom)],
     queryFn: async ({ queryKey: [, token] }): Promise<DeviceInfo[]> => {

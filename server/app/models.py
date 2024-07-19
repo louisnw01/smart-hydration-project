@@ -38,6 +38,7 @@ class User(db.Entity):
     hash = Required(str)
     jug_user = Optional('JugUser')
     email_verified = Required(bool)
+    email_link = Optional('VerifyEmail')
 
 
 class JugUser(db.Entity):
@@ -94,6 +95,7 @@ class VerifyEmail(db.Entity):
     id = PrimaryKey(str)
     expire_time = Required(int)
     user = Required(User)
+
 
 class InviteLink(db.Entity):
     id = PrimaryKey(str)            # the id is the code at the end of the link.
