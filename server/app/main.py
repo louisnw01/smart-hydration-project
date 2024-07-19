@@ -30,17 +30,9 @@ async def init():
 async def root():
     return {"message": "Hello World"}
 
+
 # Temporary for MVP
 @app.get("/get-all-jugs")
 async def get_all_jugs(user_id: str = Depends(auth_user)):
     session = login_and_get_session()
     return get_all_jug_ids(user_id, session)
-
-
-# example of using a protected route; the Depends(auth_user) part should be added to all protected routes
-# @app.get("/protected")
-# async def protected(user_id: str = Depends(auth_user)):
-
-#     user = get_user_by_id(user_id)
-
-#     return f"name={user.name} email={user.email}"

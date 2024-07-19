@@ -5,7 +5,7 @@ from ..auth import auth_user, generate_auth_token, get_hash
 from ..schemas import LinkJugsForm, JugLink, UserRegister, UserLogin
 from ..services import link_jugs_to_user_s, unlink_jug_from_user_s, delete_user, user_exists, create_user, \
     create_jug_user, update_jug_user_data, get_user_hash, get_user_by_email, get_user_name
-from .websocket_tunnel import tunnel
+
 
 router = APIRouter(
     prefix="/user",
