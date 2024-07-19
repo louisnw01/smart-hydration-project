@@ -10,6 +10,8 @@ import { ENDPOINTS, request } from "@/util/fetch";
 export const userHasCommunityAtom = atom(false);
 export const communityNameAtom = atom('');
 export const membersAtom = atom(new Map());
+export const selectedJugsForMemberAtom = atom<Set<string>>(new Set<string>);
+
 
 //update this so it only works on the front end for now
 export const linkJugToMemberMAtom = atomWithMutation((get) => ({

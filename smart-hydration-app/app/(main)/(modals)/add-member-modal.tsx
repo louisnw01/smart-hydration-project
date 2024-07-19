@@ -1,43 +1,41 @@
 import { useState } from "react";
 import { View, Text, Pressable, TextInput } from "react-native";
-import { createCommunityMAtom } from "@/atom/query/community";
 import { useNavigation } from "expo-router";
-import { useAtom, useAtomValue } from "jotai";
-import { userHasCommunityAtom, membersAtom } from "@/atom/community";
+import { useAtom } from "jotai";
+import { membersAtom, selectedJugsForMemberAtom } from "@/atom/community";
 import StyledButton from "@/components/common/button";
 
 //assume names are unique for now. later, will get unique id for each member from backend
 interface memberProps {
     name: string,
-    devices: string[],
+    devices: Set<string>,
 }
 
 export default function AddMemberModal() {
     const navigation = useNavigation();
-    const [communityName, setCommunityName] = useState('');
-    const { mutate } = useAtomValue(createCommunityMAtom);
     const [showErrorMessage, setShowErrorMessage] = useState(false);
-    const [, setUserHasCommunity] = useAtom(userHasCommunityAtom);
     const [members, setMembers] = useAtom(membersAtom);
     const [memberName, setMemberName] = useState('');
-    const [memberDevices, setMemberDevices] = useState('');
+    const [memberDevices, setMemberDevices] = useState<Set<string>>(new Set());
     const createMember = ({ name, devices }: memberProps) => ({
         name,
         devices,
     });
+    const [selectedJugs, setSelectedJugs] = useAtom(selectedJugsForMemberAtom);
 
     const handlePress = () => {
-        //only member name is required, can add a member without a jug
-        if (memberName) {
-            const newMember = createMember({ name: memberName, devices: memberDevices.split(',') });
+        //for now, must have member name and add devices. In future, probably just name should be required
+        if (memberName && memberDevices) {
+            setMemberDevices(selectedJugs);
+            const member = createMember({ name: memberName, devices: memberDevices });
             setMembers((prevMembers) => {
                 const newMembers = new Map(prevMembers);
-                newMembers.set(memberName, newMember);
+                newMembers.set(memberName, member);
                 return newMembers;
             });
-            //to do later: send member details to db when each member added 
+            //to do later: send member details to DB when each member added 
             setMemberName('');
-            setMemberDevices('');
+            setMemberDevices(new Set());
         }
         else {
             setShowErrorMessage(true);
@@ -57,7 +55,7 @@ export default function AddMemberModal() {
                     placeholder={`Member name (required)`}
                     className="bg-gray-200 h-14 placeholder-black text-xl rounded-xl px-3"
                     onChangeText={(val) => {
-                        setCommunityName(val);
+                        setMemberName(val);
                         setShowErrorMessage(false);
                     }}
                     textContentType="name"
