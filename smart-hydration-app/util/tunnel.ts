@@ -5,7 +5,7 @@ import { atom, useAtomValue } from "jotai";
 import { atomEffect } from "jotai-effect";
 import { queryClientAtom } from "jotai-tanstack-query";
 import { useEffect } from "react";
-import { SERVER_URL } from "./fetch";
+import { SERVER_ADDRESS } from "./fetch";
 
 enum MessageType {
     CONNECT = 1,
@@ -91,7 +91,10 @@ export const tunnelInitEAtom = atomEffect((get, set) => {
     const authToken = get(authTokenAtom);
     if (!authToken) return;
 
-    const tunnel = new TunnelClient(`ws://${SERVER_URL}/tunnel/`, authToken);
+    const tunnel = new TunnelClient(
+        `ws://${SERVER_ADDRESS}/tunnel/`,
+        authToken,
+    );
 
     set(tunnelAtom, tunnel);
 });
