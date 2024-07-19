@@ -1,10 +1,12 @@
 import useColorPalette from "@/util/palette";
+import { Ref } from "react";
 import { Text, TextInput, TextInputProps, View } from "react-native";
 
 interface StyledTextInputProps extends TextInputProps {
     requiredIcon?: boolean;
     width?: number;
     title?: string;
+    inputRef?: any;
 }
 export default function StyledTextInput(props: StyledTextInputProps) {
     const palette = useColorPalette();
@@ -24,6 +26,7 @@ export default function StyledTextInput(props: StyledTextInputProps) {
                 </View>
             )}
             <TextInput
+                ref={props.inputRef}
                 placeholderTextColor={palette.fglight}
                 className="h-8 text-xl dark:bg-neutral-800 dark:text-white"
                 {...props}

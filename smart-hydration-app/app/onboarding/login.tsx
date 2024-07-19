@@ -1,6 +1,6 @@
 import { View, Pressable, Text, ScrollView, TextInput } from "react-native";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAtomValue, useSetAtom } from "jotai";
 import { loginMAtom } from "@/atom/query";
 
@@ -18,6 +18,8 @@ export default function LoginPage() {
     const [password, setPassword] = useState("");
     const setAuthToken = useSetAtom(authTokenAtom);
     const palette = useColorPalette();
+
+    const passwordRef = useRef<TextInput>();
 
     const { mutate, data, isPending, isError, isSuccess } =
         useAtomValue(loginMAtom);
@@ -45,8 +47,10 @@ export default function LoginPage() {
                         autoCapitalize="none"
                         keyboardType="email-address"
                         title="Email Address"
+                        onSubmitEditing={() => passwordRef.current?.focus()}
                     />
                     <StyledTextInput
+                        inputRef={passwordRef}
                         onChangeText={setPassword}
                         textContentType="password"
                         secureTextEntry={true}

@@ -5,6 +5,7 @@ import { View, Text } from "react-native";
 import GenericOnboardContent from "./generic-onboard-content";
 import { jugUserInfoAtom } from "@/atom/jug-user";
 import StyledTextInput from "../common/text-input";
+import { router } from "expo-router";
 
 interface NameProps {
     isOnboarding: boolean;
@@ -40,7 +41,10 @@ export default function Name({ isOnboarding, pronoun, nextHref }: NameProps) {
                 onChangeText={(val) => setName(val)}
                 textContentType="name"
                 returnKeyType="done"
-                onSubmitEditing={validateName}
+                onSubmitEditing={() => {
+                    validateName();
+                    if (proceed) router.push(nextHref);
+                }}
                 onEndEditing={validateName}
             />
             <View style={{ width: 350 }}>
