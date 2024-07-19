@@ -1,16 +1,16 @@
 import { useState } from "react";
 import { View, Text, SectionList, Pressable } from "react-native";
-import { useAtomValue } from "jotai";
-import { getAllJugsQAtom, linkJugToUserMAtom } from "@/atom/query";
+import { useAtom, useAtomValue } from "jotai";
+import { getAllJugsQAtom } from "@/atom/query"; 
 import { useNavigation } from "expo-router";
 import Loading from "@/components/common/loading";
+import { selectedJugsForMemberAtom } from "@/atom/community";
 
 export default function AddDeviceMemberModal() {
     const { data, isLoading } = useAtomValue(getAllJugsQAtom);
     const navigation = useNavigation();
-    const [selectedJugs, setSelectedJugs] = useState(new Set<string>());
-    //change this line: 
-    const { mutate: linkJugsToUser } = useAtomValue(linkJugToUserMAtom);
+    const [selectedJugs, setSelectedJugs] = useAtom(selectedJugsForMemberAtom);
+    
     const handleSelect = (jug_id: string) => {
         if (selectedJugs.has(jug_id)) {
             selectedJugs.delete(jug_id);
@@ -21,8 +21,7 @@ export default function AddDeviceMemberModal() {
     };
 
     const handlePress = () => {
-        //change this line: 
-        linkJugsToUser(Array.from(selectedJugs));
+        
         navigation.goBack();
     };
 
