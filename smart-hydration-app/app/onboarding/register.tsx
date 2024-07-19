@@ -9,6 +9,8 @@ import { textInputStyle } from "@/constants/styles";
 import { getUserExistsQAtom } from "@/atom/query";
 import StyledTextInput from "@/components/common/text-input";
 
+const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
 export default function RegisterPage() {
     const router = useRouter();
     const setInfo = useSetAtom(registerInfoAtom);
@@ -23,18 +25,27 @@ export default function RegisterPage() {
     const { isLoading, data, refetch } = useAtomValue(getUserExistsQAtom);
 
     useEffect(() => {
-        if (!isLoading && data != undefined) {
-            validateEmail();
-        }
+        if (isLoading || !data) return;
+        setEmailErrorMessage(
+            "This email is already linked to an account. Either go to login or use a different email.",
+        );
     }, [data]);
 
-    const validatePassword = () => {
+    useEffect(() => {
+        if (email && !regex.test(email)) {
+            setEmailErrorMessage("Invalid email format.");
+            setEmailValid(false);
+            setProceed(false);
+        } else {
+            setEmailErrorMessage("");
+            setEmailValid(true);
+            setProceed(true && passwordValid);
+        }
+    }, [email]);
+
+    useEffect(() => {
         if (password !== confirmPassword) {
             setPasswordError("Passwords don't match\n");
-            setPasswordValid(false);
-            setProceed(false);
-        } else if (password.length == 0) {
-            setPasswordError("You must enter a password\n");
             setPasswordValid(false);
             setProceed(false);
         } else {
@@ -43,82 +54,70 @@ export default function RegisterPage() {
             setPasswordValid(true);
             setProceed(true && emailValid);
         }
+    }, [password, confirmPassword]);
+
+    const validatePassword = () => {
+        if (password.length == 0) {
+            setPasswordError("You must enter a password\n");
+            setPasswordValid(false);
+            setProceed(false);
+        }
     };
 
     const validateEmail = () => {
-        const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-
-        if (!regex.test(email)) {
-            setEmailErrorMessage("Invalid email format.");
-            setEmailValid(false);
-            setProceed(false);
-        } else if (email.length == 0) {
+        if (email.length == 0) {
             setEmailErrorMessage("You must enter your email");
             setEmailValid(false);
             setProceed(false);
-        } else {
-            if (data) {
-                setEmailErrorMessage(
-                    "This email is already linked to an account. Either go to login or use a different email.",
-                );
-                return;
-            }
-            setEmailErrorMessage("");
-            setEmailValid(true);
-            setProceed(true && passwordValid);
         }
     };
 
     return (
         <GenericOnboardContent nextHref="onboarding/name" proceed={proceed}>
-            <View className="gap-5 mt-16 items-center">
-                <View style={{ width: 350 }}>
-                    <StyledTextInput
-                        requiredIcon
-                        placeholder="Enter your email address"
-                        onChangeText={(val) => setEmail(val.toLowerCase())}
-                        keyboardType="email-address"
-                        autoCapitalize="none"
-                        textContentType="emailAddress"
-                        onSubmitEditing={() => {
-                            setInfo((prev) => ({ ...prev, email: email }));
-                            refetch();
-                        }}
-                        onEndEditing={() => {
-                            setInfo((prev) => ({ ...prev, email: email }));
-                            refetch();
-                        }}
-                    />
-                </View>
-                <View style={{ width: 350 }}>
-                    <StyledTextInput
-                        requiredIcon
-                        placeholder="Enter your password"
-                        autoCapitalize="none"
-                        onChangeText={(val) => setPassword(val)}
-                        textContentType="newPassword"
-                        secureTextEntry={true}
-                        onSubmitEditing={validatePassword}
-                        onEndEditing={validatePassword}
-                    />
-                </View>
-                <View style={{ width: 350 }}>
-                    <StyledTextInput
-                        requiredIcon
-                        placeholder="Confirm your password"
-                        autoCapitalize="none"
-                        onChangeText={(val) => setConfirmPassword(val)}
-                        secureTextEntry={true}
-                        onSubmitEditing={validatePassword}
-                        onEndEditing={validatePassword}
-                    />
-                </View>
-                <View style={{ width: 350 }}>
-                    <Text style={{ color: "red", fontSize: 18 }}>
-                        {passwordError}
-                        {emailError}
-                    </Text>
-                </View>
+            <View className="gap-5 mt-16">
+                <StyledTextInput
+                    requiredIcon
+                    title="Email Address"
+                    placeholder="example@gmail.com"
+                    onChangeText={(val) => setEmail(val.toLowerCase())}
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                    textContentType="emailAddress"
+                    onSubmitEditing={() => {
+                        validateEmail();
+                        setInfo((prev) => ({ ...prev, email: email }));
+                        refetch();
+                    }}
+                    onEndEditing={() => {
+                        validateEmail();
+                        setInfo((prev) => ({ ...prev, email: email }));
+                        refetch();
+                    }}
+                />
+
+                <StyledTextInput
+                    requiredIcon
+                    title="Password"
+                    autoCapitalize="none"
+                    onChangeText={(val) => setPassword(val)}
+                    textContentType="newPassword"
+                    secureTextEntry={true}
+                    onSubmitEditing={validatePassword}
+                />
+
+                <StyledTextInput
+                    requiredIcon
+                    title="Confirm Password"
+                    autoCapitalize="none"
+                    onChangeText={(val) => setConfirmPassword(val)}
+                    secureTextEntry={true}
+                />
+
+                <Text style={{ color: "red", fontSize: 18 }}>
+                    {passwordError}
+                    {emailError}
+                </Text>
+
                 <Pressable
                     onPress={() => router.push("onboarding/login")}
                     style={{ marginTop: 24 }}

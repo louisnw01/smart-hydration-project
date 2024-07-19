@@ -62,7 +62,9 @@ export default function Dob({ isOnboarding, nextHref }: DobProps) {
     return (
         <GenericOnboardContent nextHref={nextHref} proceed={proceed}>
             <StyledTextInput
-                placeholder="dd-mm-yyyy (required)"
+                requiredIcon
+                title="Date of Birth"
+                placeholder="dd-mm-yyyy"
                 value={dob}
                 onChangeText={formatDob}
                 textContentType="birthdate"
@@ -71,11 +73,8 @@ export default function Dob({ isOnboarding, nextHref }: DobProps) {
                 onSubmitEditing={validateDob}
                 onEndEditing={validateDob}
             />
-            <View style={{ width: 350 }}>
-                <Text style={{ color: "red", fontSize: 18 }}>
-                    {errorMessage}
-                </Text>
-            </View>
+
+            <Text style={{ color: "red", fontSize: 18 }}>{errorMessage}</Text>
         </GenericOnboardContent>
     );
 }

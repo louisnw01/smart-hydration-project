@@ -34,7 +34,8 @@ export default function Name({ isOnboarding, pronoun, nextHref }: NameProps) {
     return (
         <GenericOnboardContent nextHref={nextHref} proceed={proceed}>
             <StyledTextInput
-                placeholder={`Enter ${pronoun} name`}
+                title="Name"
+                placeholder="John Doe"
                 requiredIcon
                 onChangeText={(val) => setName(val)}
                 textContentType="name"

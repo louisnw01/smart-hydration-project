@@ -12,7 +12,7 @@ import { userHasJugsAtom } from "@/atom/hydration";
 import Loading from "@/components/common/loading";
 import { hydrationInsightsEAtom } from "@/atom/effect/hydration";
 import WaterScreen from "@/components/home/water-screen";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { MaterialCommunityIcons, FontAwesome } from "@expo/vector-icons";
 import useColorPalette from "@/util/palette";
 
 export default function HomePage() {
@@ -55,9 +55,23 @@ export default function HomePage() {
                         {!hasJugs && (
                             <StyledButton
                                 text="add a new jug"
-                                textSize="xl"
                                 href="devices"
-                                icon=<Jug />
+                                textSize="lg"
+                                buttonClass="self-center mt-8"
+                                textClass="mt-[1px]"
+                                icon={
+                                    <View className="flex flex-row w-6">
+                                        <Jug width={16} fill={palette.fg} />
+                                        <View className="aboslute top-[13px] right-[9px] w-[8px] h-[8px] rounded-xl bg-gray-200 dark:bg-black" />
+                                        <FontAwesome
+                                            name="plus-circle"
+                                            size={12}
+                                            left={-16}
+                                            top={12}
+                                            color={palette.fg}
+                                        />
+                                    </View>
+                                }
                             />
                         )}
                         <StyledButton
