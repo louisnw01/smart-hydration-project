@@ -138,7 +138,7 @@ const settingsList: ISettingsSection[] = [
                         <OptionBlock
                             isLast={isLast}
                             text={name}
-                            onPress={() => router.navigate("settings/theme")}
+                            onPress={() => router.navigate("settings/community/remove-member")}
                             icon={
                                 <Ionicons
                                     name="color-palette"
@@ -151,14 +151,14 @@ const settingsList: ISettingsSection[] = [
                 },
             },
             {
-                name: "Invite member",
+                name: "Invite Member",
                 component: (name, isFirst, isLast) => {
                     const router = useRouter();
                     return (
                         <OptionBlock
                             isLast={isLast}
                             text={name}
-                            onPress={() => router.navigate("settings/theme")}
+                            onPress={() => router.navigate("settings/community/invite-member")}
                             icon={
                                 <Ionicons
                                     name="color-palette"
