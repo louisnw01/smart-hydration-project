@@ -26,6 +26,31 @@ export default function CommunityLayout() {
                     title: "Community Profile",
                 }}
             />
+            <Stack.Screen
+                name="change-name"
+                options={{
+                    title: "Change Name",
+                }}
+            />
+            <Stack.Screen
+                name="change-owner"
+                options={{
+                    title: "Change Owner",
+                }}
+            />
+            <Stack.Screen
+                name="invite-member"
+                options={{
+                    title: "Invite Member",
+                }}
+            />
+            />
+            <Stack.Screen
+                name="remove-member"
+                options={{
+                    title: "Remove Member",
+                }}
+            />
         </Stack>
     );
 }
