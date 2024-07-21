@@ -1,56 +1,41 @@
 import React, { useState } from 'react';
-import { View, Pressable, Text, TextInput, FlatList, TouchableOpacity } from "react-native";
-import { useRouter } from "expo-router";
-import RNPickerSelect from 'react-native-picker-select';
+import { View, Text, FlatList, TouchableOpacity } from 'react-native';
 
-export default function ChangeName() {
-    const router = useRouter();
-
-
+export default function MemberList() {
     const [members, setMembers] = useState([
-      { label: 'John Doe', value: 'john' },
-      { label: 'Jane Smith', value: 'jane' },
-      { label: 'Alice Johnson', value: 'alice' },
-  ]);
-  const [selectedMember, setSelectedMember] = useState(null);
+        { label: 'John Doe', value: 'john' },
+        { label: 'Jane Smith', value: 'jane' },
+        { label: 'Alice Johnson', value: 'alice' },
+        { label: 'Tim Smith', value: 'tim' },
+        { label: 'Rose Doe', value: 'rose' },
+        { label: 'Amy Something', value: 'amy' },
+    ]);
 
-  const removeMember = (value) => {
-      setMembers(members.filter(member => member.value !== value));
-  };
+    const removeMember = (value) => {
+        setMembers(members.filter(member => member.value !== value));
+    };
+
+
     return (
-
-      <View>
-          <Text className="text-black text-xl font-semibold text-center mt-10">
-              Manage Members
+      <View className="p-5">
+          <Text className="text-black text-xl font-semibold text-center mb-5">
+              Member List
           </Text>
-
-          <RNPickerSelect
-
-              onValueChange={(value) => setSelectedMember(value)}
-              items={members}
-              placeholder={{ label: 'Select a member', value: null }}
-              //style={pickerSelectStyles}
-          />
-          <TouchableOpacity
-              //style={styles.removeButton}
-              onPress={() => removeMember(selectedMember)}
-              disabled={!selectedMember}
-          >
-            <FlatList className="w-full mt-5 border-t border-gray-300"
+          <FlatList
               data={members}
               keyExtractor={(item) => item.value}
               renderItem={({ item }) => (
-                <View className="p-3 border-b border-gray-300">
-                <Text className="text-lg">{item.label}</Text>
-            </View>
+                  <View className="flex-row justify-between items-center p-3 border-b border-gray-300 bg-gray-200 rounded-lg mb-2">
+                      <Text className="text-lg">{item.label}</Text>
+                      <TouchableOpacity
+                          className="bg-blue-700 border border-gray-400 py-1 px-4 rounded-lg"
+                          onPress={() => removeMember(item.value)}
+                      >
+                          <Text className="text-black-500 text-lg">-</Text>
+                      </TouchableOpacity>
+                  </View>
               )}
           />
-              {/*<Text style={styles.removeButtonText}>Remove Member</Text>*/}
-              <Text className = "text-white text-lg">Remove Member</Text>
-
-          </TouchableOpacity>
-
       </View>
-);
+  );
 }
-
