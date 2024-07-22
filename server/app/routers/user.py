@@ -1,8 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException
-from pony.orm.core import db_session
+from pony.orm.core import db_session, commit
+
+from ..models import User, Jug, JugUser
 
 from ..auth import auth_user, generate_auth_token, get_hash
-from ..schemas import LinkJugsForm, JugLink, UserRegister, UserLogin
+from ..schemas import LinkJugsForm, JugLink, UserRegister, UserLogin, TargetUpdate
 from ..services import link_jugs_to_user_s, unlink_jug_from_user_s, delete_user, user_exists, create_user, \
     create_jug_user, update_jug_user_data, get_user_hash, get_user_by_email, get_user_name
 
@@ -75,3 +77,16 @@ async def get_user(user_id: str = Depends(auth_user)):
 @router.get("/exists")
 async def email_exists(email: str):
     return user_exists(email)
+
+    Jug.get(smart_hydration_id=jug_id).name = name
+
+@router.post("/update-user-target")
+async def update_user_hydration_target(form: TargetUpdate, user_id: str = Depends(auth_user)):
+    with db_session:
+        user = JugUser.get(user=user_id)
+        if user:
+            user.target = form.newValue
+            commit()
+            return {"status": "success"}
+        else:
+            raise HTTPException(status_code=404, detail="User not found")

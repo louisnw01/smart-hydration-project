@@ -104,6 +104,32 @@ export const deleteUser = atomWithMutation((get) => ({
   },
 }));
 
+export const updateUserTarget = atomWithMutation((get) => ({
+    mutationKey: ["/user/update-user-target", get(authTokenAtom)],
+    enabled: !!get(authTokenAtom),
+    mutationFn: async (formData: { newValue: number }) => {
+        const token = get(authTokenAtom);
+        console.log("Sending request with formData:", formData);
+        const response = await request(ENDPOINTS.UPDATE_USER_TARGET, {
+            method: "post",
+            body: formData,
+            auth: token as string,
+        });
+
+        if (!response.ok) {
+            alert(JSON.stringify(response))
+            alert("Could not update user target");
+        }
+
+
+        return;
+    },
+
+    onSuccess: () => {
+        alert("Successfully updated")
+    },
+}));
+
 export const getJugDataQAtom = atomWithQuery((get) => ({
     queryKey: ["get-jug-data", get(authTokenAtom)],
     queryFn: async ({ queryKey: [, token] }): Promise<DeviceInfo[]> => {
