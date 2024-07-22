@@ -14,6 +14,7 @@ import { hydrationInsightsEAtom } from "@/atom/effect/hydration";
 import WaterScreen from "@/components/home/water-screen";
 import { MaterialCommunityIcons, FontAwesome } from "@expo/vector-icons";
 import useColorPalette from "@/util/palette";
+import { router } from "expo-router";
 
 export default function HomePage() {
     useAtomValue(hydrationInsightsEAtom);
@@ -76,7 +77,9 @@ export default function HomePage() {
                         <StyledButton
                             text="add a drink"
                             textClass="text-lg mt-[1px]"
-                            href="add-drink-modal"
+                            onPress={() =>
+                                router.push("custom/add-drink-modal")
+                            }
                             icon=<MaterialCommunityIcons
                                 name="water-plus-outline"
                                 size={24}

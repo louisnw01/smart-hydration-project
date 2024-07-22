@@ -7,7 +7,7 @@ interface ButtonProps {
     text: string;
     href?: string;
     onPress?: Function;
-    textClass: string;
+    textClass?: string;
     buttonClass?: string;
     icon?: ReactNode;
     style?: ViewStyle;
@@ -25,7 +25,9 @@ export default function StyledButton({
     const [touched, setTouched] = useState(false);
 
     textClass +=
-        textClass && !textClass.includes("dark:text") ? " dark:text-white" : "";
+        !textClass || !textClass.includes("dark:text")
+            ? " dark:text-white"
+            : "";
 
     const buttonColors = touched
         ? "bg-gray-300 dark:bg-neutral-700"
