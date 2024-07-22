@@ -29,5 +29,17 @@
       </intent-filter>
     </activity>
     <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" android:exported="false"/>
+    <activity
+    android:name="com.smart-hydration-app.android.VerifyEmail"
+    android:label="@string/verify_email" >
+    <intent-filter android:label="@string/verify_email_smarthydration">
+        <action android:name="android.intent.action.VIEW" />
+        <category android:name="android.intent.category.DEFAULT" />
+        <!-- Accepts URIs that begin with "example://gizmos” -->
+        <data android:scheme="smarthydration"
+              android:host="verify_email" />
+    </intent-filter>
+</activity>
+
   </application>
 </manifest>
