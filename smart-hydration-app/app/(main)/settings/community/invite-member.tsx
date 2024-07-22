@@ -1,16 +1,33 @@
 import { View, Pressable, Text, TextInput, Alert, Share} from "react-native";
-import Clipboard from "@react-native-clipboard/clipboard";
+// import Clipboard from "@react-native-clipboard/clipboard";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useState } from "react";
+import * as React from 'react';
+import * as Clipboard from 'expo-clipboard';
+
+
 
 export default function InviteMember() {
-    const [link, setLink] = useState<string>('https://google.com')
+    const [link, setLink] = useState<string>('https://google.com');
 
+    React.useEffect(() => {
+      // TODO: fetch link
+    },);
+
+    const handleOnCopyToClipboard = async () => {
+      await Clipboard.setStringAsync(link);
+      const clipboardContent = await Clipboard.getStringAsync();
+    }
+
+{/*
     const handleOnCopyToClipboard = () => {
       Alert.alert('Copy triggered!')
       //Clipboard.setString(link)
+      Clipboard.setString(link);
+
     }
+  */}
 
     const handleOnShare = async () => {
       try {
@@ -30,6 +47,7 @@ export default function InviteMember() {
         } else if (result.action === Share.dismissedAction) {
           // sharing was dismissed
             Alert.alert('Dismissed');
+            //change this to something more user friendly
         }
       } catch (error: any) {
         Alert.alert(error.message);
@@ -43,17 +61,27 @@ export default function InviteMember() {
                     <Text className="text-black text-2xl font-semibold text-center">
                       Here’s your invite link! This link can only be used once and will expire in 3 hours.
                     </Text>
+                  {/*
+                  for testing whether copy link works
+                    <TextInput
+                        placeholder="Enter Community name"
+                        textContentType="emailAddress"
+                        autoCapitalize="none"
+                        defaultValue={''}
+                        className="bg-gray-200 w-full h-14 placeholder-black text-xl rounded-xl px-3"
+                    />
+    */}
+                    <View className="bg-gray-300 border border-gray-100 rounded-xl h-auto w-auto p-7">
 
-                  <View style={{
-                          backgroundColor: '#d9d9d9',
+                         {/*backgroundColor: '#d9d9d9',
                           borderColor: '#f9f9f9',
                           borderRadius: '10px',
                           borderWidth: '1px',
                           height: '50px',
                           width: 'auto',
                           paddingLeft: '15px',
-                  }}>
-                        <Text  className="text-black text-2xl font-semibold text-center">
+                          */}
+                        <Text className="text-black text-2xl font-semibold text-center">
                           {link}
                         </Text>
                   </View>
@@ -74,4 +102,5 @@ export default function InviteMember() {
             </View>
         </View>
     );
+  <></>
 }
