@@ -8,6 +8,9 @@ import StyledButton from "@/components/common/button";
 import { userHasCommunityAtom, communityNameAtom, membersAtom } from "@/atom/community";
 import Loading from "@/components/common/loading";
 import MemberRow from "@/components/community/member-row";
+import { MemberInfo } from "@/interfaces/community";
+import { FilterObject } from "@/interfaces/community";
+import { data } from "@/constants/member-data";
 
 
 
@@ -15,6 +18,8 @@ import MemberRow from "@/components/community/member-row";
 //to do: for care home mode, replace home screen with Community tab
 
 //to do: add link handling logic to front end for invite link flow
+
+//to do: add plus button at top right when no members added
 //to do: add settings cog at top right 
 
 export default function CommunityPage() {
@@ -23,6 +28,8 @@ export default function CommunityPage() {
     const {  } = useAtomValue(membersAtom);
     const communityName = useAtomValue(communityNameAtom);
     const [members] = useAtom(membersAtom);
+   
+
     const handleRefresh = () => {
         setRefreshing(true);
     };
@@ -77,19 +84,23 @@ export default function CommunityPage() {
                         />
                     }
                 >
-                    <View className="flex flex-row justify-center items-center">
+                    <View className="mt-8 flex gap-6">
+                            <View className="flex flex-row justify-center">
                             <Text className="dark:text-white text-2xl font-bold">
                                 {communityName}
                             </Text>
+                            </View>
                         </View>
 
                         {members.size === 0 && (
                                 <Text className="text-center dark:text-white text-lg">
-                                   This community has no members
+                                  This community only contains example members
                                 </Text>
                             )}
-                            {Array.from(members.values()).map((member, idx) => (
+                            {Array.from(data.values()).map((member, idx) => (
+                                <View className="my-3">
                                 <MemberRow key={idx} member={member} />
+                                </View>
                             ))}
                     <View className="mt-8 flex gap-6">
                         <View className="flex flex-row justify-center">

@@ -102,6 +102,15 @@ export default function TabLayout() {
                     tabBarIcon: ({ color }) => (
                         <FontAwesome6 name="people-group" size={24} color={color} />
                     ),
+                    headerRight: () => (
+                        <Link className="px-5" href="add-member-modal">
+                            <Entypo
+                                name="circle-with-plus"
+                                size={26}
+                                color={palette.fg}
+                            />
+                        </Link>
+                    ),
                 }}
             />
         </Tabs>

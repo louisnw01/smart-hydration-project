@@ -16,7 +16,7 @@ export const selectedJugsForMemberAtom = atom<Set<string>>(new Set<string>);
 export const selectedMemberAtom = atom<Partial<MemberInfo>>({});
 
 
-//update this so it only works on the front end for now
+
 export const linkJugToMemberMAtom = atomWithMutation((get) => ({
     mutationKey: ["/user/link-jug", get(authTokenAtom)],
     enabled: !!get(authTokenAtom),

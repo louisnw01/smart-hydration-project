@@ -5,22 +5,13 @@ import { View, Text, Pressable } from "react-native";
 import { useAtomValue, useSetAtom } from "jotai";
 import { useRouter } from "expo-router";
 import { MemberInfo } from "@/interfaces/community"
-import { DeviceInfo } from "@/interfaces/device"
 import { selectedMemberAtom } from "@/atom/community";
-import { getAllJugsQAtom, getJugDataQAtom } from "@/atom/query";
+import { getJugDataQAtom } from "@/atom/query";
 
 export default function MemberRow({ member }: { member: MemberInfo }) {
     const setMember = useSetAtom(selectedMemberAtom);
-    //const { data, isLoading } = useAtomValue(getAllJugsQAtom);
-    const {data } = useAtomValue(getJugDataQAtom);
-    const devicesData: DeviceInfo[] = Array.isArray(data) ? data : [];
+    const { data } = useAtomValue(getJugDataQAtom);
     const router = useRouter();
-
-    console.log("This is the data:", data);
-    console.log("This is devices data:", devicesData);
-    //console.log("Filtered jugs in add-member-row:", filteredJugs);
-    console.log("Member's name in add-member-row:", member.name);
-    console.log("Member's jug IDs in add-member-row:", member.jugIDs);
 
     return (
         <Pressable
@@ -34,21 +25,22 @@ export default function MemberRow({ member }: { member: MemberInfo }) {
                 <Text className="text-xl font-bold dark:text-white">
                     {member.name}
                 </Text>
-            </View>
-            <View className="mt-2">
-            {devicesData.length > 0 &&
-                    devicesData.filter(device => {
-                            Array.from(member.jugIDs).forEach(jugID => {
-                        });
-                    }).map((device, idx) => (
-                        <Text key={idx}>{device.name}</Text>
-                    ))
-                }
+                <Text className="text-2l dark:text-white">
+                    <Text className="font-bold">Last drank: </Text>
+                    {member.last_drank} hours ago
+                </Text>
+                <Text className="text-2l dark:text-white">
+                    <Text className="font-bold">Target progress: </Text>
+                    {member.target_percentage}%
+                </Text>
+                <Text className="text-2l dark:text-white">
+                    <Text className="font-bold">Notes: </Text>
+                    {member.description}
+                </Text>
             </View>
         </Pressable>
     );
 }
 
-//only displays devices that are added to user
 
 
