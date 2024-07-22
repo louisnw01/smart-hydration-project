@@ -3,7 +3,7 @@ import HydrationPercentage from "@/components/home/hydration-pct";
 import HydrationStatus from "@/components/home/hydration-status";
 import { useAtomValue } from "jotai";
 import { View, RefreshControl, ScrollView, Text } from "react-native";
-import { getHydrationQAtom } from "@/atom/query";
+import {getHydrationQAtom, getUserTargetQAtom, updateUserTarget} from "@/atom/query";
 import { useState } from "react";
 
 import StyledButton from "@/components/common/button";

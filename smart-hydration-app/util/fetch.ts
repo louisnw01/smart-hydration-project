@@ -19,7 +19,7 @@ export const ENDPOINTS = {
     USER_EXISTS: "/user/exists",
     ADD_DRINK: "/jug-user/add-drink-event",
     UPDATE_USER_TARGET: "/user/update-user-target",
-
+    GET_USER_TARGET: "/user/get-user-target",
     CREATE_COMMUNITY: "/community/create",
     UPDATE_COMMUNITY: "/community/update",
     DELETE_COMMUNITY: "/community/delete",
