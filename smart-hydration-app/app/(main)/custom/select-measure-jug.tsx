@@ -1,4 +1,4 @@
-import { selectedDeviceAtom } from "@/atom/device";
+import { selectedDeviceAtom, selectedJugIdAtom } from "@/atom/device";
 import { userHasJugsAtom } from "@/atom/hydration";
 import StyledButton from "@/components/common/button";
 import DeviceSection from "@/components/devices/device-section";
@@ -7,7 +7,7 @@ import { useAtomValue, useSetAtom } from "jotai";
 import { View, Text } from "react-native";
 
 export default function AddCupSizeInMls() {
-    const setDevice = useSetAtom(selectedDeviceAtom);
+    const setJugId = useSetAtom(selectedJugIdAtom);
 
     return (
         <View className="mx-6 mt-20 h-full">
@@ -17,7 +17,7 @@ export default function AddCupSizeInMls() {
 
             <DeviceSection
                 onPress={(device) => {
-                    setDevice(device);
+                    setJugId(device.id);
                     router.push("custom/fill-cup");
                 }}
             />

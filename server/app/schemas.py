@@ -49,3 +49,7 @@ class CreateCommunityForm(BaseModel):
 class AddJugUserForm(BaseModel):
     name: str
     dob: Optional[str] = None
+
+
+class CreateInvitationForm(BaseModel):
+    permission: str

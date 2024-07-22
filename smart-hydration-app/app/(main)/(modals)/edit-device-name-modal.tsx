@@ -1,5 +1,5 @@
 import { Pressable, Text, TextInput, View } from "react-native";
-import { useAtom, useAtomValue } from "jotai";
+import { useAtomValue } from "jotai";
 import { updateJugNameMAtom } from "@/atom/query";
 import { selectedDeviceAtom } from "@/atom/device";
 import { useState } from "react";
@@ -9,7 +9,7 @@ import StyledButton from "@/components/common/button";
 
 export default function EditDeviceName() {
     const { mutate } = useAtomValue(updateJugNameMAtom);
-    const [currentJug, setJugInfo] = useAtom(selectedDeviceAtom);
+    const currentJug = useAtomValue(selectedDeviceAtom);
 
     const [jugName, setJugName] = useState("");
     const router = useRouter();
@@ -18,8 +18,6 @@ export default function EditDeviceName() {
         const jugId = currentJug?.id;
         if (!jugId) return;
         mutate({ jugId, name: jugName });
-
-        setJugInfo((prev) => ({ ...prev, name: jugName }));
         router.back();
     };
 

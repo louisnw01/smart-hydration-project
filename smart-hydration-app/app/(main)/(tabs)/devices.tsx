@@ -11,11 +11,11 @@ import useColorPalette from "@/util/palette";
 import { FontAwesome } from "@expo/vector-icons";
 import { authTokenAtom } from "@/atom/user";
 import DeviceSection from "@/components/devices/device-section";
-import { selectedDeviceAtom } from "@/atom/device";
+import { selectedDeviceAtom, selectedJugIdAtom } from "@/atom/device";
 import { router } from "expo-router";
 
 export default function DevicesPage() {
-    const setDevice = useSetAtom(selectedDeviceAtom);
+    const setJugId = useSetAtom(selectedJugIdAtom);
     const { data, isLoading, refetch } = useAtomValue(getJugDataQAtom);
     const [refreshing, setRefreshing] = useState(false);
 
@@ -33,7 +33,7 @@ export default function DevicesPage() {
             <DeviceSection
                 addJugButton
                 onPress={(device) => {
-                    setDevice(device);
+                    setJugId(device.id);
                     router.push("device-info-modal");
                 }}
             />
