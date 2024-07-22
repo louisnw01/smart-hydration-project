@@ -45,20 +45,31 @@ def user_exists(email):
 def get_auth_token(email):
     pass
 
+
 @db_session
 def delete_user(user_id):
     user = User.get(id=user_id)
-    #if user is found get community associated with user in user.community
+    community_member = user.community_member
+    jug_user = user.jug_user
+
+    if jug_user:
+        jug_user.delete()
+    if community_member:
+        community_member.delete()
     if user:
-        community_id = user.community
-        if community_id:
-            community = Community.get(id=user.community.id)
-            if community:
-                jug_user = JugUser.get(id=user.community.id)
-                if jug_user:
-                    jug_user.delete()
-                community.delete()
         user.delete()
+
+    #if user is found get community associated with user in user.community
+    # if user:
+    #     community_id = user.community
+    #     if community_id:
+    #         community = Community.get(id=user.community.id)
+    #         if community:
+    #             jug_user = JugUser.get(id=user.community.id)
+    #             if jug_user:
+    #                 jug_user.delete()
+    #             community.delete()
+    #     user.delete()
 
 
 @db_session
@@ -158,8 +169,6 @@ def get_jug_name_by_id(sh_jug_id):
     jug = get(j for j in Jug if j.smart_hydration_id == sh_jug_id)
     name = jug.name
     return name
-
-
 
 
 # def get_community_jug_data(user_id):

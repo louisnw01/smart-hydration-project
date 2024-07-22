@@ -1,5 +1,7 @@
 import hashlib
 import os
+import string
+import random
 import time
 from typing import Optional
 from uuid import UUID
@@ -47,3 +49,9 @@ async def auth_user(
         raise HTTPException(status_code=401, detail='unauthorized token')
 
     return user_id
+
+
+def generate_invite_link(length=10):
+    characters = string.ascii_letters + string.digits
+    random_string = ''.join(random.choice(characters) for _ in range(length))
+    return random_string

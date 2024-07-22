@@ -4,7 +4,7 @@ import { ReactNode } from "react";
 import { View, Text, Pressable } from "react-native";
 import { useSetAtom } from "jotai";
 import { useRouter } from "expo-router";
-import { selectedDeviceAtom } from "@/atom/device";
+import { selectedDeviceAtom, selectedJugIdAtom } from "@/atom/device";
 
 export default function DeviceRow({
     device,
