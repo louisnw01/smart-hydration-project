@@ -81,7 +81,7 @@ async def email_exists(email: str):
 
 @router.post("/send-verification-email")
 async def send_verification_link(user_id: str = Depends(auth_user_no_email_verified)):
-    link = await generate_verification_link(user_id)
+    link = generate_verification_link(user_id)
     with db_session:
         user = User.get(id=user_id)
         email = user.email
@@ -89,7 +89,7 @@ async def send_verification_link(user_id: str = Depends(auth_user_no_email_verif
         send_email_with_ses(name, email, "verify", link)
 
 
-async def generate_verification_link(user_id):
+def generate_verification_link(user_id):
     with db_session:
         user = User.get(id=user_id)
 
