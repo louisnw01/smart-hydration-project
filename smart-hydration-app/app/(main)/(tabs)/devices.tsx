@@ -49,9 +49,8 @@ export default function DevicesPage() {
                     <StyledButton
                         text="add a new jug"
                         href="add-device-modal"
-                        textSize="lg"
                         buttonClass="self-center mt-8"
-                        textClass="mt-[1px]"
+                        textClass="text-lg mt-[1px]"
                         icon={
                             <View className="flex flex-row w-6">
                                 <Jug width={16} fill={palette.fg} />
