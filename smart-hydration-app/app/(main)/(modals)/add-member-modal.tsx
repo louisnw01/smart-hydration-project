@@ -9,24 +9,21 @@ import { useEffect } from "react";
 
 //assume names are unique for now. later, will get unique id for each member from backend
 
-
 export default function AddMemberModal() {
     const navigation = useNavigation();
     const [showErrorMessage, setShowErrorMessage] = useState(false);
     const [members, setMembers] = useAtom(membersAtom);
     const [memberName, setMemberName] = useState('');
-    const createMember = ({ name, jugIDs }: MemberInfo) => ({
+    const createMember = ({ name }: MemberInfo) => ({
         name,
-        jugIDs,
     });
     const [selectedJugs, setSelectedJugs] = useAtom(selectedJugsForMemberAtom);
     console.log("selected jugs:", selectedJugs);
 
     const handlePress = () => {
-        //for now, must have member name and add devices. In future, probably just name should be required
         if (memberName) {
             //bug: can add member even if they have no devices
-            const member = createMember({ name: memberName, jugIDs: selectedJugs });
+            const member = createMember({ name: memberName });
             setMembers((prevMembers) => {
                 const newMembers = new Map(prevMembers);
                 newMembers.set(memberName, member);
