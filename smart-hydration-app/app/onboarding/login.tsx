@@ -35,7 +35,10 @@ export default function LoginPage() {
 
     return (
         <PageWrapper>
-            <ScrollView className="mt-20 gap-10">
+            <ScrollView
+                className="mt-20 gap-10"
+                contentContainerClassName="flex flex-1"
+            >
                 <View className="self-center">
                     <Drop width={100} height={100} fill={palette.border} />
                 </View>
@@ -64,43 +67,17 @@ export default function LoginPage() {
                     )}
                     <StyledButton
                         text="Log In"
-                        textSize="xl"
                         buttonClass="py-3 bg-black justify-center rounded-xl mt-10 dark:bg-white"
-                        textClass="font-medium text-white dark:text-black"
+                        textClass="text-xl font-medium text-white dark:text-black"
                         onPress={handleSubmit}
                     />
 
                     <StyledButton
                         text="Register"
-                        textSize="xl"
-                        buttonClass="py-3 justify-center rounded-xl -mt-2 border border-black dark:border-neutral-600"
-                        textClass="font-medium dark:text-white"
+                        buttonClass="py-3 justify-center rounded-xl -mt-2 bg-white dark:bg-black border border-black dark:border-neutral-600"
+                        textClass="text-xl font-medium"
                         onPress={() => router.push("onboarding/register")}
                     />
-                    {/* <Pressable
-                        onPress={handleSubmit}
-                        className="bg-blue px-4 py-2 rounded-xl mt-10"
-                    >
-                        <Text className="text-2xl font-semibold text-white">
-                            Submit
-                        </Text>
-                    </Pressable> */}
-                    {/* <Pressable
-                        onPress={() => router.push("onboarding/register")}
-                        className="mt-10"
-                    >
-                        {({ pressed }) => (
-                            <Text
-                                style={{
-                                    fontWeight: "600",
-                                    color: pressed ? "darkblue" : "blue",
-                                    textDecorationLine: "underline",
-                                }}
-                            >
-                                Register new account
-                            </Text>
-                        )}
-                    </Pressable> */}
                 </View>
             </ScrollView>
         </PageWrapper>

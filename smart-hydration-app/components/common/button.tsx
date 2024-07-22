@@ -7,9 +7,8 @@ interface ButtonProps {
     text: string;
     href?: string;
     onPress?: Function;
-    textSize?: "sm" | "md" | "lg" | "xl";
+    textClass: string;
     buttonClass?: string;
-    textClass?: string;
     icon?: ReactNode;
     style?: ViewStyle;
 }
@@ -17,7 +16,6 @@ export default function StyledButton({
     text,
     href,
     onPress,
-    textSize,
     buttonClass,
     textClass,
     icon,
@@ -26,8 +24,8 @@ export default function StyledButton({
     const router = useRouter();
     const [touched, setTouched] = useState(false);
 
-    let finalTextClass = textSize ? "text-" + textSize : "";
-    finalTextClass += " dark:text-white " + textClass;
+    textClass +=
+        textClass && !textClass.includes("dark:text") ? " dark:text-white" : "";
 
     const buttonColors = touched
         ? "bg-gray-300 dark:bg-neutral-700"
@@ -53,7 +51,7 @@ export default function StyledButton({
             onTouchEnd={() => setTouched(false)}
         >
             {icon && icon}
-            <Text className={finalTextClass}>{text}</Text>
+            <Text className={textClass}>{text}</Text>
         </Pressable>
     );
 }

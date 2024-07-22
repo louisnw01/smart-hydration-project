@@ -56,9 +56,8 @@ export default function HomePage() {
                             <StyledButton
                                 text="add a new jug"
                                 href="devices"
-                                textSize="lg"
                                 buttonClass="self-center mt-8"
-                                textClass="mt-[1px]"
+                                textClass="text-lg mt-[1px]"
                                 icon={
                                     <View className="flex flex-row w-6">
                                         <Jug width={16} fill={palette.fg} />
@@ -76,8 +75,7 @@ export default function HomePage() {
                         )}
                         <StyledButton
                             text="add a drink"
-                            textSize="xl"
-                            textClass="mt-[1px]"
+                            textClass="text-lg mt-[1px]"
                             href="add-drink-modal"
                             icon=<MaterialCommunityIcons
                                 name="water-plus-outline"

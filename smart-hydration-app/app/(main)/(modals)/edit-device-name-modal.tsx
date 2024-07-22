@@ -4,9 +4,11 @@ import { updateJugNameMAtom } from "@/atom/query";
 import { selectedDeviceAtom } from "@/atom/device";
 import { useState } from "react";
 import { useRouter } from "expo-router";
+import StyledTextInput from "@/components/common/text-input";
+import StyledButton from "@/components/common/button";
 
 export default function EditDeviceName() {
-    const {mutate} = useAtomValue(updateJugNameMAtom);
+    const { mutate } = useAtomValue(updateJugNameMAtom);
     const [currentJug, setJugInfo] = useAtom(selectedDeviceAtom);
 
     const [jugName, setJugName] = useState("");
@@ -17,26 +19,23 @@ export default function EditDeviceName() {
         if (!jugId) return;
         mutate({ jugId, name: jugName });
 
-        setJugInfo((prev) => ({...prev, name:jugName }));
+        setJugInfo((prev) => ({ ...prev, name: jugName }));
         router.back();
-        
     };
 
     return (
-        <View className="mx-16 gap-5 mt-16 items-center">
-            <TextInput
+        <View className="mx-6 gap-20 mt-16">
+            <StyledTextInput
+                title="New Jug Name"
                 placeholder={currentJug?.name}
                 onChangeText={setJugName}
-                className="bg-gray-200 w-full h-14 placeholder-black text-xl rounded-xl px-3"
             />
-            <Pressable
+            <StyledButton
+                text="Submit"
+                buttonClass="bg-green rounded-xl justify-center"
+                textClass="text-xl text-white"
                 onPress={handleSubmit}
-                className="bg-blue px-4 py-2 rounded-xl mt-10"
-            >
-                <Text className="text-2xl font-semibold text-white">
-                    Submit
-                </Text>
-            </Pressable>
+            />
         </View>
     );
 }
