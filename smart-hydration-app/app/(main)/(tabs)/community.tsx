@@ -1,6 +1,6 @@
 
 import PageWrapper from "@/components/common/page-wrapper";
-import { ScrollView, RefreshControl, View, Text } from "react-native";
+import { ScrollView, RefreshControl, View, Text, TextInput, Pressable } from "react-native";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { getAllJugsQAtom, getJugDataQAtom } from "@/atom/query";
 import { useState } from "react";
@@ -11,8 +11,6 @@ import MemberRow from "@/components/community/member-row";
 import { MemberInfo } from "@/interfaces/community";
 import { FilterObject } from "@/interfaces/community";
 import { data } from "@/constants/member-data";
-
-
 
 //for now (basic user flow), Community tab is shown as 4th tab
 //to do: for care home mode, replace home screen with Community tab
@@ -25,10 +23,14 @@ import { data } from "@/constants/member-data";
 export default function CommunityPage() {
     const [hasCommunity] = useAtom(userHasCommunityAtom);
     const [refreshing, setRefreshing] = useState(false);
-    const {  } = useAtomValue(membersAtom);
+    const { } = useAtomValue(membersAtom);
     const communityName = useAtomValue(communityNameAtom);
     const [members] = useAtom(membersAtom);
-   
+
+    const handlePress = () => {
+
+    };
+
 
     const handleRefresh = () => {
         setRefreshing(true);
@@ -85,23 +87,41 @@ export default function CommunityPage() {
                     }
                 >
                     <View className="mt-8 flex gap-6">
-                            <View className="flex flex-row justify-center">
+                        <View className="flex flex-row justify-center">
                             <Text className="dark:text-white text-2xl font-bold">
                                 {communityName}
                             </Text>
-                            </View>
                         </View>
+                    </View>
 
-                        {members.size === 0 && (
-                                <Text className="text-center dark:text-white text-lg">
-                                  This community only contains example members
-                                </Text>
-                            )}
-                            {Array.from(data.values()).map((member, idx) => (
-                                <View className="my-3">
-                                <MemberRow key={idx} member={member} />
-                                </View>
-                            ))}
+                    {/* change this to members.size > 0 when entered members are stored in members array*/}
+                    {members.size === 0 && (
+                        <Text className="text-center dark:text-white text-lg">
+                            This community only contains example members
+                        </Text>
+                    )}
+                    <View className="flex flex-row mx-2 items-center my-2">
+                        <TextInput
+                            placeholder={`Search members...`}
+                            className="bg-gray-200 h-14 placeholder-black text-xl rounded-xl px-3 flex-1"
+                            onChangeText={(val) => {
+
+                            }}
+                            textContentType="name"
+                            returnKeyType="done"
+                        />
+                        <Pressable
+                            onPress={handlePress}
+                            className="bg-blue px-4 py-2 rounded-xl ml-2"
+                        ><Text className="text-2l font-semibold text-white">
+                                Sort by name (A-Z)
+                            </Text></Pressable>
+                    </View>
+                    {Array.from(data.values()).map((member, idx) => (
+                        <View className="my-3">
+                            <MemberRow key={member.name} member={member} />
+                        </View>
+                    ))}
                     <View className="mt-8 flex gap-6">
                         <View className="flex flex-row justify-center">
                             <StyledButton
