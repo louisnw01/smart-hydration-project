@@ -2,14 +2,34 @@ import os
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from email.utils import parseaddr
 
 from dotenv import load_dotenv
 from string import Template
+import re
 
 load_dotenv()
 
 
+def is_valid_email(email):
+    # Extract the email address using parseaddr
+    parsed_email = parseaddr(email)[1]
+
+    # Define a regular expression for basic validation
+    regex = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
+
+    # Check if the parsed email matches the regex pattern
+    if re.match(regex, parsed_email):
+        return True
+    else:
+        return False
+
+
 def send_email_with_ses(name, to_address, email_type, link=None):
+
+    if not is_valid_email(to_address):
+        raise Exception('Invalid email address')
+
     # getting the credentials from environment
     host = os.getenv("SES_HOST_ADDRESS")
     user = os.getenv("SES_USER_ID")
