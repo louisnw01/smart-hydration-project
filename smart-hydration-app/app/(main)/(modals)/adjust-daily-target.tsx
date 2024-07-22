@@ -21,6 +21,7 @@ export default function AdjustDailyTarget() {
 
     function updateTarget() {
         updateUserTargetAtom({ newValue: textToDisplay } );
+        setCurrentDailyTarget(textToDisplay)
     }
     return (
         <View className="flex-col pl-8 pr-8 pt-6 gap-6">

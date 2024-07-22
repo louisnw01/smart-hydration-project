@@ -10,6 +10,7 @@ class TargetUpdate(BaseModel):
     newValue: int
 
 
+
 class UserRegister(BaseModel):
     name: str
     email: str

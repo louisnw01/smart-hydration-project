@@ -90,3 +90,14 @@ async def update_user_hydration_target(form: TargetUpdate, user_id: str = Depend
             return {"status": "success"}
         else:
             raise HTTPException(status_code=404, detail="User not found")
+
+@router.get("/get-user-target")
+async def get_user_target(user_id: str = Depends(auth_user)):
+    with db_session:
+        user = JugUser.get(user=user_id)
+        if user:
+            target = user.target
+            commit()
+            return {"target": target}
+        else:
+            raise HTTPException(status_code=404, detail="User not found")

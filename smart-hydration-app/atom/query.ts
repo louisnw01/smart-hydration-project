@@ -130,6 +130,22 @@ export const updateUserTarget = atomWithMutation((get) => ({
     },
 }));
 
+export const getUserTargetQAtom = atomWithQuery((get) => ({
+    queryKey: ["get-user-target", get(authTokenAtom)],
+    queryFn: async ({ queryKey: [, token] }): Promise<DeviceInfo[]> => {
+        const response = await request(ENDPOINTS.GET_USER_TARGET, {
+            auth: token as string,
+        });
+
+        if (!response.ok) {
+            throw new Error("User Target Could Not Be Found");
+        }
+
+        return await response.json();
+    },
+    enabled: !!get(authTokenAtom),
+}));
+
 export const getJugDataQAtom = atomWithQuery((get) => ({
     queryKey: ["get-jug-data", get(authTokenAtom)],
     queryFn: async ({ queryKey: [, token] }): Promise<DeviceInfo[]> => {
