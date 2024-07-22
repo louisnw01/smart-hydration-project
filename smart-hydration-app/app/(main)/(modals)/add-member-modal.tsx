@@ -18,7 +18,6 @@ export default function AddMemberModal() {
         name,
     });
     const [selectedJugs, setSelectedJugs] = useAtom(selectedJugsForMemberAtom);
-    console.log("selected jugs:", selectedJugs);
 
     const handlePress = () => {
         if (memberName) {
@@ -38,7 +37,6 @@ export default function AddMemberModal() {
             setShowErrorMessage(true);
         }
     };
-
 
     return (
         <View className="mt-8 flex gap-6">
