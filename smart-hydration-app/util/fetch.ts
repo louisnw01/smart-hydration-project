@@ -24,7 +24,8 @@ export const ENDPOINTS = {
     UPDATE_COMMUNITY: "/community/update",
     DELETE_COMMUNITY: "/community/delete",
 
-    CREATE_JUG_USER: "/jug-user/create"
+    CREATE_JUG_USER: "/jug-user/create",
+    VERIFY_EMAIL: "/user/verify"
 };
 
 interface RequestOptions {

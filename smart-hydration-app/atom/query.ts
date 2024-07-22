@@ -212,12 +212,26 @@ export const loginMAtom = atomWithMutation((get) => ({
 
         return object.access_token;
     },
-    // onSuccess: () => {
-    //     const setAuthToken = useSetAtom(authTokenAtom);
-    //     const queryClient = get(queryClientAtom);
-    //     const token = queryClient.getQueryData(['login']);
-    //     setAuthToken(token as string);
-    // },
+}));
+
+export const verifyEmailMAtom = atomWithMutation((get) => ({
+    mutationKey: ["/user/verify", get(authTokenAtom)],
+    mutationFn: async (formData: { code: string }) => {
+        const token = get(authTokenAtom);
+        const response = await request(ENDPOINTS.VERIFY_EMAIL, {
+            method: "post",
+            body: formData,
+            auth: token as string,
+        });
+
+        const object = await response.json();
+
+        if (!response.ok) {
+            throw new Error(object.detail);
+        }
+
+        return object.access_token;
+    },
 }));
 
 export const registerMAtom = atomWithMutation((get) => ({
