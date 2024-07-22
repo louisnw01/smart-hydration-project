@@ -44,7 +44,6 @@ export default function CommunityLayout() {
                     title: "Invite Member",
                 }}
             />
-            />
             <Stack.Screen
                 name="remove-member"
                 options={{

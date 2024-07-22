@@ -4,10 +4,11 @@ import { SelectList, MultipleSelectList } from "react-native-dropdown-select-lis
 export interface SelectInputBoxProperties {
     multiple?: boolean;
     data: { key: string, value: string }[];
+    onChange: (value: string) => void;
 }
 
 export const SelectInputBox: React.FC<SelectInputBoxProperties> = (props: SelectInputBoxProperties): React.ReactElement => {
-    const { multiple, data } = props;
+    const { multiple, data, onChange } = props;
 
     const [selected, setSelected] = useState<string | undefined>();
     const [selectedMultiple, setSelectedMultiple] = useState<string[]>([]);
@@ -15,7 +16,7 @@ export const SelectInputBox: React.FC<SelectInputBoxProperties> = (props: Select
 
     return (
         <>
-            {!multiple && <SelectList  data={data} setSelected={(val: any) => setSelected(val)} save="value" />}
+            {!multiple && <SelectList  data={data} setSelected={onChange} save="value" />}
             {multiple && <MultipleSelectList data={data} setSelected={(val: any) => setSelectedMultiple(val)} save="value" />}
         </>
     );

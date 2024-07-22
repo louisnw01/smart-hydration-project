@@ -1,41 +1,67 @@
-import React, { useState } from 'react';
-import { View, Text, FlatList, TouchableOpacity } from 'react-native';
+import { DialogModal } from '@/components/common/dialogModal';
+import React, { useEffect, useState } from 'react';
+import { View, Text, FlatList, TouchableOpacity, Modal } from 'react-native';
 
 export default function MemberList() {
     const [members, setMembers] = useState([
-        { label: 'John Doe', value: 'john' },
-        { label: 'Jane Smith', value: 'jane' },
-        { label: 'Alice Johnson', value: 'alice' },
-        { label: 'Tim Smith', value: 'tim' },
-        { label: 'Rose Doe', value: 'rose' },
-        { label: 'Amy Something', value: 'amy' },
+        { name: 'John Doe', id: 'john' },
+        { name: 'Jane Smith', id: 'jane' },
+        { name: 'Alice Johnson', id: 'alice' },
+        { name: 'Tim Smith', id: 'tim' },
+        { name: 'Rose Doe', id: 'rose' },
+        { name: 'Amy Something', id: 'amy' },
     ]);
 
-    const removeMember = (value) => {
-        setMembers(members.filter(member => member.value !== value));
+    //hard code in details from supabase
+    const [modalVisible, setModalVisible] = useState<boolean>(false);
+    const [selectedMember, setSelectedMember] = useState<string | null>(null);
+
+
+
+    useEffect(() => {
+      // TODO: fetch member list
+    }, [])
+
+    const confirmRemoveMember = (value: string) => {
+        setModalVisible(true);
+        setSelectedMember(value);
     };
 
+    const handleRemoveMember = () => {
+        //TODO: fetch remove member
+        // removeMember(selectectedMember)
+        setModalVisible(false);
+        setSelectedMember(null);
+    };
+
+    const handleOnReject = () => {
+      setModalVisible(false);
+      setSelectedMember(null);
+    }
 
     return (
-      <View className="p-5">
-          <Text className="text-black text-xl font-semibold text-center mb-5">
-              Member List
-          </Text>
-          <FlatList
-              data={members}
-              keyExtractor={(item) => item.value}
-              renderItem={({ item }) => (
-                  <View className="flex-row justify-between items-center p-3 border-b border-gray-300 bg-gray-200 rounded-lg mb-2">
-                      <Text className="text-lg">{item.label}</Text>
-                      <TouchableOpacity
-                          className="bg-blue-700 border border-gray-400 py-1 px-4 rounded-lg"
-                          onPress={() => removeMember(item.value)}
-                      >
-                          <Text className="text-black-500 text-lg">-</Text>
-                      </TouchableOpacity>
-                  </View>
-              )}
-          />
-      </View>
-  );
+        <View className="p-5">
+            <Text className="text-black text-xl font-semibold text-center mb-5">
+                Member List
+            </Text>
+            <FlatList
+                data={members}
+                keyExtractor={(item) => item.id}
+                renderItem={({ item }) => (
+                    <View className="flex-row justify-between items-center p-3 border-b border-gray-300 bg-gray-200 rounded-lg mb-2">
+                        <Text className="text-lg">{item.name}</Text>
+                        <TouchableOpacity
+                            className="bg-blue-700 border border-gray-400 py-1 px-4 rounded-lg"
+                            onPress={() => confirmRemoveMember(item.id)}
+                        >
+                            <Text className="text-black text-lg">-</Text>
+                        </TouchableOpacity>
+                    </View>
+                )}
+            />
+
+            <DialogModal text={'Are you sure you want to delete this member?'} isVisible={modalVisible} onConfirm={handleRemoveMember} onReject={handleOnReject} onRequestClose={handleOnReject} />
+
+        </View>
+    );
 }
