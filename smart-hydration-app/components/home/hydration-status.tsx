@@ -6,18 +6,7 @@ import { dailyTargetAtom, userNameAtom } from "@/atom/user";
 import { getUserQAtom, getUserTargetQAtom } from "@/atom/query";
 import { useEffect } from "react";
 import { amountDrankTodayAtom } from "@/atom/hydration";
-
-function getRelativeTarget(target: number) {
-    let timeNow = new Date().getHours();
-    if (timeNow < 6) {
-        return 0;
-    }
-    if (timeNow > 22) {
-        return target;
-    }
-    let dayProgress = (timeNow - 6) / (22 - 6);
-    return dayProgress * target;
-}
+import { getRelativeTarget } from "@/util/trends";
 
 export default function HydrationStatus() {
     const hydration = useAtomValue(amountDrankTodayAtom);

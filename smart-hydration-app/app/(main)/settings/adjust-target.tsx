@@ -6,16 +6,16 @@ import { getUserTargetQAtom } from "@/atom/query";
 
 export default function AdjustTarget() {
     // TODO Not sure if this will cause errors down the line or not, probably will but it works for now
-    const dailyTarget = useAtomValue(getUserTargetQAtom).data.target;
+    const { data } = useAtomValue(getUserTargetQAtom);
+    const dailyTarget = data?.target;
     return (
         <View className="flex flex-col gap-20 w-full">
-            <Text className="text-center text-2xl pt-6 pb-6 font-semibold">Your daily target is {dailyTarget}ml</Text>
-            <View className="justify-around pl-28 pr-28 text-center">
+            <Text className="text-center text-2xl py-6 font-semibold">Your daily target is {dailyTarget}ml</Text>
+            <View className="justify-around px-28 text-center">
             <StyledButton
             text="Adjust Daily Target"
             href="adjust-daily-target"
-            textSize="lg"
-            textClass="text-center"
+            textClass="text-lg text-center"
         />
             </View>
         </View>

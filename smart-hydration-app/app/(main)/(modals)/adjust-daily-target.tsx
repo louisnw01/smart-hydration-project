@@ -21,7 +21,7 @@ export default function AdjustDailyTarget() {
 
 
     return (
-        <View className="flex-col pl-8 pr-8 pt-6 gap-6">
+        <View className="flex-col px-8 pt-6 gap-6">
             <Text className="text-xl font-semibold">New Target: {textToDisplay}ml</Text>
             <Slider
                 style={{width: "100%", height: 40}}

@@ -109,7 +109,6 @@ export const updateUserTarget = atomWithMutation((get) => ({
     enabled: !!get(authTokenAtom),
     mutationFn: async (formData: { newValue: number }) => {
         const token = get(authTokenAtom);
-        console.log("Sending request with formData:", formData);
         const response = await request(ENDPOINTS.UPDATE_USER_TARGET, {
             method: "post",
             body: formData,
