@@ -4,19 +4,27 @@ from fastapi import FastAPI, Depends
 from .api import login_and_get_session, get_all_jug_ids
 from .auth import auth_user
 from .models import connect_to_database
-from .routers import community, jug_user, user, data, jug
+from .routers import community, jug_user, user, data, jug, websocket_tunnel
+from .pushertest import pusher_init
+
 
 load_dotenv()
 
 connect_to_database()
 
 app = FastAPI()
-app.include_router(community.router)
+
 app.include_router(jug_user.router)
 app.include_router(user.router)
 app.include_router(data.router)
 app.include_router(jug.router)
+app.include_router(community.router)
+app.include_router(websocket_tunnel.router)
 
+
+@app.on_event('startup')
+async def init():
+    await pusher_init()
 
 @app.get("/")
 async def root():
@@ -28,13 +36,3 @@ async def root():
 async def get_all_jugs(user_id: str = Depends(auth_user)):
     session = login_and_get_session()
     return get_all_jug_ids(user_id, session)
-
-
-# example of using a protected route; the Depends(auth_user) part should be added to all protected routes
-# @app.get("/protected")
-# async def protected(user_id: str = Depends(auth_user)):
-
-#     user = get_user_by_id(user_id)
-
-#     return f"name={user.name} email={user.email}"
-
