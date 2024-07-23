@@ -1,35 +1,57 @@
-import { Link } from "expo-router";
-import {
-    View,
-} from "react-native";
+import useColorPalette from "@/util/palette";
+import { useRouter } from "expo-router";
+import { ReactNode, useState } from "react";
+import { Pressable, Text, View, ViewStyle } from "react-native";
 
 interface ButtonProps {
     text: string;
     href?: string;
-    textSize?: "sm" | "md" | "lg" | "xl";
+    onPress?: Function;
+    textClass: string;
     buttonClass?: string;
-    textClass?: string;
+    icon?: ReactNode;
+    style?: ViewStyle;
 }
 export default function StyledButton({
     text,
     href,
-    textSize,
+    onPress,
     buttonClass,
     textClass,
+    icon,
+    style,
 }: ButtonProps) {
-    let finalTextClass = textSize ? "text-" + textSize : "";
-    finalTextClass += " " + textClass;
+    const router = useRouter();
+    const [touched, setTouched] = useState(false);
 
-    if (!buttonClass) {
-        buttonClass = "bg-gray-200";
-    }
+    textClass +=
+        textClass && !textClass.includes("dark:text") ? " dark:text-white" : "";
+
+    const buttonColors = touched
+        ? "bg-gray-300 dark:bg-neutral-700"
+        : "bg-gray-200 dark:bg-neutral-800";
+
+    buttonClass = !buttonClass
+        ? buttonColors
+        : !buttonClass.includes("bg-")
+          ? (buttonClass += " " + buttonColors)
+          : buttonClass;
+
     const finalButtonClass =
-        "justify-center px-3 py-3 rounded-3xl " + buttonClass;
+        "flex-row gap-[3px] px-4 py-2 rounded-3xl " + buttonClass;
+
     return (
-        <View className={finalButtonClass}>
-            <Link className={finalTextClass} href={href}>
-                {text}
-            </Link>
-        </View>
+        <Pressable
+            style={style}
+            className={finalButtonClass}
+            onPress={() =>
+                onPress ? onPress() : href ? router.navigate(href) : undefined
+            }
+            onTouchStart={() => setTouched(true)}
+            onTouchEnd={() => setTouched(false)}
+        >
+            {icon && icon}
+            <Text className={textClass}>{text}</Text>
+        </Pressable>
     );
 }
