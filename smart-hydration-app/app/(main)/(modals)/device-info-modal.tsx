@@ -4,7 +4,14 @@ import { useAtomValue } from "jotai";
 import { unlinkJugFromUserMAtom } from "@/atom/query";
 import { useRouter } from "expo-router";
 import { selectedDeviceAtom } from "@/atom/device";
+import JugIcon from "@/assets/svgs/jug.svg";
 import colors from "@/colors";
+import {
+    Entypo,
+    MaterialCommunityIcons,
+    FontAwesome,
+} from "@expo/vector-icons";
+import useColorPalette from "@/util/palette";
 
 function Container({
     children,
@@ -83,19 +90,25 @@ function Container({
 export default function DeviceInfoModal() {
     const router = useRouter();
     const device = useAtomValue(selectedDeviceAtom);
+    const palette = useColorPalette();
     const { mutate: unlinkJugFromUser } = useAtomValue(unlinkJugFromUserMAtom);
 
     if (!device) return;
     return (
         <View className="mt-8 mx-5">
-            <View className="flex-row justify-between">
-                <View className="flex-row">
-                    {/* <Text className="text-xs">jug icon</Text> */}
+            <View className="flex-row justify-between items-center">
+                <View className="flex-row gap-3">
+                    <JugIcon
+                        width={17}
+                        height={17}
+                        top={7}
+                        fill={palette.border}
+                    />
                     <Text className="text-3xl font-semibold dark:text-white">
                         {device.name}
                     </Text>
                 </View>
-                {/* <Text>pen</Text> */}
+                <Text className="dark:text-gray-400">{device.id}</Text>
             </View>
 
             <View className="flex flex-row mt-12">
@@ -153,29 +166,45 @@ export default function DeviceInfoModal() {
 
             <View className="flex mt-56 gap-3">
                 <Pressable
-                    className="bg-gray-100 px-4 py-3 rounded-xl items-center"
+                    className="flex-row items-center gap-3 bg-gray-100 px-4 py-3 rounded-xl dark:bg-neutral-900"
                     onPress={() => {
                         router.push("edit-device-name-modal");
                     }}
                 >
-                    <Text className="text-xl">Change Device Name</Text>
+                    <Entypo name="pencil" size={17} color={palette.border} />
+                    <Text className="text-xl dark:text-gray-200">
+                        Change Device Name
+                    </Text>
                 </Pressable>
                 <Pressable
-                    className="bg-gray-100 px-4 py-3 rounded-xl items-center"
+                    className="flex-row items-center gap-3 bg-gray-100 px-4 py-3 rounded-xl dark:bg-neutral-900"
                     onPress={() => {
                         alert("todo: edit device user");
                     }}
                 >
-                    <Text className="text-xl">Change Device Jug User</Text>
+                    <MaterialCommunityIcons
+                        name="monitor-edit"
+                        size={17}
+                        color={palette.border}
+                    />
+                    <Text className="text-xl dark:text-gray-200">
+                        Change Device Jug User
+                    </Text>
                 </Pressable>
 
                 <Pressable
-                    className="bg-gray-100 px-4 py-3 rounded-xl items-center mt-5"
+                    className="flex-row items-center gap-4 bg-gray-100 px-4 py-3 rounded-xl dark:bg-neutral-900 mt-5"
                     onPress={() => {
                         device.id && unlinkJugFromUser(device.id);
                         router.back();
                     }}
                 >
+                    <FontAwesome
+                        name="trash-o"
+                        size={18}
+                        color="red"
+                        left={2}
+                    />
                     <Text className="text-xl text-red">Remove Device</Text>
                 </Pressable>
             </View>

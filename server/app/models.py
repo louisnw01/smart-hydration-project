@@ -60,6 +60,7 @@ class Jug(db.Entity):
     qr_hash = Required(str)
     name = Optional(str)
     owners = Set('JugUser')
+    system_id = Required(int)
 
 
 class Community(db.Entity):
