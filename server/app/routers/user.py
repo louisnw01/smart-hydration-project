@@ -106,7 +106,7 @@ async def verify_email(form: VerifyEmailForm, user_id: str = Depends(auth_user_n
 
 @router.get("/redirect_verify/{code}")
 async def redirect_verify(code: str):
-    return RedirectResponse("smarthydration://verify_email/" + code)
+    return RedirectResponse("smarthydration://onboarding/email-verification?code="+ code)
 
 
 def generate_verification_link(user_id):
