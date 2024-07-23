@@ -1,30 +1,31 @@
 // TODO server_url should be in .env
 
-const SERVER_URL = "http://localhost:8085";
-// const SERVER_URL = "https://hydrationapi.louisnw.com";
+export const SERVER_ADDRESS = "localhost:8085";
+// export const SERVER_ADDRESS = "hydrationapi.louisnw.com";
+
+const SERVER_URL = `http${SERVER_ADDRESS.includes(".com") ? "s" : ""}://${SERVER_ADDRESS}`;
 
 export const ENDPOINTS = {
     HELLO_WORLD: "/",
-    FETCH_COMMUNITY: "/community-jug-status",
-    LOGIN: "/login",
-    REGISTER: "/register",
-    UNLINK_JUG_FROM_USER: "/unlink-jug-from-user",
-    LINK_JUG_TO_USER: "/link-jug-to-user",
-    FETCH_HISTORICAL_JUG_DATA: "/historical-jug-data",
+    FETCH_COMMUNITY: "/data/latest",
+    LOGIN: "/user/login",
+    REGISTER: "/user/register",
+    UNLINK_JUG_FROM_USER: "/user/unlink-jug",
+    LINK_JUG_TO_USER: "/user/link-jug",
+    FETCH_HISTORICAL_JUG_DATA: "/data/historical",
     GET_ALL_JUGS: "/get-all-jugs",
-    UPDATE: "/update",
-    FETCH_USER: "/user",
-    GET_TODAYS_INTAKE: "/todays-total-intake",
-    DELETE_USER: "/delete-user-s",
-    UPDATE_JUG_NAME: "/update-jug-name",
-    USER_EXISTS: "/user-exists",
-    ADD_DRINK: "/add-drink-event",
-  
+    UPDATE: "/jug-user/update",
+    FETCH_USER: "/user/user-name",
+    DELETE_USER: "/user/delete",
+    UPDATE_JUG_NAME: "/jug/update-name",
+    USER_EXISTS: "/user/exists",
+    ADD_DRINK: "/jug-user/add-drink-event",
+
     CREATE_COMMUNITY: "/community/create",
     UPDATE_COMMUNITY: "/community/update",
     DELETE_COMMUNITY: "/community/delete",
 
-    CREATE_JUG_USER: "/jug-user/create"
+    CREATE_JUG_USER: "/jug-user/create",
 };
 
 interface RequestOptions {
