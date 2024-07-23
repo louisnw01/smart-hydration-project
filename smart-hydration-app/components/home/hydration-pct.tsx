@@ -1,10 +1,10 @@
 import { Text, useColorScheme, View } from "react-native";
-import {useAtom, useAtomValue} from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 import { AVERAGE_HYDRATION_PER_DAY } from "@/constants/person";
 import { amountDrankTodayAtom } from "@/atom/hydration";
 import { useWaterLevel } from "./water-screen";
 import useColorPalette from "@/util/palette";
-import {getHydrationQAtom, getUserTargetQAtom} from "@/atom/query";
+import { getHydrationQAtom, getUserTargetQAtom } from "@/atom/query";
 
 export default function HydrationPercentage() {
     const palette = useColorPalette();
