@@ -18,7 +18,6 @@ export default function HomePage() {
 
     const { refetch } = useAtomValue(getHydrationQAtom);
     const [refreshing, setRefreshing] = useState(false);
-
     const handleRefresh = async () => {
         setRefreshing(true);
         refetch();

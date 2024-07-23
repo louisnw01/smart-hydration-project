@@ -102,7 +102,7 @@ def get_hydration_events(session, jug, start_timestamp):
     # ValueError: Invalid isoformat string: '2023-07-06T06:43:04.000000Z'
 
     aggs = []
-    for row in data:
+    for row in data.values():
         if row['type'] != 'DRINK':
             continue
         iso_date = dt.datetime.fromisoformat(row['timestamp'].replace('Z', ''))

@@ -1,10 +1,10 @@
-import {Text, View, Button } from "react-native";
+import { Text, View, Button } from "react-native";
 import Slider from '@react-native-community/slider';
 import { useAtom } from "jotai";
 import { dailyTargetAtom} from "@/atom/user";
 import React from "react";
-import {useAtomValue} from "jotai/index";
-import {linkJugToUserMAtom, updateUserTarget} from "@/atom/query";
+import { useAtomValue } from "jotai/index";
+import { getUserTargetQAtom, linkJugToUserMAtom, updateUserTarget } from "@/atom/query";
 
 
 
@@ -19,10 +19,7 @@ export default function AdjustDailyTarget() {
         return;
     }
 
-    function updateTarget() {
-        updateUserTargetAtom({ newValue: textToDisplay } );
-        setCurrentDailyTarget(textToDisplay)
-    }
+
     return (
         <View className="flex-col pl-8 pr-8 pt-6 gap-6">
             <Text className="text-xl font-semibold">New Target: {textToDisplay}ml</Text>
@@ -36,7 +33,9 @@ export default function AdjustDailyTarget() {
                 onValueChange={updateText}
             />
             <Button
-                onPress={updateTarget}
+                onPress={() => {
+                    updateUserTargetAtom({ newValue: textToDisplay });
+                }}
                 title="Submit"
             />
         </View>
