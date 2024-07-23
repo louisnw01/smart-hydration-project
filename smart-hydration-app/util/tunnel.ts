@@ -6,6 +6,7 @@ import { atomEffect } from "jotai-effect";
 import { queryClientAtom } from "jotai-tanstack-query";
 import { useEffect } from "react";
 import { SERVER_ADDRESS } from "./fetch";
+import { isMeasuringNewCupSizeAtom } from "@/atom/device";
 
 enum MessageType {
     CONNECT = 1,
@@ -109,6 +110,17 @@ export const subscribeToJugDataEAtom = atomEffect((get, set) => {
         if (!jugsLatest) return;
         const row = jugsLatest.find((row) => row.id == jugData.id);
         if (!row) return;
+
+        const jugIdOfMeasuringJug = get(isMeasuringNewCupSizeAtom);
+
+        if (jugIdOfMeasuringJug && jugIdOfMeasuringJug == jugData.id) {
+            const diff = row.water_level - jugData.water_level;
+            if (diff >= 0) {
+                return;
+            }
+            // we can take this diff as the cup size
+            alert(`todo: implement custom cup size of ${diff}`);
+        }
 
         queryClient.setQueryData(
             ["get-jug-data", get(authTokenAtom)],
