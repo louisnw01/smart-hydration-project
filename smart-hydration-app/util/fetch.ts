@@ -22,7 +22,7 @@ export const ENDPOINTS = {
     CREATE_COMMUNITY: "/community/create",
     UPDATE_COMMUNITY: "/community/update",
     DELETE_COMMUNITY: "/community/delete",
-    COMMUNITY_MEMBER: "/community/user",
+    //COMMUNITY_MEMBER: "/community/user",
 
     CREATE_JUG_USER: "/jug-user/create"
 };
