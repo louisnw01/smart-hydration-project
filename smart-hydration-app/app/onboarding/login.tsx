@@ -8,12 +8,15 @@ import { authTokenAtom } from "@/atom/user";
 import PageWrapper from "@/components/common/page-wrapper";
 import Drop from "@/assets/svgs/water-drop-svgrepo-com.svg";
 import { Redirect, useRouter } from "expo-router";
+import useColorPalette from "@/util/palette";
+import StyledTextInput from "@/components/common/text-input";
 
 export default function LoginPage() {
     const router = useRouter();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const setAuthToken = useSetAtom(authTokenAtom);
+    const palette = useColorPalette();
 
     const { mutate, data, isPending, isError, isSuccess } =
         useAtomValue(loginMAtom);
@@ -29,26 +32,24 @@ export default function LoginPage() {
 
     return (
         <PageWrapper>
-            <ScrollView className="flex mt-20 gap-10">
-                <View className="items-center gap-14">
-                    <Text className="text-4xl font-bold">Login</Text>
-                    <Drop width={100} height={100} />
-                </View>
+            <ScrollView
+                className="flex mt-20 gap-10"
+                contentContainerStyle={{ alignItems: "center" }}
+            >
+                <Drop width={100} height={100} fill={palette.border} />
                 <View className="mx-16 gap-5 mt-16 items-center">
-                    <TextInput
+                    <StyledTextInput
                         placeholder="Enter your email address"
-                        onChangeText={(val)=>setEmail(val.toLowerCase())}
+                        onChangeText={(val) => setEmail(val.toLowerCase())}
                         textContentType="emailAddress"
                         autoCapitalize="none"
                         keyboardType="email-address"
-                        className="bg-gray-200 w-full h-14 placeholder-black text-xl rounded-xl px-3"
                     />
-                    <TextInput
+                    <StyledTextInput
                         placeholder="Enter your password"
                         onChangeText={setPassword}
                         textContentType="password"
                         secureTextEntry={true}
-                        className="bg-gray-200 w-full h-14 placeholder-black text-xl rounded-xl px-3"
                     />
                     {isPending && <Text>Logging in..</Text>}
                     {isError && (

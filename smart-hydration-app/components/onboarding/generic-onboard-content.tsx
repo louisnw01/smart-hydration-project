@@ -26,7 +26,9 @@ export default function GenericOnboardContent({
                 <OnboardingButton
                     text="Next"
                     color={colors.blue}
-                    onPress={() => {proceed && router.push(nextHref)}}
+                    onPress={() => {
+                        proceed && router.push(nextHref);
+                    }}
                 />
             )}
         </View>
