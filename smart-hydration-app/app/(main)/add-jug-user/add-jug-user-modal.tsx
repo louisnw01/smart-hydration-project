@@ -2,13 +2,13 @@ import StyledButton from "@/components/common/button";
 import { View } from "react-native";
 
 export default function AddJugUser() {
-    return(
+    return (
         <View className="flex flex-row justify-center py-10">
             <StyledButton
                 text="Click to continue"
-                textSize="xl"
+                textClass="text-lg"
                 href="add-jug-user/name"
             />
         </View>
-    )
+    );
 }

@@ -7,8 +7,7 @@ import { request } from "@/util/fetch";
 import { useEffect, useState } from "react";
 import Loading from "@/components/common/loading";
 import { View } from "react-native";
-
-// Add this function to the top of wrappedIndex for one run if needed
+import { tunnelInitEAtom } from "@/util/tunnel";
 
 function useSession() {
     const [isLoading, setIsLoading] = useState(true);
@@ -40,6 +39,8 @@ function useSession() {
 
 export default function MainLayout() {
     useAtomValue(colorSchemeEAtom);
+    useAtomValue(tunnelInitEAtom);
+
     const { isLoading, isSuccess, isEmailVerified } = useSession();
 
     if (isLoading) {
