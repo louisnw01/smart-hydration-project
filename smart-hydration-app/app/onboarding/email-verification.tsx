@@ -2,28 +2,27 @@ import { authTokenAtom } from "@/atom/user";
 import colors from "@/colors";
 import GenericOnboardContent from "@/components/onboarding/generic-onboard-content";
 import OnboardingButton from "@/components/onboarding/onboarding-button";
-import { Redirect, useRouter } from "expo-router";
 import { useAtomValue, useSetAtom } from "jotai";
 import { Pressable, Text, TextInput, View } from "react-native";
 import CountdownButton from "@/components/common/countdown-button";
 import { sendVerificationEmailMAtom, verifyEmailMAtom } from "@/atom/query";
 import { useVerificationLink } from "@/components/common/verification-link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { router } from "expo-router";
 
 export default function EmailVerificationPage() {
-    const router = useRouter();
     const setAuthAtom = useSetAtom(authTokenAtom);
     const {url: verificationUrl} = useVerificationLink();
     const [testingCode, setTestingCode] = useState("");
 
 
-    const { mutate, isPending, isError, isSuccess } =
+    const { mutate, isPending, isSuccess, data } =
         useAtomValue(verifyEmailMAtom);
 
-    if (isSuccess) {
-        router.replace("(tabs)");
-    }
+    useEffect(() => {
+            if (!isSuccess || data) return;
+            router.replace("(tabs)");
+        }, [data, isSuccess]);
 
     const handleVerify = () => {
         mutate({code: testingCode})
@@ -52,6 +51,12 @@ export default function EmailVerificationPage() {
                                 Verify
                             </Text>
                         </Pressable></>}
+                    {isPending && <Text>Verifying..</Text>}
+                    {data && (
+                        <Text className="text-red">
+                            {data}
+                        </Text>
+                    )}
             </View>
                 <View className="flex flex-row items-center justify-center">
                 <CountdownButton text="Resend email" mutateAtom={sendVerificationEmailMAtom}/>
@@ -71,7 +76,12 @@ export default function EmailVerificationPage() {
 //function to extract verification code from link
 // format = smarthydration://verify_email/auth=xxxxxxxx
 function processVerificationUrl(url:string){
-    const code:string = url.slice(-10);
+    var code:string;
+    if(url.length >= 10) {
+        code = url.slice(-10);
+    } else {
+        code = url;
+    }
 
     return code;
 }

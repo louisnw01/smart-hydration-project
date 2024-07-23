@@ -227,10 +227,10 @@ export const verifyEmailMAtom = atomWithMutation((get) => ({
         const object = await response.json();
 
         if (!response.ok) {
-            throw new Error(object.detail);
+            return object.detail;
         }
 
-        return object.access_token;
+        return;
     },
 }));
 
