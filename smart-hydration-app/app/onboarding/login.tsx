@@ -1,6 +1,6 @@
 import { View, Pressable, Text, ScrollView, TextInput } from "react-native";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAtomValue, useSetAtom } from "jotai";
 import { loginMAtom } from "@/atom/query";
 
@@ -10,6 +10,7 @@ import Drop from "@/assets/svgs/water-drop-svgrepo-com.svg";
 import { Redirect, useRouter } from "expo-router";
 import useColorPalette from "@/util/palette";
 import StyledTextInput from "@/components/common/text-input";
+import StyledButton from "@/components/common/button";
 
 export default function LoginPage() {
     const router = useRouter();
@@ -17,6 +18,8 @@ export default function LoginPage() {
     const [password, setPassword] = useState("");
     const setAuthToken = useSetAtom(authTokenAtom);
     const palette = useColorPalette();
+
+    const passwordRef = useRef<TextInput>();
 
     const { mutate, data, isPending, isError, isSuccess } =
         useAtomValue(loginMAtom);
@@ -33,23 +36,28 @@ export default function LoginPage() {
     return (
         <PageWrapper>
             <ScrollView
-                className="flex mt-20 gap-10"
-                contentContainerStyle={{ alignItems: "center" }}
+                className="mt-20 gap-10"
+                contentContainerClassName="flex flex-1"
             >
-                <Drop width={100} height={100} fill={palette.border} />
-                <View className="mx-16 gap-5 mt-16 items-center">
+                <View className="self-center">
+                    <Drop width={100} height={100} fill={palette.border} />
+                </View>
+                <View className="mx-6 gap-5 mt-16">
                     <StyledTextInput
-                        placeholder="Enter your email address"
+                        placeholder="example@gmail.com"
                         onChangeText={(val) => setEmail(val.toLowerCase())}
                         textContentType="emailAddress"
                         autoCapitalize="none"
                         keyboardType="email-address"
+                        title="Email Address"
+                        onSubmitEditing={() => passwordRef.current?.focus()}
                     />
                     <StyledTextInput
-                        placeholder="Enter your password"
+                        inputRef={passwordRef}
                         onChangeText={setPassword}
                         textContentType="password"
                         secureTextEntry={true}
+                        title="Password"
                     />
                     {isPending && <Text>Logging in..</Text>}
                     {isError && (
@@ -57,30 +65,19 @@ export default function LoginPage() {
                             Incorrect username or password. Please try again
                         </Text>
                     )}
-                    <Pressable
+                    <StyledButton
+                        text="Log In"
+                        buttonClass="py-3 bg-black justify-center rounded-xl mt-10 dark:bg-white"
+                        textClass="text-xl font-medium text-white dark:text-black"
                         onPress={handleSubmit}
-                        className="bg-blue px-4 py-2 rounded-xl mt-10"
-                    >
-                        <Text className="text-2xl font-semibold text-white">
-                            Submit
-                        </Text>
-                    </Pressable>
-                    <Pressable
+                    />
+
+                    <StyledButton
+                        text="Register"
+                        buttonClass="py-3 justify-center rounded-xl -mt-2 bg-white dark:bg-black border border-black dark:border-neutral-600"
+                        textClass="text-xl font-medium"
                         onPress={() => router.push("onboarding/register")}
-                        className="mt-10"
-                    >
-                        {({ pressed }) => (
-                            <Text
-                                style={{
-                                    fontWeight: "600",
-                                    color: pressed ? "darkblue" : "blue",
-                                    textDecorationLine: "underline",
-                                }}
-                            >
-                                Register new account
-                            </Text>
-                        )}
-                    </Pressable>
+                    />
                 </View>
             </ScrollView>
         </PageWrapper>

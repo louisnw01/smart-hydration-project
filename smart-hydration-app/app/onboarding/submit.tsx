@@ -1,6 +1,7 @@
 import { registerMAtom } from "@/atom/query";
 import { authTokenAtom, registerInfoAtom } from "@/atom/user";
 import colors from "@/colors";
+import StyledButton from "@/components/common/button";
 import Loading from "@/components/common/loading";
 import GenericOnboardContent from "@/components/onboarding/generic-onboard-content";
 import OnboardingButton from "@/components/onboarding/onboarding-button";
@@ -29,15 +30,16 @@ export default function SubmitPage() {
 
     return (
         <GenericOnboardContent proceed={true}>
-            <Text className="text-xl font-light">
+            <Text className="text-xl font-light text-center">
                 Tap the button to set up your Smart Hydration profile.
             </Text>
             <Loading isLoading={isPending} message="registering.." />
             <>
                 {!isPending && (
-                    <OnboardingButton
+                    <StyledButton
                         text="Submit & Register"
-                        color={colors.green}
+                        buttonClass="bg-green self-center rounded-xl"
+                        textClass="text-white text-lg font-semibold"
                         onPress={() => submitAndRegister()}
                     />
                 )}
