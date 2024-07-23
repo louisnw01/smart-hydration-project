@@ -7,7 +7,8 @@ import {
     Foundation,
     MaterialIcons,
 } from "@expo/vector-icons";
-import { Link, Tabs } from "expo-router";
+import { Link, router, Tabs } from "expo-router";
+import { Pressable } from "react-native";
 
 export default function TabLayout() {
     const palette = useColorPalette();
@@ -44,13 +45,18 @@ export default function TabLayout() {
                         <FontAwesome size={28} name="home" color={color} />
                     ),
                     headerRight: () => (
-                        <Link className="px-5" href="settings/settings-modal">
+                        <Pressable
+                            className="px-5"
+                            onPress={() =>
+                                router.push("settings/settings-modal")
+                            }
+                        >
                             <Entypo
                                 name="cog"
                                 size={30}
                                 color={cogUnderwater ? "white" : palette.fg}
                             />
-                        </Link>
+                        </Pressable>
                     ),
                     headerTransparent: true,
                     tabBarStyle: {
@@ -82,13 +88,16 @@ export default function TabLayout() {
                         />
                     ),
                     headerRight: () => (
-                        <Link className="px-5" href="add-device-modal">
+                        <Pressable
+                            className="px-5"
+                            onPress={() => router.push("add-device-modal")}
+                        >
                             <Entypo
                                 name="circle-with-plus"
                                 size={26}
                                 color={palette.fg}
                             />
-                        </Link>
+                        </Pressable>
                     ),
                 }}
             />

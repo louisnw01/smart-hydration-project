@@ -3,6 +3,8 @@ import { View } from "react-native";
 import { useRouter } from "expo-router";
 import OnboardingButton from "./onboarding-button";
 import colors from "@/colors";
+import StyledButton from "../common/button";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 interface PageContent {
     children: JSX.Element | JSX.Element[];
@@ -16,16 +18,19 @@ export default function GenericOnboardContent({
     proceed,
 }: PageContent) {
     const router = useRouter();
+    const insets = useSafeAreaInsets();
     return (
-        <View className="flex flex-1 gap-8 mx-16 items-center mt-10">
+        <View className="flex flex-1 gap-8 mx-6 mt-10">
             {/* <Text className="text-4xl font-light text-gray-500 dark:text-gray-400">
                 {title}
             </Text> */}
             {children}
             {nextHref && (
-                <OnboardingButton
+                <StyledButton
                     text="Next"
-                    color={colors.blue}
+                    buttonClass="absolute bg-blue self-end rounded-xl right-0"
+                    style={{ bottom: insets.bottom + 10 }}
+                    textClass="text-white font-semibold text-lg"
                     onPress={() => {
                         proceed && router.push(nextHref);
                     }}
