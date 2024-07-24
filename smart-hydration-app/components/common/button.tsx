@@ -16,7 +16,7 @@ export default function StyledButton(props: ButtonProps) {
     props.textClass +=
         props.textClass && !props.textClass.includes("dark:text") ? " dark:text-white" : "";
 
-    const buttonColors = touched
+    const buttonColors = touched || props.disabled
         ? "bg-gray-300 dark:bg-neutral-700"
         : "bg-gray-200 dark:bg-neutral-800";
 
