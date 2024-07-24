@@ -16,6 +16,10 @@ const storage = createJSONStorage(() => ({
 
 export const colorSchemeAtom = atomWithStorage("color-scheme", "Auto", storage);
 
+export const notificationsAtom = atomWithStorage("notifications", "On", storage);
+
+export const notificationFrequencyAtom = atomWithStorage("notification-frequency", "1 hour", storage);
+
 export const authTokenAtom = atomWithStorage("auth-token", "", storage);
 
 export const nonSecureStorage = createJSONStorage(() => AsyncStorage);
