@@ -32,7 +32,8 @@ export default function EditDeviceName() {
                 text="Submit"
                 buttonClass="bg-green rounded-xl justify-center"
                 textClass="text-xl text-white"
-                onPress={handleSubmit}
+                onPress={handleSubmit} 
+                children={undefined}
             />
         </View>
     );

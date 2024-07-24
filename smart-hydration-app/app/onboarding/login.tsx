@@ -66,17 +66,19 @@ export default function LoginPage() {
                         </Text>
                     )}
                     <StyledButton
-                        text="Log In"
+                        text="Login"
                         buttonClass="py-3 bg-black justify-center rounded-xl mt-10 dark:bg-white"
                         textClass="text-xl font-medium text-white dark:text-black"
-                        onPress={handleSubmit}
-                    />
+                        onPress={handleSubmit} 
+                        children={undefined}           
+                     />
 
                     <StyledButton
                         text="Register"
                         buttonClass="py-3 justify-center rounded-xl -mt-2 bg-white dark:bg-black border border-black dark:border-neutral-600"
                         textClass="text-xl font-medium"
-                        onPress={() => router.push("onboarding/register")}
+                        onPress={() => router.push("onboarding/register")} 
+                        children={undefined} 
                     />
                 </View>
             </ScrollView>

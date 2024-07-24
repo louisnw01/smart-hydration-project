@@ -17,14 +17,16 @@ export default function LoginRegister() {
                 text="Login"
                 buttonClass="justify-center bg-blue rounded-xl mt-32"
                 textClass="text-2xl text-white font-medium"
-                onPress={() => router.push("/onboarding/login")}
-            />
+                onPress={() => router.push("/onboarding/login")} 
+                children={undefined}           
+             />
 
             <StyledButton
                 text="Register"
                 buttonClass="justify-center bg-blue rounded-xl"
                 textClass="text-2xl text-white font-medium"
-                onPress={() => router.push("onboarding/register")}
+                onPress={() => router.push("onboarding/register")} 
+                children={undefined}            
             />
         </View>
     );

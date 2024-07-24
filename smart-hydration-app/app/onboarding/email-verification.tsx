@@ -9,6 +9,8 @@ import { sendVerificationEmailMAtom, verifyEmailMAtom } from "@/atom/query";
 import { useEffect, useState } from "react";
 import { router } from "expo-router";
 import * as Linking from "expo-linking";
+import StyledButton from "@/components/common/button";
+import { FontAwesome } from '@expo/vector-icons';
 
 
 export default function EmailVerificationPage() {
@@ -60,15 +62,20 @@ export default function EmailVerificationPage() {
                 </Text>)}
             </View>
                 <View className="flex flex-row items-center justify-center">
-                <CountdownButton text="Resend email" mutateAtom={sendVerificationEmailMAtom}/>
+                <CountdownButton 
+                    text="Resend email" 
+                    mutateAtom={sendVerificationEmailMAtom}
+                    icon=<FontAwesome name="send" size={24} color="black" />/>
                 </View>
-                <OnboardingButton
-                    text="Login as another user"
-                    color={colors.green}
-                    onPress={() => {
-                        setAuthAtom("");
-                        router.replace("onboarding/login-register");
-                    }}
+                <StyledButton
+                text="Login as another user"
+                buttonClass="justify-center bg-blue rounded-xl absolute inset-x-0 bottom-10"
+                textClass="text-2xl text-white font-medium"
+                onPress={() => {
+                    setAuthAtom("");
+                    router.replace("onboarding/login-register");
+                } } 
+                children={undefined}  
                 />
         </GenericOnboardContent>
     );

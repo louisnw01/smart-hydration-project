@@ -7,7 +7,8 @@ export default function AddJugUser() {
             <StyledButton
                 text="Click to continue"
                 textClass="text-lg"
-                href="add-jug-user/name"
+                href="add-jug-user/name" 
+                children={undefined}
             />
         </View>
     );
