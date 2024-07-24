@@ -107,6 +107,31 @@ const settingsList: ISettingsSection[] = [
             },
         ],
     },
+    {
+        title: "Notifications",
+        data: [
+            {
+                name: "Notification settings",
+                component: (name, isFirst, isLast) => {
+                    const router = useRouter();
+                    return (
+                        <OptionBlock
+                            isLast={isLast}
+                            text={name}
+                            onPress={() => router.navigate("settings/notifications")}
+                            icon={
+                                <Ionicons
+                                    name="notifications-outline"
+                                    size={19}
+                                    color="gray"
+                                />
+                            }
+                        />
+                    );
+                },
+            },
+        ],
+    },
 ];
 
 export default function SettingsModal() {
