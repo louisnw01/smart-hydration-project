@@ -52,7 +52,6 @@ export default function CountdownButton({text, mutateAtom, icon}:CountdownProps)
         buttonClass="self-center mt-20"
         textClass="text-lg mt-[1px]"
         icon={icon}
-        children={undefined}
         />
     {isDisabled && (
       <View className='flex flex-row absolute left-40 py-3 px-3 mt-20'>

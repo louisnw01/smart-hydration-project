@@ -1,10 +1,8 @@
 import { useRouter } from "expo-router";
 import { ReactNode, useState } from "react";
-import { Pressable, Text, ViewStyle } from "react-native";
-import { PressableProps } from "react-native-paper/lib/typescript/components/TouchableRipple/Pressable";
+import { Pressable, Text, PressableProps} from "react-native";
 
 interface ButtonProps extends PressableProps {
-    style?: ViewStyle;
     text: string;
     href?: string;
     textClass: string;
@@ -33,7 +31,6 @@ export default function StyledButton(props: ButtonProps) {
 
     return (
         <Pressable
-            style={props.style}
             className={finalButtonClass}
             onPress={() =>
                 props.onPress ? props.onPress : props.href ? router.navigate(props.href) : undefined

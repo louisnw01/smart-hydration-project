@@ -1,4 +1,4 @@
-import { Pressable, Text, TextInput, View } from "react-native";
+import { View } from "react-native";
 import { useAtomValue } from "jotai";
 import { updateJugNameMAtom } from "@/atom/query";
 import { selectedDeviceAtom } from "@/atom/device";
@@ -32,8 +32,7 @@ export default function EditDeviceName() {
                 text="Submit"
                 buttonClass="bg-green rounded-xl justify-center"
                 textClass="text-xl text-white"
-                onPress={handleSubmit} 
-                children={undefined}
+                onPress={handleSubmit}
             />
         </View>
     );

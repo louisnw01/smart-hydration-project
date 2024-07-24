@@ -9,7 +9,6 @@ import Loading from "@/components/common/loading";
 import Jug from "@/assets/svgs/jug.svg";
 import useColorPalette from "@/util/palette";
 import { FontAwesome } from "@expo/vector-icons";
-import { authTokenAtom } from "@/atom/user";
 
 export default function DevicesPage() {
     const palette = useColorPalette();
@@ -60,7 +59,8 @@ export default function DevicesPage() {
                                 left={-16}
                                 top={12}
                                 color={palette.fg} />
-                        </View>} children={undefined}                    />
+                        </View>}
+                     />
 
                     {/* <View className="flex flex-row justify-center">
                         <StyledButton

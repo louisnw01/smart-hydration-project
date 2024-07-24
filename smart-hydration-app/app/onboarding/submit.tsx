@@ -42,8 +42,7 @@ export default function SubmitPage() {
                         text="Submit & Register"
                         buttonClass="bg-green self-center rounded-xl"
                         textClass="text-white text-lg font-semibold"
-                        onPress={() => submitAndRegister()} 
-                        children={undefined}  
+                        onPress={() => submitAndRegister()}
                     />
                 )}
             </>

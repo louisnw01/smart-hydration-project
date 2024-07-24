@@ -1,7 +1,5 @@
 import { authTokenAtom } from "@/atom/user";
-import colors from "@/colors";
 import GenericOnboardContent from "@/components/onboarding/generic-onboard-content";
-import OnboardingButton from "@/components/onboarding/onboarding-button";
 import { useAtomValue, useSetAtom } from "jotai";
 import { Text, View } from "react-native";
 import CountdownButton from "@/components/common/countdown-button";
@@ -74,8 +72,7 @@ export default function EmailVerificationPage() {
                 onPress={() => {
                     setAuthAtom("");
                     router.replace("onboarding/login-register");
-                } } 
-                children={undefined}  
+                } }
                 />
         </GenericOnboardContent>
     );
