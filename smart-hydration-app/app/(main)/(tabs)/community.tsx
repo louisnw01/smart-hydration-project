@@ -47,7 +47,7 @@ export default function CommunityPage() {
             return 0;
         });
     };
-    
+
     //filtering only works on strings (not numbers) for now
 
     useEffect(() => {
@@ -55,11 +55,16 @@ export default function CommunityPage() {
         setFilteredData(result);
     }, [textInput, filters, data]);
 
-    const handlePress = () => {
+    const handleSortPress = () => {
         setFilters(prev => ({
             ...prev,
             sort: prev.sort === 'asc' ? 'desc' : 'asc'
         }));
+    };
+
+    const handleClearPress = () => {
+        setFilters(prev => ({ ...prev, searchTerm: '' }));
+        setTextInput('');
     };
 
     const handleRefresh = () => {
@@ -108,69 +113,82 @@ export default function CommunityPage() {
     else {
         return (
             <PageWrapper>
-            <View className="flex-1">
                 <View className="flex-1">
-                    <ScrollView 
-                        refreshControl={
-                            <RefreshControl
-                                refreshing={refreshing}
-                                onRefresh={handleRefresh}
-                            />
-                        }
-                    >
-                        <View className="mt-8 flex gap-6">
-                            <View className="flex flex-row justify-center">
-                                <Text className="dark:text-white text-2xl font-bold">
-                                    {communityName}
-                                </Text>
+                    <View className="flex-1">
+                        <ScrollView
+                            refreshControl={
+                                <RefreshControl
+                                    refreshing={refreshing}
+                                    onRefresh={handleRefresh}
+                                />
+                            }
+                        >
+                            <View className="mt-8 flex gap-6">
+                                <View className="flex flex-row justify-center">
+                                    <Text className="dark:text-white text-2xl font-bold">
+                                        {communityName}
+                                    </Text>
+                                </View>
                             </View>
-                        </View>
-                        {/* change this to members.size > 0 when entered members are stored in members array*/}
-                        {/*members.size === 0 && (
+                            {/* change this to members.size > 0 when entered members are stored in members array*/}
+                            {/*members.size === 0 && (
                             <Text className="text-center dark:text-white text-lg">
                                 This community only contains example members
                             </Text>
                         )*/}
-                        <View className="flex flex-row mx-2 items-center my-2">
+                            <View className="flex flex-row mx-2 items-center my-2">
+                                <Pressable
+                                    onPress={handleSortPress}
+                                    className="bg-blue px-4 py-2 rounded-xl ml-2"
+                                >
+                                    <Text className="text-2l font-semibold text-white">
+                                        Sort by name {filters.sort === "asc" ? "A-Z" : "Z-A"}
+                                    </Text>
+                                </Pressable>
+                            </View>
+                            {Array.from(filteredData.values()).map((member) => (
+                                <View key={member.name} className="my-3">
+                                    <MemberRow member={member} />
+                                </View>
+                            ))}
+                            <View className="mt-8 flex gap-6">
+                                <View className="flex flex-row justify-center">
+                                    <StyledButton
+                                        text="+ Add a member"
+                                        href="add-member-modal"
+                                        textClass="text-lg"
+                                    />
+                                </View>
+                            </View>
+                        </ScrollView>
+                    </View>
+                    <View className="flex flex-row items-center p-2">
+                        <View className="flex-1">
+                            <TextInput
+                                value={textInput}
+                                placeholder={`Search members...`}
+                                className="bg-gray-200 h-14 placeholder-black text-xl rounded-xl px-3 m-1 border"
+                                onChangeText={(val) => {
+                                    setTextInput(val);
+                                    setFilters(prev => ({ ...prev, searchTerm: val }));
+                                }}
+                                textContentType="name"
+                                returnKeyType="done"
+                            />
+                        </View>
+                        <View>
                             <Pressable
-                                onPress={handlePress}
+                                onPress={handleClearPress}
                                 className="bg-blue px-4 py-2 rounded-xl ml-2"
                             >
                                 <Text className="text-2l font-semibold text-white">
-                                    Sort by name {filters.sort === "asc" ? "A-Z" : "Z-A"}
+                                    Clear search
                                 </Text>
                             </Pressable>
                         </View>
-                        {Array.from(filteredData.values()).map((member) => (
-                            <View key={member.name} className="my-3">
-                                <MemberRow member={member} />
-                            </View>
-                        ))}
-                        <View className="mt-8 flex gap-6">
-                            <View className="flex flex-row justify-center">
-                                <StyledButton
-                                    text="+ Add a member"
-                                    href="add-member-modal"
-                                    textClass="text-lg"
-                                />
-                            </View>
-                        </View>
-                    </ScrollView>
+                    </View>
                 </View>
-                <View className="w-full">
-                    <TextInput
-                        placeholder={`Search members...`}
-                        className="bg-gray-200 h-14 placeholder-black text-xl rounded-xl px-3 m-1 border"
-                        onChangeText={(val) => {
-                            setTextInput(val);
-                            setFilters(prev => ({ ...prev, searchTerm: val }));
-                        }}
-                        textContentType="name"
-                        returnKeyType="done"
-                    />
-                </View>
-            </View>
-        </PageWrapper>
+            </PageWrapper>
         );
     }
 
