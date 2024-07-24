@@ -49,12 +49,13 @@ export default function CountdownButton({text, mutateAtom, icon}:CountdownProps)
       <StyledButton
         text={text}
         onPress={handlePress}
-        buttonClass="self-center mt-20"
+        buttonClass="self-center mt-20 px-3"
         textClass="text-lg mt-[1px]"
         icon={icon}
+        disabled={isDisabled}
         />
     {isDisabled && (
-      <View className='flex flex-row absolute left-40 py-3 px-3 mt-20'>
+      <View className='flex flex-row absolute left-40 py-3 px-5 mt-20'>
         <Svg height={radius * 3 + strokeWidth} 
              width={radius * 3 + strokeWidth} 
              viewBox={`0 0 ${radius * 3 + strokeWidth} ${radius * 3 + strokeWidth}`}>
