@@ -20,14 +20,14 @@ export default function StyledButton(props: ButtonProps) {
         ? "bg-gray-300 dark:bg-neutral-700"
         : "bg-gray-200 dark:bg-neutral-800";
 
-    props.buttonClass = !props.buttonClass
+    const buttonClass = !props.buttonClass
         ? buttonColors
         : !props.buttonClass.includes("bg-")
-          ? (props.buttonClass += " " + buttonColors)
-          : props.buttonClass;
+            ? (props.buttonClass += " " + buttonColors)
+            : props.buttonClass;
 
     const finalButtonClass =
-        "flex-row gap-[3px] px-4 py-2 rounded-3xl " + props.buttonClass;
+        "flex-row gap-[3px] px-4 py-2 rounded-3xl " + buttonClass;
 
     return (
         <Pressable
