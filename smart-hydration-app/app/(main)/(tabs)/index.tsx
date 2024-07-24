@@ -58,20 +58,18 @@ export default function HomePage() {
                                 href="devices"
                                 buttonClass="self-center mt-8"
                                 textClass="text-lg mt-[1px]"
-                                icon={
-                                    <View className="flex flex-row w-6">
-                                        <Jug width={16} fill={palette.fg} />
-                                        <View className="aboslute top-[13px] right-[9px] w-[8px] h-[8px] rounded-xl bg-gray-200 dark:bg-black" />
-                                        <FontAwesome
-                                            name="plus-circle"
-                                            size={12}
-                                            left={-16}
-                                            top={12}
-                                            color={palette.fg}
-                                        />
-                                    </View>
-                                }
-                            />
+                                icon={<View className="flex flex-row w-6">
+                                    <Jug width={16} fill={palette.fg} />
+                                    <View className="aboslute top-[13px] right-[9px] w-[8px] h-[8px] rounded-xl bg-gray-200 dark:bg-black" />
+                                    <FontAwesome
+                                        name="plus-circle"
+                                        size={12}
+                                        left={-16}
+                                        top={12}
+                                        color={palette.fg} />
+                                </View>} 
+                                children={undefined}                           
+                                 />
                         )}
                         <StyledButton
                             text="add a drink"
@@ -80,8 +78,8 @@ export default function HomePage() {
                             icon=<MaterialCommunityIcons
                                 name="water-plus-outline"
                                 size={24}
-                                color={palette.fg}
-                            />
+                                color={palette.fg} /> 
+                            children={undefined}                     
                         />
                     </View>
                 )}

@@ -1,17 +1,18 @@
 import { Atom, useAtomValue } from 'jotai';
 import { AtomWithMutationResult } from 'jotai-tanstack-query';
-import React, { useState, useEffect } from 'react';
-import { View, Text, Pressable } from 'react-native';
-import { Button } from 'react-native-paper';
+import React, { useState, useEffect, ReactNode } from 'react';
+import { View, Text } from 'react-native';
 import Svg, { Circle, G } from 'react-native-svg';
+import StyledButton from './button';
 
 
 interface CountdownProps{
   text:string,
-  mutateAtom:Atom<AtomWithMutationResult<void, unknown, void, unknown>>
+  mutateAtom:Atom<AtomWithMutationResult<void, unknown, void, unknown>>,
+  icon?: ReactNode,
 }
 
-export default function CountdownButton({text, mutateAtom}:CountdownProps){
+export default function CountdownButton({text, mutateAtom, icon}:CountdownProps){
   const [isDisabled, setIsDisabled] = useState(false);
   const [countdown, setCountdown] = useState(0);
   const [radius] = useState(10); // Radius of the circular countdown
@@ -45,15 +46,16 @@ export default function CountdownButton({text, mutateAtom}:CountdownProps){
 
   return (
     <View className='flex flex-row'>
-      <Button 
-        onPress={handlePress} 
-        disabled={isDisabled} 
-        buttonColor='blue'
-        mode='contained'
-      >{text}
-    </Button>
+      <StyledButton
+        text={text}
+        onPress={handlePress}
+        buttonClass="self-center mt-20"
+        textClass="text-lg mt-[1px]"
+        icon={icon}
+        children={undefined}
+        />
     {isDisabled && (
-      <View className='flex flex-row absolute left-40 py-3 px-3'>
+      <View className='flex flex-row absolute left-40 py-3 px-3 mt-20'>
         <Svg height={radius * 3 + strokeWidth} 
              width={radius * 3 + strokeWidth} 
              viewBox={`0 0 ${radius * 3 + strokeWidth} ${radius * 3 + strokeWidth}`}>
