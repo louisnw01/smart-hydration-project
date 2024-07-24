@@ -49,7 +49,7 @@ export default function CommunityPage() {
     };
     
     //filtering only works on strings (not numbers) for now
-    
+
     useEffect(() => {
         const result = filterAndSortData(filters);
         setFilteredData(result);
@@ -90,14 +90,14 @@ export default function CommunityPage() {
                             <StyledButton
                                 text="+ Create a community"
                                 href="create-community-modal"
-                                textSize="lg"
+                                textClass="text-lg"
                             />
                         </View>
                         <View className="flex flex-row justify-center">
                             <StyledButton
                                 text="+ Join a community"
                                 href="join-community-modal"
-                                textSize="lg"
+                                textClass="text-lg"
                             />
                         </View>
                     </View>
@@ -108,7 +108,7 @@ export default function CommunityPage() {
     else {
         return (
             <PageWrapper>
-                <ScrollView
+                <ScrollView className="mb-10"
                     refreshControl={
                         <RefreshControl
                             refreshing={refreshing}
@@ -130,16 +130,7 @@ export default function CommunityPage() {
                         </Text>
                     )*/}
                     <View className="flex flex-row mx-2 items-center my-2">
-                        <TextInput
-                            placeholder={`Search members...`}
-                            className="bg-gray-200 h-14 placeholder-black text-xl rounded-xl px-3 flex-1"
-                            onChangeText={(val) => {
-                                setTextInput(val);
-                                setFilters(prev => ({ ...prev, searchTerm: val }));
-                            }}
-                            textContentType="name"
-                            returnKeyType="done"
-                        />
+                        
                         <Pressable
                             onPress={handlePress}
                             className="bg-blue px-4 py-2 rounded-xl ml-2"
@@ -157,11 +148,23 @@ export default function CommunityPage() {
                             <StyledButton
                                 text="+ Add a member"
                                 href="add-member-modal"
-                                textSize="lg"
+                                textClass="text-lg"
                             />
                         </View>
                     </View>
                 </ScrollView>
+                <View className="absolute bottom-0 w-full">
+                    <TextInput
+                            placeholder={`Search members...`}
+                            className="bg-gray-200 h-14 placeholder-black text-xl rounded-xl px-3 flex-1"
+                            onChangeText={(val) => {
+                                setTextInput(val);
+                                setFilters(prev => ({ ...prev, searchTerm: val }));
+                            }}
+                            textContentType="name"
+                            returnKeyType="done"
+                        />
+                        </View>
             </PageWrapper>
         );
     }
