@@ -18,6 +18,8 @@ export default function InviteMember() {
     const handleOnCopyToClipboard = async () => {
       await Clipboard.setStringAsync(link);
       const clipboardContent = await Clipboard.getStringAsync();
+      Alert.alert('Copied to Clipboard')
+
     }
 
 {/*
@@ -62,7 +64,7 @@ export default function InviteMember() {
                       Here’s your invite link! This link can only be used once and will expire in 3 hours.
                     </Text>
                   {/*
-                  for testing whether copy link works
+                  //for testing whether copy link works
                     <TextInput
                         placeholder="Enter Community name"
                         textContentType="emailAddress"
@@ -98,7 +100,7 @@ export default function InviteMember() {
                     />
                   </View>
 
-
+                  <></>
             </View>
         </View>
     );

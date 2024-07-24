@@ -21,11 +21,14 @@ export const DialogModal: React.FC<DialogModalProps> = ({
 }: DialogModalProps): React.ReactElement => {
   return (<Modal
   transparent={true}
-  animationType="fade"
+  animationType="none"
   visible={isVisible}
+  //backdropColor = {'white'}
+  //backdropOpacity = {1}
   onRequestClose={() => onRequestClose && onRequestClose()}
 >
-  <View className="flex-1 justify-center items-center bg-black bg-opacity-50">
+  {/*<View className="flex-1 justify-center items-center bg-white bg-opacity-50">*/}
+  <View className="flex-1 justify-center items-center">
       <View className="w-4/5 bg-white p-5 rounded-lg items-center">
           <Text className="text-lg mb-4">{text}</Text>
           <View className="flex-row justify-around w-full">
