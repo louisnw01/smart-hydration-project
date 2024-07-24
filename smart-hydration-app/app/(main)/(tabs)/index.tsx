@@ -2,7 +2,7 @@ import PageWrapper from "@/components/common/page-wrapper";
 import HydrationPercentage from "@/components/home/hydration-pct";
 import HydrationStatus from "@/components/home/hydration-status";
 import { useAtomValue } from "jotai";
-import { View, RefreshControl, ScrollView, Text } from "react-native";
+import { View, RefreshControl, ScrollView } from "react-native";
 import { getHydrationQAtom } from "@/atom/query";
 import { useState } from "react";
 import Jug from "@/assets/svgs/jug.svg";
@@ -67,9 +67,8 @@ export default function HomePage() {
                                         left={-16}
                                         top={12}
                                         color={palette.fg} />
-                                </View>} 
-                                children={undefined}                           
-                                 />
+                                </View>}                      
+                            />
                         )}
                         <StyledButton
                             text="add a drink"
@@ -78,8 +77,8 @@ export default function HomePage() {
                             icon=<MaterialCommunityIcons
                                 name="water-plus-outline"
                                 size={24}
-                                color={palette.fg} /> 
-                            children={undefined}                     
+                                color={palette.fg} 
+                        />                    
                         />
                     </View>
                 )}

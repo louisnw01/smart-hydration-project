@@ -31,8 +31,7 @@ export default function GenericOnboardContent({
                     textClass="text-white font-semibold text-lg"
                     onPress={() => {
                         proceed && router.push(nextHref);
-                    } } 
-                    children={undefined}     
+                    } }   
                 />
             )}
         </View>
