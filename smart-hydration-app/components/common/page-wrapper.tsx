@@ -5,5 +5,9 @@ export default function PageWrapper({
 }: {
     children: JSX.Element | JSX.Element[];
 }) {
-    return <View className="flex flex-1 w-screen h-full">{children}</View>;
+    return (
+        <View className="flex flex-1 w-screen h-full dark:bg-black">
+            {children}
+        </View>
+    );
 }

@@ -6,6 +6,10 @@ class UserLogin(BaseModel):
     email: str
     password: str
 
+class TargetUpdate(BaseModel):
+    newValue: int
+
+
 
 class UserRegister(BaseModel):
     name: str
@@ -49,3 +53,11 @@ class CreateCommunityForm(BaseModel):
 class AddJugUserForm(BaseModel):
     name: str
     dob: Optional[str] = None
+
+
+class CreateInvitationForm(BaseModel):
+    permission: str
+
+
+class VerifyEmailForm(BaseModel):
+    code: str

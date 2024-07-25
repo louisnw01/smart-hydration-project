@@ -14,7 +14,7 @@ export default function Loading({
     return (
         <View>
             <ActivityIndicator
-                className="justify-center top-2/4"
+                className="justify-center w-full h-full"
                 size={large ? "large" : "small"}
             />
             <Text className="mt-16 flex justify-center text-center text-2xl dark:text-white">

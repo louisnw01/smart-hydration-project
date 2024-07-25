@@ -16,6 +16,18 @@ export function getTodaysStartMS() {
     return getFloorOf(Date.now(), MS_DAY);
 }
 
+export function getRelativeTarget(target: number) {
+    let timeNow = new Date().getHours();
+    if (timeNow < 6) {
+        return 0;
+    }
+    if (timeNow > 22) {
+        return target;
+    }
+    let dayProgress = (timeNow - 6) / (22 - 6);
+    return dayProgress * target;
+}
+
 export function getAllAggregates(
     data: any[],
     interval: number,
@@ -23,7 +35,7 @@ export function getAllAggregates(
 ) {
     if (!data) return [];
     const aggs: Map<number, number> = new Map();
-
+    
     for (const row of data) {
         if (conditional && !conditional(row)) continue;
 

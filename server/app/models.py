@@ -37,6 +37,8 @@ class User(db.Entity):
     community_member = Optional('CommunityMember')
     hash = Required(str)
     jug_user = Optional('JugUser')
+    email_verified = Required(bool)
+    email_link = Optional('VerifyEmail')
 
 
 class JugUser(db.Entity):
@@ -51,6 +53,7 @@ class JugUser(db.Entity):
     community = Optional('Community')
     user = Optional(User)
     otherdrinks = Set('OtherDrink')
+    target = Optional(int)
 
 
 class Jug(db.Entity):
@@ -59,6 +62,7 @@ class Jug(db.Entity):
     qr_hash = Required(str)
     name = Optional(str)
     owners = Set('JugUser')
+    system_id = Required(int)
 
 
 class Community(db.Entity):
@@ -66,6 +70,7 @@ class Community(db.Entity):
     name = Required(str)
     jug_users = Set(JugUser)
     followers = Set('CommunityMember')
+    invite_links = Set('InviteLink')
 
 
 class CommunityMember(db.Entity):
@@ -86,3 +91,16 @@ class OtherDrink(db.Entity):
 class Medication(db.Entity):
     id = PrimaryKey(int, auto=True)
     name = Required(str)
+
+
+class VerifyEmail(db.Entity):
+    id = PrimaryKey(str)
+    expire_time = Required(int)
+    user = Required(User)
+
+
+class InviteLink(db.Entity):
+    id = PrimaryKey(str)            # the id is the code at the end of the link.
+    expire_time = Required(int)     # unix timestamp
+    permission = Required(str)
+    community = Required(Community)

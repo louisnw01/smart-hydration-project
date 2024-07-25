@@ -1,5 +1,7 @@
 import hashlib
 import os
+import string
+import random
 import time
 from typing import Optional
 from uuid import UUID
@@ -35,6 +37,7 @@ def decode_auth_token(token: str):
 
 get_bearer_token = HTTPBearer(auto_error=False)
 
+
 async def auth_user(
         auth: Optional[HTTPAuthorizationCredentials] = Depends(get_bearer_token),
 ) -> str:
@@ -42,8 +45,33 @@ async def auth_user(
         raise HTTPException(status_code=401, detail='unauthorized token')
 
     user_id = decode_auth_token(auth.credentials)
+    user = get_user_by_id(user_id)
 
-    if user_id is None or not get_user_by_id(user_id):
+    if user_id is None or not user:
+        raise HTTPException(status_code=401, detail='unauthorized token')
+
+    if not user.email_verified:
+        raise HTTPException(status_code=403, detail='email unverified')
+
+    return user_id
+
+
+async def auth_user_no_email_verified(
+        auth: Optional[HTTPAuthorizationCredentials] = Depends(get_bearer_token),
+) -> str:
+    if auth is None:
+        raise HTTPException(status_code=401, detail='unauthorized token')
+
+    user_id = decode_auth_token(auth.credentials)
+    user = get_user_by_id(user_id)
+
+    if user_id is None or not user:
         raise HTTPException(status_code=401, detail='unauthorized token')
 
     return user_id
+
+
+def generate_invite_link(length=10):
+    characters = string.ascii_letters + string.digits
+    random_string = ''.join(random.choice(characters) for _ in range(length))
+    return random_string

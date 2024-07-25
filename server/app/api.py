@@ -57,6 +57,7 @@ def get_jug_latest(session, jug_id):
 
 
     return {
+        'id': result['identifier'],
         'capacity': result['device_model']['capacity_ml'],
         'charging': result['telemetry']['charging'],
         'battery': result['telemetry']['battery'],
@@ -79,8 +80,6 @@ def get_all_jug_ids(user_id, session):
     if real_jugs is None or fake_jugs is None:
         return
 
-    print(json.dumps(real_jugs, indent=4))
-
     return {
         "real": [x['identifier'] for x in real_jugs if x['identifier'] not in owned_jugs],
         "fake": [x['identifier'] for x in fake_jugs if x['identifier'] not in owned_jugs]
@@ -100,9 +99,8 @@ def get_hydration_events(session, jug, start_timestamp):
 
     #  iso_date = dt.datetime.fromisoformat(row['timestamp'])
     # ValueError: Invalid isoformat string: '2023-07-06T06:43:04.000000Z'
-
     aggs = []
-    for row in data:
+    for row in data.values():
         if row['type'] != 'DRINK':
             continue
         iso_date = dt.datetime.fromisoformat(row['timestamp'].replace('Z', ''))
