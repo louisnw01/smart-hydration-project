@@ -22,7 +22,8 @@
                 "foregroundImage": "./assets/images/adaptive-icon.png",
                 "backgroundColor": "#ffffff"
             },
-            "package": "com.louisnw01.smarthydrationapp"
+            "package": "com.louisnw01.smarthydrationapp",
+            "googleServicesFile": "./google-services.json"
         },
         "web": {
             "bundler": "metro",
