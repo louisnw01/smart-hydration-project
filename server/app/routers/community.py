@@ -74,6 +74,7 @@ async def validate_invitation(code: str, user_id: str = Depends(auth_user)):
 
         commit()
 
+
 @router.post("/generate-invite")
 async def create_invitation(form: CreateInvitationForm, user_id: str = Depends(auth_user)):
     with db_session:

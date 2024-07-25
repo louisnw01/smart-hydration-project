@@ -147,6 +147,24 @@ export const getUserTargetQAtom = atomWithQuery((get) => ({
     enabled: !!get(authTokenAtom),
 }));
 
+export const sendVerificationEmailMAtom = atomWithMutation((get) => ({
+    mutationKey: ["/user/send-verification-email", get(authTokenAtom)],
+    enabled: !!get(authTokenAtom),
+    mutationFn: async () => {
+        const token = get(authTokenAtom);
+        const response = await request(ENDPOINTS.SEND_VERIFICATION_EMAIL, {
+            method: "post",
+            auth: token as string,
+        });
+  
+        if (!response.ok) {
+            throw new Error("Verification email could not be sent");
+        }
+  
+        return;
+    },
+  }));
+
 export const getJugDataQAtom = atomWithQuery((get) => ({
     queryKey: ["get-jug-data", get(authTokenAtom)],
     queryFn: async ({queryKey: [, token]}): Promise<DeviceInfo[]> => {
@@ -209,6 +227,9 @@ export const getHydrationQAtom = atomWithQuery((get) => ({
             },
             auth: token,
         });
+        if (!response.ok) {
+            throw new Error();
+        }
         return await response.json();
     },
     enabled: !!get(authTokenAtom),
@@ -230,12 +251,26 @@ export const loginMAtom = atomWithMutation((get) => ({
 
         return object.access_token;
     },
-    // onSuccess: () => {
-    //     const setAuthToken = useSetAtom(authTokenAtom);
-    //     const queryClient = get(queryClientAtom);
-    //     const token = queryClient.getQueryData(['login']);
-    //     setAuthToken(token as string);
-    // },
+}));
+
+export const verifyEmailMAtom = atomWithMutation((get) => ({
+    mutationKey: ["/user/verify", get(authTokenAtom)],
+    mutationFn: async (formData: { code: string }) => {
+        const token = get(authTokenAtom);
+        const response = await request(ENDPOINTS.VERIFY_EMAIL, {
+            method: "post",
+            body: formData,
+            auth: token as string,
+        });
+
+        const object = await response.json();
+
+        if (!response.ok) {
+            return object.detail;
+        }
+
+        return;
+    },
 }));
 
 export const registerMAtom = atomWithMutation((get) => ({

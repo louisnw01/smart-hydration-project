@@ -57,3 +57,7 @@ class AddJugUserForm(BaseModel):
 
 class CreateInvitationForm(BaseModel):
     permission: str
+
+
+class VerifyEmailForm(BaseModel):
+    code: str

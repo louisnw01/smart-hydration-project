@@ -35,7 +35,7 @@ export function getAllAggregates(
 ) {
     if (!data) return [];
     const aggs: Map<number, number> = new Map();
-
+    
     for (const row of data) {
         if (conditional && !conditional(row)) continue;
 
