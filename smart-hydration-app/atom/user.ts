@@ -29,3 +29,5 @@ export const drinkListAtom = atomWithStorage(
     [],
     nonSecureStorage,
 );
+
+export const dailyTargetAtom = atom(2200);

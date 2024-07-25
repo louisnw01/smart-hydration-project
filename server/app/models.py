@@ -37,6 +37,8 @@ class User(db.Entity):
     community_member = Optional('CommunityMember')
     hash = Required(str)
     jug_user = Optional('JugUser')
+    email_verified = Required(bool)
+    email_link = Optional('VerifyEmail')
 
 
 class JugUser(db.Entity):
@@ -51,6 +53,7 @@ class JugUser(db.Entity):
     community = Optional('Community')
     user = Optional(User)
     otherdrinks = Set('OtherDrink')
+    target = Optional(int)
 
 
 class Jug(db.Entity):
@@ -88,6 +91,12 @@ class OtherDrink(db.Entity):
 class Medication(db.Entity):
     id = PrimaryKey(int, auto=True)
     name = Required(str)
+
+
+class VerifyEmail(db.Entity):
+    id = PrimaryKey(str)
+    expire_time = Required(int)
+    user = Required(User)
 
 
 class InviteLink(db.Entity):
