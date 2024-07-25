@@ -1,8 +1,6 @@
 import { View } from "react-native";
 
 import { useRouter } from "expo-router";
-import OnboardingButton from "./onboarding-button";
-import colors from "@/colors";
 import StyledButton from "../common/button";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -33,7 +31,7 @@ export default function GenericOnboardContent({
                     textClass="text-white font-semibold text-lg"
                     onPress={() => {
                         proceed && router.push(nextHref);
-                    }}
+                    } }   
                 />
             )}
         </View>

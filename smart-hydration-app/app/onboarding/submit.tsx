@@ -1,4 +1,4 @@
-import { registerMAtom } from "@/atom/query";
+import { registerMAtom, sendVerificationEmailMAtom } from "@/atom/query";
 import { authTokenAtom, registerInfoAtom } from "@/atom/user";
 import colors from "@/colors";
 import StyledButton from "@/components/common/button";
@@ -14,6 +14,7 @@ export default function SubmitPage() {
     const router = useRouter();
     const setAuthToken = useSetAtom(authTokenAtom);
     const clearRegisterInfo = useSetAtom(registerInfoAtom);
+    const {mutate: sendVerificationEmail} = useAtomValue(sendVerificationEmailMAtom)
     const {
         mutate: submitAndRegister,
         data,
@@ -25,6 +26,7 @@ export default function SubmitPage() {
         if (!isSuccess || !data) return;
         setAuthToken(data);
         clearRegisterInfo({});
+        sendVerificationEmail();
         router.replace("(tabs)");
     }, [isSuccess, data]);
 
