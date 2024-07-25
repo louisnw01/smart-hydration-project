@@ -9,7 +9,6 @@ import Loading from "@/components/common/loading";
 import Jug from "@/assets/svgs/jug.svg";
 import useColorPalette from "@/util/palette";
 import { FontAwesome } from "@expo/vector-icons";
-import { authTokenAtom } from "@/atom/user";
 
 export default function DevicesPage() {
     const palette = useColorPalette();
@@ -51,20 +50,17 @@ export default function DevicesPage() {
                         href="add-device-modal"
                         buttonClass="self-center mt-8"
                         textClass="text-lg mt-[1px]"
-                        icon={
-                            <View className="flex flex-row w-6">
-                                <Jug width={16} fill={palette.fg} />
-                                <View className="aboslute top-[13px] right-[9px] w-[8px] h-[8px] rounded-xl bg-gray-200 dark:bg-black" />
-                                <FontAwesome
-                                    name="plus-circle"
-                                    size={12}
-                                    left={-16}
-                                    top={12}
-                                    color={palette.fg}
-                                />
-                            </View>
-                        }
-                    />
+                        icon={<View className="flex flex-row w-6">
+                            <Jug width={16} fill={palette.fg} />
+                            <View className="aboslute top-[13px] right-[9px] w-[8px] h-[8px] rounded-xl bg-gray-200 dark:bg-black" />
+                            <FontAwesome
+                                name="plus-circle"
+                                size={12}
+                                left={-16}
+                                top={12}
+                                color={palette.fg} />
+                        </View>}
+                     />
 
                     {/* <View className="flex flex-row justify-center">
                         <StyledButton

@@ -1,7 +1,7 @@
 import { authTokenAtom, colorSchemeAtom } from "@/atom/user";
 import { OptionBlock } from "@/components/common/option-block";
 import { useRouter } from "expo-router";
-import {useAtomValue, useSetAtom } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import { ReactElement, ReactNode, useEffect } from "react";
 import { Pressable, SectionList, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";

@@ -1,13 +1,19 @@
 import { Text, useColorScheme, View } from "react-native";
-import { useAtomValue } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 import { AVERAGE_HYDRATION_PER_DAY } from "@/constants/person";
 import { amountDrankTodayAtom } from "@/atom/hydration";
 import { useWaterLevel } from "./water-screen";
 import useColorPalette from "@/util/palette";
+import { getHydrationQAtom, getUserTargetQAtom } from "@/atom/query";
 
 export default function HydrationPercentage() {
     const palette = useColorPalette();
     const amountDrankToday = useAtomValue(amountDrankTodayAtom);
+    const waterTargetResponse = useAtomValue(getUserTargetQAtom);
+    let waterTarget = 2200;
+    if (waterTargetResponse.data) {
+        waterTarget = waterTargetResponse.data.target;
+    }
     const waterLevel = useWaterLevel();
     const percentUnderwater = waterLevel && waterLevel >= 0.82;
     const textUnderwater = waterLevel && waterLevel >= 0.71;
@@ -30,7 +36,7 @@ export default function HydrationPercentage() {
                     color: textUnderwater ? "white" : palette.fg,
                 }}
             >
-                of your daily target
+                of your daily target ({waterTarget}ml)
             </Text>
         </View>
     );

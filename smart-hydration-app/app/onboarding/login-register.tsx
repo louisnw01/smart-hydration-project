@@ -1,4 +1,4 @@
-import { View, Pressable, Text } from "react-native";
+import { View } from "react-native";
 import Drop from "@/assets/svgs/water-drop-svgrepo-com.svg";
 import { useRouter } from "expo-router";
 import useColorPalette from "@/util/palette";
@@ -17,14 +17,14 @@ export default function LoginRegister() {
                 text="Login"
                 buttonClass="justify-center bg-blue rounded-xl mt-32"
                 textClass="text-2xl text-white font-medium"
-                onPress={() => router.push("/onboarding/login")}
-            />
+                onPress={() => router.push("/onboarding/login")}      
+             />
 
             <StyledButton
                 text="Register"
                 buttonClass="justify-center bg-blue rounded-xl"
                 textClass="text-2xl text-white font-medium"
-                onPress={() => router.push("onboarding/register")}
+                onPress={() => router.push("onboarding/register")}     
             />
         </View>
     );
