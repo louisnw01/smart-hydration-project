@@ -1,12 +1,14 @@
 from fastapi import APIRouter, Depends, HTTPException
-from pony.orm.core import db_session
+from pony.orm.core import db_session, commit
+from starlette.responses import RedirectResponse
 
-from ..auth import auth_user, generate_auth_token, get_hash
-from ..schemas import LinkJugsForm, JugLink, UserRegister, UserLogin
+from ..auth import auth_user, generate_auth_token, get_hash, generate_invite_link, auth_user_no_email_verified
+from ..mail import send_email_with_ses
+from ..models import User, VerifyEmail
+from ..schemas import LinkJugsForm, JugLink, UserRegister, UserLogin, VerifyEmailForm
 from ..services import link_jugs_to_user_s, unlink_jug_from_user_s, delete_user, user_exists, create_user, \
     create_jug_user, update_jug_user_data, get_user_hash, get_user_by_email, get_user_name
-
-
+import datetime as dt
 router = APIRouter(
     prefix="/user",
     tags=["user"],
@@ -76,3 +78,57 @@ async def get_user(user_id: str = Depends(auth_user)):
 @router.get("/exists")
 async def email_exists(email: str):
     return user_exists(email)
+
+
+@router.post("/send-verification-email")
+async def send_verification_link(user_id: str = Depends(auth_user_no_email_verified)):
+    link = generate_verification_link(user_id)
+    with db_session:
+        user = User.get(id=user_id)
+        email = user.email
+        name = user.name
+        send_email_with_ses(name, email, "verify", link)
+
+
+@router.post("/verify")
+async def verify_email(form: VerifyEmailForm, user_id: str = Depends(auth_user_no_email_verified)):
+    with db_session:
+        email_table = User.get(id=user_id).email_link
+        if email_table.id != form.code:
+            raise HTTPException(status_code=404, detail="This link is not valid for the current user")
+        elif email_table.expire_time < dt.datetime.now().timestamp():
+            raise HTTPException(status_code=403, detail="Your link has expired. Press resend email for a new link.")
+    # delete validated link
+        User.get(id=user_id).email_verified = True
+        email_table.delete()
+        commit()
+
+
+@router.get("/redirect_verify/{code}")
+async def redirect_verify(code: str):
+    return RedirectResponse("smarthydration://onboarding/email-verification?code="+ code)
+
+
+def generate_verification_link(user_id):
+    with db_session:
+        user = User.get(id=user_id)
+
+        time_to_expire = dt.timedelta(days=1)
+
+        expire_time = (dt.datetime.now()+time_to_expire).timestamp()
+
+        old_link = VerifyEmail.get(user=user)
+        if old_link is not None:
+            time_since_last_request = expire_time - old_link.expire_time
+            if time_since_last_request < 60:
+                raise HTTPException(status_code=403, detail="Too many requests")
+            old_link.delete()
+
+        link = VerifyEmail(
+            id=generate_invite_link(),
+            expire_time=int(expire_time),
+            user=user
+        )
+        commit()
+
+        return "https://hydrationapi.louisnw.com/user/redirect_verify/"+link.id
