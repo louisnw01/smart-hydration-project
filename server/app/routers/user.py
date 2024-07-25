@@ -4,11 +4,13 @@ from starlette.responses import RedirectResponse
 
 from ..auth import auth_user, generate_auth_token, get_hash, generate_invite_link, auth_user_no_email_verified
 from ..mail import send_email_with_ses
-from ..models import User, VerifyEmail
-from ..schemas import LinkJugsForm, JugLink, UserRegister, UserLogin, VerifyEmailForm
+from ..models import User, VerifyEmail, Jug, JugUser
+from ..schemas import LinkJugsForm, JugLink, UserRegister, UserLogin, VerifyEmailForm, TargetUpdate
 from ..services import link_jugs_to_user_s, unlink_jug_from_user_s, delete_user, user_exists, create_user, \
     create_jug_user, update_jug_user_data, get_user_hash, get_user_by_email, get_user_name
 import datetime as dt
+
+
 router = APIRouter(
     prefix="/user",
     tags=["user"],
@@ -78,6 +80,28 @@ async def get_user(user_id: str = Depends(auth_user)):
 @router.get("/exists")
 async def email_exists(email: str):
     return user_exists(email)
+
+  
+@router.post("/update-user-target")
+async def update_user_hydration_target(form: TargetUpdate, user_id: str = Depends(auth_user)):
+    with db_session:
+        user = JugUser.get(user=user_id)
+        if user:
+            user.target = form.newValue
+            return {"status": "success"}
+        else:
+            raise HTTPException(status_code=404, detail="User not found")
+
+            
+@router.get("/get-user-target")
+async def get_user_target(user_id: str = Depends(auth_user)):
+    with db_session:
+        user = JugUser.get(user=user_id)
+        if user:
+            target = user.target
+            return {"target": target}
+        else:
+            raise HTTPException(status_code=404, detail="User not found")
 
 
 @router.post("/send-verification-email")

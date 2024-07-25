@@ -6,6 +6,10 @@ class UserLogin(BaseModel):
     email: str
     password: str
 
+class TargetUpdate(BaseModel):
+    newValue: int
+
+
 
 class UserRegister(BaseModel):
     name: str
