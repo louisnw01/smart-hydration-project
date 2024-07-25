@@ -13,7 +13,7 @@ export default function StyledButton(props: ButtonProps) {
     const router = useRouter();
     const [touched, setTouched] = useState(false);
 
-    props.textClass +=
+    const textClass:string =
         props.textClass && !props.textClass.includes("dark:text") ? " dark:text-white" : "";
 
     const buttonColors = touched || props.disabled
@@ -40,7 +40,7 @@ export default function StyledButton(props: ButtonProps) {
             {...props}
         >
             {props.icon && props.icon}
-            <Text className={props.textClass}>{props.text}</Text>
+            <Text className={textClass}>{props.text}</Text>
         </Pressable>
     );
 }
