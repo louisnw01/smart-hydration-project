@@ -17,7 +17,6 @@ export default function AddMemberModal() {
     const createMember = ({ name }: MemberInfo) => ({
         name,
     });
-    const [selectedJugs, setSelectedJugs] = useAtom(selectedJugsForMemberAtom);
 
     const handlePress = () => {
         if (memberName) {
@@ -68,7 +67,7 @@ export default function AddMemberModal() {
                 <StyledButton
                     text="+Add member's jug(s)"
                     href="add-device-member-modal"
-                    textSize="lg"
+                    textClass="text-lg"
                 />
             </View>
             <View className="flex flex-row justify-center items-center">
