@@ -80,6 +80,26 @@ const settingsList: ISettingsSection[] = [
                     );
                 },
             },
+            {
+                name: "Daily Target",
+                component: (name, isFirst, isLast) => {
+                    const router = useRouter();
+                    return (
+                        <OptionBlock
+                            isLast={isLast}
+                            text={name}
+                            onPress={() => router.navigate("settings/adjust-target")}
+                            icon={
+                                <MaterialCommunityIcons
+                                    name="cup-water"
+                                    size={19}
+                                    color="gray"
+                                />
+                            }
+                        />
+                    );
+                },
+            },
         ],
     },
     {

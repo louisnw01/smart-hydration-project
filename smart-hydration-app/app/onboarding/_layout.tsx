@@ -1,7 +1,9 @@
 import OnboardingHeader from "@/components/onboarding/onboarding-header";
+import useColorPalette from "@/util/palette";
 import { Stack } from "expo-router";
 
 export default function OnboardingLayout() {
+    const palette = useColorPalette();
     return (
         <Stack
             screenOptions={{
@@ -10,7 +12,7 @@ export default function OnboardingLayout() {
                 headerShadowVisible: false,
                 headerBackVisible: false,
                 contentStyle: {
-                    backgroundColor: "white",
+                    backgroundColor: palette.bg,
                 },
                 header: (props) => <OnboardingHeader {...props} />,
             }}
@@ -18,7 +20,13 @@ export default function OnboardingLayout() {
             <Stack.Screen
                 name="login-register"
                 options={{
-                    title: "Smart Hydration",
+                    title: "smart hydration",
+                }}
+            />
+            <Stack.Screen
+                name="login"
+                options={{
+                    title: "Login",
                 }}
             />
             <Stack.Screen
@@ -43,6 +51,12 @@ export default function OnboardingLayout() {
                 name="submit"
                 options={{
                     title: "You're almost there!",
+                }}
+            />
+            <Stack.Screen
+                name="email-verification"
+                options={{
+                    title: "Verify your email",
                 }}
             />
         </Stack>

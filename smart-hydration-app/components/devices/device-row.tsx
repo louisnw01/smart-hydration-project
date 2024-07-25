@@ -4,10 +4,10 @@ import { ReactNode } from "react";
 import { View, Text, Pressable } from "react-native";
 import { useSetAtom } from "jotai";
 import { useRouter } from "expo-router";
-import { selectedDeviceAtom } from "@/atom/device";
+import { selectedDeviceAtom, selectedJugIdAtom } from "@/atom/device";
 
 export default function DeviceRow({ device }: { device: DeviceInfo }) {
-    const setDevice = useSetAtom(selectedDeviceAtom);
+    const setDeviceId = useSetAtom(selectedJugIdAtom);
     const router = useRouter();
     const percentFull = (device.water_level / device.capacity) * 100;
 
@@ -16,7 +16,7 @@ export default function DeviceRow({ device }: { device: DeviceInfo }) {
         <Pressable
             className="mx-6 bg-gray-200 px-7 py-4 flex flex-row justify-between rounded-xl dark:bg-neutral-800"
             onPress={() => {
-                setDevice(device);
+                setDeviceId(device.id);
                 router.push("device-info-modal");
             }}
         >
