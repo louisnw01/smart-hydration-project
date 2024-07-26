@@ -22,6 +22,8 @@ export const notificationFrequencyAtom = atomWithStorage("notification-frequency
 
 export const authTokenAtom = atomWithStorage("auth-token", "", storage);
 
+export const pushTokenAtom = atomWithStorage("push-token", "", storage);
+
 export const nonSecureStorage = createJSONStorage(() => AsyncStorage);
 
 export const drinkListAtom = atomWithStorage(

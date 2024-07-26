@@ -61,3 +61,7 @@ class CreateInvitationForm(BaseModel):
 
 class VerifyEmailForm(BaseModel):
     code: str
+
+
+class PushTokenForm(BaseModel):
+    pushToken: str

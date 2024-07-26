@@ -3,6 +3,9 @@ import {
     colorSchemeAtom,
     userNameAtom,
     drinkListAtom,
+    notificationsAtom,
+    notificationFrequencyAtom,
+    pushTokenAtom,
 } from "@/atom/user";
 import { OptionBlock } from "@/components/common/option-block";
 import { useRouter } from "expo-router";
@@ -11,9 +14,10 @@ import { ReactElement, ReactNode, useEffect } from "react";
 import { Pressable, SectionList, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Feather, MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
-import { deleteUser } from "@/atom/query";
+import { deleteUser, removePushTokenMAtom } from "@/atom/query";
 import { ISettingsSection } from "@/interfaces/settings";
 import { amountDrankTodayAtom } from "@/atom/hydration";
+import { registerForPushNotificationsAsync } from "@/util/notifications";
 
 const settingsList: ISettingsSection[] = [
     {
@@ -159,7 +163,11 @@ export default function SettingsModal() {
     const setAuthAtom = useSetAtom(authTokenAtom);
     const setUserNameAtom = useSetAtom(userNameAtom);
     const setAmounDrankTodayAtom = useSetAtom(amountDrankTodayAtom);
+    const setNotifications = useSetAtom(notificationsAtom);
+    const setNotificationFrequency = useSetAtom(notificationFrequencyAtom);
     const setDrinksList = useSetAtom(drinkListAtom);
+    const {mutate, isSuccess, data} = useAtomValue(removePushTokenMAtom);
+    const pushToken = useAtomValue(pushTokenAtom);
     const router = useRouter();
     //const { mutate: submitDeleteUser, isPending, isSuccess, isError } = useAtomValue(deleteUser);
     //useEffect(() => {
@@ -176,6 +184,18 @@ export default function SettingsModal() {
       }
     }, [isError]);
   */}
+
+    useEffect(() => {
+        if(!isSuccess) return;
+        setAuthAtom("");
+        setUserNameAtom("");
+        setAmounDrankTodayAtom(0);
+        setDrinksList([]);
+        setNotificationFrequency("1 hour");
+        setNotifications("On");
+        router.replace("onboarding/login-register");
+    },[isSuccess, data])
+
     return (
         <View
             className="flex flex-1 justify-between mx-4"
@@ -211,11 +231,7 @@ export default function SettingsModal() {
                 <Pressable
                     className="items-center bg-red rounded-xl px-7 py-3"
                     onPress={() => {
-                        setAuthAtom("");
-                        setUserNameAtom("");
-                        setAmounDrankTodayAtom(0);
-                        setDrinksList([]);
-                        router.replace("onboarding/login-register");
+                        mutate({pushToken: pushToken as string});
                     }}
                 >
                     <Text className="text-xl mt-1 text-white">Log Out</Text>

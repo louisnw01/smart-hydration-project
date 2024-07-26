@@ -3,7 +3,7 @@ import {
     atomWithMutation,
     queryClientAtom,
 } from "jotai-tanstack-query";
-import { authTokenAtom, registerInfoAtom } from "./user";
+import { authTokenAtom, pushTokenAtom, registerInfoAtom } from "./user";
 import { ENDPOINTS, request } from "@/util/fetch";
 import { DeviceInfo, ITimeSeries } from "@/interfaces/device";
 import { jugUserInfoAtom } from "./jug-user";
@@ -258,6 +258,46 @@ export const verifyEmailMAtom = atomWithMutation((get) => ({
     mutationFn: async (formData: { code: string }) => {
         const token = get(authTokenAtom);
         const response = await request(ENDPOINTS.VERIFY_EMAIL, {
+            method: "post",
+            body: formData,
+            auth: token as string,
+        });
+
+        const object = await response.json();
+
+        if (!response.ok) {
+            return object.detail;
+        }
+
+        return;
+    },
+}));
+
+export const addPushTokenMAtom = atomWithMutation((get) => ({
+    mutationKey: ["/user/add-push-token", get(authTokenAtom)],
+    mutationFn: async (formData: { pushToken: string }) => {
+        const token = get(authTokenAtom);
+        const response = await request(ENDPOINTS.ADD_PUSH_TOKEN, {
+            method: "post",
+            body: formData,
+            auth: token as string,
+        });
+
+        const object = await response.json();
+
+        if (!response.ok) {
+            return object.detail;
+        }
+
+        return;
+    },
+}));
+
+export const removePushTokenMAtom = atomWithMutation((get) => ({
+    mutationKey: ["/user/remove-push-token", get(authTokenAtom)],
+    mutationFn: async (formData: { pushToken: string }) => {
+        const token = get(authTokenAtom);
+        const response = await request(ENDPOINTS.REMOVE_PUSH_TOKEN, {
             method: "post",
             body: formData,
             auth: token as string,
