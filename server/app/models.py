@@ -112,4 +112,5 @@ class Tag(db.Entity):
     id = PrimaryKey(int, auto=True)
     name = Required(str)
     community = Required(Community)
+    jug_users = Set(JugUser)
 
