@@ -1,5 +1,6 @@
 from enum import Enum
 from typing import Dict
+from starlette.websockets import WebSocketDisconnect
 from typing_extensions import Literal
 from pony.orm.core import db_session
 
@@ -50,21 +51,24 @@ class TunnelServer:
             }[MessageType(data[0])](*data[1:])
 
     async def handle_connect(self, ws):
-        await ws.accept()
+        try:
+            await ws.accept()
 
-        connection_data = await ws.receive_json()
-        key = connection_data[1]
+            connection_data = await ws.receive_json()
+            key = connection_data[1]
 
-        if not self.auth_key(key):
-            await ws.send_json(self.error('invalid key'))
-            return await ws.close()
-        self.ws[key] = ws
-        await ws.send_json(self.ok('connected'))
+            if not self.auth_key(key):
+                await ws.send_json(self.error('invalid key'))
+                return await ws.close()
+            self.ws[key] = ws
+            await ws.send_json(self.ok('connected'))
 
-        while 1:
-            data = await ws.receive_json()
-            response = self.handle_client(data)
-            await ws.send_json(response)
+            while 1:
+                data = await ws.receive_json()
+                response = self.handle_client(data)
+                await ws.send_json(response)
+        except WebSocketDisconnect:
+            return
 
     def handle_subscribe(self, client_key, event_name, event_variable, from_client=True, derived_key=None):
         """

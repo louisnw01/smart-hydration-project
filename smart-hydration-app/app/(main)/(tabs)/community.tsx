@@ -9,18 +9,22 @@ import MemberRow from "@/components/community/member-row";
 import { MemberInfo } from "@/interfaces/community";
 import { FilterObject } from "@/interfaces/community";
 import { data as startData } from "@/constants/member-data"
+import { communityInfoQAtom } from "@/atom/query/community";
+import Loading from "@/components/common/loading";
 
 //for now (basic user flow), Community tab is shown as 4th tab
 //to do: for care home mode, replace home screen with Community tab
 
 //to do: add link handling logic to front end for invite link flow
-//to do: add settings cog at top right 
+//to do: add settings cog at top right
 
 export default function CommunityPage() {
-    const [hasCommunity] = useAtom(userHasCommunityAtom);
+    const { isLoading } = useAtomValue(communityInfoQAtom);
+    const hasCommunity = useAtomValue(userHasCommunityAtom);
     const [refreshing, setRefreshing] = useState(false);
-    const { } = useAtomValue(membersAtom);
+    // const { } = useAtomValue(membersAtom);
     const communityName = useAtomValue(communityNameAtom);
+    console.log("hasCommunity", hasCommunity, "name", communityName)
     //const [members] = useAtom(membersAtom); <- commented out while data is hardcoded
     const [data] = useState<MemberInfo[]>(startData);
     const [filteredData, setFilteredData] = useState<MemberInfo[]>([])
@@ -74,6 +78,11 @@ export default function CommunityPage() {
     if (refreshing) {
         setRefreshing(false);
     }
+
+    if (isLoading) {
+        return <Loading isLoading message=""/>
+    }
+
     if (!hasCommunity) {
         return (
             <PageWrapper>
