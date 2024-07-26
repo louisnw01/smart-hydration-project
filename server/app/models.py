@@ -54,6 +54,7 @@ class JugUser(db.Entity):
     user = Optional(User)
     otherdrinks = Set('OtherDrink')
     target = Optional(int)
+    tags = Set('Tag')
 
 
 class Jug(db.Entity):
@@ -71,6 +72,7 @@ class Community(db.Entity):
     jug_users = Set(JugUser)
     followers = Set('CommunityMember')
     invite_links = Set('InviteLink')
+    tags = Set('Tag')
 
 
 class CommunityMember(db.Entity):
@@ -104,3 +106,10 @@ class InviteLink(db.Entity):
     expire_time = Required(int)     # unix timestamp
     permission = Required(str)
     community = Required(Community)
+
+
+class Tag(db.Entity):
+    id = PrimaryKey(int, auto=True)
+    name = Required(int)
+    community = Required(Community)
+
