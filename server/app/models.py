@@ -39,6 +39,7 @@ class User(db.Entity):
     jug_user = Optional('JugUser')
     email_verified = Required(bool)
     email_link = Optional('VerifyEmail')
+    notifications = Set('Notifications')
 
 
 class JugUser(db.Entity):
@@ -104,3 +105,10 @@ class InviteLink(db.Entity):
     expire_time = Required(int)     # unix timestamp
     permission = Required(str)
     community = Required(Community)
+
+
+class Notifications(db.Entity):
+    expo_token = PrimaryKey(str)
+    active = Required(bool)
+    frequency = Required(int)
+    user = Required(User)

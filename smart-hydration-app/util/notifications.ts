@@ -73,7 +73,10 @@ export async function registerForPushNotificationsAsync() {
           projectId,
         })
       ).data;
-      console.log(pushTokenString);
+      // push token is unique to a device. Will change if app unistalled on android but not iOS. 
+      // TODO: push token in supabase
+      // + const token = (await Notifications.getDevicePushTokenAsync()).data; for sending to FCM or APN
+
       return pushTokenString;
     } catch (e: unknown) {
       handleRegistrationError(`${e}`);

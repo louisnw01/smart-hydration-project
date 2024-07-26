@@ -30,7 +30,10 @@ export const ENDPOINTS = {
     DELETE_COMMUNITY: "/community/delete",
 
     CREATE_JUG_USER: "/jug-user/create",
-    VERIFY_EMAIL: "/user/verify"
+    VERIFY_EMAIL: "/user/verify",
+
+    ADD_PUSH_TOKEN: "/user/add-push-token",
+    REMOVE_PUSH_TOKEN: "/user/remove-push-token"
 };
 
 interface RequestOptions {
