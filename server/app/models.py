@@ -110,6 +110,6 @@ class InviteLink(db.Entity):
 
 class Tag(db.Entity):
     id = PrimaryKey(int, auto=True)
-    name = Required(int)
+    name = Required(str)
     community = Required(Community)
 
