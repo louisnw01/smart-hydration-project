@@ -1,42 +1,56 @@
+import { communityUsersQAtom, deleteCommunityMemberMAtom } from '@/atom/query/community';
 import { DialogModal } from '@/components/common/dialogModal';
+import Loading from '@/components/common/loading';
+import { useAtomValue } from 'jotai';
 import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, TouchableOpacity, Modal } from 'react-native';
 
 export default function MemberList() {
-    const [members, setMembers] = useState([
-        { name: 'John Doe', id: 'john' },
-        { name: 'Jane Smith', id: 'jane' },
-        { name: 'Alice Johnson', id: 'alice' },
-        { name: 'Tim Smith', id: 'tim' },
-        { name: 'Rose Doe', id: 'rose' },
-        { name: 'Amy Something', id: 'amy' },
-    ]);
+
+    const { data: members, isLoading } = useAtomValue(communityUsersQAtom);
+    const { mutate, isPending, isSuccess } = useAtomValue(deleteCommunityMemberMAtom);
+
+    // const [members, setMembers] = useState([
+    //     { name: 'John Doe', id: 'john' },
+    //     { name: 'Jane Smith', id: 'jane' },
+    //     { name: 'Alice Johnson', id: 'alice' },
+    //     { name: 'Tim Smith', id: 'tim' },
+    //     { name: 'Rose Doe', id: 'rose' },
+    //     { name: 'Amy Something', id: 'amy' },
+    // ]);
 
     //hard code in details from supabase
     const [modalVisible, setModalVisible] = useState<boolean>(false);
-    const [selectedMember, setSelectedMember] = useState<string | null>(null);
+    const [selectedMemberID, setSelectedMemberID] = useState<number | null>(null);
 
 
 
     useEffect(() => {
-      // TODO: fetch member list
-    }, [])
+        if (isPending || !isSuccess) return;
+        setModalVisible(false);
+        setSelectedMemberID(null);
+    }, [isSuccess])
 
     const confirmRemoveMember = (value: string) => {
         setModalVisible(true);
-        setSelectedMember(value);
+        setSelectedMemberID(value);
     };
 
     const handleRemoveMember = () => {
         //TODO: fetch remove member
         // removeMember(selectectedMember)
-        setModalVisible(false);
-        setSelectedMember(null);
+        if (selectedMemberID == null) return;
+        mutate({ id: selectedMemberID });
     };
 
     const handleOnReject = () => {
       setModalVisible(false);
-      setSelectedMember(null);
+      setSelectedMemberID(null);
+    }
+
+
+    if (isLoading) {
+        return <Loading isLoading />
     }
 
     return (

@@ -1,25 +1,26 @@
-import { useState } from "react";
+import { joinCommunityMAtom } from "@/atom/query/community";
+import { router } from "expo-router";
+import { useAtomValue } from "jotai";
+import { useEffect, useState } from "react";
 import { View, Text, Pressable, TextInput } from "react-native";
-import { useNavigation } from "expo-router";
-import { userHasCommunityAtom } from "@/atom/community";
-import { useAtom } from "jotai";
 
 export default function JoinCommunityModal() {
-    const navigation = useNavigation();
     const [inviteLink, setInviteLink] = useState('');
     const [showErrorMessage, setShowErrorMessage] = useState(false);
-    const [, setUserHasCommunity] = useAtom(userHasCommunityAtom);
+    const { mutate, isSuccess, isPending } = useAtomValue(joinCommunityMAtom);
+
     const handlePress = () => {
-        if (inviteLink !== '') {
-            //to do: check invite link is valid 
-            //to do: create atom to send invite link to backend
-            setUserHasCommunity(true);
-            navigation.goBack();
-        }
-        else {
-            setShowErrorMessage(true);
-        }
+        if (!inviteLink) return setShowErrorMessage(true);
+        // TODO: check invite link is valid
+        const code = inviteLink.slice(-10)
+        mutate({ code });
     };
+
+    useEffect(() => {
+        if (isSuccess && !isPending) {
+            router.back();
+        }
+    }, [isSuccess])
 
     return (
         <View className="mt-8 flex gap-6">

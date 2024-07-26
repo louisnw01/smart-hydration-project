@@ -1,10 +1,27 @@
-import { atomWithMutation, atomWithQuery } from "jotai-tanstack-query";
+import { atomWithMutation, atomWithQuery, queryClientAtom } from "jotai-tanstack-query";
 import { authTokenAtom } from "../user";
-import { ENDPOINTS, request } from "@/util/fetch";
+import { ENDPOINTS, request, SERVER_URL } from "@/util/fetch";
+import { isCommunityOwnerAtom, userHasCommunityAtom } from "../community";
+
+
+export const communityInfoQAtom = atomWithQuery((get) => ({
+    queryKey: ["get-community-info", get(authTokenAtom)],
+    queryFn: async ({queryKey: [, token]}) => {
+        const response = await request(ENDPOINTS.COMMUNITY_INFO, {
+            auth: token as string
+        })
+        if (!response.ok) {
+            throw new Error("could not find a community");
+        }
+
+        return await response.json();
+    },
+    enabled: !!get(authTokenAtom),
+    retry: false,
+}))
 
 export const createCommunityMAtom = atomWithMutation((get) => ({
     mutationKey: ["create-community", get(authTokenAtom)],
-    enabled: !!get(authTokenAtom),
     mutationFn: async (formData: { name: string }) => {
         const token = get(authTokenAtom);
         const response = await request(ENDPOINTS.CREATE_COMMUNITY, {
@@ -17,6 +34,12 @@ export const createCommunityMAtom = atomWithMutation((get) => ({
             return;
         }
     },
+    onSuccess: (data, formData) => {
+        const qc = get(queryClientAtom);
+        qc.setQueryData(["get-community-info", get(authTokenAtom)], { name: formData.name, is_owner: true })
+    },
+    // only enabled if auth and user doesn't have a community
+    enabled: !!get(authTokenAtom) && !get(userHasCommunityAtom),
 }));
 
 export const updateCommunityMAtom = atomWithMutation((get) => ({
@@ -52,6 +75,87 @@ export const deleteCommunityMAtom = atomWithMutation((get) => ({
     },
     onSuccess: () => {},
 }));
+
+export const communityInviteLinkQAtom = atomWithQuery((get) => ({
+    queryKey: ["community-invite-link", get(authTokenAtom)],
+    queryFn: async ({ queryKey: [, token] }) => {
+        const response = await request(ENDPOINTS.COMMUNITY_GENERATE_INVITE, {
+            auth: token as string
+        })
+        if (!response.ok) {
+            throw new Error("could not generate invite link");
+        }
+
+        return await response.json();
+    },
+    enabled: !!get(authTokenAtom) && !!get(isCommunityOwnerAtom),
+    staleTime: 0,
+    initialData: undefined,
+}));
+
+export const joinCommunityMAtom = atomWithMutation((get) => ({
+    mutationKey: ["join-community", get(authTokenAtom)],
+    enabled: !!get(authTokenAtom),
+    mutationFn: async (formData: {code: string}) => {
+        const token = get(authTokenAtom);
+        const response = await request(SERVER_URL+`/community/invite/${formData.code}`, {
+            method: "post",
+            auth: token as string,
+            rawUrl: true
+        });
+
+        if (!response.ok) {
+            throw new Error("could not join community")
+        }
+    },
+    onSuccess: () => {
+        const qc = get(queryClientAtom);
+        qc.invalidateQueries({ queryKey: ['get-community-info'] });
+    },
+}));
+
+
+export const communityUsersQAtom = atomWithQuery((get) => ({
+    queryKey: ["get-community-users", get(authTokenAtom)],
+    queryFn: async ({ queryKey: [, token] }) => {
+        const response = await request(ENDPOINTS.COMMUNITY_USERS, {
+            auth: token as string
+        })
+        if (!response.ok) {
+            throw new Error("could not generate invite link");
+        }
+
+        return await response.json();
+    },
+    enabled: !!get(authTokenAtom) && !!get(userHasCommunityAtom),
+}));
+
+
+export const deleteCommunityMemberMAtom = atomWithMutation((get) => ({
+    mutationKey: ["delete-community-member", get(authTokenAtom)],
+    enabled: !!get(authTokenAtom),
+    mutationFn: async (formData: {id: number}) => {
+        const token = get(authTokenAtom);
+        const response = await request(ENDPOINTS.DELETE_COMMUNITY_MEMBER, {
+            method: "post",
+            body: formData,
+            auth: token as string,
+        });
+
+        if (!response.ok) {
+            throw new Error("could not delete community member")
+        }
+
+    },
+    onSuccess: (data, formData) => {
+    const qc = get(queryClientAtom)
+    void qc.setQueryData(
+        ["get-community-users", get(authTokenAtom)],
+        (prev) => prev?.filter((member) => member.id != formData.id)
+    )
+    }
+}));
+
 
 {/*export const getCommunityMembersMAtom = atomWithQuery((get) => ({
     queryKey: ["get-community-members", get(authTokenAtom)],
