@@ -5,10 +5,12 @@ from starlette.responses import RedirectResponse
 from ..auth import auth_user, generate_auth_token, get_hash, generate_invite_link, auth_user_no_email_verified
 from ..mail import send_email_with_ses
 from ..models import User, VerifyEmail, Jug, JugUser, Notifications
-from ..schemas import LinkJugsForm, JugLink, UserRegister, UserLogin, VerifyEmailForm, TargetUpdate, PushTokenForm
+from ..schemas import LinkJugsForm, JugLink, UserRegister, UserLogin, VerifyEmailForm, TargetUpdate, PushTokenForm, \
+    ToggleNotificationsForm
 from ..services import link_jugs_to_user_s, unlink_jug_from_user_s, delete_user, user_exists, create_user, \
     create_jug_user, update_jug_user_data, get_user_hash, get_user_by_email, get_user_name
 import datetime as dt
+import re
 
 router = APIRouter(
     prefix="/user",
@@ -159,12 +161,17 @@ def generate_verification_link(user_id):
 
 @router.post("/add-push-token")
 async def add_push_token(form: PushTokenForm, user_id: str = Depends(auth_user)):
+    time_to_send = dt.timedelta(hours=1)
+
+    send_time = (dt.datetime.now() + time_to_send).timestamp()
+
     with db_session:
         user = User.get(id=user_id)
         if Notifications.get(expo_token=form.pushToken, user=user) is None:
             Notifications(expo_token=form.pushToken,
                           active=True,
                           frequency=60 * 60 * 24,
+                          send_time=int(send_time),
                           user=user
                           )
             commit()
@@ -177,3 +184,50 @@ async def delete_push_token(form: PushTokenForm, user_id: str = Depends(auth_use
         if token is not None:
             token.delete()
             commit()
+
+
+@router.post("/toggle-notifications")
+async def toggle_notifications(form: ToggleNotificationsForm, user_id: str = Depends(auth_user)):
+    if form.pushToken is None:
+        raise HTTPException(status_code=400, detail="Modifying notification settings has no effect in simulators")
+
+    with db_session:
+        token = Notifications.get(expo_token=form.pushToken, user=user_id)
+        if form.notificationSelection == "On":
+            token.active = True
+            token.send_time = token.frequency + int(dt.datetime.now().timestamp())
+        elif form.notificationSelection == "Off":
+            token.active = False
+        commit()
+
+
+@router.post("/toggle-notifications-frequency")
+async def toggle_notifications_frequency(form: ToggleNotificationsForm, user_id: str = Depends(auth_user)):
+    if form.pushToken is None:
+        raise HTTPException(status_code=400, detail="Modifying notification settings has no effect in simulators")
+
+    hours = extract_number_from_string(form.notificationSelection)
+
+    time_to_send = dt.timedelta(hours=hours)
+
+    send_time = (dt.datetime.now() + time_to_send).timestamp()
+
+    with db_session:
+        token = Notifications.get(expo_token=form.pushToken, user=user_id)
+        token.send_time = int(send_time)
+        token.frequency = 60 * 60 * 24 * hours
+        commit()
+
+
+def extract_number_from_string(s):
+    # Define the regex pattern to match one or more digits followed by a space and the word "hours"
+    pattern = r'(\d+)\s+hours'
+
+    # Search the string for the pattern
+    match = re.search(pattern, s)
+
+    # If a match is found, return the number as an integer
+    if match:
+        return int(match.group(1))
+    else:
+        return None

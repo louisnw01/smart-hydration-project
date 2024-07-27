@@ -6,10 +6,14 @@ import { Entypo } from "@expo/vector-icons";
 interface OptionBlockProps {
     text: string;
     atom: WritableAtom<unknown, [unknown], void>;
-    href: string;
+    onPress?: Function;
+    icon: any,
+    multiSelect?: boolean;
+    isFirst: boolean|undefined;
+    isLast: boolean|undefined;
 }
 
-export function MultiSelectOptionBlock({ text, atom, icon, isFirst, isLast }) {
+export function MultiSelectOptionBlock({ text, atom, onPress, icon, isFirst, isLast }:OptionBlockProps) {
     const setValue = useSetAtom(atom);
     return (
         <OptionBlock
@@ -19,6 +23,7 @@ export function MultiSelectOptionBlock({ text, atom, icon, isFirst, isLast }) {
             atom={atom}
             onPress={() => {
                 setValue(text);
+                if(onPress) onPress();
             }}
             isFirst={isFirst}
             isLast={isLast}
@@ -42,7 +47,7 @@ export function OptionBlock({
     return (
         <Pressable
             className={`flex-row items-center justify-between h-14 bg-gray-100 px-4 dark:bg-neutral-900 ${className}`}
-            onPress={onPress}
+            onPress={()=>{if(onPress) onPress();}}
         >
             <View className="flex flex-row items-center gap-3">
                 {icon}
