@@ -7,7 +7,6 @@ import { userHasCommunityAtom, communityNameAtom } from "@/atom/community";
 
 export default function CreateCommunityModal() {
     const [communityName, setCommunityName] = useState('');
-    const hasCommunity = useAtomValue(userHasCommunityAtom);
     const { mutate, isPending, isSuccess, data, isError } = useAtomValue(createCommunityMAtom);
     const [showErrorMessage, setShowErrorMessage] = useState(false);
 

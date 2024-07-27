@@ -86,12 +86,12 @@ def get_all_jug_ids(user_id, session):
     }
 
 
-def get_hydration_events(session, jug, start_timestamp):
+def get_hydration_events(session, jug, start_timestamp, last_day=False):
     # get a list of all hydration events for the jug for the past year
     # TODO convert start_timestamp to datetime. fromTimestamp
     start_date = dt.datetime.fromtimestamp(start_timestamp)
-
-    data = query(session, f'/data/device/{jug.smart_hydration_id}/events/hydration?maxCount=1000')
+    todays_date = dt.date.today().strftime("%Y-%m-%d") if last_day else None
+    data = query(session, f'/data/device/{jug.smart_hydration_id}/events/hydration?maxCount=1000{f"&minDate={todays_date}" if last_day else ""}')
     if data is None:
         return []
     # 2024-06-21T12:09:32.476000
