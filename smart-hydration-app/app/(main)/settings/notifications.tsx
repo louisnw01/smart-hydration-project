@@ -53,68 +53,88 @@ const settingsList: ISettingsSection[] = [
             {
                 name: "1 hour",
                 component: (name, isFirst, isLast) => {
+                    const notificationsOn:boolean = useAtomValue(notificationsAtom) == "On" ? true : false;
                     const {mutate: toggleNotificationsFrequency} = useAtomValue(toggleNotificationsFrequencyMAtom);
                     return (
-                        <MultiSelectOptionBlock
-                            text={name}
-                            atom={notificationFrequencyAtom}
-                            icon={null}
-                            isFirst={isFirst}
-                            isLast={isLast} 
-                            multiSelect={false}
-                            onPress={()=>{toggleNotificationsFrequency()}}                          
-                        />
+                        <>
+                            {notificationsOn && (
+                                <MultiSelectOptionBlock
+                                    text={name}
+                                    atom={notificationFrequencyAtom}
+                                    icon={null}
+                                    isFirst={isFirst}
+                                    isLast={isLast}
+                                    multiSelect={false}
+                                    onPress={() => { toggleNotificationsFrequency() }}                          
+                                />
+                            )}
+                        </>
                     );
                 },
             },
             {
                 name: "3 hours",
                 component: (name, isFirst, isLast) => {
+                    const notificationsOn:boolean = useAtomValue(notificationsAtom) == "On" ? true : false;
                     const {mutate: toggleNotificationsFrequency} = useAtomValue(toggleNotificationsFrequencyMAtom);
                     return (
-                        <MultiSelectOptionBlock
-                            text={name}
-                            atom={notificationFrequencyAtom}
-                            icon={null}
-                            isFirst={isFirst}
-                            isLast={isLast} 
-                            multiSelect={false}
-                            onPress={()=>{toggleNotificationsFrequency()}}                        
-                        />
+                        <>
+                            {notificationsOn && (
+                                <MultiSelectOptionBlock
+                                    text={name}
+                                    atom={notificationFrequencyAtom}
+                                    icon={null}
+                                    isFirst={isFirst}
+                                    isLast={isLast}
+                                    multiSelect={false}
+                                    onPress={() => { toggleNotificationsFrequency() }}                          
+                                />
+                            )}
+                        </>
                     );
                 },
             },
             {
                 name: "6 hours",
                 component: (name, isFirst, isLast) => {
+                    const notificationsOn:boolean = useAtomValue(notificationsAtom) == "On" ? true : false;
                     const {mutate: toggleNotificationsFrequency} = useAtomValue(toggleNotificationsFrequencyMAtom);
                     return (
-                        <MultiSelectOptionBlock
-                            text={name}
-                            atom={notificationFrequencyAtom}
-                            icon={null}
-                            isFirst={isFirst}
-                            isLast={isLast}
-                            multiSelect={false}
-                            onPress={()=>{toggleNotificationsFrequency()}}                        
-                        />
+                        <>
+                            {notificationsOn && (
+                                <MultiSelectOptionBlock
+                                    text={name}
+                                    atom={notificationFrequencyAtom}
+                                    icon={null}
+                                    isFirst={isFirst}
+                                    isLast={isLast}
+                                    multiSelect={false}
+                                    onPress={() => { toggleNotificationsFrequency() }}                          
+                                />
+                            )}
+                        </>
                     );
                 },
             },
             {
                 name: "12 hours",
                 component: (name, isFirst, isLast) => {
+                    const notificationsOn:boolean = useAtomValue(notificationsAtom) == "On" ? true : false;
                     const {mutate: toggleNotificationsFrequency} = useAtomValue(toggleNotificationsFrequencyMAtom);
                     return (
-                        <MultiSelectOptionBlock
-                            text={name}
-                            atom={notificationFrequencyAtom}
-                            icon={null}
-                            isFirst={isFirst}
-                            isLast={isLast} 
-                            multiSelect={false}
-                            onPress={()=>{toggleNotificationsFrequency()}}                        
-                        />
+                        <>
+                            {notificationsOn && (
+                                <MultiSelectOptionBlock
+                                    text={name}
+                                    atom={notificationFrequencyAtom}
+                                    icon={null}
+                                    isFirst={isFirst}
+                                    isLast={isLast}
+                                    multiSelect={false}
+                                    onPress={() => { toggleNotificationsFrequency() }}                          
+                                />
+                            )}
+                        </>
                     );
                 },
             },
@@ -130,6 +150,7 @@ const shouldRenderHeader = (section: SectionListData<ISettingsActions, ISettings
 
 export default function Notifications() {
     const insets = useSafeAreaInsets();
+    const notificationsOn:boolean = useAtomValue(notificationsAtom) == "On" ? true : false;
     return (
         <View
             className="flex flex-1 justify-between mx-4 mt-4"
@@ -147,7 +168,7 @@ export default function Notifications() {
                     )
                 }
                 renderSectionHeader={({ section }) => 
-                    shouldRenderHeader(section) && (
+                    (shouldRenderHeader(section) && notificationsOn) && (
                     <View className="bg-gray-100 dark:bg-neutral-900 py-4 px-4 rounded-t-xl mt-6">
                         <Text className="font-bold dark:text-white">
                             {section.title}
