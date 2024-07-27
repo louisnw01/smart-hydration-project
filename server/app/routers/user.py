@@ -188,7 +188,7 @@ async def delete_push_token(form: PushTokenForm, user_id: str = Depends(auth_use
 
 @router.post("/toggle-notifications")
 async def toggle_notifications(form: ToggleNotificationsForm, user_id: str = Depends(auth_user)):
-    if form.pushToken is None:
+    if form.pushToken == '':
         raise HTTPException(status_code=400, detail="Modifying notification settings has no effect in simulators")
 
     with db_session:
@@ -203,7 +203,7 @@ async def toggle_notifications(form: ToggleNotificationsForm, user_id: str = Dep
 
 @router.post("/toggle-notifications-frequency")
 async def toggle_notifications_frequency(form: ToggleNotificationsForm, user_id: str = Depends(auth_user)):
-    if form.pushToken is None:
+    if form.pushToken == '':
         raise HTTPException(status_code=400, detail="Modifying notification settings has no effect in simulators")
 
     hours = extract_number_from_string(form.notificationSelection)
