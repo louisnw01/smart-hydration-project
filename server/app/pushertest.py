@@ -1,3 +1,4 @@
+import asyncio
 from os import getenv
 import hmac
 import hashlib
@@ -6,20 +7,41 @@ from asyncpusher.channel import Channel
 from asyncpusher.pusher import Pusher
 from pony.orm.core import db_session
 
-from .api import get_jug_latest, login_and_get_session
+from .api import get_hydration_events, get_jug_latest, login_and_get_session
 from .routers.websocket_tunnel import tunnel
 from .models import Jug, User
 
 
-async def fire_jug_info(data):
-    system_id = data['device']
-    jug_data = get_jug_latest(login_and_get_session(), system_id);
+async def fire_jug_info(sys_id):
+    jug_data = get_jug_latest(login_and_get_session(), sys_id);
 
     if jug_data is None:
         return
 
     await tunnel.fire(f'jug-latest', jug_data['id'], jug_data)
 
+
+# The function below should be used, but a few changes are needed:
+    # jugs can only be owned by one person
+    # we need jug.owner attribute
+    # we need juguser.last_drank column
+
+async def fire_last_drank(sys_id):
+    with db_session:
+        jug = Jug.get(system_id=sys_id)
+        if jug is None:
+            return
+
+        jug_data_today = get_hydration_events(login_and_get_session(), jug, 0, last_day=True)
+        if len(jug_data_today) == 0:
+            return
+
+        latest = jug_data_today[-1]
+
+        if latest['time'] > jug.last_drank:
+            jug.last_drank = latest['time']
+        # TODO
+        await tunnel.fire('last_drank', jug.owner, latest['time'])
 
 async def on_telemetry_change(data):
     print(f'[{dt.datetime.now()}] telemetry changed', data)
@@ -28,6 +50,7 @@ async def on_telemetry_change(data):
 async def on_waterlevel_change(data):
     print(f'[{dt.datetime.now()}] waterlevel changed', data)
     await fire_jug_info(data)
+    asyncio.gather(fire_jug_info(data['device']), fire_last_drank(data['device']))
 
 
 
@@ -43,6 +66,8 @@ async def pusher_init():
     pusher = Pusher(getenv("PUSHER_APP_KEY"), 'eu', channel_authenticator=auth_channel)
     await pusher.connect()
 
-    channel = await pusher.subscribe("private-organisation.5.devices")
-    channel.bind('device-telemetry-updated', on_telemetry_change)
-    channel.bind('device-waterlevel-updated', on_waterlevel_change)
+
+    for org in (5, 2):
+        channel = await pusher.subscribe(f"private-organisation.{org}.devices")
+        channel.bind('device-telemetry-updated', on_telemetry_change)
+        channel.bind('device-waterlevel-updated', on_waterlevel_change)

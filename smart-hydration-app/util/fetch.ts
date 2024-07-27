@@ -1,10 +1,10 @@
 // TODO server_url should be in .env
 
-export const SERVER_ADDRESS = "localhost:8085";
+export const SERVER_ADDRESS = "192.168.1.104:8085";
 // export const SERVER_ADDRESS = "hydrationapi.louisnw.com";
 
 export const SERVER_URL = `http${
-  SERVER_ADDRESS.includes(".com") ? "s" : ""
+    SERVER_ADDRESS.includes(".com") ? "s" : ""
 }://${SERVER_ADDRESS}`;
 
 export const ENDPOINTS = {
@@ -31,9 +31,10 @@ export const ENDPOINTS = {
     CREATE_COMMUNITY: "/community/create",
     UPDATE_COMMUNITY: "/community/update",
     DELETE_COMMUNITY: "/community/delete",
-    COMMUNITY_GENERATE_INVITE: '/community/generate-invite',
+    COMMUNITY_GENERATE_INVITE: "/community/generate-invite",
     COMMUNITY_USERS: "/community/users",
     DELETE_COMMUNITY_MEMBER: "/community/delete-member",
+    PATIENT_INFO: "/community/patient-info",
 
     CREATE_JUG_USER: "/jug-user/create",
     VERIFY_EMAIL: "/user/verify",
@@ -49,7 +50,7 @@ interface RequestOptions {
 
 export async function request(
     endpoint: string,
-    options: Partial<RequestOptions>
+    options: Partial<RequestOptions>,
 ) {
     let url = options.rawUrl ? endpoint : SERVER_URL + endpoint;
 

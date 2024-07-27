@@ -12,7 +12,6 @@ import {
 import React from "react";
 import { Link, router, Tabs } from "expo-router";
 import { Pressable } from "react-native";
-import { userHasCommunityAtom, communityNameAtom } from "@/atom/community";
 
 export default function TabLayout() {
     const palette = useColorPalette();

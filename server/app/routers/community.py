@@ -29,6 +29,22 @@ async def community_info(user_id: str = Depends(auth_user)):
         return {"name": community.name, "is_owner": member.is_owner}
 
 
+@router.get("/patient-info")
+async def patient_info(user_id: str = Depends(auth_user)):
+    with db_session:
+        community = try_get_users_community(user_id)
+
+        patient_info = []
+        for juguser in community.jug_users:
+            patient_info.append({
+                "name": juguser.name,
+                "jugs": [{"name": jug.name, "id": jug.smart_hydration_id} for jug in juguser.jugs],
+                "target": juguser.target,
+            })
+
+        return patient_info
+
+
 @router.get("/users")
 async def community_users(user_id: str = Depends(auth_user)):
     with db_session:
@@ -111,8 +127,8 @@ async def validate_invitation(code: str, user_id: str = Depends(auth_user)):
         link = InviteLink.get(id=code)
 
         if link is None or link.expire_time < dt.datetime.now().timestamp():
-            link.delete()
-            raise HTTPException(400, 'invalid link')
+            link.delete() if link is not None else None
+            raise HTTPException(400, 'This link is invalid. Please try again')
 
         if user.community_member is not None:
             raise HTTPException(400, 'user is already within a community')

@@ -1,33 +1,13 @@
-import { atom } from 'jotai'
 import { MemberInfo } from "@/interfaces/community";
+import { atom } from "jotai";
 
-import {
-    atomWithMutation,
-    queryClientAtom,
-} from "jotai-tanstack-query";
-import { authTokenAtom } from "./user";
 import { ENDPOINTS, request } from "@/util/fetch";
-import { communityInfoQAtom } from './query/community';
+import { atomWithMutation, queryClientAtom } from "jotai-tanstack-query";
+import { authTokenAtom } from "./user";
 
-
-export const userHasCommunityAtom = atom((get) => {
-    const { data, isLoading } = get(communityInfoQAtom);
-    return !isLoading && !!data?.name;
-});
-export const communityNameAtom = atom((get) => {
-    const { data, isLoading } = get(communityInfoQAtom);
-    if (isLoading) return;
-    return data?.name;
-});
-export const isCommunityOwnerAtom = atom((get) => {
-    const { data, isLoading } = get(communityInfoQAtom);
-    return !isLoading && data?.is_owner;
-})
 export const membersAtom = atom(new Map());
-export const selectedJugsForMemberAtom = atom<Set<string>>(new Set<string>);
+export const selectedJugsForMemberAtom = atom<Set<string>>(new Set<string>());
 export const selectedMemberAtom = atom<Partial<MemberInfo>>({});
-
-
 
 export const linkJugToMemberMAtom = atomWithMutation((get) => ({
     mutationKey: ["/user/link-jug", get(authTokenAtom)],
