@@ -21,11 +21,6 @@ async def fire_jug_info(sys_id):
     await tunnel.fire(f'jug-latest', jug_data['id'], jug_data)
 
 
-# The function below should be used, but a few changes are needed:
-    # jugs can only be owned by one person
-    # we need jug.owner attribute
-    # we need juguser.last_drank column
-
 async def fire_last_drank(sys_id):
     with db_session:
         jug = Jug.get(system_id=sys_id)
@@ -38,10 +33,10 @@ async def fire_last_drank(sys_id):
 
         latest = jug_data_today[-1]
 
-        if latest['time'] > jug.last_drank:
-            jug.last_drank = latest['time']
-        # TODO
-        await tunnel.fire('last_drank', jug.owner, latest['time'])
+        for juguser in jug.owners:
+            if latest['time'] > juguser.last_drank:
+                juguser.last_drank = latest['time']
+            await tunnel.fire('last_drank', juguser.id, latest['time'])
 
 async def on_telemetry_change(data):
     print(f'[{dt.datetime.now()}] telemetry changed', data)
