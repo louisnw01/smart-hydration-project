@@ -33,7 +33,9 @@ export const ENDPOINTS = {
     VERIFY_EMAIL: "/user/verify",
 
     ADD_PUSH_TOKEN: "/user/add-push-token",
-    REMOVE_PUSH_TOKEN: "/user/remove-push-token"
+    REMOVE_PUSH_TOKEN: "/user/remove-push-token",
+    TOGGLE_NOTIFICATIONS: "/user/toggle-notifications",
+    TOGGLE_NOTIFICATIONS_FREQUENCY: "/user/toggle-notifications-frequency",
 };
 
 interface RequestOptions {

@@ -43,7 +43,7 @@ export default function LoginPage() {
             registerForPushNotificationsAsync()
             .then(pushToken => {
                 addPushToken({pushToken});
-                setStoredPushToken(pushToken);
+                setStoredPushToken(pushToken ?? "");
             }
             )   
             .catch((error: any) => console.error(error));

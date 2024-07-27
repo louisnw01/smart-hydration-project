@@ -111,4 +111,6 @@ class Notifications(db.Entity):
     expo_token = PrimaryKey(str)
     active = Required(bool)
     frequency = Required(int)
+    send_time = Required(int)
     user = Required(User)
+

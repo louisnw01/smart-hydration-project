@@ -65,3 +65,8 @@ class VerifyEmailForm(BaseModel):
 
 class PushTokenForm(BaseModel):
     pushToken: str
+
+
+class ToggleNotificationsForm(BaseModel):
+    notificationSelection: str
+    pushToken: str

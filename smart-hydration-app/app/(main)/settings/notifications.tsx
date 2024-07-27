@@ -4,6 +4,8 @@ import { Feather } from "@expo/vector-icons";
 import { ISettingsActions, ISettingsSection } from "@/interfaces/settings";
 import { SectionList, View, Text, SectionListData } from "react-native";
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { toggleNotificationsFrequencyMAtom, toggleNotificationsMAtom } from "@/atom/query";
+import { useAtomValue } from "jotai";
 
 const settingsList: ISettingsSection[] = [
     {
@@ -12,13 +14,16 @@ const settingsList: ISettingsSection[] = [
             {
                 name: "On",
                 component: (name, isFirst, isLast) => {
+                    const {mutate: toggleNotifications} = useAtomValue(toggleNotificationsMAtom);
                     return (
                         <MultiSelectOptionBlock
                             text={name}
                             atom={notificationsAtom}
                             icon={<Feather name="bell" size={18} color="gray" />}
                             isFirst={isFirst}
-                            isLast={isLast}
+                            isLast={isLast} 
+                            multiSelect={false}
+                            onPress={toggleNotifications}                        
                         />
                     );
                 },
@@ -26,15 +31,16 @@ const settingsList: ISettingsSection[] = [
             {
                 name: "Off",
                 component: (name, isFirst, isLast) => {
+                    const {mutate: toggleNotifications} = useAtomValue(toggleNotificationsMAtom);
                     return (
                         <MultiSelectOptionBlock
                             text={name}
                             atom={notificationsAtom}
-                            icon={
-                                <Feather name="bell-off" size={18} color="gray" />
-                            }
+                            icon={<Feather name="bell-off" size={18} color="gray" />}
                             isFirst={isFirst}
-                            isLast={isLast}
+                            isLast={isLast} 
+                            multiSelect={false}
+                            onPress={()=>{toggleNotifications()}}                           
                         />
                     );
                 },
@@ -47,13 +53,16 @@ const settingsList: ISettingsSection[] = [
             {
                 name: "1 hour",
                 component: (name, isFirst, isLast) => {
+                    const {mutate: toggleNotificationsFrequency} = useAtomValue(toggleNotificationsFrequencyMAtom);
                     return (
                         <MultiSelectOptionBlock
                             text={name}
                             atom={notificationFrequencyAtom}
                             icon={null}
                             isFirst={isFirst}
-                            isLast={isLast}
+                            isLast={isLast} 
+                            multiSelect={false}
+                            onPress={()=>{toggleNotificationsFrequency()}}                          
                         />
                     );
                 },
@@ -61,13 +70,16 @@ const settingsList: ISettingsSection[] = [
             {
                 name: "3 hours",
                 component: (name, isFirst, isLast) => {
+                    const {mutate: toggleNotificationsFrequency} = useAtomValue(toggleNotificationsFrequencyMAtom);
                     return (
                         <MultiSelectOptionBlock
                             text={name}
                             atom={notificationFrequencyAtom}
                             icon={null}
                             isFirst={isFirst}
-                            isLast={isLast}
+                            isLast={isLast} 
+                            multiSelect={false}
+                            onPress={()=>{toggleNotificationsFrequency()}}                        
                         />
                     );
                 },
@@ -75,6 +87,7 @@ const settingsList: ISettingsSection[] = [
             {
                 name: "6 hours",
                 component: (name, isFirst, isLast) => {
+                    const {mutate: toggleNotificationsFrequency} = useAtomValue(toggleNotificationsFrequencyMAtom);
                     return (
                         <MultiSelectOptionBlock
                             text={name}
@@ -82,6 +95,8 @@ const settingsList: ISettingsSection[] = [
                             icon={null}
                             isFirst={isFirst}
                             isLast={isLast}
+                            multiSelect={false}
+                            onPress={()=>{toggleNotificationsFrequency()}}                        
                         />
                     );
                 },
@@ -89,13 +104,16 @@ const settingsList: ISettingsSection[] = [
             {
                 name: "12 hours",
                 component: (name, isFirst, isLast) => {
+                    const {mutate: toggleNotificationsFrequency} = useAtomValue(toggleNotificationsFrequencyMAtom);
                     return (
                         <MultiSelectOptionBlock
                             text={name}
                             atom={notificationFrequencyAtom}
                             icon={null}
                             isFirst={isFirst}
-                            isLast={isLast}
+                            isLast={isLast} 
+                            multiSelect={false}
+                            onPress={()=>{toggleNotificationsFrequency()}}                        
                         />
                     );
                 },
