@@ -8,10 +8,9 @@ import {
     Foundation,
     MaterialIcons,
 } from "@expo/vector-icons";
-import React from "react";
 import { Link, router, Tabs } from "expo-router";
+import React from "react";
 import { Pressable } from "react-native";
-import { userHasCommunityAtom, communityNameAtom } from "@/atom/community";
 
 export default function TabLayout() {
     const palette = useColorPalette();
@@ -109,7 +108,11 @@ export default function TabLayout() {
                 options={{
                     title: "Community",
                     tabBarIcon: ({ color }) => (
-                        <FontAwesome6 name="people-group" size={24} color={color} />
+                        <FontAwesome6
+                            name="people-group"
+                            size={24}
+                            color={color}
+                        />
                     ),
                     headerRight: () => (
                         <Link className="px-5" href="add-member-modal">
@@ -118,7 +121,7 @@ export default function TabLayout() {
                                 size={26}
                                 color={palette.fg}
                             />
-                        </Pressable>
+                        </Link>
                     ),
                 }}
             />
