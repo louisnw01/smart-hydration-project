@@ -50,6 +50,12 @@ export default function CommunityLayout() {
                     title: "Remove Member",
                 }}
             />
+            <Stack.Screen
+                name="edit-tags"
+                options={{
+                    title: "Edit community tags",
+                }}
+            />
         </Stack>
     );
 }

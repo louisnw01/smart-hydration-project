@@ -76,6 +76,13 @@ export default function MemberInfoModal() {
                     textClass="text-lg"
                 />
             </View>
+            <View className="flex flex-row justify-center items-center">
+                <StyledButton
+                    text="Apply tags"
+                    href="apply-tags"
+                    textClass="text-lg"
+                />
+            </View>
         </View>
     );
 }

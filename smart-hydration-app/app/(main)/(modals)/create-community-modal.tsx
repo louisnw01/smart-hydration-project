@@ -38,7 +38,6 @@ export default function CreateCommunityModal() {
             <View className="flex flex-row justify-center items-center">
                 <StyledTextInput
                     placeholder={`Community name (required)`}
-                    className="bg-gray-200 h-14 placeholder-black text-xl rounded-xl px-3"
                     onChangeText={(val) => {
                         setCommunityName(val);
                         setShowErrorMessage(false);
