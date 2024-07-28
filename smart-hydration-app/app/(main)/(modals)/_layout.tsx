@@ -23,7 +23,11 @@ export default function ModalLayout() {
                     return (
                         <Pressable onPress={() => router.back()}>
                             <Entypo
-                                name= {Platform.OS == "android" ? "chevron-left" :"circle-with-cross"}
+                                name={
+                                    Platform.OS == "android"
+                                        ? "chevron-left"
+                                        : "circle-with-cross"
+                                }
                                 size={24}
                                 color="rgb(80, 80, 80)"
                             />
@@ -40,10 +44,10 @@ export default function ModalLayout() {
                 name="add-device-modal"
                 options={{ title: "Add a Device" }}
             />
-            <Stack.Screen
+            {/* <Stack.Screen
                 name="add-drink-modal"
                 options={{ title: "Add a Drink" }}
-            />
+            /> */}
             <Stack.Screen name="device-info-modal" options={{ title: "" }} />
             <Stack.Screen
                 name="edit-device-name-modal"
