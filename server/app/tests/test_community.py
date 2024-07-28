@@ -61,6 +61,10 @@ def test_community_invites():
 
     auth_token = response.json()['access_token']
 
+    # verify email to allow query
+    with db_session:
+        User.get(email='testinvite@gmail.com').email_verified = True
+
     response = client.post(f'/community/invite/{code}', headers={'Authorization': f'Bearer {auth_token}'})
     assert response.status_code == 200
 

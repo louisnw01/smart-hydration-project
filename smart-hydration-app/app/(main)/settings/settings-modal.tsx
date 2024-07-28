@@ -80,6 +80,26 @@ const settingsList: ISettingsSection[] = [
                     );
                 },
             },
+            {
+                name: "Daily Target",
+                component: (name, isFirst, isLast) => {
+                    const router = useRouter();
+                    return (
+                        <OptionBlock
+                            isLast={isLast}
+                            text={name}
+                            onPress={() => router.navigate("settings/adjust-target")}
+                            icon={
+                                <MaterialCommunityIcons
+                                    name="cup-water"
+                                    size={19}
+                                    color="gray"
+                                />
+                            }
+                        />
+                    );
+                },
+            },
         ],
     },
     {
@@ -94,6 +114,71 @@ const settingsList: ISettingsSection[] = [
                             isLast={isLast}
                             text={name}
                             onPress={() => router.navigate("settings/theme")}
+                            icon={
+                                <Ionicons
+                                    name="color-palette"
+                                    size={19}
+                                    color="gray"
+                                />
+                            }
+                        />
+                    );
+                },
+            },
+        ],
+    },
+    {
+        title: "Community",
+        data: [
+            {
+                name: "Community Profile",
+                component: (name, isFirst, isLast) => {
+                    const router = useRouter();
+                    return (
+                        <OptionBlock
+                            isLast={isLast}
+                            text={name}
+                            onPress={() => router.navigate("settings/community/community-profile")}
+                            icon={
+                                <Ionicons
+                                    name="color-palette"
+                                    size={19}
+                                    color="gray"
+                                />
+                            }
+                        />
+                    );
+                },
+            },
+            {
+                name: "Remove Member",
+                component: (name, isFirst, isLast) => {
+                    const router = useRouter();
+                    return (
+                        <OptionBlock
+                            isLast={isLast}
+                            text={name}
+                            onPress={() => router.navigate("settings/community/remove-member")}
+                            icon={
+                                <Ionicons
+                                    name="color-palette"
+                                    size={19}
+                                    color="gray"
+                                />
+                            }
+                        />
+                    );
+                },
+            },
+            {
+                name: "Invite Member",
+                component: (name, isFirst, isLast) => {
+                    const router = useRouter();
+                    return (
+                        <OptionBlock
+                            isLast={isLast}
+                            text={name}
+                            onPress={() => router.navigate("settings/community/invite-member")}
                             icon={
                                 <Ionicons
                                     name="color-palette"

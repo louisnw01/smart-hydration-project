@@ -1,4 +1,4 @@
-import { View, Pressable, Text, ScrollView, TextInput } from "react-native";
+import { View, Text, ScrollView, TextInput } from "react-native";
 
 import { useEffect, useRef, useState } from "react";
 import { useAtomValue, useSetAtom } from "jotai";

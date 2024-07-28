@@ -2,14 +2,16 @@ import { View, Text } from "react-native";
 import { useAtom, useAtomValue } from "jotai";
 import { HYDRATION_MESSAGE } from "@/constants/hydration-status";
 import colors from "@/colors";
-import { userNameAtom } from "@/atom/user";
-import { getUserQAtom } from "@/atom/query";
+import { dailyTargetAtom, userNameAtom } from "@/atom/user";
+import { getUserQAtom, getUserTargetQAtom } from "@/atom/query";
 import { useEffect } from "react";
 import { amountDrankTodayAtom } from "@/atom/hydration";
+import { getRelativeTarget } from "@/util/trends";
 
 export default function HydrationStatus() {
     const hydration = useAtomValue(amountDrankTodayAtom);
-    const hydrated = hydration >= 1600;
+    const target = useAtomValue(dailyTargetAtom);
+    const hydrated = hydration >= getRelativeTarget(target);
     const { refetch, isSuccess, data } = useAtomValue(getUserQAtom);
     const [userName, setUserName] = useAtom(userNameAtom);
 

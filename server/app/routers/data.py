@@ -54,7 +54,7 @@ async def get_historical_jug_data(timestamp: int, user_id: str = Depends(auth_us
         for jug in jugs:
             big_list.extend(get_hydration_events(session, jug, timestamp))
 
-        other_drinks = select(o for o in OtherDrink if (o.juguser == juguser))
+        other_drinks = juguser.otherdrinks
 
         for drink in other_drinks:
             print(drink.timestamp , " " , drink.capacity)
