@@ -1,12 +1,11 @@
+import { isMeasuringNewCupSizeAtom } from "@/atom/device";
 import { getJugDataQAtom } from "@/atom/query";
 import { authTokenAtom } from "@/atom/user";
 import { DeviceInfo } from "@/interfaces/device";
-import { atom, useAtomValue } from "jotai";
+import { atom } from "jotai";
 import { atomEffect } from "jotai-effect";
 import { queryClientAtom } from "jotai-tanstack-query";
-import { useEffect } from "react";
 import { SERVER_ADDRESS } from "./fetch";
-import { isMeasuringNewCupSizeAtom } from "@/atom/device";
 
 enum MessageType {
     CONNECT = 1,
@@ -105,17 +104,21 @@ export const subscribeToJugDataEAtom = atomEffect((get, set) => {
     if (!tunnel) return;
     const queryClient = get(queryClientAtom);
 
-    const handleJugData = (jugData: DeviceInfo) => {
+    const handleJugData = (newJugData: DeviceInfo) => {
         const { data: jugsLatest } = get(getJugDataQAtom);
-        if (!jugsLatest) return;
-        const row = jugsLatest.find((row) => row.id == jugData.id);
-        if (!row) return;
+        if (!jugsLatest) {
+            return;
+        }
+        const row = jugsLatest.find((row) => row.id == newJugData.id);
+        if (!row) {
+            return;
+        }
 
         const jugIdOfMeasuringJug = get(isMeasuringNewCupSizeAtom);
 
-        if (jugIdOfMeasuringJug && jugIdOfMeasuringJug == jugData.id) {
-            const diff = row.water_level - jugData.water_level;
-            if (diff >= 0) {
+        if (jugIdOfMeasuringJug && jugIdOfMeasuringJug == newJugData.id) {
+            const diff = row.water_level - newJugData.water_level;
+            if (diff <= 0) {
                 return;
             }
             // we can take this diff as the cup size
@@ -126,7 +129,9 @@ export const subscribeToJugDataEAtom = atomEffect((get, set) => {
             ["get-jug-data", get(authTokenAtom)],
             (prev: DeviceInfo[]) =>
                 prev.map((row) =>
-                    row.id == jugData.id ? { ...jugData, name: row.name } : row,
+                    row.id == newJugData.id
+                        ? { ...newJugData, name: row.name }
+                        : row,
                 ),
         );
     };
