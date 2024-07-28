@@ -7,7 +7,6 @@ export default function Tag({ name }: { name: string }) {
         <View className="bg-blue dark:bg-neutral-800 rounded-full px-3 py-1 mx-1 my-1">
             <Text className="text-white font-bold dark:text-black text-sm">{name}</Text>
         </View>
-        
     );
 }
 

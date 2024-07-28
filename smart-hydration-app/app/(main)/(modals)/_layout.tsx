@@ -86,7 +86,7 @@ export default function ModalLayout() {
             />
             <Stack.Screen
                 name="apply-tags"
-                options={{ title: "Apply tags" }}
+                options={{ title: "Apply tags to member" }}
             />
         </Stack>
     );
