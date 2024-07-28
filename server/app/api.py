@@ -87,31 +87,32 @@ def get_all_jug_ids(user_id, session):
 
 
 def get_hydration_events(session, jug, start_timestamp, last_day=False):
+
     # get a list of all hydration events for the jug for the past year
     # TODO convert start_timestamp to datetime. fromTimestamp
     start_date = dt.datetime.fromtimestamp(start_timestamp)
     todays_date = dt.date.today().strftime("%Y-%m-%d") if last_day else None
     data = query(session, f'/data/device/{jug.smart_hydration_id}/events/hydration?maxCount=1000{f"&minDate={todays_date}" if last_day else ""}')
-    if data is None:
+    if data is None or (type(data) == list and len(data) == 0):
         return []
     # 2024-06-21T12:09:32.476000
     # split the array
 
     #  iso_date = dt.datetime.fromisoformat(row['timestamp'])
     # ValueError: Invalid isoformat string: '2023-07-06T06:43:04.000000Z'
-    aggs = []
+    events = []
     for row in data.values():
         if row['type'] != 'DRINK':
             continue
         iso_date = dt.datetime.fromisoformat(row['timestamp'].replace('Z', ''))
 
-        aggs.append({
+        events.append({
             'time': iso_date.timestamp(),
             'value': -row['water_delta'],
             'name': jug.name,
         })
 
-    return aggs
+    return events
 
 
 def get_todays_intake(session, jug):
