@@ -24,10 +24,15 @@ export default function MemberRow({ member }: { member: MemberInfo }) {
                     <Text className="font-bold">Last drank: </Text>
                     {/* {member.last_drank} hours ago */}
                 </Text>
-                <Text className="text-2l dark:text-white">
-                    <Text className="font-bold">Target progress: </Text>
-                    {/* {member.target_percentage}% */}
+
+                <Text className="font-bold">
+                    {`Target Progress: ${((member.drank_today / member.target) * 100).toFixed(0)}%`}
                 </Text>
+                <Text className="font-bold">
+                    Amount Drank: {member.drank_today}ml
+                </Text>
+                {/* {member.target_percentage}% */}
+
                 <Text className="text-2l dark:text-white">
                     <Text className="font-bold">Notes: </Text>
                     {/* {member.description} */}

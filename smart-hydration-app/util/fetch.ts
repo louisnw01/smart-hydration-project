@@ -1,6 +1,6 @@
 // TODO server_url should be in .env
 
-export const SERVER_ADDRESS = "192.168.1.104:8085";
+export const SERVER_ADDRESS = "localhost:8085";
 // export const SERVER_ADDRESS = "hydrationapi.louisnw.com";
 
 export const SERVER_URL = `http${
@@ -34,7 +34,7 @@ export const ENDPOINTS = {
     COMMUNITY_GENERATE_INVITE: "/community/generate-invite",
     COMMUNITY_USERS: "/community/users",
     DELETE_COMMUNITY_MEMBER: "/community/delete-member",
-    PATIENT_INFO: "/community/patient-info",
+    PATIENT_INFO: "/community/patient-info", // get the info through this endpoint
 
     CREATE_JUG_USER: "/jug-user/create",
     VERIFY_EMAIL: "/user/verify",

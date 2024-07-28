@@ -52,7 +52,7 @@ async def get_historical_jug_data(timestamp: int, user_id: str = Depends(auth_us
 
         big_list = []
         for jug in jugs:
-            big_list.extend(get_hydration_events(session, jug, timestamp))
+            big_list.extend(get_hydration_events(session, jug, timestamp, False))
 
         other_drinks = juguser.otherdrinks
 
