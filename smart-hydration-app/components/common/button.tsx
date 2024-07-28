@@ -37,7 +37,7 @@ export default function StyledButton(props: ButtonProps) {
 
     return (
         <Pressable
-            style={style}
+            style={props.style}
             className={finalButtonClass}
             onPress={() =>
                 props.onPress
