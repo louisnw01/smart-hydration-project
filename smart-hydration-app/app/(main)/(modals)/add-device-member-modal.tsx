@@ -1,16 +1,17 @@
 import { useState } from "react";
 import { View, Text, SectionList, Pressable } from "react-native";
 import { useAtom, useAtomValue } from "jotai";
-import { getAllJugsQAtom } from "@/atom/query"; 
+import { getAllJugsQAtom } from "@/atom/query";
 import { useNavigation } from "expo-router";
 import Loading from "@/components/common/loading";
 import { selectedJugsForMemberAtom } from "@/atom/community";
+import StyledButton from "@/components/common/button";
 
 export default function AddDeviceMemberModal() {
     const { data, isLoading } = useAtomValue(getAllJugsQAtom);
     const navigation = useNavigation();
     const [selectedJugs, setSelectedJugs] = useAtom(selectedJugsForMemberAtom);
-    
+
     const handleSelect = (jug_id: string) => {
         if (selectedJugs.has(jug_id)) {
             selectedJugs.delete(jug_id);
@@ -21,7 +22,7 @@ export default function AddDeviceMemberModal() {
     };
 
     const handlePress = () => {
-        
+
         navigation.goBack();
     };
 
@@ -48,8 +49,8 @@ export default function AddDeviceMemberModal() {
                             style={{
                                 ...(selectedJugs.has(item)
                                     ? {
-                                          backgroundColor: "rgb(90, 240, 130)",
-                                      }
+                                        backgroundColor: "rgb(90, 240, 130)",
+                                    }
                                     : undefined),
                                 // backgroundColor: selectedJugs.has(item)
                                 //     ? "rgb(90, 240, 130)"
@@ -71,14 +72,12 @@ export default function AddDeviceMemberModal() {
                 />
             )}
             {selectedJugs.size > 0 && (
-                <Pressable
-                    className="bg-blue items-center mx-16 justify-center px-3 py-3 rounded-3xl"
+                <StyledButton
+                    text={`Add ${selectedJugs.size} jug${selectedJugs.size > 1 ? "s" : ""} to member`}
+                    href="add-member-modal"
+                    textClass="text-lg"
                     onPress={handlePress}
-                >
-                    <Text className="text-white text-2xl">
-                        {`Add ${selectedJugs.size} jug${selectedJugs.size > 1 ? "s" : ""} to member`}
-                    </Text>
-                </Pressable>
+                />
             )}
         </View>
     );

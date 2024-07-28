@@ -57,7 +57,7 @@ export default function MemberInfoModal() {
                 </Text>
             </View>
             <View className="mx-6 bg-gray-200 px-7 py-4 flex flex-col justify-between rounded-xl dark:bg-neutral-800">
-            <Text className="text-xl font-bold dark:text-white">
+                <Text className="text-xl font-bold dark:text-white">
                     Location
                 </Text>
                 <Text className="text-xl dark:text-white">
@@ -65,18 +65,16 @@ export default function MemberInfoModal() {
                 </Text>
             </View>
             <View className="flex flex-row justify-center items-center">
-                <Pressable className="bg-blue px-4 py-2 rounded-xl">
-                    <Text className="text-2xl font-semibold text-white">
-                        Link jug to member
-                    </Text>
-                </Pressable>
+                <StyledButton
+                    text="Link jug to member"
+                    textClass="text-lg"
+                />
             </View>
             <View className="flex flex-row justify-center items-center">
-                <Pressable className="bg-blue px-4 py-2 rounded-xl">
-                    <Text className="text-2xl font-semibold text-white">
-                        Add drink
-                    </Text>
-                </Pressable>
+                <StyledButton
+                    text="Add drink"
+                    textClass="text-lg"
+                />
             </View>
         </View>
     );

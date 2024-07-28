@@ -9,6 +9,7 @@ import MemberRow from "@/components/community/member-row";
 import { MemberInfo } from "@/interfaces/community";
 import { FilterObject } from "@/interfaces/community";
 import { data as startData } from "@/constants/member-data"
+import StyledTextInput from "@/components/common/text-input";
 
 //for now (basic user flow), Community tab is shown as 4th tab
 //to do: for care home mode, replace home screen with Community tab
@@ -137,14 +138,11 @@ export default function CommunityPage() {
                             </Text>
                         )*/}
                             <View className="flex flex-row mx-2 items-center my-2">
-                                <Pressable
+                                <StyledButton
+                                    text={`Sort by name ${filters.sort === "asc" ? "A-Z" : "Z-A"}`}
                                     onPress={handleSortPress}
-                                    className="bg-blue px-4 py-2 rounded-xl ml-2"
-                                >
-                                    <Text className="text-2l font-semibold text-white">
-                                        Sort by name {filters.sort === "asc" ? "A-Z" : "Z-A"}
-                                    </Text>
-                                </Pressable>
+                                    textClass="text-lg"
+                                />
                             </View>
                             {Array.from(filteredData.values()).map((member) => (
                                 <View key={member.name} className="my-3">
@@ -164,10 +162,9 @@ export default function CommunityPage() {
                     </View>
                     <View className="flex flex-row items-center p-2">
                         <View className="flex-1">
-                            <TextInput
+                            <StyledTextInput
                                 value={textInput}
                                 placeholder={`Search members...`}
-                                className="bg-gray-200 h-14 placeholder-black text-xl rounded-xl px-3 m-1 border"
                                 onChangeText={(val) => {
                                     setTextInput(val);
                                     setFilters(prev => ({ ...prev, searchTerm: val }));
@@ -176,15 +173,12 @@ export default function CommunityPage() {
                                 returnKeyType="done"
                             />
                         </View>
-                        <View>
-                            <Pressable
+                        <View className="ml-2">
+                            <StyledButton
+                                text="Clear search"
                                 onPress={handleClearPress}
-                                className="bg-blue px-4 py-2 rounded-xl ml-2"
-                            >
-                                <Text className="text-2l font-semibold text-white">
-                                    Clear search
-                                </Text>
-                            </Pressable>
+                                textClass="text-lg"
+                            />
                         </View>
                     </View>
                 </View>

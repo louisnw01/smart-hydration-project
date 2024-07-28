@@ -3,6 +3,8 @@ import { View, Text, Pressable, TextInput } from "react-native";
 import { useNavigation } from "expo-router";
 import { userHasCommunityAtom } from "@/atom/community";
 import { useAtom } from "jotai";
+import StyledButton from "@/components/common/button";
+import StyledTextInput from "@/components/common/text-input";
 
 export default function JoinCommunityModal() {
     const navigation = useNavigation();
@@ -29,7 +31,7 @@ export default function JoinCommunityModal() {
                 </Text>
             </View>
             <View className="flex flex-row justify-center items-center">
-                <TextInput
+                <StyledTextInput
                     placeholder={`Invite link (required)`}
                     className="bg-gray-200 h-14 placeholder-black text-xl rounded-xl px-3"
                     onChangeText={(val) => {
@@ -41,19 +43,19 @@ export default function JoinCommunityModal() {
                 />
             </View>
             {showErrorMessage && (
-            <View className="flex flex-row justify-center items-center">
-                <Text className="dark:text-white text-2xl">
-                    You must enter an invite link
-                </Text>
-            </View>
+                <View className="flex flex-row justify-center items-center">
+                    <Text className="dark:text-white text-2xl">
+                        You must enter an invite link
+                    </Text>
+                </View>
             )}
             <View className="flex flex-row justify-center items-center">
-                <Pressable
+                <StyledButton
+                    text="Submit"
+                    href="community"
+                    textClass="text-lg"
                     onPress={handlePress}
-                    className="bg-blue px-4 py-2 rounded-xl mt-10"
-                ><Text className="text-2xl font-semibold text-white">
-                        Submit
-                    </Text></Pressable>
+                />
             </View>
         </View>
     );
