@@ -84,6 +84,10 @@ export default function ModalLayout() {
                 name="member-info-modal"
                 options={{ title: "Member details" }}
             />
+            <Stack.Screen
+                name="apply-tags"
+                options={{ title: "Apply tags" }}
+            />
         </Stack>
     );
 }
