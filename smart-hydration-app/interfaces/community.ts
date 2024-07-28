@@ -9,3 +9,7 @@ export interface FilterObject {
     searchTerm: string,
     sort: "asc" | "desc"
   }
+
+  export interface TagInfo {
+    name: string,
+  }
