@@ -42,21 +42,16 @@ export default function MemberInfoModal() {
                 </View>
             </View>
             <View className="mx-6 bg-gray-200 px-7 py-4 flex flex-col justify-between rounded-xl dark:bg-neutral-800">
-                <Text className="text-xl font-bold dark:text-white">
-                    Progress to target
-                </Text>
-                <Text className="text-xl dark:text-white">
-                    Data here (tap to read more)
-                </Text>
+                <View>
+                    <Text className="text-xl font-bold dark:text-white">
+                        Progress to target
+                    </Text>
+                    <Text className="text-xl dark:text-white">
+                        Data here (tap to read more)
+                    </Text>
+                </View>
             </View>
-            <View className="mx-6 bg-gray-200 px-7 py-4 flex flex-col justify-between rounded-xl dark:bg-neutral-800">
-                <Text className="text-xl font-bold dark:text-white">
-                    Trends
-                </Text>
-                <Text className="text-xl dark:text-white">
-                    Data here (tap to read more)
-                </Text>
-            </View>
+
             <View className="mx-6 bg-gray-200 px-7 py-4 flex flex-col justify-between rounded-xl dark:bg-neutral-800">
                 <Text className="text-xl font-bold dark:text-white">
                     Favourite drink
@@ -73,24 +68,26 @@ export default function MemberInfoModal() {
                     Room 101
                 </Text>
             </View>
-            <View className="flex flex-row justify-center items-center">
-                <StyledButton
-                    text="Link jug to member"
-                    textClass="text-lg"
-                />
-            </View>
-            <View className="flex flex-row justify-center items-center">
-                <StyledButton
-                    text="Add drink"
-                    textClass="text-lg"
-                />
-            </View>
-            <View className="flex flex-row justify-center items-center">
-                <StyledButton
-                    text="Apply tags"
-                    href="apply-tags"
-                    textClass="text-lg"
-                />
+            <View className="flex flex-col justify-center items-center">
+                <View className="my-2">
+                    <StyledButton
+                        text="Link jug to member"
+                        textClass="text-lg"
+                    />
+                </View>
+                <View className="my-2">
+                    <StyledButton
+                        text="Add drink"
+                        textClass="text-lg"
+                    />
+                </View>
+                <View className="my-2">
+                    <StyledButton
+                        text="Apply tags"
+                        href="apply-tags"
+                        textClass="text-lg"
+                    />
+                </View>
             </View>
         </View>
     );
