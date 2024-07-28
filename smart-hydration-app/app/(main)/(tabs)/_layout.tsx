@@ -8,7 +8,6 @@ import {
     Foundation,
     MaterialIcons,
 } from "@expo/vector-icons";
-
 import React from "react";
 import { Link, router, Tabs } from "expo-router";
 import { Pressable } from "react-native";
@@ -119,7 +118,7 @@ export default function TabLayout() {
                                 size={26}
                                 color={palette.fg}
                             />
-                        </Link>
+                        </Pressable>
                     ),
                 }}
             />
