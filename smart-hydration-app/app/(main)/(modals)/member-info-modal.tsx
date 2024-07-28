@@ -6,6 +6,7 @@ import { MemberInfo } from "@/interfaces/community"
 import { membersAtom, selectedJugsForMemberAtom } from "@/atom/community";
 import StyledButton from "@/components/common/button";
 import { useEffect } from "react";
+import Tag from "@/components/community/tag";
 
 export default function MemberInfoModal() {
     const navigation = useNavigation();
@@ -28,9 +29,17 @@ export default function MemberInfoModal() {
                 <Text className="text-xl dark:text-white">
                     Last drank
                 </Text>
-                <Text className="text-xl dark:text-white">
-                    Tags
-                </Text>
+                <View className="flex-row flex-wrap my-2">
+                    <Tag name="Independent"></Tag>
+                    <Tag name="Likes coffee"></Tag>
+                    <Tag name="Aggressive"></Tag>
+                    <Tag name="Four"></Tag>
+                    <Tag name="Five"></Tag>
+                    <Tag name="Six"></Tag>
+                    <Tag name="Seven"></Tag>
+                    <Tag name="Eight"></Tag>
+                    <Tag name="Nine"></Tag>
+                </View>
             </View>
             <View className="mx-6 bg-gray-200 px-7 py-4 flex flex-col justify-between rounded-xl dark:bg-neutral-800">
                 <Text className="text-xl font-bold dark:text-white">
