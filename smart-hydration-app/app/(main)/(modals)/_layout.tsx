@@ -68,6 +68,26 @@ export default function ModalLayout() {
                     },
                 }}
             />
+            <Stack.Screen
+                name="create-community-modal"
+                options={{ title: "Create a Community" }}
+            />
+            <Stack.Screen
+                name="join-community-modal"
+                options={{ title: "Join a Community" }}
+            />
+            <Stack.Screen
+                name="add-member-modal"
+                options={{ title: "Add a community member" }}
+            />
+            <Stack.Screen
+                name="add-device-member-modal"
+                options={{ title: "Add jug(s) to member" }}
+            />
+            <Stack.Screen
+                name="member-info-modal"
+                options={{ title: "Member details" }}
+            />
         </Stack>
     );
 }

@@ -4,11 +4,14 @@ import useColorPalette from "@/util/palette";
 import {
     Entypo,
     FontAwesome,
+    FontAwesome6,
     Foundation,
     MaterialIcons,
 } from "@expo/vector-icons";
+import React from "react";
 import { Link, router, Tabs } from "expo-router";
 import { Pressable } from "react-native";
+import { userHasCommunityAtom, communityNameAtom } from "@/atom/community";
 
 export default function TabLayout() {
     const palette = useColorPalette();
@@ -92,6 +95,24 @@ export default function TabLayout() {
                             className="px-5"
                             onPress={() => router.push("add-device-modal")}
                         >
+                            <Entypo
+                                name="circle-with-plus"
+                                size={26}
+                                color={palette.fg}
+                            />
+                        </Pressable>
+                    ),
+                }}
+            />
+            <Tabs.Screen
+                name="community"
+                options={{
+                    title: "Community",
+                    tabBarIcon: ({ color }) => (
+                        <FontAwesome6 name="people-group" size={24} color={color} />
+                    ),
+                    headerRight: () => (
+                        <Link className="px-5" href="add-member-modal">
                             <Entypo
                                 name="circle-with-plus"
                                 size={26}

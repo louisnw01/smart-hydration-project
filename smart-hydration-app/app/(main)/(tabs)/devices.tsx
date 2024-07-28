@@ -37,14 +37,6 @@ export default function DevicesPage() {
                     router.push("device-info-modal");
                 }}
             />
-
-            {/* <View className="flex flex-row justify-center">
-                        <StyledButton
-                            text="+ add a new jug user"
-                            href="add-jug-user"
-                            textSize="lg"
-                        />
-                    </View> */}
         </View>
     );
 }
