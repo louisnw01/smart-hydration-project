@@ -92,6 +92,97 @@ export default function SettingsLayout() {
                     },
                 }}
             />
+            <Stack.Screen
+                name="community/invite-member"
+                options={{
+                    title: "Invite a Member",
+                    headerLeft: () => {
+                        const router = useRouter();
+                        return (
+                            <Pressable onPress={() => router.back()}>
+                                <Entypo
+                                    name="chevron-left"
+                                    size={24}
+                                    color="rgb(80, 80, 80)"
+                                />
+                            </Pressable>
+                        );
+                    },
+                }}
+            />
+            <Stack.Screen
+                name="community/change-name"
+                options={{
+                    title: "Change Community Name",
+                    headerLeft: () => {
+                        const router = useRouter();
+                        return (
+                            <Pressable onPress={() => router.back()}>
+                                <Entypo
+                                    name="chevron-left"
+                                    size={24}
+                                    color="rgb(80, 80, 80)"
+                                />
+                            </Pressable>
+                        );
+                    },
+                }}
+            />
+            <Stack.Screen
+                name="community/change-owner"
+                options={{
+                    title: "Transfer Community Ownership",
+                    headerLeft: () => {
+                        const router = useRouter();
+                        return (
+                            <Pressable onPress={() => router.back()}>
+                                <Entypo
+                                    name="chevron-left"
+                                    size={24}
+                                    color="rgb(80, 80, 80)"
+                                />
+                            </Pressable>
+                        );
+                    },
+                }}
+            />
+            <Stack.Screen
+                name="community/community-profile"
+                options={{
+                    title: "Transfer Community Ownership",
+                    headerLeft: () => {
+                        const router = useRouter();
+                        return (
+                            <Pressable onPress={() => router.back()}>
+                                <Entypo
+                                    name="chevron-left"
+                                    size={24}
+                                    color="rgb(80, 80, 80)"
+                                />
+                            </Pressable>
+                        );
+                    },
+                }}
+            />
+            <Stack.Screen
+                name="community/remove-member"
+                options={{
+                    title: "Remove a Member",
+                    headerLeft: () => {
+                        const router = useRouter();
+                        return (
+                            <Pressable onPress={() => router.back()}>
+                                <Entypo
+                                    name="chevron-left"
+                                    size={24}
+                                    color="rgb(80, 80, 80)"
+                                />
+                            </Pressable>
+                        );
+                    },
+                }}
+            />
+
         </Stack>
     );
 }

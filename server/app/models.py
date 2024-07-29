@@ -54,6 +54,7 @@ class JugUser(db.Entity):
     user = Optional(User)
     otherdrinks = Set('OtherDrink')
     target = Optional(int)
+    last_drank = Optional(int)
     tags = Set('Tag')
 
 
@@ -104,7 +105,7 @@ class VerifyEmail(db.Entity):
 class InviteLink(db.Entity):
     id = PrimaryKey(str)            # the id is the code at the end of the link.
     expire_time = Required(int)     # unix timestamp
-    permission = Required(str)
+    permission = Optional(str)
     community = Required(Community)
 
 
