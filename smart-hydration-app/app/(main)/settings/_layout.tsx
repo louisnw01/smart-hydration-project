@@ -182,6 +182,24 @@ export default function SettingsLayout() {
                     },
                 }}
             />
+            <Stack.Screen
+                name="community/edit-tags"
+                options={{
+                    title: "Edit community tags",
+                    headerLeft: () => {
+                        const router = useRouter();
+                        return (
+                            <Pressable onPress={() => router.back()}>
+                                <Entypo
+                                    name="chevron-left"
+                                    size={24}
+                                    color="rgb(80, 80, 80)"
+                                />
+                            </Pressable>
+                        );
+                    },
+                }}
+            />
 
         </Stack>
     );
