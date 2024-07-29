@@ -12,6 +12,7 @@ export const ENDPOINTS = {
     REGISTER: "/user/register",
     UNLINK_JUG_FROM_USER: "/user/unlink-jug",
     LINK_JUG_TO_USER: "/user/link-jug",
+    LINK_JUG_TO_COMMUNITY_MEMBER: "/community/link-jug-to-member",
     FETCH_HISTORICAL_JUG_DATA: "/data/historical",
     GET_ALL_JUGS: "/get-all-jugs",
     UPDATE: "/jug-user/update",
@@ -23,7 +24,7 @@ export const ENDPOINTS = {
     UPDATE_USER_TARGET: "/user/update-user-target",
     GET_USER_TARGET: "/user/get-user-target",
 
-    SEND_VERIFICATION_EMAIL:"/user/send-verification-email",
+    SEND_VERIFICATION_EMAIL: "/user/send-verification-email",
 
     CREATE_COMMUNITY: "/community/create",
     UPDATE_COMMUNITY: "/community/update",
@@ -31,7 +32,7 @@ export const ENDPOINTS = {
     //COMMUNITY_MEMBER: "/community/user",
 
     CREATE_JUG_USER: "/jug-user/create",
-    VERIFY_EMAIL: "/user/verify"
+    VERIFY_EMAIL: "/user/verify",
 };
 
 interface RequestOptions {

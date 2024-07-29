@@ -9,6 +9,9 @@ class UserLogin(BaseModel):
 class TargetUpdate(BaseModel):
     newValue: int
 
+class AddJugsToMemberForm(BaseModel):
+    jugIds: List[str]
+    communityMember: str
 
 
 class UserRegister(BaseModel):

@@ -2,9 +2,10 @@ from typing import Optional
 import datetime as dt
 from fastapi import APIRouter, Depends, HTTPException
 from pony.orm.core import commit, db_session, delete
+from server.app.routers import jug_user
 from ..services import get_user_by_id
-from ..models import Community, CommunityMember, InviteLink, User
-from ..schemas import CreateCommunityForm, CreateInvitationForm
+from ..models import Community, CommunityMember, InviteLink, User, JugUser
+from ..schemas import CreateCommunityForm, CreateInvitationForm, AddJugsToMemberForm
 from ..auth import auth_user, generate_invite_link
 
 
@@ -97,3 +98,19 @@ async def create_invitation(form: CreateInvitationForm, user_id: str = Depends(a
         )
 
         return link.id
+
+@router.post("/link-jug-to-member")
+async def link_jugs_to_community_member(form: AddJugsToMemberForm, user_id: str = Depends(auth_user)):
+    with db_session:
+        user = User.get(id=user_id)
+        user_juser = JugUser.get(user = user)
+        user_community = user_juser.community
+        juguser = User.get(id = form.communityMember)
+        juser_community = juguser.community
+        if user_community != juser_community:
+            return HTTPException(400, 'user is not part of the same community')
+
+        for jug in form.jugIds:
+            juguser.jugs.extend(jug)
+
+        return {"message": "Jugs successfully linked to community member"}
