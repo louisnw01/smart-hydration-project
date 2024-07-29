@@ -26,7 +26,7 @@ export default function InviteMember() {
 
         await Clipboard.setStringAsync(`smarthydration://${link}`);
         const clipboardContent = await Clipboard.getStringAsync();
-        alert('Copied to Clipboard')
+        alert('todo: Copied to Clipboard modal')
     }
 
 {/*
