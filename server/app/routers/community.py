@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from pony.orm.core import commit, db_session, delete
 from server.app.routers import jug_user
 from ..services import get_user_by_id
-from ..models import Community, CommunityMember, InviteLink, User, JugUser
+from ..models import Community, CommunityMember, InviteLink, Jug, User, JugUser
 from ..schemas import CreateCommunityForm, CreateInvitationForm, AddJugsToMemberForm
 from ..auth import auth_user, generate_invite_link
 
@@ -111,6 +111,7 @@ async def link_jugs_to_community_member(form: AddJugsToMemberForm, user_id: str 
             return HTTPException(400, 'user is not part of the same community')
 
         for jug in form.jugIds:
-            juguser.jugs.add(jug)
+            jug_to_add = Jug.get(smart_hydration_id = jug)
+            juguser.jugs.add(jug_to_add)
 
         return {"message": "Jugs successfully linked to community member"}
