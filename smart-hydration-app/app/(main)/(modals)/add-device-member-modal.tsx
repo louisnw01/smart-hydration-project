@@ -1,16 +1,18 @@
 import { useState } from "react";
 import { View, Text, SectionList, Pressable } from "react-native";
 import { useAtom, useAtomValue } from "jotai";
-import { getAllJugsQAtom } from "@/atom/query"; 
+import { getAllJugsQAtom, getJugDataQAtom } from "@/atom/query";
 import { useNavigation } from "expo-router";
 import Loading from "@/components/common/loading";
 import { selectedJugsForMemberAtom } from "@/atom/community";
 
 export default function AddDeviceMemberModal() {
-    const { data, isLoading } = useAtomValue(getAllJugsQAtom);
+    const { data, isLoading, refetch } = useAtomValue(getJugDataQAtom);
+    const [refreshing, setRefreshing] = useState(false);
+    console.log(JSON.stringify(data));
     const navigation = useNavigation();
     const [selectedJugs, setSelectedJugs] = useAtom(selectedJugsForMemberAtom);
-    
+
     const handleSelect = (jug_id: string) => {
         if (selectedJugs.has(jug_id)) {
             selectedJugs.delete(jug_id);
@@ -21,7 +23,6 @@ export default function AddDeviceMemberModal() {
     };
 
     const handlePress = () => {
-        
         navigation.goBack();
     };
 
@@ -37,10 +38,11 @@ export default function AddDeviceMemberModal() {
 
             {data && (
                 <SectionList
-                    sections={Object.entries(data).map(([name, list]) => ({
-                        title: name === "real" ? "Real Jugs" : "Test Jugs",
-                        data: list,
-                    }))}
+                    // sections={Object.entries(data).map(([name]) => ({
+                    //     title: "Connected Jugs:",
+                    //     data: name,
+                    // }))}
+                    sections={[{ title: "Connected Jugs", data: data }]}
                     renderItem={({ item }) => (
                         <Pressable
                             className="mx-4 px-4 py-3 rounded-xl my-2 bg-gray-200 dark:bg-neutral-800"
@@ -56,14 +58,15 @@ export default function AddDeviceMemberModal() {
                                 //     : undefined,
                             }}
                         >
-                            <Text className="text-lg dark:text-white">
-                                {item}
+                            <Text className="text-xl font-semibold dark:text-white">
+                                {item.name}
                             </Text>
+                            <Text>Smart Hydration ID: {item.id}</Text>
                         </Pressable>
                     )}
                     renderSectionHeader={({ section }) => (
                         <Text className="text-xl font-bold ml-4 pt-4 dark:text-white">
-                            {section.title}
+                            {"Connected Jugs"}
                         </Text>
                     )}
                     keyExtractor={(item) => `jug-list-${item}`}

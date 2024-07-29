@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { View, Text, Pressable, TextInput } from "react-native";
-import { useNavigation } from "expo-router";
+import { router, useNavigation } from "expo-router";
 import { useAtom } from "jotai";
-import { MemberInfo } from "@/interfaces/community"
+import { MemberInfo } from "@/interfaces/community";
 import { membersAtom, selectedJugsForMemberAtom } from "@/atom/community";
 import StyledButton from "@/components/common/button";
 import { useEffect } from "react";
@@ -19,18 +19,10 @@ export default function MemberInfoModal() {
                 <Text className="text-xl font-bold dark:text-white">
                     Profile details
                 </Text>
-                <Text className="text-xl dark:text-white">
-                    Name
-                </Text>
-                <Text className="text-xl dark:text-white">
-                    Jugs
-                </Text>
-                <Text className="text-xl dark:text-white">
-                    Last drank
-                </Text>
-                <Text className="text-xl dark:text-white">
-                    Tags
-                </Text>
+                <Text className="text-xl dark:text-white">Name</Text>
+                <Text className="text-xl dark:text-white">Jugs</Text>
+                <Text className="text-xl dark:text-white">Last drank</Text>
+                <Text className="text-xl dark:text-white">Tags</Text>
             </View>
             <View className="mx-6 bg-gray-200 px-7 py-4 flex flex-col justify-between rounded-xl dark:bg-neutral-800">
                 <Text className="text-xl font-bold dark:text-white">
@@ -52,20 +44,21 @@ export default function MemberInfoModal() {
                 <Text className="text-xl font-bold dark:text-white">
                     Favourite drink
                 </Text>
-                <Text className="text-xl dark:text-white">
-                    Tea
-                </Text>
+                <Text className="text-xl dark:text-white">Tea</Text>
             </View>
             <View className="mx-6 bg-gray-200 px-7 py-4 flex flex-col justify-between rounded-xl dark:bg-neutral-800">
-            <Text className="text-xl font-bold dark:text-white">
+                <Text className="text-xl font-bold dark:text-white">
                     Location
                 </Text>
-                <Text className="text-xl dark:text-white">
-                    Room 101
-                </Text>
+                <Text className="text-xl dark:text-white">Room 101</Text>
             </View>
             <View className="flex flex-row justify-center items-center">
-                <Pressable className="bg-blue px-4 py-2 rounded-xl">
+                <Pressable
+                    className="bg-blue px-4 py-2 rounded-xl"
+                    onPress={() => {
+                        router.push("add-device-member-modal");
+                    }}
+                >
                     <Text className="text-2xl font-semibold text-white">
                         Link jug to member
                     </Text>
