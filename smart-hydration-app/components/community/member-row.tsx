@@ -1,4 +1,4 @@
-import { selectedMemberAtom } from "@/atom/community";
+import { selectedPatientAtom } from "@/atom/community";
 import Tag from "./tag";
 import { PatientInfo } from "@/interfaces/community";
 import { router } from "expo-router";
@@ -6,7 +6,7 @@ import { useSetAtom } from "jotai";
 import { Pressable, Text, View } from "react-native";
 
 export default function MemberRow({ patient }: { patient: PatientInfo }) {
-    const setPatient = useSetAtom(selectedMemberAtom);
+    const setPatient = useSetAtom(selectedPatientAtom);
     return (
         <Pressable
             className="mx-6 bg-gray-200 px-7 py-4 flex flex-col rounded-xl dark:bg-neutral-800"
