@@ -1,8 +1,8 @@
+import SHDrop from "@/assets/svgs/SH_Drop.svg";
 import PageHeader from "@/components/common/header";
 import useColorPalette from "@/util/palette";
 import {
     Entypo,
-    FontAwesome,
     FontAwesome6,
     Foundation,
     MaterialIcons,
@@ -38,7 +38,13 @@ export default function TabLayout() {
                 options={{
                     title: "Home",
                     tabBarIcon: ({ color }) => (
-                        <FontAwesome size={28} name="home" color={color} />
+                        <SHDrop
+                            width={180}
+                            height={180}
+                            right={12}
+                            bottom={9}
+                            fill={color}
+                        />
                     ),
                     headerRight: () => (
                         <Pressable
@@ -50,13 +56,6 @@ export default function TabLayout() {
                             <Entypo name="cog" size={30} color={palette.fg} />
                         </Pressable>
                     ),
-                    headerTransparent: true,
-                    tabBarStyle: {
-                        elevation: 0,
-                        backgroundColor: "transparent",
-                        position: "absolute",
-                        borderTopWidth: 0,
-                    },
                 }}
             />
             <Tabs.Screen

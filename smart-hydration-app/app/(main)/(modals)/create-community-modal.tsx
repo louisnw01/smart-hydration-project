@@ -1,13 +1,13 @@
-import { useEffect, useState } from "react";
-import { View, Text, Pressable, TextInput } from "react-native";
 import { createCommunityMAtom } from "@/atom/query/community";
-import { router, useNavigation } from "expo-router";
-import { useAtom, useAtomValue, useSetAtom } from "jotai";
-import { userHasCommunityAtom, communityNameAtom } from "@/atom/community";
+import { router } from "expo-router";
+import { useAtomValue } from "jotai";
+import { useEffect, useState } from "react";
+import { Pressable, Text, TextInput, View } from "react-native";
 
 export default function CreateCommunityModal() {
-    const [communityName, setCommunityName] = useState('');
-    const { mutate, isPending, isSuccess, data, isError } = useAtomValue(createCommunityMAtom);
+    const [communityName, setCommunityName] = useState("");
+    const { mutate, isPending, isSuccess, data, isError } =
+        useAtomValue(createCommunityMAtom);
     const [showErrorMessage, setShowErrorMessage] = useState(false);
 
     useEffect(() => {
@@ -17,15 +17,15 @@ export default function CreateCommunityModal() {
         } else if (isError) {
             // TODO: show an error message
         }
-    }, [isPending])
+    }, [isPending]);
 
     const handlePress = () => {
-        //to do: check if community exists before allowing creation
-        if (communityName !== '') {
+        //TODO: check if community exists before allowing creation
+        if (communityName !== "") {
             mutate({ name: communityName });
-        //     setCommunityNameAtom(communityName);
-        //     setUserHasCommunity(true);
-        //     navigation.goBack();
+            //     setCommunityNameAtom(communityName);
+            //     setUserHasCommunity(true);
+            //     navigation.goBack();
         } else {
             setShowErrorMessage(true);
         }
@@ -51,19 +51,21 @@ export default function CreateCommunityModal() {
                 />
             </View>
             {showErrorMessage && (
-            <View className="flex flex-row justify-center items-center">
-                <Text className="dark:text-white text-2xl">
-                    You must enter a community name
-                </Text>
-            </View>
+                <View className="flex flex-row justify-center items-center">
+                    <Text className="dark:text-white text-2xl">
+                        You must enter a community name
+                    </Text>
+                </View>
             )}
             <View className="flex flex-row justify-center items-center">
                 <Pressable
                     onPress={handlePress}
                     className="bg-blue px-4 py-2 rounded-xl mt-10"
-                ><Text className="text-2xl font-semibold text-white">
+                >
+                    <Text className="text-2xl font-semibold text-white">
                         Submit
-                    </Text></Pressable>
+                    </Text>
+                </Pressable>
             </View>
         </View>
     );
