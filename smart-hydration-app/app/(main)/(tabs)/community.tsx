@@ -4,11 +4,9 @@ import { useAtomValue } from "jotai";
 import { useEffect, useState } from "react";
 import {
     FlatList,
-    Pressable,
     RefreshControl,
     ScrollView,
     Text,
-    TextInput,
     View,
 } from "react-native";
 
@@ -20,9 +18,9 @@ import {
 } from "@/atom/query/community";
 import Loading from "@/components/common/loading";
 import MemberRow from "@/components/community/member-row";
-import { data as startData } from "@/constants/member-data"
+
 import StyledTextInput from "@/components/common/text-input";
-import { FilterObject, MemberInfo } from "@/interfaces/community";
+import { FilterObject, PatientInfo } from "@/interfaces/community";
 
 //for now (basic user flow), Community tab is shown as 4th tab
 //to do: for care home mode, replace home screen with Community tab
@@ -31,15 +29,16 @@ import { FilterObject, MemberInfo } from "@/interfaces/community";
 
 //to do: add settings cog at top right
 
+
+
 export default function CommunityPage() {
     const { isLoading, refetch } = useAtomValue(communityInfoQAtom);
     const { data, isLoading: patientInfoIsLoading } =
         useAtomValue(patientInfoQAtom);
-    console.log("NOWHERE", data);
     const hasCommunity = useAtomValue(userHasCommunityAtom);
     const [refreshing, setRefreshing] = useState(false);
     const communityName = useAtomValue(communityNameAtom);
-    const [filteredData, setFilteredData] = useState<MemberInfo[]>([]);
+    const [filteredData, setFilteredData] = useState<PatientInfo[]>([]);
     const [textInput, setTextInput] = useState("");
     const [filters, setFilters] = useState<FilterObject>({
         searchTerm: "",
@@ -47,16 +46,12 @@ export default function CommunityPage() {
     });
     const filterAndSortData = (filterObj: FilterObject) => {
         if (!data) return;
-        const filteredData = data.filter((member) => {
+        const filteredData = data.filter((patient: PatientInfo) => {
             return (
-                (member.name &&
-                    member.name
+                (patient.name &&
+                    patient.name
                         .toLowerCase()
-                        .indexOf(filterObj.searchTerm.toLowerCase()) > -1) ||
-                (member.description &&
-                    member.description.indexOf(
-                        filterObj.searchTerm.toLowerCase(),
-                    ) > -1)
+                        .indexOf(filterObj.searchTerm.toLowerCase()) > -1)
             );
         });
         return filteredData.sort((a: any, b: any) => {
@@ -76,7 +71,7 @@ export default function CommunityPage() {
     useEffect(() => {
         if (!data) return;
         const result = filterAndSortData(filters);
-        setFilteredData(result);
+        setFilteredData(result); 
     }, [textInput, filters, data]);
 
     const handleSortPress = () => {
@@ -179,11 +174,11 @@ export default function CommunityPage() {
                                 />
                         </View>
 
-                        {!!data && data.length > 0 && (
+                        {!!filteredData && filteredData.length > 0 && (
                             <FlatList
-                                data={data}
+                                data={filteredData}
                                 contentContainerClassName="flex gap-6"
-                                keyExtractor={(patient) => patient.name}
+                                keyExtractor={(patient, idx) => idx}
                                 renderItem={({ item }) => (
                                     <MemberRow member={item} />
                                 )}

@@ -13,3 +13,14 @@ export interface FilterObject {
   export interface TagInfo {
     name: string,
   }
+
+  interface Jug {
+    name: string;
+    id: string;
+}
+
+export interface PatientInfo {
+    name: string;
+    jugs: Jug[];
+    target: number | null; 
+}

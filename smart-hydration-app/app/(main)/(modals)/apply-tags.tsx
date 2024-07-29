@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { View, Text, Pressable, TextInput } from "react-native";
 import { useNavigation } from "expo-router";
-import { userHasCommunityAtom } from "@/atom/community";
 import { useAtom } from "jotai";
 import StyledButton from "@/components/common/button";
 import StyledTextInput from "@/components/common/text-input";
@@ -11,7 +10,6 @@ export default function ApplyTags() {
     const navigation = useNavigation();
     const [inviteLink, setInviteLink] = useState('');
     const [showErrorMessage, setShowErrorMessage] = useState(false);
-    const [, setUserHasCommunity] = useAtom(userHasCommunityAtom);
     const handlePress = () => {
 
     };
