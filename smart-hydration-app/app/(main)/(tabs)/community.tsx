@@ -173,14 +173,14 @@ export default function CommunityPage() {
                                     textClass="text-lg"
                                 />
                         </View>
-
+                         {/* filtering breaks if users have the same name: get ID from endpoint and use that as ID instead? */}
                         {!!filteredData && filteredData.length > 0 && (
                             <FlatList
                                 data={filteredData}
                                 contentContainerClassName="flex gap-6"
-                                keyExtractor={(patient, idx) => idx}
+                                keyExtractor={(patient) => patient.name}
                                 renderItem={({ item }) => (
-                                    <MemberRow member={item} />
+                                    <MemberRow patient={item} />
                                 )}
                             />
                         )}

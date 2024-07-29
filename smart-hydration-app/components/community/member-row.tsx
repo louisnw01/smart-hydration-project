@@ -1,25 +1,23 @@
 import { selectedMemberAtom } from "@/atom/community";
 import Tag from "./tag";
-import { MemberInfo } from "@/interfaces/community";
+import { PatientInfo } from "@/interfaces/community";
 import { router } from "expo-router";
 import { useSetAtom } from "jotai";
 import { Pressable, Text, View } from "react-native";
 
-export default function MemberRow({ member }: { member: MemberInfo }) {
-    const setMember = useSetAtom(selectedMemberAtom);
-    // const { data } = useAtomValue(getJugDataQAtom);
-    // const router = useRouter();
+export default function MemberRow({ patient }: { patient: PatientInfo }) {
+    const setPatient = useSetAtom(selectedMemberAtom);
     return (
         <Pressable
             className="mx-6 bg-gray-200 px-7 py-4 flex flex-col rounded-xl dark:bg-neutral-800"
             onPress={() => {
-                setMember(member);
+                setPatient(patient);
                 router.push("member-info-modal");
             }}
         >
             <View className="flex-1">
                 <Text className="text-xl font-bold dark:text-white">
-                    {member.name}
+                    {patient.name}
                 </Text>
                 <Text className="text-2l dark:text-white">
                     <Text className="font-bold">Last drank: </Text>
@@ -27,7 +25,7 @@ export default function MemberRow({ member }: { member: MemberInfo }) {
                 </Text>
                 <Text className="text-2l dark:text-white">
                     <Text className="font-bold">Target progress: </Text>
-                    {/* {member.target_percentage}% */}
+                    {patient.target_percentage}%
                 </Text>
             </View>
             {/* create a tag group component */}

@@ -22,5 +22,5 @@ export interface FilterObject {
 export interface PatientInfo {
     name: string;
     jugs: Jug[];
-    target: number | null; 
+    target_percentage: number | null; 
 }
