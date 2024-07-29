@@ -13,6 +13,7 @@ import { hydrationInsightsEAtom } from "@/atom/effect/hydration";
 import WaterScreen from "@/components/home/water-screen";
 import { MaterialCommunityIcons, FontAwesome } from "@expo/vector-icons";
 import useColorPalette from "@/util/palette";
+import { router } from "expo-router";
 
 export default function HomePage() {
     useAtomValue(hydrationInsightsEAtom);
@@ -56,22 +57,27 @@ export default function HomePage() {
                                 href="devices"
                                 buttonClass="self-center mt-8"
                                 textClass="text-lg mt-[1px]"
-                                icon={<View className="flex flex-row w-6">
-                                    <Jug width={16} fill={palette.fg} />
-                                    <View className="aboslute top-[13px] right-[9px] w-[8px] h-[8px] rounded-xl bg-gray-200 dark:bg-black" />
-                                    <FontAwesome
-                                        name="plus-circle"
-                                        size={12}
-                                        left={-16}
-                                        top={12}
-                                        color={palette.fg} />
-                                </View>}                      
+                                icon={
+                                    <View className="flex flex-row w-6">
+                                        <Jug width={16} fill={palette.fg} />
+                                        <View className="aboslute top-[13px] right-[9px] w-[8px] h-[8px] rounded-xl bg-gray-200 dark:bg-black" />
+                                        <FontAwesome
+                                            name="plus-circle"
+                                            size={12}
+                                            left={-16}
+                                            top={12}
+                                            color={palette.fg}
+                                        />
+                                    </View>
+                                }
                             />
                         )}
                         <StyledButton
                             text="add a drink"
                             textClass="text-lg mt-[1px]"
-                            href="add-drink-modal"
+                            onPress={() =>
+                                router.push("custom/add-drink-modal")
+                            }
                             icon=<MaterialCommunityIcons
                                 name="water-plus-outline"
                                 size={24}
