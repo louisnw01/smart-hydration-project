@@ -111,6 +111,6 @@ async def link_jugs_to_community_member(form: AddJugsToMemberForm, user_id: str 
             return HTTPException(400, 'user is not part of the same community')
 
         for jug in form.jugIds:
-            juguser.jugs.extend(jug)
+            juguser.jugs.add(jug)
 
         return {"message": "Jugs successfully linked to community member"}
