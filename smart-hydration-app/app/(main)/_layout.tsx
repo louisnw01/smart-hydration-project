@@ -72,6 +72,12 @@ export default function MainLayout() {
                     presentation: "formSheet",
                 }}
             />
+            <Stack.Screen
+                name="custom"
+                options={{
+                    presentation: "formSheet",
+                }}
+            />
         </Stack>
     );
 }
