@@ -1,5 +1,4 @@
 import PageHeader from "@/components/common/header";
-import { useWaterLevel } from "@/components/home/water-screen";
 import useColorPalette from "@/util/palette";
 import {
     Entypo,
@@ -14,9 +13,6 @@ import { Pressable } from "react-native";
 
 export default function TabLayout() {
     const palette = useColorPalette();
-    const waterLevel = useWaterLevel();
-    const underWater = waterLevel && waterLevel >= 0.1;
-    const cogUnderwater = waterLevel && waterLevel > 0.89;
     return (
         <Tabs
             screenOptions={{
@@ -28,12 +24,10 @@ export default function TabLayout() {
                 },
                 tabBarStyle: {
                     backgroundColor: palette.bg,
-                    borderTopColor: palette.border,
+                    borderTopWidth: 0,
                 },
                 tabBarActiveTintColor: palette.fg,
-                tabBarInactiveTintColor: underWater
-                    ? "white"
-                    : "rgb(145, 145, 145)",
+                tabBarInactiveTintColor: "rgb(145, 145, 145)",
             }}
             sceneContainerStyle={{
                 backgroundColor: palette.bg,
@@ -53,11 +47,7 @@ export default function TabLayout() {
                                 router.push("settings/settings-modal")
                             }
                         >
-                            <Entypo
-                                name="cog"
-                                size={30}
-                                color={cogUnderwater ? "white" : palette.fg}
-                            />
+                            <Entypo name="cog" size={30} color={palette.fg} />
                         </Pressable>
                     ),
                     headerTransparent: true,
