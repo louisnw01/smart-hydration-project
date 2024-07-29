@@ -7,7 +7,8 @@
         "android": "expo run:android",
         "ios": "expo run:ios",
         "web": "expo start --web",
-        "test": "jest"
+        "test": "jest",
+        "lint": "eslint ."
     },
     "jest": {
         "setupFiles": [
@@ -26,6 +27,7 @@
         "@tanstack/react-query": "^5.50.1",
         "@types/react": "~18.2.79",
         "eas-cli": "^10.1.1",
+        "eslint": "^8.57.0",
         "expo": "~51.0.18",
         "expo-clipboard": "~6.0.3",
         "expo-constants": "^16.0.2",
@@ -58,8 +60,12 @@
         "@babel/preset-env": "^7.24.7",
         "@types/jest": "^29.5.12",
         "@types/react-native": "^0.73.0",
+        "eslint-config-expo": "^7.0.0",
+        "eslint-config-prettier": "^9.1.0",
+        "eslint-plugin-prettier": "^5.2.1",
         "jest": "^29.7.0",
         "jest-expo": "^51.0.3",
+        "prettier": "^3.3.3",
         "react-native-svg-transformer": "^1.4.0",
         "tailwindcss": "3.3.2"
     },
