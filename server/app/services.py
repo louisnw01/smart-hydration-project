@@ -1,3 +1,4 @@
+from fastapi import HTTPException
 from pony.orm.core import commit, get, select, db_session
 
 from .mail import send_email_with_ses
@@ -236,3 +237,12 @@ def get_users_jugs_sh_ids(user_id):
 def update_jug_name_s(jug_id, name):
     Jug.get(smart_hydration_id=jug_id).name = name
     commit()
+
+
+def try_get_users_community(user_id):
+    user = User.get(id=user_id)
+    member = user.community_member
+    if not member:
+        raise HTTPException(400, 'user is not part of a community')
+
+    return member.community

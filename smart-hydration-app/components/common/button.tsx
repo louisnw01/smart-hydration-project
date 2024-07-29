@@ -5,8 +5,10 @@ import { Pressable, PressableProps, Text } from "react-native";
 interface ButtonProps extends PressableProps {
     text: string;
     href?: string;
-    textClass: string;
+    textClass?: string;
     buttonClass?: string;
+    buttonColors?: string;
+    touchButtonColors?: string;
     icon?: ReactNode;
     style?: ViewStyle;
 }
@@ -15,15 +17,14 @@ export default function StyledButton(props: ButtonProps) {
     const router = useRouter();
     const [touched, setTouched] = useState(false);
 
-    props.textClass +=
-        props.textClass && !props.textClass.includes("dark:text")
-            ? " dark:text-white"
-            : "";
+    const textClass = !props.textClass?.includes("dark:text")
+        ? `${props.textClass} dark:text-white`
+        : props.textClass;
 
     const buttonColors =
         touched || props.disabled
-            ? "bg-gray-300 dark:bg-neutral-700"
-            : "bg-gray-200 dark:bg-neutral-800";
+            ? props.touchButtonColors || "bg-gray-300 dark:bg-neutral-700"
+            : props.buttonColors || "bg-gray-200 dark:bg-neutral-800";
 
     const buttonClass = !props.buttonClass
         ? buttonColors
@@ -50,7 +51,7 @@ export default function StyledButton(props: ButtonProps) {
             {...props}
         >
             {props.icon && props.icon}
-            <Text className={props.textClass}>{props.text}</Text>
+            <Text className={textClass}>{props.text}</Text>
         </Pressable>
     );
 }
