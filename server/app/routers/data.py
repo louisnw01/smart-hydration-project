@@ -53,7 +53,6 @@ async def get_historical_jug_data(timestamp: int, user_id: str = Depends(auth_us
         other_drinks = juguser.otherdrinks
 
         for drink in other_drinks:
-            print(drink.timestamp , " " , drink.capacity)
             big_list.append({"time": drink.timestamp, "value": drink.capacity})
 
         jugs = [jug.to_dict() for jug in juguser.jugs]
