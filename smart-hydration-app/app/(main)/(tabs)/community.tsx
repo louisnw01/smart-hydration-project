@@ -23,11 +23,11 @@ import MemberRow from "@/components/community/member-row";
 import { FilterObject, MemberInfo } from "@/interfaces/community";
 
 //for now (basic user flow), Community tab is shown as 4th tab
-//to do: for care home mode, replace home screen with Community tab
+//TODO: for care home mode, replace home screen with Community tab
 
-//to do: add link handling logic to front end for invite link flow
+//TODO: add link handling logic to front end for invite link flow
 
-//to do: add settings cog at top right
+//TODO: add settings cog at top right
 
 export default function CommunityPage() {
     const { isLoading, refetch } = useAtomValue(communityInfoQAtom);
