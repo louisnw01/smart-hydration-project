@@ -3,7 +3,6 @@ import { View, Text, Pressable, TextInput } from "react-native";
 import { createCommunityMAtom } from "@/atom/query/community";
 import { router, useNavigation } from "expo-router";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
-import { userHasCommunityAtom, communityNameAtom } from "@/atom/query/community";
 
 export default function CreateCommunityModal() {
     const [communityName, setCommunityName] = useState('');
