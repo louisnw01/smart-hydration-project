@@ -26,6 +26,7 @@ import { FilterObject, MemberInfo } from "@/interfaces/community";
 //to do: for care home mode, replace home screen with Community tab
 
 //to do: add link handling logic to front end for invite link flow
+
 //to do: add settings cog at top right
 
 export default function CommunityPage() {
