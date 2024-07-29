@@ -3,7 +3,9 @@
 export const SERVER_ADDRESS = "localhost:8085";
 // export const SERVER_ADDRESS = "hydrationapi.louisnw.com";
 
-const SERVER_URL = `http${SERVER_ADDRESS.includes(".com") ? "s" : ""}://${SERVER_ADDRESS}`;
+export const SERVER_URL = `http${
+    SERVER_ADDRESS.includes(".com") ? "s" : ""
+}://${SERVER_ADDRESS}`;
 
 export const ENDPOINTS = {
     HELLO_WORLD: "/",
@@ -23,11 +25,16 @@ export const ENDPOINTS = {
     UPDATE_USER_TARGET: "/user/update-user-target",
     GET_USER_TARGET: "/user/get-user-target",
 
-    SEND_VERIFICATION_EMAIL:"/user/send-verification-email",
-  
+    SEND_VERIFICATION_EMAIL: "/user/send-verification-email",
+
+    COMMUNITY_INFO: "/community/info",
     CREATE_COMMUNITY: "/community/create",
     UPDATE_COMMUNITY: "/community/update",
     DELETE_COMMUNITY: "/community/delete",
+    COMMUNITY_GENERATE_INVITE: "/community/generate-invite",
+    COMMUNITY_USERS: "/community/users",
+    DELETE_COMMUNITY_MEMBER: "/community/delete-member",
+    PATIENT_INFO: "/community/patient-info",
 
     CREATE_JUG_USER: "/jug-user/create",
     VERIFY_EMAIL: "/user/verify",
@@ -43,13 +50,14 @@ interface RequestOptions {
     query: { [key: string]: any };
     body: { [key: string]: any };
     auth?: string;
+    rawUrl?: boolean;
 }
 
 export async function request(
     endpoint: string,
     options: Partial<RequestOptions>,
 ) {
-    let url = SERVER_URL + endpoint;
+    let url = options.rawUrl ? endpoint : SERVER_URL + endpoint;
 
     if (options.query) {
         url += "?";

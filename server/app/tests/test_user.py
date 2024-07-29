@@ -10,6 +10,10 @@ client = get_test_client()
 
 
 def test_email_link_generation():
+    with db_session:
+        user = User.get(id=USER_ID)
+        link = VerifyEmail.get(user=user)
+        link.delete() if link is not None else None
     assert generate_verification_link(USER_ID) is not None
 
     with db_session:

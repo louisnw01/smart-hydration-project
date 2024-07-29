@@ -132,6 +132,71 @@ const settingsList: ISettingsSection[] = [
         ],
     },
     {
+        title: "Community",
+        data: [
+            {
+                name: "Community Profile",
+                component: (name, isFirst, isLast) => {
+                    const router = useRouter();
+                    return (
+                        <OptionBlock
+                            isLast={isLast}
+                            text={name}
+                            onPress={() => router.navigate("settings/community/community-profile")}
+                            icon={
+                                <Ionicons
+                                    name="color-palette"
+                                    size={19}
+                                    color="gray"
+                                />
+                            }
+                        />
+                    );
+                },
+            },
+            {
+                name: "Remove Member",
+                component: (name, isFirst, isLast) => {
+                    const router = useRouter();
+                    return (
+                        <OptionBlock
+                            isLast={isLast}
+                            text={name}
+                            onPress={() => router.navigate("settings/community/remove-member")}
+                            icon={
+                                <Ionicons
+                                    name="color-palette"
+                                    size={19}
+                                    color="gray"
+                                />
+                            }
+                        />
+                    );
+                },
+            },
+            {
+                name: "Invite Member",
+                component: (name, isFirst, isLast) => {
+                    const router = useRouter();
+                    return (
+                        <OptionBlock
+                            isLast={isLast}
+                            text={name}
+                            onPress={() => router.navigate("settings/community/invite-member")}
+                            icon={
+                                <Ionicons
+                                    name="color-palette"
+                                    size={19}
+                                    color="gray"
+                                />
+                            }
+                        />
+                    );
+                },
+            },
+        ],
+    },
+    {
         title: "Notifications",
         data: [
             {

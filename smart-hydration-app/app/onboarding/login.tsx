@@ -84,11 +84,11 @@ export default function LoginPage() {
                         </Text>
                     )}
                     <StyledButton
-                        text="Login"
+                        text="Log In"
                         buttonClass="py-3 bg-black justify-center rounded-xl mt-10 dark:bg-white"
                         textClass="text-xl font-medium text-white dark:text-black"
-                        onPress={handleSubmit}          
-                     />
+                        onPress={handleSubmit}
+                    />
 
                     <StyledButton
                         text="Register"

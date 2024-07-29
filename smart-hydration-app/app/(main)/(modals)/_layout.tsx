@@ -23,7 +23,11 @@ export default function ModalLayout() {
                     return (
                         <Pressable onPress={() => router.back()}>
                             <Entypo
-                                name= {Platform.OS == "android" ? "chevron-left" :"circle-with-cross"}
+                                name={
+                                    Platform.OS == "android"
+                                        ? "chevron-left"
+                                        : "circle-with-cross"
+                                }
                                 size={24}
                                 color="rgb(80, 80, 80)"
                             />
@@ -40,10 +44,10 @@ export default function ModalLayout() {
                 name="add-device-modal"
                 options={{ title: "Add a Device" }}
             />
-            <Stack.Screen
+            {/* <Stack.Screen
                 name="add-drink-modal"
                 options={{ title: "Add a Drink" }}
-            />
+            /> */}
             <Stack.Screen name="device-info-modal" options={{ title: "" }} />
             <Stack.Screen
                 name="edit-device-name-modal"
@@ -63,6 +67,26 @@ export default function ModalLayout() {
                         );
                     },
                 }}
+            />
+            <Stack.Screen
+                name="create-community-modal"
+                options={{ title: "Create a Community" }}
+            />
+            <Stack.Screen
+                name="join-community-modal"
+                options={{ title: "Join a Community" }}
+            />
+            <Stack.Screen
+                name="add-member-modal"
+                options={{ title: "Add a community member" }}
+            />
+            <Stack.Screen
+                name="add-device-member-modal"
+                options={{ title: "Add jug(s) to member" }}
+            />
+            <Stack.Screen
+                name="member-info-modal"
+                options={{ title: "Member details" }}
             />
         </Stack>
     );

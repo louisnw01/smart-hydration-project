@@ -4,9 +4,11 @@ import useColorPalette from "@/util/palette";
 import {
     Entypo,
     FontAwesome,
+    FontAwesome6,
     Foundation,
     MaterialIcons,
 } from "@expo/vector-icons";
+
 import { Link, router, Tabs } from "expo-router";
 import { Pressable } from "react-native";
 
@@ -98,6 +100,28 @@ export default function TabLayout() {
                                 color={palette.fg}
                             />
                         </Pressable>
+                    ),
+                }}
+            />
+            <Tabs.Screen
+                name="community"
+                options={{
+                    title: "Community",
+                    tabBarIcon: ({ color }) => (
+                        <FontAwesome6
+                            name="people-group"
+                            size={24}
+                            color={color}
+                        />
+                    ),
+                    headerRight: () => (
+                        <Link className="px-5" href="add-jug-user">
+                            <Entypo
+                                name="circle-with-plus"
+                                size={26}
+                                color={palette.fg}
+                            />
+                        </Link>
                     ),
                 }}
             />
