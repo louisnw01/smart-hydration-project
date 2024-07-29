@@ -38,7 +38,7 @@ def test_community_endpoints():
 def test_community_invites():
     client.post('/community/create', json={'name': 'MyTestCommunity'})
 
-    response = client.post('/community/generate-invite', json={"permission": "TestPermission"})
+    response = client.get('/community/generate-invite')
 
     code = response.json()
     assert code is not None

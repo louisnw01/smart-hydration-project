@@ -1,16 +1,17 @@
 import colors from "@/colors";
 import { WritableAtom, useAtom, useAtomValue, useSetAtom } from "jotai";
-import { Switch, View, Text, Pressable } from "react-native";
+import { Switch, View, Text, Pressable, GestureResponderEvent } from "react-native";
 import { Entypo } from "@expo/vector-icons";
 
 interface OptionBlockProps {
-    text: string;
-    atom: WritableAtom<unknown, [unknown], void>;
-    onPress?: Function;
-    icon: any,
+    text?: string;
+    atom?: WritableAtom<unknown, [unknown], void>;
+    href?: string;
+    isFirst?: boolean;
+    isLast?: boolean;
     multiSelect?: boolean;
-    isFirst: boolean|undefined;
-    isLast: boolean|undefined;
+    icon?: React.ReactNode;
+    onPress?: (event: GestureResponderEvent) => void;
 }
 
 export function MultiSelectOptionBlock({ text, atom, onPress, icon, isFirst, isLast }:OptionBlockProps) {
