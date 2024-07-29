@@ -71,7 +71,7 @@ export default function CommunityPage() {
     useEffect(() => {
         if (!data) return;
         const result = filterAndSortData(filters);
-        setFilteredData(result); 
+        setFilteredData(result);
     }, [textInput, filters, data]);
 
     const handleSortPress = () => {
@@ -167,13 +167,13 @@ export default function CommunityPage() {
                             </Text>
                         )*/}
                         <View className="flex flex-row mx-2 items-center my-2">
-                        <StyledButton
-                                    text={`Sort by name ${filters.sort === "asc" ? "A-Z" : "Z-A"}`}
-                                    onPress={handleSortPress}
-                                    textClass="text-lg"
-                                />
+                            <StyledButton
+                                text={`Sort by name ${filters.sort === "asc" ? "A-Z" : "Z-A"}`}
+                                onPress={handleSortPress}
+                                textClass="text-lg"
+                            />
                         </View>
-                         {/* filtering breaks if users have the same name: get ID from endpoint and use that as ID instead? */}
+                        {/* filtering breaks if users have the same name: get ID from endpoint and use that as ID instead? */}
                         {!!filteredData && filteredData.length > 0 && (
                             <FlatList
                                 data={filteredData}
