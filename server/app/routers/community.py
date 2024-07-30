@@ -37,12 +37,9 @@ async def patient_info(user_id: str = Depends(auth_user)):
         community = try_get_users_community(user_id)
 
         # get targets for users
-        progress_to_target = "0%"
         patient_info = []
         for juguser in community.jug_users:
-            if (juguser.drank_today == None):
-                if (calculate_drank_today(juguser) == 0):
-                    progress_to_target = "0%"
+
 
             patient_info.append({
                 "name": juguser.name,
@@ -53,16 +50,6 @@ async def patient_info(user_id: str = Depends(auth_user)):
 
         return patient_info
 
-def calculate_drank_today(juguser: JugUser):
-    # get list of events today
-    aggs = []
-    for jug in juguser.jugs:
-        aggs.append(get_hydration_events(login_and_get_session(), jug, 0, True))
-    if (len(aggs) == 0):
-        return 0
-    # get other drinks today
-    # add values together
-    # set drank_today in db
 
 @router.get("/users")
 async def community_users(user_id: str = Depends(auth_user)):
