@@ -7,6 +7,7 @@ import { authTokenAtom, registerInfoAtom } from "./user";
 import { ENDPOINTS, request } from "@/util/fetch";
 import { DeviceInfo, ITimeSeries } from "@/interfaces/device";
 import { jugUserInfoAtom } from "./jug-user";
+import { selectedMemberAtom } from "./community";
 
 export const linkJugsToMemberMAtom = atomWithMutation((get) => ({
     mutationKey: ["/community/link-jug-to-member", get(authTokenAtom)],
@@ -204,20 +205,39 @@ export const userInfoQAtom = atomWithQuery((get) => ({
     enabled: !!get(authTokenAtom),
 }));
 
+async function fetchJugData(jugUserId: number, token: string) {
+    const response = await request(ENDPOINTS.FETCH_COMMUNITY, {
+        query: { jug_user_id: jugUserId },
+        auth: token as string,
+    });
+
+    if (!response.ok) {
+        throw new Error("Jug Data Could Not Be Found");
+    }
+    return await response.json();
+}
+
 export const getJugDataQAtom = atomWithQuery((get) => ({
     queryKey: ["get-jug-data", get(authTokenAtom)],
     queryFn: async ({ queryKey: [, token] }): Promise<DeviceInfo[]> => {
-        const response = await request(ENDPOINTS.FETCH_COMMUNITY, {
-            auth: token as string,
-        });
+        const { data } = get(userInfoQAtom);
+        const jugUserId = data?.juguser;
 
-        if (!response.ok) {
-            throw new Error("Jug Data Could Not Be Found");
-        }
-
-        return await response.json();
+        return await fetchJugData(jugUserId, token);
     },
-    enabled: !!get(authTokenAtom),
+    enabled: !!get(authTokenAtom) && !get(userInfoQAtom).isLoading,
+}));
+
+export const getPatientJugDataQAtom = atomWithQuery((get) => ({
+    queryKey: [
+        "get-patient-jug-data",
+        get(authTokenAtom),
+        get(selectedMemberAtom),
+    ],
+    queryFn: async ({ queryKey: [, token, member] }): Promise<DeviceInfo[]> => {
+        return await fetchJugData(member.id, token);
+    },
+    enabled: !!get(authTokenAtom) && !!get(selectedMemberAtom),
 }));
 
 export const updateMAtom = atomWithMutation((get) => ({
