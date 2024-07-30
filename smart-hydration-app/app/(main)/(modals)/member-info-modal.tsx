@@ -7,6 +7,7 @@ import {
     membersAtom,
     selectedCommunityMemberAtom,
     selectedJugsForMemberAtom,
+    selectedMemberAtom,
 } from "@/atom/community";
 import StyledButton from "@/components/common/button";
 import { useEffect } from "react";
@@ -14,6 +15,7 @@ import { useEffect } from "react";
 export default function MemberInfoModal() {
     const navigation = useNavigation();
     const members = useAtomValue(membersAtom);
+    const selectedMember = useAtomValue(selectedMemberAtom);
     alert(members);
 
     return (
@@ -62,7 +64,6 @@ export default function MemberInfoModal() {
                 <Pressable
                     className="bg-blue px-4 py-2 rounded-xl"
                     onPress={() => {
-                        setSelectedMember();
                         router.push("add-device-member-modal");
                     }}
                 >

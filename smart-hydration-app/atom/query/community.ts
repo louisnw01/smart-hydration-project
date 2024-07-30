@@ -220,7 +220,7 @@ export const linkJugsToCommunityMemberMAtom = atomWithMutation((get) => ({
     enabled: !!get(authTokenAtom),
     mutationFn: async (formData: {
         jugIds: string[];
-        communityMember: string;
+        communityMember: number;
     }) => {
         const token = get(authTokenAtom);
         const response = await request(ENDPOINTS.LINK_JUG_TO_COMMUNITY_MEMBER, {

@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { View, Text, SectionList, Pressable } from "react-native";
-import { useAtom, useAtomValue, useSetAtom } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 import { getAllJugsQAtom, getJugDataQAtom } from "@/atom/query";
 import { useNavigation } from "expo-router";
 import Loading from "@/components/common/loading";
 import {
-    selectedJugsForMemberAtom,
     selectedCommunityMemberAtom,
+    selectedJugsForMemberAtom,
+    selectedMemberAtom,
 } from "@/atom/community";
 import { linkJugsToCommunityMemberMAtom } from "@/atom/query/community";
 
@@ -16,10 +17,10 @@ export default function AddDeviceMemberModal() {
     console.log(JSON.stringify(data));
     const navigation = useNavigation();
     const [selectedJugs, setSelectedJugs] = useAtom(selectedJugsForMemberAtom);
+    const selectedMember = useAtomValue(selectedMemberAtom);
     const { mutate: linkJugsToCommunityMember } = useAtomValue(
         linkJugsToCommunityMemberMAtom,
     );
-    const selectedMember = useAtomValue(selectedCommunityMemberAtom);
 
     const handleSelect = (jug) => {
         const newSelectedJugs = new Set(selectedJugs);
@@ -32,7 +33,17 @@ export default function AddDeviceMemberModal() {
     };
 
     const handlePress = () => {
-        linkJugsToCommunityMember(formData);
+        console.log("Selected member: " + JSON.stringify(selectedMember));
+        let jugIdArray = [];
+        for (let j of selectedJugs) {
+            jugIdArray.push(j.id);
+        }
+        const queryData = {
+            jugIds: jugIdArray,
+            communityMember: selectedMember.id,
+        };
+        console.log(queryData);
+        linkJugsToCommunityMember(queryData);
         navigation.goBack();
     };
 
