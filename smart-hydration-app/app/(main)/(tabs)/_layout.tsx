@@ -104,7 +104,7 @@ export default function TabLayout() {
                         />
                     ),
                     headerRight: () => (
-                        <Link className="px-5" href="add-member-modal">
+                        <Link className="px-5" href="add-jug-user">
                             <Entypo
                                 name="circle-with-plus"
                                 size={26}
