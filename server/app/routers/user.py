@@ -221,7 +221,7 @@ async def toggle_notifications_frequency(form: ToggleNotificationsForm, user_id:
 
 def extract_number_from_string(s):
     # Define the regex pattern to match one or more digits followed by a space and the word "hours"
-    pattern = r'(\d+)\s+hours'
+    pattern = r'(\d+)\s+hour(s)?'
 
     # Search the string for the pattern
     match = re.search(pattern, s)
