@@ -64,3 +64,7 @@ class CreateInvitationForm(BaseModel):
 
 class VerifyEmailForm(BaseModel):
     code: str
+
+
+class DeleteCommunityMemberForm(BaseModel):
+    id: int
