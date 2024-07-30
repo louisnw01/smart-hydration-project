@@ -11,7 +11,7 @@ class TargetUpdate(BaseModel):
 
 class AddJugsToMemberForm(BaseModel):
     jugIds: List[str]
-    communityMember: str
+    communityMember: int
 
 
 class UserRegister(BaseModel):
