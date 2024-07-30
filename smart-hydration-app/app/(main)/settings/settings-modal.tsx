@@ -1,23 +1,20 @@
 import {
     authTokenAtom,
-    colorSchemeAtom,
-    userNameAtom,
     drinkListAtom,
     notificationsAtom,
     notificationFrequencyAtom,
     pushTokenAtom,
 } from "@/atom/user";
 import { OptionBlock } from "@/components/common/option-block";
+import { ISettingsSection } from "@/interfaces/settings";
+import { Feather, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useAtomValue, useSetAtom } from "jotai";
-import { ReactElement, ReactNode, useEffect } from "react";
 import { Pressable, SectionList, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { Feather, MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
-import { deleteUser, removePushTokenMAtom } from "@/atom/query";
-import { ISettingsSection } from "@/interfaces/settings";
+import { removePushTokenMAtom } from "@/atom/query";
 import { amountDrankTodayAtom } from "@/atom/hydration";
-import { registerForPushNotificationsAsync } from "@/util/notifications";
+import { useEffect } from "react";
 
 const settingsList: ISettingsSection[] = [
     {
@@ -92,7 +89,9 @@ const settingsList: ISettingsSection[] = [
                         <OptionBlock
                             isLast={isLast}
                             text={name}
-                            onPress={() => router.navigate("settings/adjust-target")}
+                            onPress={() =>
+                                router.navigate("settings/adjust-target")
+                            }
                             icon={
                                 <MaterialCommunityIcons
                                     name="cup-water"
@@ -142,7 +141,11 @@ const settingsList: ISettingsSection[] = [
                         <OptionBlock
                             isLast={isLast}
                             text={name}
-                            onPress={() => router.navigate("settings/community/community-profile")}
+                            onPress={() =>
+                                router.navigate(
+                                    "settings/community/community-profile",
+                                )
+                            }
                             icon={
                                 <Ionicons
                                     name="color-palette"
@@ -162,7 +165,11 @@ const settingsList: ISettingsSection[] = [
                         <OptionBlock
                             isLast={isLast}
                             text={name}
-                            onPress={() => router.navigate("settings/community/remove-member")}
+                            onPress={() =>
+                                router.navigate(
+                                    "settings/community/remove-member",
+                                )
+                            }
                             icon={
                                 <Ionicons
                                     name="color-palette"
@@ -182,7 +189,11 @@ const settingsList: ISettingsSection[] = [
                         <OptionBlock
                             isLast={isLast}
                             text={name}
-                            onPress={() => router.navigate("settings/community/invite-member")}
+                            onPress={() =>
+                                router.navigate(
+                                    "settings/community/invite-member",
+                                )
+                            }
                             icon={
                                 <Ionicons
                                     name="color-palette"
@@ -226,7 +237,6 @@ const settingsList: ISettingsSection[] = [
 export default function SettingsModal() {
     const insets = useSafeAreaInsets();
     const setAuthAtom = useSetAtom(authTokenAtom);
-    const setUserNameAtom = useSetAtom(userNameAtom);
     const setAmounDrankTodayAtom = useSetAtom(amountDrankTodayAtom);
     const setNotifications = useSetAtom(notificationsAtom);
     const setNotificationFrequency = useSetAtom(notificationFrequencyAtom);
@@ -234,26 +244,10 @@ export default function SettingsModal() {
     const {mutate, isSuccess, data} = useAtomValue(removePushTokenMAtom);
     const pushToken = useAtomValue(pushTokenAtom);
     const router = useRouter();
-    //const { mutate: submitDeleteUser, isPending, isSuccess, isError } = useAtomValue(deleteUser);
-    //useEffect(() => {
-      {/*if (isSuccess) {
-        router.replace("onboarding/login-register");
-      }
-    }, [isSuccess]);
-
-    useEffect(() => {
-      if (isError) {
-
-        //router.navigate("settings/theme");
-       console.error('error')
-      }
-    }, [isError]);
-  */}
 
     useEffect(() => {
         if(!isSuccess) return;
         setAuthAtom("");
-        setUserNameAtom("");
         setAmounDrankTodayAtom(0);
         setDrinksList([]);
         setNotificationFrequency("1 hour");
@@ -287,10 +281,6 @@ export default function SettingsModal() {
                 keyExtractor={(item) => `settings-${item.name}`}
                 stickySectionHeadersEnabled={false}
             />
-
-            {/* <View className="gap-5">
-                <OptionBlock text="Dark Mode" atom={colorSchemeAtom} />
-            </View> */}
             <View className="gap-5">
                 <View className="w-full h-[1px] bg-gray-300 dark:bg-neutral-800" />
                 <Pressable
@@ -301,17 +291,6 @@ export default function SettingsModal() {
                 >
                     <Text className="text-xl mt-1 text-white">Log Out</Text>
                 </Pressable>
-                {/*
-                <Pressable
-                    className="items-center bg-blue rounded-xl px-7 py-3"
-                    disabled={isPending}
-                    onPress={() => {
-                        submitDeleteUser();
-                    }}
-                >
-                    <Text className="text-xl mt-1 text-white">{isPending ? 'Deleting account...' : 'Delete Account'}</Text>
-                </Pressable>
-                  */}
             </View>
         </View>
     );

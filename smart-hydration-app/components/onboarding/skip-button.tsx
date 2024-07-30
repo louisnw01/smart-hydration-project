@@ -1,4 +1,4 @@
-import { Text, Pressable } from "react-native";
+import { Pressable, Text } from "react-native";
 
 interface SubmitButtonProps {
     onPress: () => void;

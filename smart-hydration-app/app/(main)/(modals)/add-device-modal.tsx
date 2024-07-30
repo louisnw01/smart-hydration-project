@@ -1,9 +1,9 @@
-import { useState } from "react";
-import { View, Text, SectionList, Pressable } from "react-native";
-import { useAtomValue } from "jotai";
 import { getAllJugsQAtom, linkJugToUserMAtom } from "@/atom/query";
-import { useNavigation } from "expo-router";
 import Loading from "@/components/common/loading";
+import { useNavigation } from "expo-router";
+import { useAtomValue } from "jotai";
+import { useState } from "react";
+import { Pressable, SectionList, Text, View } from "react-native";
 
 export default function MVPAddDeviceModal() {
     const { data, isLoading } = useAtomValue(getAllJugsQAtom);
@@ -20,15 +20,7 @@ export default function MVPAddDeviceModal() {
     };
 
     const handlePress = () => {
-        // alert(
-        //     `todo: add jugs ${Array.from(selectedJugs).join(", ")} to account`,
-        // );
-
-
-
         linkJugsToUser(Array.from(selectedJugs));
-
-        // code to add to account here
         navigation.goBack();
     };
 
