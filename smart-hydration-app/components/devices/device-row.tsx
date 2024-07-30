@@ -6,19 +6,19 @@ import { useSetAtom } from "jotai";
 import { useRouter } from "expo-router";
 import { selectedDeviceAtom, selectedJugIdAtom } from "@/atom/device";
 
-export default function DeviceRow({ device }: { device: DeviceInfo }) {
-    const setDeviceId = useSetAtom(selectedJugIdAtom);
-    const router = useRouter();
+export default function DeviceRow({
+    device,
+    onPress,
+}: {
+    device: DeviceInfo;
+    onPress: Function;
+}) {
     const percentFull = (device.water_level / device.capacity) * 100;
-
     const isStale = false;
     return (
         <Pressable
-            className="mx-6 bg-gray-200 px-7 py-4 flex flex-row justify-between rounded-xl dark:bg-neutral-800"
-            onPress={() => {
-                setDeviceId(device.id);
-                router.push("device-info-modal");
-            }}
+            className="bg-gray-200 px-7 py-4 flex flex-row justify-between rounded-xl dark:bg-neutral-800"
+            onPress={() => onPress(device)}
         >
             <View className="flex">
                 <Text className="text-xl font-bold dark:text-white">

@@ -1,6 +1,6 @@
 import { View, Text, ScrollView, TextInput } from "react-native";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAtomValue, useSetAtom } from "jotai";
 import { loginMAtom } from "@/atom/query";
 
@@ -66,11 +66,11 @@ export default function LoginPage() {
                         </Text>
                     )}
                     <StyledButton
-                        text="Login"
+                        text="Log In"
                         buttonClass="py-3 bg-black justify-center rounded-xl mt-10 dark:bg-white"
                         textClass="text-xl font-medium text-white dark:text-black"
-                        onPress={handleSubmit}          
-                     />
+                        onPress={handleSubmit}
+                    />
 
                     <StyledButton
                         text="Register"

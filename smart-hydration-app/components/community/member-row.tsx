@@ -41,3 +41,4 @@ export default function MemberRow({ member }: { member: MemberInfo }) {
         </Pressable>
     );
 }
+
