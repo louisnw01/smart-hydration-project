@@ -85,26 +85,27 @@ async def get_all_jug_ids(user_id, session):
     }
 
 
+
 async def get_hydration_events(session, jug_id, jug_name, start_timestamp, last_day=False):
     # get a list of all hydration events for the jug for the past year
     # TODO convert start_timestamp to datetime. fromTimestamp
     start_date = dt.datetime.fromtimestamp(start_timestamp)
     todays_date = dt.date.today().strftime("%Y-%m-%d") if last_day else None
     data = await query(session, f'/data/device/{jug_id}/events/hydration?maxCount=1000{f"&minDate={todays_date}" if last_day else ""}')
+
     if data is None or (type(data) == list and len(data) == 0):
         return []
 
-    aggs = []
-
+    events = []
     for row in data.values():
         if row['type'] != 'DRINK':
             continue
         iso_date = dt.datetime.fromisoformat(row['timestamp'].replace('Z', ''))
 
-        aggs.append({
+        events.append({
             'time': iso_date.timestamp(),
             'value': -row['water_delta'],
             'name': jug_name,
         })
 
-    return aggs
+    return events
