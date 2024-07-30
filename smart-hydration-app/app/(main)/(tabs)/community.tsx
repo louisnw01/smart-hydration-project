@@ -33,7 +33,6 @@ export default function CommunityPage() {
     const { isLoading, refetch } = useAtomValue(communityInfoQAtom);
     const { data, isLoading: patientInfoIsLoading } =
         useAtomValue(patientInfoQAtom);
-    console.log("NOWHERE", data);
     const hasCommunity = useAtomValue(userHasCommunityAtom);
     const [refreshing, setRefreshing] = useState(false);
     const communityName = useAtomValue(communityNameAtom);
@@ -75,7 +74,7 @@ export default function CommunityPage() {
         if (!data) return;
         const result = filterAndSortData(filters);
         setFilteredData(result);
-    }, [textInput, filters, data]);
+    }, [textInput, filters, data, filterAndSortData]);
 
     const handleSortPress = () => {
         setFilters((prev) => ({

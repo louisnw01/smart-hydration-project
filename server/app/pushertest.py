@@ -35,36 +35,38 @@ async def fire_last_drank(sys_id):
 
     with db_session:
         latest = jug_data_today[-1]
-
+        jug = Jug.get(system_id=sys_id)
         for juguser in jug.owners:
-            if latest['time'] > juguser.last_drank:
+            if not juguser.last_drank or latest['time'] > juguser.last_drank:
                 juguser.last_drank = latest['time']
             await tunnel.fire('last_drank', juguser.id, latest['time'])
 
+
 async def fire_drank_today(sys_id):
-    print("FIRE DRANK TODAY")
     with db_session:
         jug = Jug.get(system_id=sys_id)
         if jug is None:
-            print("jug is none")
             return
 
-        for juguser in jug.owners:
-            events = []
-            for jug in juguser.jugs:
-                events.extend(get_hydration_events(login_and_get_session(), jug, 0, True))
+        async with SmartHydrationSession() as session:
 
-            # time.mktime(d.timetuple())
+            for juguser in jug.owners:
+                tasks = []
+                for jug in juguser.jugs:
+                    tasks.append(get_hydration_events(session, jug.smart_hydration_id, jug.name, 0, True))
 
-            today_timestamp = dt.datetime.combine(dt.date.today(), dt.time()).timestamp()
+                individual_jug_events = await asyncio.gather(*tasks)
 
-            drinks_today = OtherDrink.select(lambda drink: drink.juguser == juguser and drink.timestamp > today_timestamp)
+                events = []
+                for jug_events in individual_jug_events:
+                    events.extend(jug_events)
 
-            events.extend([{"time": d.timestamp, "value": d.capacity, "name": "OTHERDRINK"} for d in drinks_today])
-            juguser.drank_today = sum(map(lambda e: e['value'], events), 0)
-    # get other drinks today
-    # add values together
-    # set drank_today in db
+                today_timestamp = dt.datetime.combine(dt.date.today(), dt.time()).timestamp()
+                drinks_today = OtherDrink.select(lambda drink: drink.juguser == juguser and drink.timestamp > today_timestamp)
+
+                events.extend([{"time": d.timestamp, "value": d.capacity, "name": "OTHERDRINK"} for d in drinks_today])
+                juguser.drank_today = sum(map(lambda e: e['value'], events), 0)
+
 
 async def on_telemetry_change(data):
     print(f'[{dt.datetime.now()}] telemetry changed', data)
@@ -84,7 +86,6 @@ async def on_waterlevel_change(data):
     )
 
 
-
 async def auth_channel(values):
     message = f"{values['socket_id']}:{values['channel_name']}"
     secret_key_bytes = getenv("PUSHER_APP_SECRET").encode('utf-8')
@@ -96,7 +97,6 @@ async def auth_channel(values):
 async def pusher_init():
     pusher = Pusher(getenv("PUSHER_APP_KEY"), 'eu', channel_authenticator=auth_channel)
     await pusher.connect()
-
 
     for org in (5, 2):
         channel = await pusher.subscribe(f"private-organisation.{org}.devices")

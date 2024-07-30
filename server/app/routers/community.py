@@ -3,7 +3,7 @@ import datetime as dt
 from fastapi import APIRouter, Depends, HTTPException
 import pprint
 from pony.orm.core import commit, db_session, delete
-from ..api import get_hydration_events, login_and_get_session
+from ..api import get_hydration_events
 from ..services import get_user_by_id, try_get_users_community
 from ..models import Community, CommunityMember, InviteLink, JugUser, User
 from ..schemas import CreateCommunityForm, CreateInvitationForm, DeleteCommunityMemberForm
