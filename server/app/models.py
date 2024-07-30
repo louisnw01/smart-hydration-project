@@ -54,6 +54,7 @@ class JugUser(db.Entity):
     user = Optional(User)
     otherdrinks = Set('OtherDrink')
     target = Optional(int)
+    drank_today = Optional(int)
     last_drank = Optional(int)
 
 
