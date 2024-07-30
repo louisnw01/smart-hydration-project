@@ -1,10 +1,9 @@
+import { deleteItemAsync, getItem, setItem } from "expo-secure-store";
 import { atom } from "jotai";
-import { getItem, setItem, deleteItemAsync } from "expo-secure-store";
 
-import { atomWithStorage, createJSONStorage } from "jotai/vanilla/utils";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { atomWithStorage, createJSONStorage } from "jotai/vanilla/utils";
 
-export const userNameAtom = atom<string>("");
 export const registerInfoAtom = atom<Partial<RegistrationInfo>>({});
 
 // Stored values that persist between open/closing the app

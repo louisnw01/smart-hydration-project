@@ -1,13 +1,13 @@
-import { getJugDataQAtom } from "@/atom/query";
-import { useAtomValue } from "jotai";
-import DeviceRow from "./device-row";
-import { FlatList, RefreshControl, View } from "react-native";
-import Loading from "../common/loading";
-import StyledButton from "../common/button";
 import Jug from "@/assets/svgs/jug.svg";
-import { FontAwesome } from "@expo/vector-icons";
+import { getJugDataQAtom } from "@/atom/query";
 import useColorPalette from "@/util/palette";
-import { useState } from "react";
+import { useQueryRefetch } from "@/util/query-refetch";
+import { FontAwesome } from "@expo/vector-icons";
+import { useAtomValue } from "jotai";
+import { FlatList, RefreshControl, View } from "react-native";
+import StyledButton from "../common/button";
+import Loading from "../common/loading";
+import DeviceRow from "./device-row";
 
 export default function DeviceSection({
     addJugButton,
@@ -17,30 +17,22 @@ export default function DeviceSection({
     onPress: Function;
 }) {
     const palette = useColorPalette();
-    const { data, isLoading, refetch } = useAtomValue(getJugDataQAtom);
-    const [refreshing, setRefreshing] = useState(false);
+    const { data, isLoading } = useAtomValue(getJugDataQAtom);
+    const { isRefreshing, handleRefresh } = useQueryRefetch(getJugDataQAtom);
 
     if (isLoading) {
         return <Loading message="Getting your jugs..." isLoading />;
     }
 
-    const handleRefresh = () => {
-        setRefreshing(true);
-        refetch();
-    };
-
-    if (!isLoading && refreshing) {
-        setRefreshing(false);
-    }
-
-    const listItems = data.map((device) => (
-        <DeviceRow
-            device={device}
-            onPress={(device) => {
-                onPress(device);
-            }}
-        />
-    ));
+    const listItems =
+        data?.map((device) => (
+            <DeviceRow
+                device={device}
+                onPress={(device) => {
+                    onPress(device);
+                }}
+            />
+        )) || [];
 
     if (addJugButton) {
         listItems.push(
@@ -74,7 +66,7 @@ export default function DeviceSection({
             keyExtractor={(item, idx) => idx}
             refreshControl={
                 <RefreshControl
-                    refreshing={refreshing}
+                    refreshing={isRefreshing}
                     onRefresh={handleRefresh}
                 />
             }
