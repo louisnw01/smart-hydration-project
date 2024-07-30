@@ -1,78 +1,148 @@
 import { useState } from "react";
-import { View, Text, Pressable, TextInput } from "react-native";
+import { View, Text, Pressable, TextInput, ScrollView } from "react-native";
 import { useNavigation } from "expo-router";
 import { useAtom } from "jotai";
 import StyledButton from "@/components/common/button";
 import StyledTextInput from "@/components/common/text-input";
-import ApplyTagRow from "@/components/community/apply-tag-row";
+import ApplyTagRow from "@/components/community/apply-tag-section";
+import Tag from "@/components/community/tag";
+import { FilterObject, TagInfo } from "@/interfaces/community";
+import PageWrapper from "@/components/common/page-wrapper";
 
 export default function ApplyTags() {
     const navigation = useNavigation();
     const [inviteLink, setInviteLink] = useState('');
     const [showErrorMessage, setShowErrorMessage] = useState(false);
-    const handlePress = () => {
+    const [textInput, setTextInput] = useState("");
+    const [filters, setFilters] = useState<FilterObject>({
+        searchTerm: "",
+        sort: "asc",
+    });
+    const handleAppliedPress = (tag: TagInfo) => {
+        moveFromApplied(tag.name);
+    };
 
+    const handleUnappliedPress = (tag: TagInfo) => {
+        moveToApplied(tag.name);
     };
     const [appliedTags, setAppliedTags] = useState([
         { name: "independent" },
         { name: "tea" },
         { name: "aggressive" },
         { name: "friendly" },
-        { name: "coffee" }
-      ]);
-      const [unappliedTags, setUnappliedTags] = useState([
+        { name: "coffee" },
+        { name: "one" },
+        { name: "two" },
+        { name: "three" },
+        { name: "four" },
+        { name: "five" }
+    ]);
+    const [unappliedTags, setUnappliedTags] = useState([
         { name: "squash" },
         { name: "soda" },
         { name: "needs help" },
         { name: "juice" },
-      ]);
+        { name: "six" },
+        { name: "seven" },
+        { name: "eight" },
+        { name: "nine" },
+        { name: "ten" }
+    ]);
 
-    //to do: add ScrollView to this page
+    const moveFromApplied = (tagName: string) => {
+        if (tagName !== '') {
+            //remove tag from appliedTags array
+            const filteredArray = appliedTags.filter(item => item.name !== tagName);
+            setAppliedTags(filteredArray);
+            //add tag to unappliedTags array
+            const newTag = { name: tagName };
+            setUnappliedTags([...unappliedTags, newTag]);
+        }
+    };
+
+    const moveToApplied = (tagName: string) => {
+        if (tagName !== '') {
+            //remove tag from unappliedTags array
+            const filteredArray = unappliedTags.filter(item => item.name !== tagName);
+            setUnappliedTags(filteredArray);
+            //add tag to appliedTags array
+            const newTag = { name: tagName };
+            setAppliedTags([...appliedTags, newTag]);
+        }
+    };
+
+    const handleClearPress = () => {
+        setFilters((prev) => ({ ...prev, searchTerm: "" }));
+        setTextInput("");
+    };
+
     //to do: stick search bar to bottom of page
+    //to do: add messages for when no tags applied / all tags applied
 
     return (
-        <View className="mt-8 flex gap-6">
-            <Text className="dark:text-white text-2xl mx-6">
-               Press a tag to apply or remove it
-            </Text>
-            <Text className="dark:text-white text-2xl mx-6">
-               Applied tags
-            </Text>
-            <Text className="dark:text-white text-2xl mx-6">
-               Tags to select
-            </Text>
-            <View className="flex-col justify-start mx-6">
-                {appliedTags.map((tag) => (
-                    <View key={tag.name} className="">
-                        <ApplyTagRow tag={tag} />
+        <PageWrapper>
+            <ScrollView>
+                <View className="mt-8 flex gap-6">
+                    <Text className="dark:text-white text-2xl mx-6">
+                        Press a tag to move it to the other section
+                    </Text>
+                    <Text className="dark:text-white font-bold text-2xl mx-6">
+                        Applied tags
+                    </Text>
+                    <View className="flex-row flex-wrap my-2 mx-3">
+                        {appliedTags.map((tag, index) => (
+                            <Pressable key={index} onPress={() => handleAppliedPress(tag)}>
+                                <Tag name={tag.name} />
+                            </Pressable>
+                        ))}
                     </View>
-                ))}
-            </View>
-            <View className="flex flex-col justify-center items-center">
-                <StyledButton
-                    text="Save member's tags"
-                    href="member-info-modal"
-                    textClass="text-lg"
-                />
-            </View>
+                    <Text className="dark:text-white font-bold text-2xl mx-6">
+                        Unapplied tags
+                    </Text>
+                    <View className="flex-row flex-wrap my-2 mx-3">
+                        {unappliedTags.map((tag, index) => (
+                            <Pressable key={index} onPress={() => handleUnappliedPress(tag)}>
+                                <Tag name={tag.name} />
+                            </Pressable>
+                        ))}
+                    </View>
+                    <View className="flex flex-col justify-center items-center">
+                        <StyledButton
+                            text="Save member's tags"
+                            href="member-info-modal"
+                            textClass="text-lg"
+                        />
+                    </View>
+                </View>
+            </ScrollView>
             <View className="flex flex-row items-center p-2">
-                <View className="flex-1">
-                    <StyledTextInput
-                        placeholder={`Search tags...`}
-                        onChangeText={(val) => {
-
-                        }}
-                        textContentType="name"
-                        returnKeyType="done"
-                    />
-                </View>
-                <View className="ml-2">
-                    <StyledButton
-                        text="Clear search"
-                        textClass="text-lg"
-                    />
-                </View>
-            </View>
-        </View>
+      <View className="flex-1">
+        <TextInput
+          value={textInput}
+          placeholder="Search tags to select..."
+          className="bg-gray-200 h-14 placeholder-black text-xl rounded-xl px-3 mb-7 m-1 border"
+          onChangeText={(val) => {
+            setTextInput(val);
+            setFilters((prev) => ({
+              ...prev,
+              searchTerm: val,
+            }));
+          }}
+          textContentType="name"
+          returnKeyType="done"
+        />
+      </View>
+      <View className="justify-center ml-2">
+        <Pressable
+          onPress={handleClearPress}
+          className="bg-blue px-4 py-2 rounded-xl mb-6"
+        >
+          <Text className="text-xl font-semibold text-white">
+            Clear search
+          </Text>
+        </Pressable>
+      </View>
+    </View>
+        </PageWrapper>
     );
 }
