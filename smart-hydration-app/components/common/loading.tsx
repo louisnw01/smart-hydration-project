@@ -1,4 +1,4 @@
-import { ActivityIndicator, View, Text } from "react-native";
+import { ActivityIndicator, Text, View } from "react-native";
 
 export default function Loading({
     isLoading,
@@ -6,7 +6,7 @@ export default function Loading({
     large,
 }: {
     isLoading: boolean;
-    message: string;
+    message?: string;
     large?: boolean;
 }) {
     if (!isLoading) return null;

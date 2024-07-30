@@ -1,27 +1,32 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { View, Text, Pressable, TextInput } from "react-native";
 import { createCommunityMAtom } from "@/atom/query/community";
-import { useNavigation } from "expo-router";
-import { useAtom, useAtomValue } from "jotai";
+import { router, useNavigation } from "expo-router";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { userHasCommunityAtom, communityNameAtom } from "@/atom/community";
 
 export default function CreateCommunityModal() {
-    const navigation = useNavigation();
     const [communityName, setCommunityName] = useState('');
-    const [, setCommunityNameAtom] = useAtom(communityNameAtom);
-    const {mutate} = useAtomValue(createCommunityMAtom);
+    const { mutate, isPending, isSuccess, data, isError } = useAtomValue(createCommunityMAtom);
     const [showErrorMessage, setShowErrorMessage] = useState(false);
-    const [, setUserHasCommunity] = useAtom(userHasCommunityAtom);
+
+    useEffect(() => {
+        if (isPending) return;
+        if (isSuccess) {
+            router.back();
+        } else if (isError) {
+            // TODO: show an error message
+        }
+    }, [isPending])
 
     const handlePress = () => {
-        //to do: check if community exists before allowing creation 
-        if(communityName !== ''){
+        //to do: check if community exists before allowing creation
+        if (communityName !== '') {
             mutate({ name: communityName });
-            setCommunityNameAtom(communityName);
-            setUserHasCommunity(true);
-            navigation.goBack();
-        }
-        else{
+        //     setCommunityNameAtom(communityName);
+        //     setUserHasCommunity(true);
+        //     navigation.goBack();
+        } else {
             setShowErrorMessage(true);
         }
     };
@@ -37,9 +42,9 @@ export default function CreateCommunityModal() {
                 <TextInput
                     placeholder={`Community name (required)`}
                     className="bg-gray-200 h-14 placeholder-black text-xl rounded-xl px-3"
-                    onChangeText={(val) => { 
-                        setCommunityName(val); 
-                        setShowErrorMessage(false); 
+                    onChangeText={(val) => {
+                        setCommunityName(val);
+                        setShowErrorMessage(false);
                     }}
                     textContentType="name"
                     returnKeyType="done"
