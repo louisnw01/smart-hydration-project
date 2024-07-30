@@ -14,13 +14,12 @@ import {
 
 import {
     communityInfoQAtom,
-    communityNameAtom,
     patientInfoQAtom,
     userHasCommunityAtom,
 } from "@/atom/query/community";
 import Loading from "@/components/common/loading";
 import MemberRow from "@/components/community/member-row";
-import { FilterObject } from "@/interfaces/community";
+import { FilterObject, MemberInfo } from "@/interfaces/community";
 
 //for now (basic user flow), Community tab is shown as 4th tab
 //TODO: for care home mode, replace home screen with Community tab
@@ -35,25 +34,20 @@ export default function CommunityPage() {
         useAtomValue(patientInfoQAtom);
     const hasCommunity = useAtomValue(userHasCommunityAtom);
     const [refreshing, setRefreshing] = useState(false);
-    const communityName = useAtomValue(communityNameAtom);
-    // const [filteredData, setFilteredData] = useState<MemberInfo[]>([]);
+
+    const [filteredData, setFilteredData] = useState<MemberInfo[]>([]);
     const [textInput, setTextInput] = useState("");
     const [filters, setFilters] = useState<FilterObject>({
         searchTerm: "",
         sort: "asc",
     });
+
     // const filterAndSortData = (filterObj: FilterObject) => {
     //     if (!data) return;
     //     const filteredData = data.filter((member) => {
-    //         return (
-    //             (member.name &&
-    //                 member.name
-    //                     .toLowerCase()
-    //                     .indexOf(filterObj.searchTerm.toLowerCase()) > -1) ||
-    //             (member.description &&
-    //                 member.description.indexOf(
-    //                     filterObj.searchTerm.toLowerCase(),
-    //                 ) > -1)
+    //         return member.name
+    //                 .toLowerCase()
+    //                 .indexOf(filterObj.searchTerm.toLowerCase()) > -1)
     //         );
     //     });
     //     return filteredData.sort((a: any, b: any) => {
@@ -70,11 +64,12 @@ export default function CommunityPage() {
 
     //filtering only works on strings (not numbers) for now
 
-    // useEffect(() => {
-    //     if (!data) return;
-    //     const result = filterAndSortData(filters);
-    //     setFilteredData(result);
-    // }, [textInput, filters, data, filterAndSortData]);
+    useEffect(() => {
+        if (!data) return;
+        const result = filterAndSortData(filters);
+        setFilteredData(result);
+
+    }, [textInput, filters, data, filterAndSortData]);
 
     const handleSortPress = () => {
         setFilters((prev) => ({
@@ -155,13 +150,6 @@ export default function CommunityPage() {
                                 />
                             }
                         > */}
-                        <View className="mt-8 flex gap-6">
-                            <View className="flex flex-row justify-center">
-                                <Text className="dark:text-white text-2xl font-bold">
-                                    {communityName}
-                                </Text>
-                            </View>
-                        </View>
                         {/* change this to members.size > 0 when entered members are stored in members array*/}
                         {/*members.size === 0 && (
                             <Text className="text-center dark:text-white text-lg">
@@ -184,7 +172,7 @@ export default function CommunityPage() {
                             <FlatList
                                 data={data}
                                 contentContainerClassName="flex gap-6"
-                                keyExtractor={(patient) => patient.name}
+                                keyExtractor={(patient, idx) => idx}
                                 renderItem={({ item }) => (
                                     <MemberRow member={item} />
                                 )}

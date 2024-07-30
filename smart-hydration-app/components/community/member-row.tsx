@@ -6,11 +6,9 @@ import { Pressable, Text, View } from "react-native";
 
 export default function MemberRow({ member }: { member: MemberInfo }) {
     const setMember = useSetAtom(selectedMemberAtom);
-    // const { data } = useAtomValue(getJugDataQAtom);
-    // const router = useRouter();
     return (
         <Pressable
-            className="mx-6 bg-gray-200 px-7 py-4 flex flex-row justify-between rounded-xl dark:bg-neutral-800"
+            className="mx-6 bg-gray-100 px-7 py-4 flex flex-row justify-between rounded-xl dark:bg-neutral-900"
             onPress={() => {
                 setMember(member);
                 router.push("member-info-modal");
@@ -41,4 +39,3 @@ export default function MemberRow({ member }: { member: MemberInfo }) {
         </Pressable>
     );
 }
-
