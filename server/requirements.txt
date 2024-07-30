@@ -6,4 +6,3 @@ pony
 pyjwt
 pytest
 asyncpusher
-exponent_server_sdk

@@ -1,9 +1,12 @@
+import asyncio
+
 from dotenv import load_dotenv
 from fastapi import FastAPI, Depends
 
 from .api import SmartHydrationSession, get_all_jug_ids
 from .auth import auth_user
 from .models import connect_to_database
+from .notifications import send_drink_reminders
 from .routers import community, jug_user, user, data, jug, websocket_tunnel
 from .pushertest import pusher_init
 
@@ -21,9 +24,12 @@ app.include_router(jug.router)
 app.include_router(community.router)
 app.include_router(websocket_tunnel.router)
 
+
 @app.on_event('startup')
 async def init():
-    await pusher_init()
+    asyncio.create_task(pusher_init())
+    asyncio.create_task(send_drink_reminders())
+
 
 @app.get("/")
 async def root():

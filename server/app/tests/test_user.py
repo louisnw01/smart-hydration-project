@@ -1,9 +1,8 @@
 import pytest
-from app.models import User
 from fastapi import HTTPException
 from pony.orm.core import db_session, select
 from .util import get_test_client, USER_ID
-from ..models import VerifyEmail, Notifications
+from ..models import VerifyEmail, Notifications, User
 from ..routers.user import generate_verification_link
 
 client = get_test_client()
