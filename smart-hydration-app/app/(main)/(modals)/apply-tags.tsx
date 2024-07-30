@@ -13,24 +13,19 @@ export default function ApplyTags() {
     const handlePress = () => {
 
     };
-    const data = [
-        {
-            name: "independent",
-        },
-        {
-            name: "tea",
-        },
-        {
-            name: "aggressive",
-        },
-        {
-            name: "friendly",
-        },
-        {
-            name: "coffee",
-        },
-
-    ]
+    const [appliedTags, setAppliedTags] = useState([
+        { name: "independent" },
+        { name: "tea" },
+        { name: "aggressive" },
+        { name: "friendly" },
+        { name: "coffee" }
+      ]);
+      const [unappliedTags, setUnappliedTags] = useState([
+        { name: "squash" },
+        { name: "soda" },
+        { name: "needs help" },
+        { name: "juice" },
+      ]);
 
     //to do: add ScrollView to this page
     //to do: stick search bar to bottom of page
@@ -38,10 +33,16 @@ export default function ApplyTags() {
     return (
         <View className="mt-8 flex gap-6">
             <Text className="dark:text-white text-2xl mx-6">
-                Select tag(s) to apply to the member:
+               Press a tag to apply or remove it
+            </Text>
+            <Text className="dark:text-white text-2xl mx-6">
+               Applied tags
+            </Text>
+            <Text className="dark:text-white text-2xl mx-6">
+               Tags to select
             </Text>
             <View className="flex-col justify-start mx-6">
-                {data.map((tag) => (
+                {appliedTags.map((tag) => (
                     <View key={tag.name} className="">
                         <ApplyTagRow tag={tag} />
                     </View>
