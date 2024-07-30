@@ -1,9 +1,13 @@
 import { useState } from "react";
 import { View, Text, Pressable, TextInput } from "react-native";
 import { router, useNavigation } from "expo-router";
-import { useAtom, useAtomValue } from "jotai";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { MemberInfo } from "@/interfaces/community";
-import { membersAtom, selectedJugsForMemberAtom } from "@/atom/community";
+import {
+    membersAtom,
+    selectedCommunityMemberAtom,
+    selectedJugsForMemberAtom,
+} from "@/atom/community";
 import StyledButton from "@/components/common/button";
 import { useEffect } from "react";
 
@@ -58,6 +62,7 @@ export default function MemberInfoModal() {
                 <Pressable
                     className="bg-blue px-4 py-2 rounded-xl"
                     onPress={() => {
+                        setSelectedMember();
                         router.push("add-device-member-modal");
                     }}
                 >
