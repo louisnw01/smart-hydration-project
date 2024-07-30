@@ -16,7 +16,6 @@ export default function MemberInfoModal() {
     const navigation = useNavigation();
     const members = useAtomValue(membersAtom);
     const selectedMember = useAtomValue(selectedMemberAtom);
-    alert(members);
 
     return (
         <View className="mt-8 flex gap-6">
