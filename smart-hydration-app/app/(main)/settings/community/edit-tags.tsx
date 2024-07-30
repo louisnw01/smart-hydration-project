@@ -46,10 +46,14 @@ export default function EditTags({ }: EditTagsProps) {
   };
 
   const handleDeleteTag = (tagName: string) => {
-
+    if (tagName !== '') {
+      const filteredArray = tags.filter(item => item.name !== tagName);
+      setTags(filteredArray);
+    }
   };
 
   const handleAddTag = (tagName: string) => {
+
 
   };
 
