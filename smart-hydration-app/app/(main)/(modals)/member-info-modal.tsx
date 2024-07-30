@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { View, Text, Pressable, TextInput } from "react-native";
 import { router, useNavigation } from "expo-router";
-import { useAtom } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 import { MemberInfo } from "@/interfaces/community";
 import { membersAtom, selectedJugsForMemberAtom } from "@/atom/community";
 import StyledButton from "@/components/common/button";
@@ -9,6 +9,8 @@ import { useEffect } from "react";
 
 export default function MemberInfoModal() {
     const navigation = useNavigation();
+    const members = useAtomValue(membersAtom);
+    alert(members);
 
     return (
         <View className="mt-8 flex gap-6">

@@ -8,11 +8,8 @@ import { ENDPOINTS, request } from "@/util/fetch";
 import { DeviceInfo, ITimeSeries } from "@/interfaces/device";
 import { jugUserInfoAtom } from "./jug-user";
 
-export const linkJugsToCommunityMember = atomWithMutation((get) => ({
-    mutationKey: [
-        "/community/link-jug-to-member",
-        get(selectedCommunityMemberAtom),
-    ],
+export const linkJugsToMemberMAtom = atomWithMutation((get) => ({
+    mutationKey: ["/community/link-jug-to-member", get(authTokenAtom)],
     enabled: !!get(authTokenAtom),
     mutationFn: async (jugIds: string[], communityMember: string) => {
         const token = get(authTokenAtom);
@@ -22,9 +19,18 @@ export const linkJugsToCommunityMember = atomWithMutation((get) => ({
             auth: token as string,
         });
         if (!response.ok) {
+            alert("Cannot add jug");
             throw new Error("Jug could not be linked to community member");
         }
         return;
+    },
+    onSuccess: () => {
+        console.log("Linked jugs to user");
+        const queryClient = get(queryClientAtom);
+        void queryClient.invalidateQueries({ queryKey: ["get-jug-data"] });
+        void queryClient.invalidateQueries({
+            queryKey: ["/data/historical"],
+        });
     },
 }));
 

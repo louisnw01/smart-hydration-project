@@ -53,7 +53,8 @@ export const deleteCommunityMAtom = atomWithMutation((get) => ({
     onSuccess: () => {},
 }));
 
-{/*export const getCommunityMembersMAtom = atomWithQuery((get) => ({
+{
+    /*export const getCommunityMembersMAtom = atomWithQuery((get) => ({
     queryKey: ["get-community-members", get(authTokenAtom)],
     enabled: !!get(authTokenAtom),
     // TODO: replace this user interface with the expected one from the db
@@ -72,4 +73,26 @@ export const deleteCommunityMAtom = atomWithMutation((get) => ({
         return response.json();
     }
 }));
-*/}
+*/
+}
+
+export const linkJugsToCommunityMemberMAtom = atomWithMutation((get) => ({
+    mutationKey: ["/community/link-jug-to-member", get(authTokenAtom)],
+    enabled: !!get(authTokenAtom),
+    mutationFn: async (jugIds: string[], communityMember: string) => {
+        const token = get(authTokenAtom);
+        const response = await request(ENDPOINTS.LINK_JUG_TO_COMMUNITY_MEMBER, {
+            method: "post",
+            body: { jugIds: jugIds, communityMember: communityMember },
+            auth: token as string,
+        });
+        if (!response.ok) {
+            alert("Cannot add jug");
+            throw new Error("Jug could not be linked to community member");
+        }
+        return;
+    },
+    onSuccess: () => {
+        console.log("Linked jugs to user");
+    },
+}));

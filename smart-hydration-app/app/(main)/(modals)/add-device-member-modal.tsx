@@ -5,6 +5,7 @@ import { getAllJugsQAtom, getJugDataQAtom } from "@/atom/query";
 import { useNavigation } from "expo-router";
 import Loading from "@/components/common/loading";
 import { selectedJugsForMemberAtom } from "@/atom/community";
+import { linkJugsToCommunityMemberMAtom } from "@/atom/query/community";
 
 export default function AddDeviceMemberModal() {
     const { data, isLoading, refetch } = useAtomValue(getJugDataQAtom);
@@ -12,17 +13,26 @@ export default function AddDeviceMemberModal() {
     console.log(JSON.stringify(data));
     const navigation = useNavigation();
     const [selectedJugs, setSelectedJugs] = useAtom(selectedJugsForMemberAtom);
+    const { mutate: linkJugsToCommunityMember } = useAtomValue(
+        linkJugsToCommunityMemberMAtom,
+    );
 
-    const handleSelect = (jug_id: string) => {
-        if (selectedJugs.has(jug_id)) {
-            selectedJugs.delete(jug_id);
+    const handleSelect = (jug) => {
+        const newSelectedJugs = new Set(selectedJugs);
+        if (newSelectedJugs.has(jug)) {
+            newSelectedJugs.delete(jug);
         } else {
-            selectedJugs.add(jug_id);
+            newSelectedJugs.add(jug);
         }
-        setSelectedJugs(new Set(selectedJugs));
+        setSelectedJugs(newSelectedJugs);
     };
 
     const handlePress = () => {
+        const communityMember = "exampleCommunityMember"; // Replace this with the actual community member ID
+        linkJugsToCommunityMember({
+            jugIds: Array.from(selectedJugs),
+            communityMember,
+        });
         navigation.goBack();
     };
 
