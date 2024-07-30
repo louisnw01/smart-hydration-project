@@ -4,6 +4,7 @@ export interface MemberInfo {
     last_drank?: number;
     target_percentage?: number;
     description?: string;
+    drank_today?: number;
 }
 
 export interface FilterObject {

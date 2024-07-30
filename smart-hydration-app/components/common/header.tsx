@@ -1,20 +1,23 @@
-import { Text } from "react-native";
-import { useWaterLevel } from "../home/water-screen";
+import { communityNameAtom } from "@/atom/query/community";
 import useColorPalette from "@/util/palette";
+import { useAtomValue } from "jotai";
+import { Text } from "react-native";
 
 export default function PageHeader({ children }: { children: string }) {
     const palette = useColorPalette();
-    const waterLevel = useWaterLevel();
-    const underwater = waterLevel && waterLevel > 0.89;
-
+    const communityName = useAtomValue(communityNameAtom);
     return (
         <Text
             className="font-semibold text-3xl ml-1"
             style={{
-                color: underwater ? "white" : palette.fg,
+                color: palette.fg,
             }}
         >
-            {children === "Home" ? "smart hydration" : children}
+            {children === "Home"
+                ? "smart hydration"
+                : children == "Community"
+                  ? communityName
+                  : children}
         </Text>
     );
 }

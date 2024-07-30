@@ -1,12 +1,12 @@
+import { DeviceInfo, ITimeSeries } from "@/interfaces/device";
+import { ENDPOINTS, request } from "@/util/fetch";
 import {
-    atomWithQuery,
     atomWithMutation,
+    atomWithQuery,
     queryClientAtom,
 } from "jotai-tanstack-query";
-import { authTokenAtom, registerInfoAtom } from "./user";
-import { ENDPOINTS, request } from "@/util/fetch";
-import { DeviceInfo, ITimeSeries } from "@/interfaces/device";
 import { jugUserInfoAtom } from "./jug-user";
+import { authTokenAtom, registerInfoAtom } from "./user";
 
 export const linkJugsToMemberMAtom = atomWithMutation((get) => ({
     mutationKey: ["/community/link-jug-to-member", get(authTokenAtom)],
@@ -150,6 +150,7 @@ export const updateUserTarget = atomWithMutation((get) => ({
 
     onSuccess: (data, formData) => {
         const queryClient = get(queryClientAtom);
+<<<<<<< HEAD
         void queryClient.setQueryData(["get-user-target", get(authTokenAtom)], {
             target: formData.newValue,
         });
@@ -168,8 +169,13 @@ export const getUserTargetQAtom = atomWithQuery((get) => ({
         }
 
         return await response.json();
+=======
+        void queryClient.setQueryData(["user-info"], (prev) => ({
+            ...prev,
+            target: formData.newValue,
+        }));
+>>>>>>> community-page-changes
     },
-    enabled: !!get(authTokenAtom),
 }));
 
 export const sendVerificationEmailMAtom = atomWithMutation((get) => ({
@@ -230,10 +236,17 @@ export const updateMAtom = atomWithMutation((get) => ({
     },
 }));
 
+<<<<<<< HEAD
 export const getUserQAtom = atomWithQuery((get) => ({
     queryKey: ["/user/user-name", get(authTokenAtom)],
     queryFn: async ({ queryKey: [, token] }): Promise<string> => {
         const response = await request(ENDPOINTS.FETCH_USER, {
+=======
+export const userInfoQAtom = atomWithQuery((get) => ({
+    queryKey: ["user-info", get(authTokenAtom)],
+    queryFn: async ({ queryKey: [, token] }): Promise<any> => {
+        const response = await request(ENDPOINTS.USER_INFO, {
+>>>>>>> community-page-changes
             auth: token as string,
         });
 

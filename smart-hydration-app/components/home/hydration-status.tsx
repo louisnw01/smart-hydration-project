@@ -1,26 +1,21 @@
-import { View, Text } from "react-native";
-import { useAtom, useAtomValue } from "jotai";
-import { HYDRATION_MESSAGE } from "@/constants/hydration-status";
-import colors from "@/colors";
-import { dailyTargetAtom, userNameAtom } from "@/atom/user";
-import { getUserQAtom, getUserTargetQAtom } from "@/atom/query";
-import { useEffect } from "react";
 import { amountDrankTodayAtom } from "@/atom/hydration";
+import { userInfoQAtom } from "@/atom/query";
+import { dailyTargetAtom } from "@/atom/user";
+import colors from "@/colors";
+import { HYDRATION_MESSAGE } from "@/constants/hydration-status";
 import { getRelativeTarget } from "@/util/trends";
+import { useAtomValue } from "jotai";
+import { Text, View } from "react-native";
 
 export default function HydrationStatus() {
     const hydration = useAtomValue(amountDrankTodayAtom);
     const target = useAtomValue(dailyTargetAtom);
     const hydrated = hydration >= getRelativeTarget(target);
-    const { refetch, isSuccess, data } = useAtomValue(getUserQAtom);
-    const [userName, setUserName] = useAtom(userNameAtom);
+    const { refetch, isLoading, data } = useAtomValue(userInfoQAtom);
 
-    useEffect(() => {
-        refetch();
-        if (isSuccess) {
-            setUserName(data);
-        }
-    }, [isSuccess]);
+    if (isLoading || !data) {
+        return null;
+    }
 
     return (
         <View
@@ -31,8 +26,8 @@ export default function HydrationStatus() {
         >
             <Text className="w-full text-center text-3xl text-white">
                 {hydrated
-                    ? HYDRATION_MESSAGE.high + userName
-                    : HYDRATION_MESSAGE.low + userName}
+                    ? HYDRATION_MESSAGE.high + data.name
+                    : HYDRATION_MESSAGE.low + data.name}
             </Text>
         </View>
     );

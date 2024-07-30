@@ -1,19 +1,20 @@
-import React, { useMemo } from "react";
-import { ActivityIndicator, ScrollView, Text, View } from "react-native";
-import { CartesianChart, Bar } from "victory-native";
 import SFPro from "@/assets/fonts/SF-Pro-Display-Regular.otf";
-import { useAtomValue } from "jotai";
+import { mostHydratedDayOfWeekAtom } from "@/atom/hydration";
 import { chartTimeWindowAtom } from "@/atom/nav";
+import { getHydrationQAtom } from "@/atom/query";
+import { ScrollPageWrapper } from "@/components/common/page-wrapper";
+import WaterAmount from "@/components/common/water-amount";
+import InsightsPane from "@/components/trends/insights-pane";
+import MonthVsLastMonthInsight from "@/components/trends/month-vs-month";
+import Switcher from "@/components/trends/switcher";
+import TodayVsAvgInsight from "@/components/trends/today-vs-avg";
+import useColorPalette from "@/util/palette";
 import { formattedDataAtom } from "@/util/trends";
 import { useFont } from "@shopify/react-native-skia";
-import Switcher from "@/components/trends/switcher";
-import InsightsPane from "@/components/trends/insights-pane";
-import TodayVsAvgInsight from "@/components/trends/today-vs-avg";
-import MonthVsLastMonthInsight from "@/components/trends/month-vs-month";
-import WaterAmount from "@/components/common/water-amount";
-import useColorPalette from "@/util/palette";
-import { mostHydratedDayOfWeekAtom, userHasJugsAtom } from "@/atom/hydration";
-import Loading from "@/components/common/loading";
+import { useAtomValue } from "jotai";
+import React, { useMemo } from "react";
+import { ActivityIndicator, Text, View } from "react-native";
+import { Bar, CartesianChart } from "victory-native";
 
 const tickFormatMap: { [key: string]: (t: Date) => string } = {
     D: (t) => {
@@ -189,29 +190,20 @@ function Insights() {
 }
 
 export default function TrendsPage() {
-    const { hasJugs, isLoading } = useAtomValue(userHasJugsAtom);
-
-    if (isLoading) {
-        return <Loading isLoading message="Loading your information..." />;
-    }
-    // } else if (!hasJugs) {
-    //     return (
-    //         <View className="flex flex-1 justify-center items-center">
-    //             <Text className="dark:text-white text-2xl">
-    //                 You haven't linked any jugs yet.
-    //             </Text>
-    //         </View>
-    //     );
-    // }
+    const { isLoading } = useAtomValue(getHydrationQAtom);
 
     return (
-        <ScrollView className="bg-gray-100 dark:bg-black">
+        <ScrollPageWrapper
+            queryRefreshAtom={getHydrationQAtom}
+            isLoading={isLoading}
+            message="Loading your information..."
+            className="bg-gray-100 dark:bg-black"
+        >
             <View className="flex px-4 pb-5 bg-white dark:bg-black">
                 <RecentChart />
                 <Switcher />
-                {/* <View className="bg-gray-100 rounded-3xl pb-3 overflow-hidden dark:bg-neutral-900"></View> */}
             </View>
             <Insights />
-        </ScrollView>
+        </ScrollPageWrapper>
     );
 }
