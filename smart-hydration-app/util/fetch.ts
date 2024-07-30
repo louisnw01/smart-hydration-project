@@ -1,6 +1,6 @@
 // TODO server_url should be in .env
 
-export const SERVER_ADDRESS = "localhost:8085";
+export const SERVER_ADDRESS = "192.168.1.104:8085";
 // export const SERVER_ADDRESS = "hydrationapi.louisnw.com";
 
 export const SERVER_URL = `http${
@@ -17,13 +17,12 @@ export const ENDPOINTS = {
     FETCH_HISTORICAL_JUG_DATA: "/data/historical",
     GET_ALL_JUGS: "/get-all-jugs",
     UPDATE: "/jug-user/update",
-    FETCH_USER: "/user/user-name",
+    USER_INFO: "/user/info",
     DELETE_USER: "/user/delete",
     UPDATE_JUG_NAME: "/jug/update-name",
     USER_EXISTS: "/user/exists",
     ADD_DRINK: "/jug-user/add-drink-event",
     UPDATE_USER_TARGET: "/user/update-user-target",
-    GET_USER_TARGET: "/user/get-user-target",
 
     SEND_VERIFICATION_EMAIL: "/user/send-verification-email",
 
