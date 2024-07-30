@@ -42,39 +42,39 @@ export default function CommunityPage() {
         searchTerm: "",
         sort: "asc",
     });
-    const filterAndSortData = (filterObj: FilterObject) => {
-        if (!data) return;
-        const filteredData = data.filter((member) => {
-            return (
-                (member.name &&
-                    member.name
-                        .toLowerCase()
-                        .indexOf(filterObj.searchTerm.toLowerCase()) > -1) ||
-                (member.description &&
-                    member.description.indexOf(
-                        filterObj.searchTerm.toLowerCase(),
-                    ) > -1)
-            );
-        });
-        return filteredData.sort((a: any, b: any) => {
-            const nameA = a.name.toLowerCase();
-            const nameB = b.name.toLowerCase();
-            if (filterObj.sort === "desc") {
-                return nameB.localeCompare(nameA);
-            } else if (filterObj.sort === "asc") {
-                return nameA.localeCompare(nameB);
-            }
-            return 0;
-        });
-    };
+    // const filterAndSortData = (filterObj: FilterObject) => {
+    //     if (!data) return;
+    //     const filteredData = data.filter((member) => {
+    //         return (
+    //             (member.name &&
+    //                 member.name
+    //                     .toLowerCase()
+    //                     .indexOf(filterObj.searchTerm.toLowerCase()) > -1) ||
+    //             (member.description &&
+    //                 member.description.indexOf(
+    //                     filterObj.searchTerm.toLowerCase(),
+    //                 ) > -1)
+    //         );
+    //     });
+    //     return filteredData.sort((a: any, b: any) => {
+    //         const nameA = a.name.toLowerCase();
+    //         const nameB = b.name.toLowerCase();
+    //         if (filterObj.sort === "desc") {
+    //             return nameB.localeCompare(nameA);
+    //         } else if (filterObj.sort === "asc") {
+    //             return nameA.localeCompare(nameB);
+    //         }
+    //         return 0;
+    //     });
+    // };
 
-    //filtering only works on strings (not numbers) for now
+    // //filtering only works on strings (not numbers) for now
 
-    useEffect(() => {
-        if (!data) return;
-        const result = filterAndSortData(filters);
-        setFilteredData(result);
-    }, [textInput, filters, data, filterAndSortData]);
+    // useEffect(() => {
+    //     if (!data) return;
+    //     const result = filterAndSortData(filters);
+    //     setFilteredData(result);
+    // }, [textInput, filters, data, filterAndSortData]);
 
     const handleSortPress = () => {
         setFilters((prev) => ({
