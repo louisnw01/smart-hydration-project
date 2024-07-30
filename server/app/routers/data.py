@@ -1,10 +1,9 @@
 import asyncio
 from fastapi import APIRouter, Depends, HTTPException
 from pony.orm.core import db_session, select
-
 from ..api import SmartHydrationSession, get_jug_latest, get_hydration_events
 from ..auth import auth_user
-from ..models import User, OtherDrink
+from ..models import JugUser, User, OtherDrink
 
 router = APIRouter(
     prefix="/data",
@@ -14,15 +13,16 @@ router = APIRouter(
 
 
 @router.get("/latest")
-async def get_community_jug_status(user_id: str = Depends(auth_user)):
+async def get_community_jug_status(jug_user_id: int, user_id: str = Depends(auth_user)):
     # TODO perhaps this logic should be in auth_user, and it returns user rather than user_id
 
     with db_session:
         # community = user.community
         user = User.get(id=user_id)
-        if not user or not user.jug_user:
+        juguser = JugUser.get(id=jug_user_id)
+        if not user or not juguser:
             raise HTTPException(status_code=400, detail='user not found')
-        jugs = [jug.to_dict() for jug in user.jug_user.jugs]
+        jugs = [jug.to_dict() for jug in juguser.jugs]
     devices_info = []
     async with SmartHydrationSession() as session:
         for jug in jugs:

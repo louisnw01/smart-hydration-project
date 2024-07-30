@@ -4,10 +4,13 @@ import StyledButton from "@/components/common/button";
 import { ScrollPageWrapper } from "@/components/common/page-wrapper";
 import useColorPalette from "@/util/palette";
 import { FontAwesome, MaterialCommunityIcons } from "@expo/vector-icons";
-import { useAtomValue } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import { Text, View } from "react-native";
 import { router } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import DeviceSection from "@/components/devices/device-section";
+import { getPatientJugDataQAtom } from "@/atom/query";
+import { selectedJugIdAtom } from "@/atom/device";
 
 function MemberInfoBlock({ children, title }) {
     return (
@@ -22,6 +25,8 @@ export default function MemberInfoModal() {
     const palette = useColorPalette();
     const insets = useSafeAreaInsets();
     const member = useAtomValue(selectedMemberAtom);
+    console.log(JSON.stringify(member));
+    const setJugId = useSetAtom(selectedJugIdAtom);
     return (
         <ScrollPageWrapper
             className="mt-8 flex gap-6 mx-6 pb-20"
@@ -33,15 +38,25 @@ export default function MemberInfoModal() {
                 {member.name}
             </Text>
             <MemberInfoBlock title="Profile Details">
-                <Text className="text-xl dark:text-white">Name</Text>
+                <Text className="text-xl dark:text-white">
+                    Name: {member.name}
+                </Text>
                 <Text className="text-xl dark:text-white">Jugs</Text>
                 <Text className="text-xl dark:text-white">Last drank</Text>
                 <Text className="text-xl dark:text-white">Tags</Text>
             </MemberInfoBlock>
             <MemberInfoBlock title="Progress to Target">
-                <Text className="text-xl dark:text-white">
-                    Data here (tap to read more)
-                </Text>
+                <View className="flex-row justify-between">
+                    <Text className="text-xl dark:text-white">
+                        {member.drank_today | 0} / {member.target}ml
+                    </Text>
+                    <Text className="text-xl font-semibold dark:text-white">
+                        {((member.drank_today / member.target) * 100).toFixed(
+                            0,
+                        )}
+                        %
+                    </Text>
+                </View>
             </MemberInfoBlock>
 
             <MemberInfoBlock title="Trends Page">
@@ -50,11 +65,15 @@ export default function MemberInfoModal() {
                 </Text>
             </MemberInfoBlock>
 
-            <MemberInfoBlock title="Devices Page">
-                <Text className="text-xl dark:text-white">
-                    Embed graph here
-                </Text>
-            </MemberInfoBlock>
+            <Text className="text-xl font-bold dark:text-white">Devices</Text>
+            <DeviceSection
+                addJugButton={false}
+                queryAtom={getPatientJugDataQAtom}
+                onPress={(device) => {
+                    setJugId(device.id);
+                    router.push("device-info-modal");
+                }}
+            />
 
             <MemberInfoBlock title="Favourite Drink">
                 <Text className="text-xl dark:text-white">Tea</Text>

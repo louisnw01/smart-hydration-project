@@ -3,22 +3,25 @@ import { getJugDataQAtom } from "@/atom/query";
 import useColorPalette from "@/util/palette";
 import { useQueryRefetch } from "@/util/query-refetch";
 import { FontAwesome } from "@expo/vector-icons";
-import { useAtomValue } from "jotai";
+import { useAtomValue, Atom } from "jotai";
 import { FlatList, RefreshControl, View } from "react-native";
 import StyledButton from "../common/button";
 import Loading from "../common/loading";
 import DeviceRow from "./device-row";
+import { AtomWithQueryResult } from "jotai-tanstack-query";
 
 export default function DeviceSection({
     addJugButton,
     onPress,
+    queryAtom,
 }: {
     addJugButton?: boolean;
     onPress: Function;
+    queryAtom: Atom<AtomWithQueryResult>;
 }) {
     const palette = useColorPalette();
-    const { data, isLoading } = useAtomValue(getJugDataQAtom);
-    const { isRefreshing, handleRefresh } = useQueryRefetch(getJugDataQAtom);
+    const { data, isLoading } = useAtomValue(queryAtom);
+    const { isRefreshing, handleRefresh } = useQueryRefetch(queryAtom);
 
     if (isLoading) {
         return <Loading message="Getting your jugs..." isLoading />;
