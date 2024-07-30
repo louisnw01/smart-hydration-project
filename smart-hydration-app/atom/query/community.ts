@@ -218,11 +218,14 @@ export const deleteCommunityMemberMAtom = atomWithMutation((get) => ({
 export const linkJugsToCommunityMemberMAtom = atomWithMutation((get) => ({
     mutationKey: ["/community/link-jug-to-member", get(authTokenAtom)],
     enabled: !!get(authTokenAtom),
-    mutationFn: async (jugIds: string[], communityMember: string) => {
+    mutationFn: async (formData: {
+        jugIds: string[];
+        communityMember: string;
+    }) => {
         const token = get(authTokenAtom);
         const response = await request(ENDPOINTS.LINK_JUG_TO_COMMUNITY_MEMBER, {
             method: "post",
-            body: { jugIds: jugIds, communityMember: communityMember },
+            body: formData,
             auth: token as string,
         });
         if (!response.ok) {

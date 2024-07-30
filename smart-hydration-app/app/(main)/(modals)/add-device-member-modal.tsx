@@ -1,10 +1,13 @@
 import { useState } from "react";
 import { View, Text, SectionList, Pressable } from "react-native";
-import { useAtom, useAtomValue } from "jotai";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { getAllJugsQAtom, getJugDataQAtom } from "@/atom/query";
 import { useNavigation } from "expo-router";
 import Loading from "@/components/common/loading";
-import { selectedJugsForMemberAtom } from "@/atom/community";
+import {
+    selectedJugsForMemberAtom,
+    selectedCommunityMemberAtom,
+} from "@/atom/community";
 import { linkJugsToCommunityMemberMAtom } from "@/atom/query/community";
 
 export default function AddDeviceMemberModal() {
@@ -16,6 +19,7 @@ export default function AddDeviceMemberModal() {
     const { mutate: linkJugsToCommunityMember } = useAtomValue(
         linkJugsToCommunityMemberMAtom,
     );
+    const selectedMember = useAtomValue(selectedCommunityMemberAtom);
 
     const handleSelect = (jug) => {
         const newSelectedJugs = new Set(selectedJugs);
@@ -28,11 +32,7 @@ export default function AddDeviceMemberModal() {
     };
 
     const handlePress = () => {
-        const communityMember = "exampleCommunityMember"; // Replace this with the actual community member ID
-        linkJugsToCommunityMember({
-            jugIds: Array.from(selectedJugs),
-            communityMember,
-        });
+        linkJugsToCommunityMember(formData);
         navigation.goBack();
     };
 

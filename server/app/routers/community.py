@@ -2,17 +2,12 @@ from typing import Optional
 import datetime as dt
 from fastapi import APIRouter, Depends, HTTPException
 from pony.orm.core import commit, db_session, delete
-<<<<<<< HEAD
 from ..routers import jug_user
-from ..services import get_user_by_id
+from ..services import get_user_by_id, try_get_users_community, try_get_users_community
 from ..models import Community, CommunityMember, InviteLink, Jug, User, JugUser
-from ..schemas import CreateCommunityForm, CreateInvitationForm, AddJugsToMemberForm
-=======
-from ..services import get_user_by_id, try_get_users_community
-from ..models import Community, CommunityMember, InviteLink, User
-from ..schemas import CreateCommunityForm, CreateInvitationForm, DeleteCommunityMemberForm
->>>>>>> main
+from ..schemas import CreateCommunityForm, CreateInvitationForm, AddJugsToMemberForm, DeleteCommunityMemberForm
 from ..auth import auth_user, generate_invite_link
+import pprint
 
 
 router = APIRouter(
@@ -176,6 +171,7 @@ async def create_invitation(user_id: str = Depends(auth_user)):
 
 @router.post("/link-jug-to-member")
 async def link_jugs_to_community_member(form: AddJugsToMemberForm, user_id: str = Depends(auth_user)):
+    pprint.pprint(form)
     with db_session:
         user = User.get(id=user_id)
         user_juser = JugUser.get(user = user)
