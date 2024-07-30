@@ -1,57 +1,54 @@
+import asyncio
 import datetime as dt
 import json
 import os
 import re
-
-import requests
-from dotenv import load_dotenv
+import aiohttp
 
 from .services import get_users_jugs_sh_ids
 
-load_dotenv()
 
+class SmartHydrationSession:
+    async def __aenter__(self):
+        self.session = aiohttp.ClientSession()
 
-def login_and_get_session():
-    session = requests.Session()
+        async with self.session.get('https://www.smarthydration.online/login') as response:
+            text = await response.text()
 
-    response = session.get('https://www.smarthydration.online/login')
+            csrf_token_pattern = re.compile(r'name="_token" value="(.*?)"')
+            match = csrf_token_pattern.search(text)
+            if not match:
+                return None
 
-    csrf_token_pattern = re.compile(r'name="_token" value="(.*?)"')
-    match = csrf_token_pattern.search(response.text)
+            token = match.group(1)
 
-    if not match:
-        return None
+            async with self.session.post('https://www.smarthydration.online/login', data={
+                '_token': token,
+                'email': os.getenv('SMART_HYDRATION_EMAIL'),
+                'password': os.getenv('SMART_HYDRATION_PASSWORD'),
+            }) as response:
+                if response.status != 200:
+                    raise Exception(f"could not login to smart hydration (status code {response.status})")
+        return self.session
 
-    token = match.group(1)
-
-    response = session.post('https://www.smarthydration.online/login', data={
-        '_token': token,
-        'email': os.getenv('SMART_HYDRATION_EMAIL'),
-        'password': os.getenv('SMART_HYDRATION_PASSWORD'),
-    })
-
-    if response.status_code != 200:
-        raise Exception(f"could not login to smart hydration (status code {response.status_code})")
-
-    return session
+    async def __aexit__(self, exc_type, exc, tb):
+        await self.session.close() if self.session else None
 
 
 headers = {
     'Accept': 'application/json',
 }
-
-
-def query(session, endpoint):
-    response = session.get(f'https://www.smarthydration.online{endpoint}', headers=headers)
-    return response.json() if response.ok else None
+async def query(session: aiohttp.ClientSession, endpoint):
+    async with session.get(f'https://www.smarthydration.online{endpoint}', headers=headers) as response:
+        return await response.json(content_type=None) if response.ok else None
 
 
 def convert_timestamp(timestamp: str):
     return dt.datetime.fromisoformat(timestamp.replace('Z', '')).timestamp()
 
 
-def get_jug_latest(session, jug_id):
-    result = query(session, f'/data/device/{jug_id}')
+async def get_jug_latest(session, jug_id):
+    result = await query(session, f'/data/device/{jug_id}')
     if result is None:
         return None
 
@@ -68,14 +65,16 @@ def get_jug_latest(session, jug_id):
 
 
 # Temporary for MVP
-def get_all_jug_ids(user_id, session):
+async def get_all_jug_ids(user_id, session):
     real_id = 5
     fake_id = 2
 
     owned_jugs = get_users_jugs_sh_ids(user_id)
 
-    real_jugs = query(session, f'/data/organisation/{real_id}/device/list')
-    fake_jugs = query(session, f'/data/organisation/{fake_id}/device/list')
+    [real_jugs, fake_jugs] = await asyncio.gather(
+        query(session, f'/data/organisation/{real_id}/device/list'),
+        query(session, f'/data/organisation/{fake_id}/device/list')
+    )
 
     if real_jugs is None or fake_jugs is None:
         return
@@ -86,17 +85,15 @@ def get_all_jug_ids(user_id, session):
     }
 
 
-def get_hydration_events(session, jug, start_timestamp, last_day=False):
 
+async def get_hydration_events(session, jug_id, jug_name, start_timestamp, last_day=False):
     # get a list of all hydration events for the jug for the past year
     # TODO convert start_timestamp to datetime. fromTimestamp
     start_date = dt.datetime.fromtimestamp(start_timestamp)
     todays_date = dt.date.today().strftime("%Y-%m-%d") if last_day else None
-    data = query(session, f'/data/device/{jug.smart_hydration_id}/events/hydration?maxCount=1000{f"&minDate={todays_date}" if last_day else ""}')
+    data = await query(session, f'/data/device/{jug_id}/events/hydration?maxCount=1000{f"&minDate={todays_date}" if last_day else ""}')
     if data is None or (type(data) == list and len(data) == 0):
         return []
-    # 2024-06-21T12:09:32.476000
-    # split the array
 
     #  iso_date = dt.datetime.fromisoformat(row['timestamp'])
     # ValueError: Invalid isoformat string: '2023-07-06T06:43:04.000000Z'
@@ -109,7 +106,7 @@ def get_hydration_events(session, jug, start_timestamp, last_day=False):
         events.append({
             'time': iso_date.timestamp(),
             'value': -row['water_delta'],
-            'name': jug.name,
+            'name': jug_name,
         })
 
     return events

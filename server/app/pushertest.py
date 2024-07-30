@@ -7,13 +7,14 @@ from asyncpusher.channel import Channel
 from asyncpusher.pusher import Pusher
 from pony.orm.core import db_session, select
 
-from .api import get_hydration_events, get_jug_latest, login_and_get_session
+from .api import SmartHydrationSession, get_hydration_events, get_jug_latest
 from .routers.websocket_tunnel import tunnel
 from .models import Jug, OtherDrink, User
 
 
 async def fire_jug_info(sys_id):
-    jug_data = get_jug_latest(login_and_get_session(), sys_id);
+    async with SmartHydrationSession() as session:
+        jug_data = await get_jug_latest(session, sys_id);
 
     if jug_data is None:
         return
@@ -27,10 +28,12 @@ async def fire_last_drank(sys_id):
         if jug is None:
             return
 
-        jug_data_today = get_hydration_events(login_and_get_session(), jug, 0, last_day=True)
+    async with SmartHydrationSession() as session:
+        jug_data_today = await get_hydration_events(session, jug.smart_hydration_id, jug.name, 0, last_day=True)
         if len(jug_data_today) == 0:
             return
 
+    with db_session:
         latest = jug_data_today[-1]
 
         for juguser in jug.owners:
