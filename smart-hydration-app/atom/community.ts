@@ -1,4 +1,3 @@
-i
 import { MemberInfo } from "@/interfaces/community";
 import { atom } from "jotai";
 
