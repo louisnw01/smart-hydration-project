@@ -1,9 +1,11 @@
 from typing import Optional
 import datetime as dt
 from fastapi import APIRouter, Depends, HTTPException
+import pprint
 from pony.orm.core import commit, db_session, delete
+from ..api import get_hydration_events
 from ..services import get_user_by_id, try_get_users_community
-from ..models import Community, CommunityMember, InviteLink, User
+from ..models import Community, CommunityMember, InviteLink, JugUser, User
 from ..schemas import CreateCommunityForm, CreateInvitationForm, DeleteCommunityMemberForm
 from ..auth import auth_user, generate_invite_link
 
@@ -34,12 +36,16 @@ async def patient_info(user_id: str = Depends(auth_user)):
     with db_session:
         community = try_get_users_community(user_id)
 
+        # get targets for users
         patient_info = []
         for juguser in community.jug_users:
+
+
             patient_info.append({
                 "name": juguser.name,
                 "jugs": [{"name": jug.name, "id": jug.smart_hydration_id} for jug in juguser.jugs],
-                "target": juguser.target,
+                "target": juguser.target or 2200,
+                "drank_today": juguser.drank_today,
             })
 
         return patient_info
