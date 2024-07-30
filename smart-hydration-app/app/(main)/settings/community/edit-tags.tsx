@@ -106,15 +106,6 @@ export default function EditTags({ }: EditTagsProps) {
     <PageWrapper>
       <ScrollView>
         <View className="flex flex-1 gap-8 mx-16 items-center mt-10">
-          {/* temporary way to access member-info-modal while community page is broken*/}
-        <Pressable
-            className="mx-6 bg-gray-200 px-7 py-4 flex flex-row justify-between rounded-xl dark:bg-neutral-800"
-            onPress={() => {
-                router.push("member-info-modal");
-            }}
-        >
-          </Pressable>
-
           <StyledButton
             text={`Sort tags by name ${filters.sort === "asc" ? "A-Z" : "Z-A"}`}
             textClass="text-lg"
