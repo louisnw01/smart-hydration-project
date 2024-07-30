@@ -2,7 +2,7 @@ from typing import Optional
 import datetime as dt
 from fastapi import APIRouter, Depends, HTTPException
 from pony.orm.core import commit, db_session, delete
-from server.app.routers import jug_user
+from ..routers import jug_user
 from ..services import get_user_by_id
 from ..models import Community, CommunityMember, InviteLink, Jug, User, JugUser
 from ..schemas import CreateCommunityForm, CreateInvitationForm, AddJugsToMemberForm
