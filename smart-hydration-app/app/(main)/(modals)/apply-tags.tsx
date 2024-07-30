@@ -49,7 +49,7 @@ export default function ApplyTags() {
             </View>
             <View className="flex flex-col justify-center items-center">
                 <StyledButton
-                    text="Save tags"
+                    text="Save member's tags"
                     href="member-info-modal"
                     textClass="text-lg"
                 />
