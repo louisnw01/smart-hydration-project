@@ -19,7 +19,6 @@ export default function JoinCommunityModal() {
     };
 
     useEffect(() => {
-        console.log("ASDHJ", error?.message);
         if (error) setErrorMessage(error.message);
     }, [error]);
 

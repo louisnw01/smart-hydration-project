@@ -10,7 +10,9 @@ interface ButtonProps extends PressableProps {
     buttonColors?: string;
     touchButtonColors?: string;
     icon?: ReactNode;
+    style?: ViewStyle;
 }
+
 export default function StyledButton(props: ButtonProps) {
     const router = useRouter();
     const [touched, setTouched] = useState(false);
@@ -35,6 +37,7 @@ export default function StyledButton(props: ButtonProps) {
 
     return (
         <Pressable
+            style={props.style}
             className={finalButtonClass}
             onPress={() =>
                 props.onPress
