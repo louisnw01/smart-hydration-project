@@ -20,7 +20,7 @@ import {
 } from "@/atom/query/community";
 import Loading from "@/components/common/loading";
 import MemberRow from "@/components/community/member-row";
-import { FilterObject, MemberInfo } from "@/interfaces/community";
+import { FilterObject } from "@/interfaces/community";
 
 //for now (basic user flow), Community tab is shown as 4th tab
 //TODO: for care home mode, replace home screen with Community tab
@@ -36,45 +36,45 @@ export default function CommunityPage() {
     const hasCommunity = useAtomValue(userHasCommunityAtom);
     const [refreshing, setRefreshing] = useState(false);
     const communityName = useAtomValue(communityNameAtom);
-    const [filteredData, setFilteredData] = useState<MemberInfo[]>([]);
+    // const [filteredData, setFilteredData] = useState<MemberInfo[]>([]);
     const [textInput, setTextInput] = useState("");
     const [filters, setFilters] = useState<FilterObject>({
         searchTerm: "",
         sort: "asc",
     });
-    const filterAndSortData = (filterObj: FilterObject) => {
-        if (!data) return;
-        const filteredData = data.filter((member) => {
-            return (
-                (member.name &&
-                    member.name
-                        .toLowerCase()
-                        .indexOf(filterObj.searchTerm.toLowerCase()) > -1) ||
-                (member.description &&
-                    member.description.indexOf(
-                        filterObj.searchTerm.toLowerCase(),
-                    ) > -1)
-            );
-        });
-        return filteredData.sort((a: any, b: any) => {
-            const nameA = a.name.toLowerCase();
-            const nameB = b.name.toLowerCase();
-            if (filterObj.sort === "desc") {
-                return nameB.localeCompare(nameA);
-            } else if (filterObj.sort === "asc") {
-                return nameA.localeCompare(nameB);
-            }
-            return 0;
-        });
-    };
+    // const filterAndSortData = (filterObj: FilterObject) => {
+    //     if (!data) return;
+    //     const filteredData = data.filter((member) => {
+    //         return (
+    //             (member.name &&
+    //                 member.name
+    //                     .toLowerCase()
+    //                     .indexOf(filterObj.searchTerm.toLowerCase()) > -1) ||
+    //             (member.description &&
+    //                 member.description.indexOf(
+    //                     filterObj.searchTerm.toLowerCase(),
+    //                 ) > -1)
+    //         );
+    //     });
+    //     return filteredData.sort((a: any, b: any) => {
+    //         const nameA = a.name.toLowerCase();
+    //         const nameB = b.name.toLowerCase();
+    //         if (filterObj.sort === "desc") {
+    //             return nameB.localeCompare(nameA);
+    //         } else if (filterObj.sort === "asc") {
+    //             return nameA.localeCompare(nameB);
+    //         }
+    //         return 0;
+    //     });
+    // };
 
     //filtering only works on strings (not numbers) for now
 
-    useEffect(() => {
-        if (!data) return;
-        const result = filterAndSortData(filters);
-        setFilteredData(result);
-    }, [textInput, filters, data, filterAndSortData]);
+    // useEffect(() => {
+    //     if (!data) return;
+    //     const result = filterAndSortData(filters);
+    //     setFilteredData(result);
+    // }, [textInput, filters, data, filterAndSortData]);
 
     const handleSortPress = () => {
         setFilters((prev) => ({
