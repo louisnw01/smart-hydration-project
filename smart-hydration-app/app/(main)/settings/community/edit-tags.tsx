@@ -5,33 +5,32 @@ import StyledButton from "@/components/common/button";
 import EditTagRow from "@/components/community/edit-tag-row";
 import StyledTextInput from "@/components/common/text-input";
 
-export interface EditTagsProps {
+export interface EditTagsProps {}
 
-}
-
-export default function EditTags({ }: EditTagsProps) {
-
-  const [communityOwner, setCommunityOwner] = useState<string>('')
+export default function EditTags({}: EditTagsProps) {
+  const [communityOwner, setCommunityOwner] = useState<string>('');
   const [showNewTagBox, setShowNewTagBox] = useState(false);
   const [showEditTagBox, setShowEditTagBox] = useState(false);
+  const [newTextInput, setNewTextInput] = useState("");
+  const [editTextInput, setEditTextInput] = useState("");
+  const [currentTagName, setCurrentTagName] = useState("");
 
   const toggleNewTagSection = () => {
     setShowNewTagBox(!showNewTagBox);
   };
-  const toggleEditTagSection = () => {
+
+  const toggleEditTagSection = (tagName: string) => {
+    if (tagName) {
+      setCurrentTagName(tagName);
+    }
     setShowEditTagBox(!showEditTagBox);
   };
-  const [newTextInput, setNewTextInput] = useState("");
-  const [editTextInput, setEditTextInput] = useState("");
 
-
-  const handleStartup = async () => {
-
-  }
+  const handleStartup = async () => {};
 
   useEffect(() => {
     handleStartup();
-  })
+  }, []);
 
   const router = useRouter();
   const [tags, setTags] = useState([
@@ -41,8 +40,17 @@ export default function EditTags({ }: EditTagsProps) {
     { name: "friendly" },
     { name: "coffee" }
   ]);
-  const handleEditTag = (tagName: string) => {
-    toggleEditTagSection();
+
+  const handleEditTag = () => {
+    if (currentTagName !== "" && editTextInput !== "") {
+      const updatedTags = tags.map(tag =>
+        tag.name === currentTagName ? { ...tag, name: editTextInput } : tag
+      );
+      setTags(updatedTags);
+      setCurrentTagName("");
+      setEditTextInput(""); 
+      setShowEditTagBox(false);
+    }
   };
 
   const handleDeleteTag = (tagName: string) => {
@@ -53,10 +61,13 @@ export default function EditTags({ }: EditTagsProps) {
   };
 
   const handleAddTag = (tagName: string) => {
-
-
+    if (tagName !== '') {
+      const newTag = { name: tagName };
+      setTags([...tags, newTag]);
+      setNewTextInput(""); 
+      toggleNewTagSection();
+    }
   };
-
 
   return (
     <View className="flex flex-1 gap-8 mx-16 items-center mt-10">
@@ -67,7 +78,7 @@ export default function EditTags({ }: EditTagsProps) {
       <View className="flex-col justify-start mx-6">
         {tags.map((tag) => (
           <View key={tag.name} className="">
-            <EditTagRow tag={tag} onEdit={() => handleEditTag(tag.name)}
+            <EditTagRow tag={tag} onEdit={() => toggleEditTagSection(tag.name)}
               onDelete={() => handleDeleteTag(tag.name)} />
           </View>
         ))}
@@ -86,10 +97,8 @@ export default function EditTags({ }: EditTagsProps) {
             <View className="mr-4">
               <StyledTextInput
                 value={newTextInput}
-                placeholder={`Enter tag name...`}
-                onChangeText={(val) => {
-                  setNewTextInput(val);
-                }}
+                placeholder="Enter tag name"
+                onChangeText={(val) => setNewTextInput(val)}
                 textContentType="name"
                 returnKeyType="done"
               />
@@ -108,6 +117,7 @@ export default function EditTags({ }: EditTagsProps) {
               <StyledButton
                 text="Create"
                 textClass="text-lg"
+                onPress={() => handleAddTag(newTextInput)}
               />
             </View>
           </View>
@@ -117,15 +127,14 @@ export default function EditTags({ }: EditTagsProps) {
         <View className="mx-10 bg-gray-400 px-7 py-4 rounded-xl dark:bg-neutral-800">
           <View className="mb-3">
             <Text className="dark:text-white text-xl font-bold">Edit tag</Text>
+            <Text className="dark:text-white text-xl">Current name: {currentTagName}</Text>
           </View>
           <View className="flex-row items-center">
             <View className="mr-4">
               <StyledTextInput
                 value={editTextInput}
-                placeholder={`Edit tag name...`}
-                onChangeText={(val) => {
-                  setEditTextInput(val);
-                }}
+                placeholder="Enter new tag name"
+                onChangeText={(val) => setEditTextInput(val)}
                 textContentType="name"
                 returnKeyType="done"
               />
@@ -136,7 +145,7 @@ export default function EditTags({ }: EditTagsProps) {
                 textClass="text-lg"
                 onPress={() => {
                   setEditTextInput("");
-                  toggleEditTagSection();
+                  setShowEditTagBox(false);
                 }}
               />
             </View>
@@ -144,6 +153,7 @@ export default function EditTags({ }: EditTagsProps) {
               <StyledButton
                 text="Save"
                 textClass="text-lg"
+                onPress={handleEditTag}
               />
             </View>
           </View>
@@ -153,4 +163,4 @@ export default function EditTags({ }: EditTagsProps) {
   );
 }
 
-//add scrollview
+// Add ScrollView if needed
