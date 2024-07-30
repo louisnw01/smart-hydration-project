@@ -6,6 +6,7 @@ import useColorPalette from "@/util/palette";
 import { FontAwesome, MaterialCommunityIcons } from "@expo/vector-icons";
 import { useAtomValue } from "jotai";
 import { Text, View } from "react-native";
+import { router } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 function MemberInfoBlock({ children, title }) {
@@ -80,7 +81,7 @@ export default function MemberInfoModal() {
                         />
                     </View>
                 }
-                onPress={() => router.push("edit-device-name-modal")}
+                onPress={() => router.push("add-device-member-modal")}
             />
 
             <StyledButton

@@ -64,12 +64,12 @@ export default function CommunityPage() {
 
     //filtering only works on strings (not numbers) for now
 
-    useEffect(() => {
-        if (!data) return;
-        const result = filterAndSortData(filters);
-        setFilteredData(result);
+    // useEffect(() => {
+    //     if (!data) return;
+    //     const result = filterAndSortData(filters);
+    //     setFilteredData(result);
 
-    }, [textInput, filters, data, filterAndSortData]);
+    // }, [textInput, filters, data, filterAndSortData]);
 
     const handleSortPress = () => {
         setFilters((prev) => ({
