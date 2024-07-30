@@ -28,7 +28,6 @@ const filterAndSortData = (unappliedTags: TagInfo[], filterObj: FilterObject): T
 export default function ApplyTags() {
     const navigation = useNavigation();
     const [inviteLink, setInviteLink] = useState('');
-    const [showErrorMessage, setShowErrorMessage] = useState(false);
     const [textInput, setTextInput] = useState("");
     const [filteredUnappliedTags, setFilteredUnappliedTags] = useState<TagInfo[]>([]);
     const [filters, setFilters] = useState<FilterObject>({
@@ -98,9 +97,6 @@ export default function ApplyTags() {
         setTextInput("");
     };
 
-
-
-    //to do: stick search bar to bottom of page
     //to do: add messages for when no tags applied / all tags applied
 
     return (
