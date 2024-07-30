@@ -1,4 +1,5 @@
-import { PatientInfo } from "@/interfaces/community";
+i
+import { MemberInfo } from "@/interfaces/community";
 import { atom } from "jotai";
 
 import { ENDPOINTS, request } from "@/util/fetch";
@@ -7,7 +8,7 @@ import { authTokenAtom } from "./user";
 
 export const membersAtom = atom(new Map());
 export const selectedJugsForMemberAtom = atom<Set<string>>(new Set<string>());
-export const selectedPatientAtom = atom<Partial<PatientInfo>>({});
+export const selectedMemberAtom = atom<Partial<MemberInfo>>({});
 
 export const linkJugToMemberMAtom = atomWithMutation((get) => ({
     mutationKey: ["/user/link-jug", get(authTokenAtom)],
