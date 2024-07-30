@@ -1,19 +1,12 @@
-import {
-    authTokenAtom,
-    colorSchemeAtom,
-    userNameAtom,
-    drinkListAtom,
-} from "@/atom/user";
+import { amountDrankTodayAtom } from "@/atom/hydration";
+import { authTokenAtom, drinkListAtom } from "@/atom/user";
 import { OptionBlock } from "@/components/common/option-block";
+import { ISettingsSection } from "@/interfaces/settings";
+import { Feather, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import { useAtomValue, useSetAtom } from "jotai";
-import { ReactElement, ReactNode, useEffect } from "react";
+import { useSetAtom } from "jotai";
 import { Pressable, SectionList, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { Feather, MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
-import { deleteUser } from "@/atom/query";
-import { ISettingsSection } from "@/interfaces/settings";
-import { amountDrankTodayAtom } from "@/atom/hydration";
 
 const settingsList: ISettingsSection[] = [
     {
@@ -88,7 +81,9 @@ const settingsList: ISettingsSection[] = [
                         <OptionBlock
                             isLast={isLast}
                             text={name}
-                            onPress={() => router.navigate("settings/adjust-target")}
+                            onPress={() =>
+                                router.navigate("settings/adjust-target")
+                            }
                             icon={
                                 <MaterialCommunityIcons
                                     name="cup-water"
@@ -138,7 +133,11 @@ const settingsList: ISettingsSection[] = [
                         <OptionBlock
                             isLast={isLast}
                             text={name}
-                            onPress={() => router.navigate("settings/community/community-profile")}
+                            onPress={() =>
+                                router.navigate(
+                                    "settings/community/community-profile",
+                                )
+                            }
                             icon={
                                 <Ionicons
                                     name="color-palette"
@@ -158,7 +157,11 @@ const settingsList: ISettingsSection[] = [
                         <OptionBlock
                             isLast={isLast}
                             text={name}
-                            onPress={() => router.navigate("settings/community/remove-member")}
+                            onPress={() =>
+                                router.navigate(
+                                    "settings/community/remove-member",
+                                )
+                            }
                             icon={
                                 <Ionicons
                                     name="color-palette"
@@ -178,7 +181,11 @@ const settingsList: ISettingsSection[] = [
                         <OptionBlock
                             isLast={isLast}
                             text={name}
-                            onPress={() => router.navigate("settings/community/invite-member")}
+                            onPress={() =>
+                                router.navigate(
+                                    "settings/community/invite-member",
+                                )
+                            }
                             icon={
                                 <Ionicons
                                     name="color-palette"
@@ -197,13 +204,13 @@ const settingsList: ISettingsSection[] = [
 export default function SettingsModal() {
     const insets = useSafeAreaInsets();
     const setAuthAtom = useSetAtom(authTokenAtom);
-    const setUserNameAtom = useSetAtom(userNameAtom);
     const setAmounDrankTodayAtom = useSetAtom(amountDrankTodayAtom);
     const setDrinksList = useSetAtom(drinkListAtom);
     const router = useRouter();
     //const { mutate: submitDeleteUser, isPending, isSuccess, isError } = useAtomValue(deleteUser);
     //useEffect(() => {
-      {/*if (isSuccess) {
+    {
+        /*if (isSuccess) {
         router.replace("onboarding/login-register");
       }
     }, [isSuccess]);
@@ -215,7 +222,8 @@ export default function SettingsModal() {
        console.error('error')
       }
     }, [isError]);
-  */}
+  */
+    }
     return (
         <View
             className="flex flex-1 justify-between mx-4"
@@ -252,7 +260,6 @@ export default function SettingsModal() {
                     className="items-center bg-red rounded-xl px-7 py-3"
                     onPress={() => {
                         setAuthAtom("");
-                        setUserNameAtom("");
                         setAmounDrankTodayAtom(0);
                         setDrinksList([]);
                         router.replace("onboarding/login-register");
