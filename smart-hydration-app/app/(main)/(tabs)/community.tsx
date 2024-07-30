@@ -4,9 +4,11 @@ import { useAtomValue } from "jotai";
 import { useEffect, useState } from "react";
 import {
     FlatList,
+    Pressable,
     RefreshControl,
     ScrollView,
     Text,
+    TextInput,
     View,
 } from "react-native";
 
@@ -18,9 +20,7 @@ import {
 } from "@/atom/query/community";
 import Loading from "@/components/common/loading";
 import MemberRow from "@/components/community/member-row";
-
-import StyledTextInput from "@/components/common/text-input";
-import { FilterObject, PatientInfo } from "@/interfaces/community";
+import { FilterObject, MemberInfo } from "@/interfaces/community";
 
 //for now (basic user flow), Community tab is shown as 4th tab
 //TODO: for care home mode, replace home screen with Community tab
@@ -29,8 +29,6 @@ import { FilterObject, PatientInfo } from "@/interfaces/community";
 
 //TODO: add settings cog at top right
 
-
-
 export default function CommunityPage() {
     const { isLoading, refetch } = useAtomValue(communityInfoQAtom);
     const { data, isLoading: patientInfoIsLoading } =
@@ -38,7 +36,7 @@ export default function CommunityPage() {
     const hasCommunity = useAtomValue(userHasCommunityAtom);
     const [refreshing, setRefreshing] = useState(false);
     const communityName = useAtomValue(communityNameAtom);
-    const [filteredData, setFilteredData] = useState<PatientInfo[]>([]);
+    const [filteredData, setFilteredData] = useState<MemberInfo[]>([]);
     const [textInput, setTextInput] = useState("");
     const [filters, setFilters] = useState<FilterObject>({
         searchTerm: "",
@@ -46,12 +44,16 @@ export default function CommunityPage() {
     });
     const filterAndSortData = (filterObj: FilterObject) => {
         if (!data) return;
-        const filteredData = data.filter((patient: PatientInfo) => {
+        const filteredData = data.filter((member) => {
             return (
-                (patient.name &&
-                    patient.name
+                (member.name &&
+                    member.name
                         .toLowerCase()
-                        .indexOf(filterObj.searchTerm.toLowerCase()) > -1)
+                        .indexOf(filterObj.searchTerm.toLowerCase()) > -1) ||
+                (member.description &&
+                    member.description.indexOf(
+                        filterObj.searchTerm.toLowerCase(),
+                    ) > -1)
             );
         });
         return filteredData.sort((a: any, b: any) => {
@@ -167,20 +169,24 @@ export default function CommunityPage() {
                             </Text>
                         )*/}
                         <View className="flex flex-row mx-2 items-center my-2">
-                            <StyledButton
-                                text={`Sort by name ${filters.sort === "asc" ? "A-Z" : "Z-A"}`}
+                            <Pressable
                                 onPress={handleSortPress}
-                                textClass="text-lg"
-                            />
+                                className="bg-blue px-4 py-2 rounded-xl ml-2"
+                            >
+                                <Text className="text-2l font-semibold text-white">
+                                    Sort by name{" "}
+                                    {filters.sort === "asc" ? "A-Z" : "Z-A"}
+                                </Text>
+                            </Pressable>
                         </View>
-                        {/* filtering breaks if users have the same name: get ID from endpoint and use that as ID instead? */}
-                        {!!filteredData && filteredData.length > 0 && (
+
+                        {!!data && data.length > 0 && (
                             <FlatList
-                                data={filteredData}
+                                data={data}
                                 contentContainerClassName="flex gap-6"
                                 keyExtractor={(patient) => patient.name}
                                 renderItem={({ item }) => (
-                                    <MemberRow patient={item} />
+                                    <MemberRow member={item} />
                                 )}
                             />
                         )}
@@ -203,9 +209,10 @@ export default function CommunityPage() {
                     </View>
                     <View className="flex flex-row items-center p-2">
                         <View className="flex-1">
-                            <StyledTextInput
+                            <TextInput
                                 value={textInput}
                                 placeholder={`Search members...`}
+                                className="bg-gray-200 h-14 placeholder-black text-xl rounded-xl px-3 m-1 border"
                                 onChangeText={(val) => {
                                     setTextInput(val);
                                     setFilters((prev) => ({
@@ -217,12 +224,15 @@ export default function CommunityPage() {
                                 returnKeyType="done"
                             />
                         </View>
-                        <View className="ml-2">
-                            <StyledButton
-                                text="Clear search"
+                        <View>
+                            <Pressable
                                 onPress={handleClearPress}
-                                textClass="text-lg"
-                            />
+                                className="bg-blue px-4 py-2 rounded-xl ml-2"
+                            >
+                                <Text className="text-2l font-semibold text-white">
+                                    Clear search
+                                </Text>
+                            </Pressable>
                         </View>
                     </View>
                 </View>

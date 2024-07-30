@@ -19,9 +19,3 @@ interface Jug {
   id: string;
 }
 
-export interface PatientInfo {
-  name: string;
-  jugs: Jug[];
-  target_percentage: number | null;
-}
-
