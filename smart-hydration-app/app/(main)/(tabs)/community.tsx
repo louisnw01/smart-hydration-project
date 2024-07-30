@@ -23,11 +23,11 @@ import StyledTextInput from "@/components/common/text-input";
 import { FilterObject, PatientInfo } from "@/interfaces/community";
 
 //for now (basic user flow), Community tab is shown as 4th tab
-//to do: for care home mode, replace home screen with Community tab
+//TODO: for care home mode, replace home screen with Community tab
 
-//to do: add link handling logic to front end for invite link flow
+//TODO: add link handling logic to front end for invite link flow
 
-//to do: add settings cog at top right
+//TODO: add settings cog at top right
 
 
 
@@ -72,7 +72,7 @@ export default function CommunityPage() {
         if (!data) return;
         const result = filterAndSortData(filters);
         setFilteredData(result);
-    }, [textInput, filters, data]);
+    }, [textInput, filters, data, filterAndSortData]);
 
     const handleSortPress = () => {
         setFilters((prev) => ({

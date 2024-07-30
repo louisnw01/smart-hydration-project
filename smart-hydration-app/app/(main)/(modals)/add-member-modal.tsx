@@ -1,11 +1,10 @@
-import { useState } from "react";
-import { View, Text, Pressable, TextInput } from "react-native";
+import { membersAtom } from "@/atom/community";
+import StyledButton from "@/components/common/button";
+import { MemberInfo } from "@/interfaces/community";
 import { useNavigation } from "expo-router";
 import { useAtom } from "jotai";
-import { MemberInfo } from "@/interfaces/community"
-import { membersAtom, selectedJugsForMemberAtom } from "@/atom/community";
-import StyledButton from "@/components/common/button";
-import { useEffect } from "react";
+import { useState } from "react";
+import { Pressable, Text, TextInput, View } from "react-native";
 import StyledTextInput from "@/components/common/text-input";
 
 //assume names are unique for now. later, will get unique id for each member from backend
@@ -28,7 +27,7 @@ export default function AddMemberModal() {
                 newMembers.set(memberName, member);
                 return newMembers;
             });
-            //to do later: send member details to DB when each member added 
+            //TODO later: send member details to DB when each member added
             setMemberName('');
             setShowErrorMessage(false);
             navigation.goBack();
