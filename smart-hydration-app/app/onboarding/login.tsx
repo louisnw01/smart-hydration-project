@@ -1,37 +1,55 @@
 import { View, Text, ScrollView, TextInput } from "react-native";
 
 import { useEffect, useRef, useState } from "react";
-import { useAtomValue, useSetAtom } from "jotai";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { loginMAtom } from "@/atom/query";
 
-import { authTokenAtom } from "@/atom/user";
+import { authTokenAtom, pushTokenAtom } from "@/atom/user";
 import PageWrapper from "@/components/common/page-wrapper";
 import Drop from "@/assets/svgs/water-drop-svgrepo-com.svg";
 import { Redirect, useRouter } from "expo-router";
 import useColorPalette from "@/util/palette";
 import StyledTextInput from "@/components/common/text-input";
 import StyledButton from "@/components/common/button";
+import { registerForPushNotificationsAsync } from "@/util/notifications";
+import { addPushTokenMAtom } from "@/atom/query";
 
 export default function LoginPage() {
     const router = useRouter();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const setAuthToken = useSetAtom(authTokenAtom);
+    const [storedPushToken, setStoredPushToken] = useAtom(pushTokenAtom);
     const palette = useColorPalette();
 
     const passwordRef = useRef<TextInput>();
 
-    const { mutate, data, isPending, isError, isSuccess } =
+    const { mutate: login, data, isPending, isError, isSuccess } =
         useAtomValue(loginMAtom);
 
+    const { mutate: addPushToken }= useAtomValue(addPushTokenMAtom);
+
     const handleSubmit = () => {
-        mutate({ email, password });
+        login({ email, password });
     };
 
-    if (isSuccess && data) {
+
+    useEffect(() => {
+        if (!isSuccess && !data) return;
         setAuthToken(data);
-        return <Redirect href="(tabs)" />;
-    }
+        if(storedPushToken){
+            addPushToken({pushToken: storedPushToken as string});
+        } else {
+            registerForPushNotificationsAsync()
+            .then(pushToken => {
+                addPushToken({pushToken});
+                setStoredPushToken(pushToken ?? "");
+            }
+            )   
+            .catch((error: any) => console.error(error));
+            }
+            router.replace("(tabs)");
+        },[isSuccess, data])
 
     return (
         <PageWrapper>
