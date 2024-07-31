@@ -9,6 +9,9 @@ class UserLogin(BaseModel):
 class TargetUpdate(BaseModel):
     newValue: int
 
+class AddJugsToMemberForm(BaseModel):
+    jugIds: List[str]
+    communityMember: int
 
 
 class UserRegister(BaseModel):
@@ -65,3 +68,12 @@ class VerifyEmailForm(BaseModel):
 
 class DeleteCommunityMemberForm(BaseModel):
     id: int
+
+
+class PushTokenForm(BaseModel):
+    pushToken: str
+
+
+class ToggleNotificationsForm(BaseModel):
+    notificationSelection: str
+    pushToken: str

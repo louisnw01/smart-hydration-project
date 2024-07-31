@@ -5,6 +5,7 @@ import { useNavigation } from "expo-router";
 import { useAtom } from "jotai";
 import { useState } from "react";
 import { Pressable, Text, TextInput, View } from "react-native";
+import StyledTextInput from "@/components/common/text-input";
 
 //assume names are unique for now. later, will get unique id for each member from backend
 
@@ -44,7 +45,7 @@ export default function AddMemberModal() {
                 </Text>
             </View>
             <View className="flex flex-row justify-center items-center">
-                <TextInput
+                <StyledTextInput
                     placeholder={`Member name (required)`}
                     className="bg-gray-200 h-14 placeholder-black text-xl rounded-xl px-3"
                     onChangeText={(val) => {
@@ -70,12 +71,12 @@ export default function AddMemberModal() {
                 />
             </View>
             <View className="flex flex-row justify-center items-center">
-                <Pressable
+                <StyledButton
+                    text="Submit"
+                    href="community"
+                    textClass="text-lg"
                     onPress={handlePress}
-                    className="bg-blue px-4 py-2 rounded-xl mt-10"
-                ><Text className="text-2xl font-semibold text-white">
-                        Submit
-                    </Text></Pressable>
+                />
             </View>
         </View>
     );

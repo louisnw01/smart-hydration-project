@@ -4,10 +4,12 @@ from fastapi import APIRouter, Depends, HTTPException
 import pprint
 from pony.orm.core import commit, db_session, delete
 from ..api import get_hydration_events
-from ..services import get_user_by_id, try_get_users_community
-from ..models import Community, CommunityMember, InviteLink, JugUser, User
-from ..schemas import CreateCommunityForm, CreateInvitationForm, DeleteCommunityMemberForm, VerifyEmailForm
+from ..routers import jug_user
+from ..services import get_user_by_id, try_get_users_community, try_get_users_community
+from ..models import Community, CommunityMember, InviteLink, Jug, User, JugUser
+from ..schemas import CreateCommunityForm, CreateInvitationForm, AddJugsToMemberForm, DeleteCommunityMemberForm, VerifyEmailForm
 from ..auth import auth_user, generate_invite_link
+import pprint
 from starlette.responses import RedirectResponse
 
 router = APIRouter(
@@ -57,6 +59,7 @@ async def patient_info(user_id: str = Depends(auth_user)):
         patient_info = []
         for juguser in community.jug_users:
             patient_info.append({
+                "id": juguser.id,
                 "name": juguser.name,
                 "jugs": [{"name": jug.name, "id": jug.smart_hydration_id} for jug in juguser.jugs],
                 "target": juguser.target or 2200,
@@ -195,3 +198,21 @@ async def create_invitation(user_id: str = Depends(auth_user)):
         )
 
         return link.id
+
+@router.post("/link-jug-to-member")
+async def link_jugs_to_community_member(form: AddJugsToMemberForm, user_id: str = Depends(auth_user)):
+    pprint.pprint(form)
+    with db_session:
+        user = User.get(id=user_id)
+        user_juser = JugUser.get(user = user)
+        user_community = user_juser.community
+        juguser = JugUser.get(id = form.communityMember)
+        juser_community = juguser.community
+        if user_community != juser_community:
+            return HTTPException(400, 'user is not part of the same community')
+
+        for jug in form.jugIds:
+            jug_to_add = Jug.get(smart_hydration_id = jug)
+            juguser.jugs.add(jug_to_add)
+
+        return {"message": "Jugs successfully linked to community member"}
