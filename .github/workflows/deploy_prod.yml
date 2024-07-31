@@ -22,6 +22,12 @@ jobs:
                   echo SMART_HYDRATION_PASSWORD=$(echo "${{ Secrets.SMART_HYDRATION_PASSWORD }}" | xargs)  >> .env
                   echo JWT_SECRET=$(echo "${{ Secrets.JWT_SECRET }}" | xargs)  >> .env
                   echo JWT_ALGORITHM=$(echo "${{ Secrets.JWT_ALGORITHM }}" | xargs)  >> .env
+                  echo PUSHER_APP_KEY=$(echo "${{ Secrets.PUSHER_APP_KEY }}" | xargs)  >> .env
+                  echo PUSHER_APP_SECRET=$(echo "${{ Secrets.PUSHER_APP_SECRET }}" | xargs)  >> .env
+                  echo PUSHER_APP_CLUSTER=$(echo "${{ Secrets.PUSHER_APP_CLUSTER }}" | xargs)  >> .env
+                  echo SES_USER_ID=$(echo "${{ Secrets.SES_USER_ID }}" | xargs)  >> .env
+                  echo SES_PASSWORD=$(echo "${{ Secrets.SES_PASSWORD }}" | xargs)  >> .env
+                  echo SES_HOST_ADDRESS=$(echo "${{ Secrets.SES_HOST_ADDRESS }}" | xargs)  >> .env
                   chmod 777 .env
               working-directory: ./server
 
