@@ -3,6 +3,7 @@ import { MemberInfo } from "@/interfaces/community";
 import { router } from "expo-router";
 import { useSetAtom } from "jotai";
 import { Pressable, Text, View } from "react-native";
+import Tag from "./tag";
 
 export default function MemberRow({ member }: { member: MemberInfo }) {
     const setMember = useSetAtom(selectedMemberAtom);
@@ -33,12 +34,18 @@ export default function MemberRow({ member }: { member: MemberInfo }) {
                 </Text>
                 {/* {member.target_percentage}% */}
 
-                <Text className="text-2l dark:text-white">
-                    <Text className="font-bold">Notes: </Text>
-                    {/* {member.description} */}
-                </Text>
+                <View className="flex-row flex-wrap my-2">
+                    <Tag name="Independent"></Tag>
+                    <Tag name="Likes coffee"></Tag>
+                    <Tag name="Aggressive"></Tag>
+                    <Tag name="Four"></Tag>
+                    <Tag name="Five"></Tag>
+                    <Tag name="Six"></Tag>
+                    <Tag name="Seven"></Tag>
+                    <Tag name="Eight"></Tag>
+                    <Tag name="Nine"></Tag>
+                </View>
             </View>
         </Pressable>
     );
 }
-
