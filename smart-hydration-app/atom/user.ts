@@ -26,3 +26,5 @@ export const drinkListAtom = atomWithStorage(
 );
 
 export const dailyTargetAtom = atom(2200);
+
+export const inviteCodeAtom = atom('');

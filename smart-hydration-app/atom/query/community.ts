@@ -5,7 +5,7 @@ import {
     atomWithQuery,
     queryClientAtom,
 } from "jotai-tanstack-query";
-import { authTokenAtom } from "../user";
+import { authTokenAtom, inviteCodeAtom } from "../user";
 
 export const userHasCommunityAtom = atom((get) => {
     const { data, isLoading } = get(communityInfoQAtom);
@@ -144,7 +144,7 @@ export const joinCommunityMAtom = atomWithMutation((get) => ({
 
         if (!response.ok) {
             const error = await response.json();
-            throw new Error(error.detail);
+            return error.detail;
         }
     },
     onSuccess: () => {
@@ -190,6 +190,52 @@ export const deleteCommunityMemberMAtom = atomWithMutation((get) => ({
             (prev) => prev?.filter((member) => member.id != formData.id),
         );
     },
+}));
+
+
+export const linkJugToMemberMAtom = atomWithMutation((get) => ({
+    mutationKey: ["/user/link-jug", get(authTokenAtom)],
+    enabled: !!get(authTokenAtom),
+    mutationFn: async (jugIds: string[]) => {
+        const token = get(authTokenAtom);
+        const response = await request(ENDPOINTS.LINK_JUG_TO_USER, {
+            method: "post",
+            body: { jugIds: jugIds },
+            auth: token as string,
+        });
+
+        if (!response.ok) {
+            throw new Error("Jug could not be linked to user");
+        }
+
+        return;
+    },
+    onSuccess: () => {
+        const queryClient = get(queryClientAtom);
+        void queryClient.invalidateQueries({ queryKey: ["get-jug-data"] });
+        void queryClient.invalidateQueries({
+            queryKey: ["/data/historical"],
+        });
+    },
+}));
+
+export const communityNameQAtom = atomWithQuery((get) => ({
+    queryKey: ["name-from-link", get(authTokenAtom)],
+    queryFn: async ({ queryKey: [, token] }) => {
+        const code = get(inviteCodeAtom);
+        const response = await request(ENDPOINTS.NAME_FROM_LINK, {
+            auth: token as string,
+            query: {code},
+        });
+
+        if (!response.ok) {
+            const error = await response.json()
+            throw new Error(error.detail);
+        }
+
+        return await response.json();
+    },
+    enabled: !!get(authTokenAtom) && !!get(inviteCodeAtom),
 }));
 
 {
