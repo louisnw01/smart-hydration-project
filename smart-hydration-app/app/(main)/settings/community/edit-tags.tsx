@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, Pressable } from "react-native";
+import { View, Text, ScrollView } from "react-native";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import StyledButton from "@/components/common/button";
@@ -6,6 +6,8 @@ import EditTagRow from "@/components/community/edit-tag-row";
 import StyledTextInput from "@/components/common/text-input";
 import PageWrapper from "@/components/common/page-wrapper";
 import { FilterObject, TagInfo } from "@/interfaces/community";
+import { createTagMAtom, updateTagMAtom, deleteTagMAtom, communityInfoQAtom } from "@/atom/query/community";
+import { useAtomValue } from "jotai";
 
 export interface EditTagsProps { }
 
@@ -16,6 +18,10 @@ export default function EditTags({ }: EditTagsProps) {
   const [newTextInput, setNewTextInput] = useState("");
   const [editTextInput, setEditTextInput] = useState("");
   const [currentTagName, setCurrentTagName] = useState("");
+  const createTagMutate = useAtomValue(createTagMAtom).mutate;
+  const updateTagMutate = useAtomValue(createTagMAtom).mutate;
+  const deleteTagMutate = useAtomValue(createTagMAtom).mutate;
+  const communityInfo = useAtomValue(communityInfoQAtom); //needed to get name of community
   const [filters, setFilters] = useState<FilterObject>({
     searchTerm: "",
     sort: "asc",
@@ -86,12 +92,15 @@ export default function EditTags({ }: EditTagsProps) {
     }
   };
 
-  const handleAddTag = (tagName: string) => {
-    if (tagName !== '') {
-      const newTag = { name: tagName };
+  //to do: add logic to stop users adding tags with same name as existing tag in community
+
+  const handleAddTag = (newTagName: string) => {
+    if (newTagName !== '') {
+      const newTag = { name: newTagName };
       setTags([...tags, newTag]);
       setNewTextInput("");
       toggleNewTagSection();
+      createTagMutate({tagName: newTagName, communityName: communityInfo.data.name});
     }
   };
 
