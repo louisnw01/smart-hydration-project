@@ -72,6 +72,7 @@ async def create_community(form: CreateCommunityForm, user_id: str = Depends(aut
 
 
 @router.post("/update")
+#change name to update community owner?? 
 async def update_community_info(form: CreateCommunityForm, user_id: str = Depends(auth_user)):
     with db_session:
         user = User.get(id=user_id)
