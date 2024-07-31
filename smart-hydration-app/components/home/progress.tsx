@@ -2,7 +2,7 @@ import { amountDrankTodayAtom } from "@/atom/hydration";
 import { userInfoQAtom } from "@/atom/query";
 import colors from "@/colors";
 import useColorPalette from "@/util/palette";
-import { useAtomValue } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import { Text, TextInput, View } from "react-native";
 import Animated, {
     Easing,
@@ -13,6 +13,7 @@ import Animated, {
 } from "react-native-reanimated";
 import Svg, { Circle, G } from "react-native-svg";
 import WaterAmount from "../common/water-amount";
+import { isInCommunityAtom } from "@/atom/user";
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 const AnimatedTextInput = Animated.createAnimatedComponent(TextInput);
@@ -90,6 +91,7 @@ export default function HydrationProgress() {
     const palette = useColorPalette();
     const amountDrankToday = useAtomValue(amountDrankTodayAtom);
     const { data, isLoading } = useAtomValue(userInfoQAtom);
+    const setIsInCommunity = useSetAtom(isInCommunityAtom);
     const animatedProgress = useSharedValue(0);
 
     const text = useDerivedValue(() => animatedProgress.value.toFixed(0));
@@ -98,6 +100,8 @@ export default function HydrationProgress() {
     }));
 
     if (!data) return null;
+
+    setIsInCommunity(data.has_community);
 
     return (
         <ProgressWheel

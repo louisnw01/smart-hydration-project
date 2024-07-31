@@ -9,20 +9,23 @@ import StyledButton from "../common/button";
 import Loading from "../common/loading";
 import DeviceRow from "./device-row";
 import { AtomWithQueryResult } from "jotai-tanstack-query";
+import { isInCommunityAtom } from "@/atom/user";
 
 export default function DeviceSection({
     addJugButton,
     onPress,
     queryAtom,
+    showChangeJugUser,
 }: {
     addJugButton?: boolean;
     onPress: Function;
     queryAtom: Atom<AtomWithQueryResult>;
+    showChangeJugUser?: boolean;
 }) {
     const palette = useColorPalette();
     const { data, isLoading } = useAtomValue(queryAtom);
     const { isRefreshing, handleRefresh } = useQueryRefetch(queryAtom);
-
+    const isInCommunity = useAtomValue(isInCommunityAtom);
     if (isLoading) {
         return <Loading message="Getting your jugs..." isLoading />;
     }
@@ -31,6 +34,7 @@ export default function DeviceSection({
         data?.map((device) => (
             <DeviceRow
                 device={device}
+                showChangeJugUser={isInCommunity}
                 onPress={(device) => {
                     onPress(device);
                 }}
