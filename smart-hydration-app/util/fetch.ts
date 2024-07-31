@@ -14,6 +14,7 @@ export const ENDPOINTS = {
     REGISTER: "/user/register",
     UNLINK_JUG_FROM_USER: "/user/unlink-jug",
     LINK_JUG_TO_USER: "/user/link-jug",
+    LINK_JUG_TO_COMMUNITY_MEMBER: "/community/link-jug-to-member",
     FETCH_HISTORICAL_JUG_DATA: "/data/historical",
     GET_ALL_JUGS: "/get-all-jugs",
     UPDATE: "/jug-user/update",

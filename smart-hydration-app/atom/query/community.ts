@@ -215,3 +215,27 @@ export const deleteCommunityMemberMAtom = atomWithMutation((get) => ({
 }));
 */
 }
+
+export const linkJugsToCommunityMemberMAtom = atomWithMutation((get) => ({
+    mutationKey: ["/community/link-jug-to-member", get(authTokenAtom)],
+    enabled: !!get(authTokenAtom),
+    mutationFn: async (formData: {
+        jugIds: string[];
+        communityMember: number;
+    }) => {
+        const token = get(authTokenAtom);
+        const response = await request(ENDPOINTS.LINK_JUG_TO_COMMUNITY_MEMBER, {
+            method: "post",
+            body: formData,
+            auth: token as string,
+        });
+        if (!response.ok) {
+            alert("Cannot add jug");
+            throw new Error("Jug could not be linked to community member");
+        }
+        return;
+    },
+    onSuccess: () => {
+        console.log("Linked jugs to user");
+    },
+}));

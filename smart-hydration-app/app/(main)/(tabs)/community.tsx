@@ -35,7 +35,6 @@ export default function CommunityPage() {
     const hasCommunity = useAtomValue(userHasCommunityAtom);
     const [refreshing, setRefreshing] = useState(false);
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [filteredData, setFilteredData] = useState<MemberInfo[]>([]);
     const [textInput, setTextInput] = useState("");
     const [filters, setFilters] = useState<FilterObject>({
@@ -86,7 +85,6 @@ export default function CommunityPage() {
             }),
         );
     }, [textInput, filters, data]);
-
 
     const handleSortPress = () => {
         setFilters((prev) => ({
