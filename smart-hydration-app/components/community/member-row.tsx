@@ -62,7 +62,7 @@ function MemberDetail({ title, value, tags }) {
                     <Tag name="Eight"></Tag>
                     <Tag name="Nine"></Tag>
                 </View>
-            </View>
-        </Pressable>
+            )}
+        </View>
     );
 }

@@ -4,10 +4,10 @@ import StyledButton from "@/components/common/button";
 import { ScrollPageWrapper } from "@/components/common/page-wrapper";
 import useColorPalette from "@/util/palette";
 import { FontAwesome, MaterialCommunityIcons } from "@expo/vector-icons";
+import { router } from "expo-router";
 import { useAtomValue } from "jotai";
 import { Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import Tag from "@/components/community/tag";
 
 function MemberInfoBlock({ children, title }) {
     return (
@@ -98,7 +98,7 @@ export default function MemberInfoModal() {
                 />
                 onPress={() => router.push("edit-device-name-modal")}
             />
-        
+
            <StyledButton
                 text="Modify Tags"
                 buttonClass="flex flex-row items-center gap-3 rounded-xl px-4 py-3 bg-gray-100 dark:bg-neutral-900"
