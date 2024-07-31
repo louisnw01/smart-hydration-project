@@ -1,6 +1,7 @@
 import JugIcon from "@/assets/svgs/jug.svg";
 import { selectedDeviceAtom } from "@/atom/device";
 import { unlinkJugFromUserMAtom } from "@/atom/query";
+import { isInCommunityAtom } from "@/atom/user";
 import colors from "@/colors";
 import StyledButton from "@/components/common/button";
 import useColorPalette from "@/util/palette";
@@ -93,7 +94,7 @@ export default function DeviceInfoModal() {
     const device = useAtomValue(selectedDeviceAtom);
     const palette = useColorPalette();
     const { mutate: unlinkJugFromUser } = useAtomValue(unlinkJugFromUserMAtom);
-
+    const isInCommunity = useAtomValue(isInCommunityAtom);
     if (!device) return;
     return (
         <View className="mt-8 mx-5">
@@ -177,19 +178,19 @@ export default function DeviceInfoModal() {
                     />
                     onPress={() => router.push("edit-device-name-modal")}
                 />
-
-                <StyledButton
-                    text="Change Device Jug User"
-                    buttonClass="flex flex-row items-center gap-3 rounded-xl px-4 py-3 bg-gray-100 dark:bg-neutral-900"
-                    textClass="text-xl dark:text-gray-200"
-                    icon=<MaterialCommunityIcons
-                        name="monitor-edit"
-                        size={17}
-                        color={palette.border}
+                {isInCommunity && (
+                    <StyledButton
+                        text="Change Device Jug User"
+                        buttonClass="flex flex-row items-center gap-3 rounded-xl px-4 py-3 bg-gray-100 dark:bg-neutral-900"
+                        textClass="text-xl dark:text-gray-200"
+                        icon=<MaterialCommunityIcons
+                            name="monitor-edit"
+                            size={17}
+                            color={palette.border}
+                        />
+                        onPress={() => alert("todo: edit device user")}
                     />
-                    onPress={() => alert("todo: edit device user")}
-                />
-
+                )}
                 <StyledButton
                     text="Remove Device"
                     buttonClass="mt-5 flex flex-row items-center gap-4 rounded-xl px-4 py-3 bg-gray-100 dark:bg-neutral-900"
