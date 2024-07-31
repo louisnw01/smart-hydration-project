@@ -37,6 +37,7 @@ export default function MemberInfoModal() {
             <Text className="dark:text-white text-3xl font-semibold">
                 {member.name}
             </Text>
+
             <MemberInfoBlock title="Profile Details">
                 <Text className="text-xl dark:text-white">
                     Name: {member.name}
@@ -62,6 +63,7 @@ export default function MemberInfoModal() {
             <MemberInfoBlock title="Trends Page">
                 <Text className="text-xl dark:text-white">
                     Embed graph here
+
                 </Text>
             </MemberInfoBlock>
 
@@ -113,6 +115,18 @@ export default function MemberInfoModal() {
                     color={palette.fg}
                 />
                 onPress={() => router.push("edit-device-name-modal")}
+            />
+
+           <StyledButton
+                text="Modify Tags"
+                buttonClass="flex flex-row items-center gap-3 rounded-xl px-4 py-3 bg-gray-100 dark:bg-neutral-900"
+                textClass="text-xl dark:text-gray-200 -ml-[2px]"
+                icon=<MaterialCommunityIcons
+                    name="water-plus-outline"
+                    size={23}
+                    color={palette.fg}
+                />
+                onPress={() => router.push("apply-tags")}
             />
         </ScrollPageWrapper>
     );

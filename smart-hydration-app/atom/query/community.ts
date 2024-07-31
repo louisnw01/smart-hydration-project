@@ -1,3 +1,4 @@
+import { MemberInfo } from "@/interfaces/community";
 import { ENDPOINTS, request, SERVER_URL } from "@/util/fetch";
 import { atom } from "jotai";
 import {
@@ -39,7 +40,7 @@ export const communityInfoQAtom = atomWithQuery((get) => ({
 
 export const patientInfoQAtom = atomWithQuery((get) => ({
     queryKey: ["get-patient-info", get(authTokenAtom)],
-    queryFn: async ({ queryKey: [, token] }) => {
+    queryFn: async ({ queryKey: [, token] }): Promise<MemberInfo[]> => {
         const response = await request(ENDPOINTS.PATIENT_INFO, {
             auth: token as string,
         });

@@ -11,10 +11,10 @@ import {
 } from "@/atom/community";
 import { linkJugsToCommunityMemberMAtom } from "@/atom/query/community";
 
+
 export default function AddDeviceMemberModal() {
     const { data, isLoading, refetch } = useAtomValue(getJugDataQAtom);
     const [refreshing, setRefreshing] = useState(false);
-    console.log(JSON.stringify(data));
     const navigation = useNavigation();
     const [selectedJugs, setSelectedJugs] = useAtom(selectedJugsForMemberAtom);
     const selectedMember = useAtomValue(selectedMemberAtom);
@@ -71,8 +71,8 @@ export default function AddDeviceMemberModal() {
                             style={{
                                 ...(selectedJugs.has(item)
                                     ? {
-                                          backgroundColor: "rgb(90, 240, 130)",
-                                      }
+                                        backgroundColor: "rgb(90, 240, 130)",
+                                    }
                                     : undefined),
                                 // backgroundColor: selectedJugs.has(item)
                                 //     ? "rgb(90, 240, 130)"
@@ -95,14 +95,12 @@ export default function AddDeviceMemberModal() {
                 />
             )}
             {selectedJugs.size > 0 && (
-                <Pressable
-                    className="bg-blue items-center mx-16 justify-center px-3 py-3 rounded-3xl"
+                <StyledButton
+                    text={`Add ${selectedJugs.size} jug${selectedJugs.size > 1 ? "s" : ""} to member`}
+                    href="add-member-modal"
+                    textClass="text-lg"
                     onPress={handlePress}
-                >
-                    <Text className="text-white text-2xl">
-                        {`Add ${selectedJugs.size} jug${selectedJugs.size > 1 ? "s" : ""} to member`}
-                    </Text>
-                </Pressable>
+                />
             )}
         </View>
     );
