@@ -43,28 +43,6 @@ export default function CommunityPage() {
         sort: "asc",
     });
 
-    //     const filterAndSortData = (filterObj: FilterObject) => {
-    //         if (!data) return;
-    //         const filteredData = data.filter((member) => {
-    //             return member.name
-    //                 .toLowerCase()
-    //                 .indexOf(filterObj.searchTerm.toLowerCase()) > -1)
-    //             );
-    // });
-    // return filteredData.sort((a: any, b: any) => {
-    //     const nameA = a.name.toLowerCase();
-    //     const nameB = b.name.toLowerCase();
-    //     if (filterObj.sort === "desc") {
-    //         return nameB.localeCompare(nameA);
-    //     } else if (filterObj.sort === "asc") {
-    //         return nameA.localeCompare(nameB);
-    //     }
-    //     return 0;
-    // });
-    //     };
-
-    //filtering only works on strings (not numbers) for now
-
     useEffect(() => {
         if (!data) return;
 
@@ -108,6 +86,7 @@ export default function CommunityPage() {
             }),
         );
     }, [textInput, filters, data]);
+
 
     const handleSortPress = () => {
         setFilters((prev) => ({

@@ -6,8 +6,8 @@ import {
     queryClientAtom,
 } from "jotai-tanstack-query";
 import { selectedMemberAtom } from "./community";
+import { authTokenAtom, notificationFrequencyAtom, notificationsAtom, pushTokenAtom, registerInfoAtom } from "./user";
 import { jugUserInfoAtom } from "./jug-user";
-import { authTokenAtom, registerInfoAtom } from "./user";
 
 export const linkJugToUserMAtom = atomWithMutation((get) => ({
     mutationKey: ["/user/link-jug", get(authTokenAtom)],
@@ -264,12 +264,112 @@ export const loginMAtom = atomWithMutation((get) => ({
 }));
 
 export const verifyEmailMAtom = atomWithMutation((get) => ({
+    enabled: !!get(authTokenAtom),
     mutationKey: ["/user/verify", get(authTokenAtom)],
     mutationFn: async (formData: { code: string }) => {
         const token = get(authTokenAtom);
         const response = await request(ENDPOINTS.VERIFY_EMAIL, {
             method: "post",
             body: formData,
+            auth: token as string,
+        });
+
+        const object = await response.json();
+
+        if (!response.ok) {
+            return object.detail;
+        }
+
+        return;
+    },
+}));
+
+export const addPushTokenMAtom = atomWithMutation((get) => ({
+    enabled: !!get(authTokenAtom) && !!get(pushTokenAtom),
+    mutationKey: ["/user/add-push-token", get(authTokenAtom)],
+    mutationFn: async (formData: { pushToken: string }) => {
+        const token = get(authTokenAtom);
+        const response = await request(ENDPOINTS.ADD_PUSH_TOKEN, {
+            method: "post",
+            body: formData,
+            auth: token as string,
+        });
+
+        const object = await response.json();
+
+        if (!response.ok) {
+            return object.detail;
+        }
+
+        return;
+    },
+}));
+
+export const removePushTokenMAtom = atomWithMutation((get) => ({
+    enabled: !!get(authTokenAtom) && !!get(pushTokenAtom),
+    mutationKey: ["/user/remove-push-token", get(authTokenAtom)],
+    mutationFn: async (formData: { pushToken: string }) => {
+        const token = get(authTokenAtom);
+        const response = await request(ENDPOINTS.REMOVE_PUSH_TOKEN, {
+            method: "post",
+            body: formData,
+            auth: token as string,
+        });
+
+        const object = await response.json();
+
+        if (!response.ok) {
+            return object.detail;
+        }
+
+        return;
+    },
+}));
+
+
+export const toggleNotificationsMAtom = atomWithMutation((get) => ({
+    enabled: !!get(authTokenAtom) && !!get(pushTokenAtom),
+    mutationKey: ["/user/toggle-notifications", get(authTokenAtom)],
+    mutationFn: async () => {
+        const token = get(authTokenAtom);
+        const selection = get(notificationsAtom);
+        const pushToken = get(pushTokenAtom);
+        const formData: {notificationSelection: string, pushToken: string} = 
+            {
+                notificationSelection: selection as string,
+                pushToken: pushToken as string
+            };
+        const response = await request(ENDPOINTS.TOGGLE_NOTIFICATIONS, {
+            method: "post",
+            body:formData,
+            auth: token as string,
+        });
+
+        const object = await response.json();
+
+        if (!response.ok) {
+            return object.detail;
+        }
+
+        return;
+    },
+}));
+
+export const toggleNotificationsFrequencyMAtom = atomWithMutation((get) => ({
+    enabled: !!get(authTokenAtom) && !!get(pushTokenAtom),
+    mutationKey: ["/user/toggle-notifications-frequency", get(authTokenAtom)],
+    mutationFn: async () => {
+        const token = get(authTokenAtom);
+        const selection = get(notificationFrequencyAtom);
+        const pushToken = get(pushTokenAtom);
+        const formData: {notificationSelection: string, pushToken: string} = 
+            {
+                notificationSelection: selection as string,
+                pushToken: pushToken as string
+            };
+        const response = await request(ENDPOINTS.TOGGLE_NOTIFICATIONS_FREQUENCY, {
+            method: "post",
+            body:formData,
             auth: token as string,
         });
 

@@ -65,3 +65,12 @@ class VerifyEmailForm(BaseModel):
 
 class DeleteCommunityMemberForm(BaseModel):
     id: int
+
+
+class PushTokenForm(BaseModel):
+    pushToken: str
+
+
+class ToggleNotificationsForm(BaseModel):
+    notificationSelection: str
+    pushToken: str
