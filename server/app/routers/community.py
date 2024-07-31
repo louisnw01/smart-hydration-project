@@ -240,3 +240,20 @@ async def delete_tag(form: DeleteTagForm, user_id: str = Depends(auth_user)):
             raise HTTPException(status_code=400, detail="Tag not found or does not belong to the user's community")
         tag.delete()
         commit()
+
+
+@router.get("/get-tags")
+async def community_tags(user_id: str = Depends(auth_user)):
+    print("get tags endpoint hit")
+    with db_session:
+        community = try_get_users_community(user_id)
+        if community is None:
+            raise HTTPException(400, "User is not associated with a community")
+        data = []
+        for tag in community.tags:
+            data.append({
+                "id": tag.id,
+                "name": tag.name,
+            })
+
+        return data

@@ -293,3 +293,19 @@ export const deleteTagMAtom = atomWithMutation((get) => ({
     },
     onSuccess: () => {},
 }));
+
+export const communityTagsQAtom = atomWithQuery((get) => ({
+    queryKey: ["get-community-tags", get(authTokenAtom)],
+    queryFn: async ({ queryKey: [, token] }) => {
+        const response = await request(ENDPOINTS.COMMUNITY_TAGS, {
+            auth: token as string,
+        });
+        if (!response.ok) {
+            return null;
+        }
+        return await response.json();
+    },
+    enabled: !!get(authTokenAtom),
+    retry: false,
+}));
+

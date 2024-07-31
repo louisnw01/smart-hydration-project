@@ -38,6 +38,7 @@ export const ENDPOINTS = {
     CREATE_TAG: "/community/create-tag",
     UPDATE_TAG: "/community/update-tag",
     DELETE_TAG: "/community/delete-tag",
+    COMMUNITY_TAGS: "/community/get-tags",
 
     CREATE_JUG_USER: "/jug-user/create",
     VERIFY_EMAIL: "/user/verify",

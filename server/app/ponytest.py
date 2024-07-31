@@ -27,3 +27,4 @@ def get_jug_data(sh_jug_id):
     session = login_and_get_session()
     response = session.get("https://www.smarthydration.online/data/device/" + sh_jug_id + "/events/hydration", headers=headers)
     return response.json()
+
