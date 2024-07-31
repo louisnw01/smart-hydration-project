@@ -1,57 +1,57 @@
-import useColorPalette from "@/util/palette";
 import { useRouter } from "expo-router";
 import { ReactNode, useState } from "react";
-import { Pressable, Text, View, ViewStyle } from "react-native";
+import { Pressable, PressableProps, Text } from "react-native";
 
-interface ButtonProps {
+interface ButtonProps extends PressableProps {
     text: string;
     href?: string;
-    onPress?: Function;
-    textClass: string;
+    textClass?: string;
     buttonClass?: string;
+    buttonColors?: string;
+    touchButtonColors?: string;
     icon?: ReactNode;
     style?: ViewStyle;
 }
-export default function StyledButton({
-    text,
-    href,
-    onPress,
-    buttonClass,
-    textClass,
-    icon,
-    style,
-}: ButtonProps) {
+
+export default function StyledButton(props: ButtonProps) {
     const router = useRouter();
     const [touched, setTouched] = useState(false);
 
-    textClass +=
-        textClass && !textClass.includes("dark:text") ? " dark:text-white" : "";
+    const textClass = !props.textClass?.includes("dark:text")
+        ? `${props.textClass} dark:text-white`
+        : props.textClass;
 
-    const buttonColors = touched
-        ? "bg-gray-300 dark:bg-neutral-700"
-        : "bg-gray-200 dark:bg-neutral-800";
+    const buttonColors =
+        touched || props.disabled
+            ? props.touchButtonColors || "bg-gray-300 dark:bg-neutral-700"
+            : props.buttonColors || "bg-gray-200 dark:bg-neutral-800";
 
-    buttonClass = !buttonClass
+    const buttonClass = !props.buttonClass
         ? buttonColors
-        : !buttonClass.includes("bg-")
-          ? (buttonClass += " " + buttonColors)
-          : buttonClass;
+        : !props.buttonClass.includes("bg-")
+          ? (props.buttonClass += " " + buttonColors)
+          : props.buttonClass;
 
     const finalButtonClass =
         "flex-row gap-[3px] px-4 py-2 rounded-3xl " + buttonClass;
 
     return (
         <Pressable
-            style={style}
+            style={props.style}
             className={finalButtonClass}
             onPress={() =>
-                onPress ? onPress() : href ? router.navigate(href) : undefined
+                props.onPress
+                    ? props.onPress
+                    : props.href
+                      ? router.navigate(props.href)
+                      : undefined
             }
             onTouchStart={() => setTouched(true)}
             onTouchEnd={() => setTouched(false)}
+            {...props}
         >
-            {icon && icon}
-            <Text className={textClass}>{text}</Text>
+            {props.icon && props.icon}
+            <Text className={textClass}>{props.text}</Text>
         </Pressable>
     );
 }

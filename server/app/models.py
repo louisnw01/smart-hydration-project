@@ -37,6 +37,9 @@ class User(db.Entity):
     community_member = Optional('CommunityMember')
     hash = Required(str)
     jug_user = Optional('JugUser')
+    email_verified = Required(bool)
+    email_link = Optional('VerifyEmail')
+    notifications = Set('Notifications')
 
 
 class JugUser(db.Entity):
@@ -51,6 +54,10 @@ class JugUser(db.Entity):
     community = Optional('Community')
     user = Optional(User)
     otherdrinks = Set('OtherDrink')
+    target = Optional(int)
+    drank_today = Optional(int)
+    last_drank = Optional(int)
+    tags = Set('Tag')
 
 
 class Jug(db.Entity):
@@ -68,6 +75,7 @@ class Community(db.Entity):
     jug_users = Set(JugUser)
     followers = Set('CommunityMember')
     invite_links = Set('InviteLink')
+    tags = Set('Tag')
 
 
 class CommunityMember(db.Entity):
@@ -90,8 +98,29 @@ class Medication(db.Entity):
     name = Required(str)
 
 
+class VerifyEmail(db.Entity):
+    id = PrimaryKey(str)
+    expire_time = Required(int)
+    user = Required(User)
+
+
 class InviteLink(db.Entity):
     id = PrimaryKey(str)            # the id is the code at the end of the link.
     expire_time = Required(int)     # unix timestamp
-    permission = Required(str)
+    permission = Optional(str)
     community = Required(Community)
+
+
+class Tag(db.Entity):
+    id = PrimaryKey(int, auto=True)
+    name = Required(str)
+    community = Required(Community)
+    jug_users = Set(JugUser)
+
+    
+class Notifications(db.Entity):
+    expo_token = PrimaryKey(str)
+    active = Required(bool)
+    frequency = Required(int)
+    send_time = Required(int)
+    user = Required(User)

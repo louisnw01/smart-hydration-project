@@ -2,8 +2,6 @@ import { chartTimeWindowAtom } from "@/atom/nav";
 import { getHydrationQAtom } from "@/atom/query";
 import { MS_DAY, MS_HOUR, MS_MONTH, MS_WEEK, MS_YEAR } from "@/constants/data";
 import { atom } from "jotai";
-import { atomEffect } from "jotai-effect";
-import values from "ajv/lib/vocabularies/jtd/values";
 
 // returns the floor of a number based on an interval.
 // eg 8 jul 13:49 returns 8 jul 00:00 if interval is MS_DAY
@@ -16,16 +14,28 @@ export function getTodaysStartMS() {
   return getFloorOf(Date.now(), MS_DAY);
 }
 
+export function getRelativeTarget(target: number) {
+    let timeNow = new Date().getHours();
+    if (timeNow < 6) {
+        return 0;
+    }
+    if (timeNow > 22) {
+        return target;
+    }
+    let dayProgress = (timeNow - 6) / (22 - 6);
+    return dayProgress * target;
+}
+
 export function getAllAggregates(
   data: any[],
   interval: number,
   conditional?: (row: {}) => boolean
 ) {
-  if (!data) return [];
-  const aggs: Map<number, number> = new Map();
+    if (!data) return [];
+    const aggs: Map<number, number> = new Map();
 
-  for (const row of data) {
-    if (conditional && !conditional(row)) continue;
+    for (const row of data) {
+        if (conditional && !conditional(row)) continue;
 
     const rowStartMS = getFloorOf(row.time * 1000, interval);
 

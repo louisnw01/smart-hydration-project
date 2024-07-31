@@ -6,6 +6,10 @@ class UserLogin(BaseModel):
     email: str
     password: str
 
+class TargetUpdate(BaseModel):
+    newValue: int
+
+
 
 class UserRegister(BaseModel):
     name: str
@@ -53,3 +57,20 @@ class AddJugUserForm(BaseModel):
 
 class CreateInvitationForm(BaseModel):
     permission: str
+
+
+class VerifyEmailForm(BaseModel):
+    code: str
+
+
+class DeleteCommunityMemberForm(BaseModel):
+    id: int
+
+
+class PushTokenForm(BaseModel):
+    pushToken: str
+
+
+class ToggleNotificationsForm(BaseModel):
+    notificationSelection: str
+    pushToken: str

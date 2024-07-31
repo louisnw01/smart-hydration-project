@@ -1,12 +1,14 @@
+from fastapi import HTTPException
 from pony.orm.core import commit, get, select, db_session
 
+from .mail import send_email_with_ses
 from .models import User, Jug, JugUser, Community
 from .schemas import AddJugUserForm
 
 
 @db_session
 def create_user(name, email, hashcode):
-    user = User(name=name, email=email, hash=hashcode)
+    user = User(name=name, email=email, hash=hashcode, email_verified=False)
     commit()
     return user
 
@@ -57,6 +59,9 @@ def delete_user(user_id):
     if community_member:
         community_member.delete()
     if user:
+        email = user.email
+        name = user.name
+        send_email_with_ses(name, email, "delete")
         user.delete()
 
     #if user is found get community associated with user in user.community
@@ -204,11 +209,6 @@ def update_jug_user_data(user_id: int, key: str, new_value: str):
 
 
 @db_session
-def get_user_name(user_id):
-    return User.get(id=user_id).name
-
-
-@db_session
 def get_users_jugs(user_id):
     jugs = User.get(id=user_id).jug_user.jugs
     # jug_list = select(j.smart_hydration_id for j in Jug if (jug_user == j.owner))
@@ -232,3 +232,12 @@ def get_users_jugs_sh_ids(user_id):
 def update_jug_name_s(jug_id, name):
     Jug.get(smart_hydration_id=jug_id).name = name
     commit()
+
+
+def try_get_users_community(user_id):
+    user = User.get(id=user_id)
+    member = user.community_member
+    if not member:
+        raise HTTPException(400, 'user is not part of a community')
+
+    return member.community

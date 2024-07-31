@@ -124,7 +124,7 @@ function DrinkButton({ drinkType }: { drinkType: DrinkType }) {
 
     function handleAddDrink() {
         if (drinkType.name == "Add a new cup") {
-            alert("todo: add a new drink");
+            router.push("custom/add-custom-cup");
             return;
         }
         const drinkJSON = constructDrinkEvent(drinkType.name);

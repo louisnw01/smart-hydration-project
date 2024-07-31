@@ -1,4 +1,4 @@
-import { ActivityIndicator, View, Text } from "react-native";
+import { ActivityIndicator, Text, View } from "react-native";
 
 export default function Loading({
     isLoading,
@@ -6,18 +6,14 @@ export default function Loading({
     large,
 }: {
     isLoading: boolean;
-    message: string;
+    message?: string;
     large?: boolean;
 }) {
     if (!isLoading) return null;
-
     return (
-        <View>
-            <ActivityIndicator
-                className="justify-center w-full h-full"
-                size={large ? "large" : "small"}
-            />
-            <Text className="mt-16 flex justify-center text-center text-2xl dark:text-white">
+        <View className="w-full h-full justify-center gap-4">
+            <ActivityIndicator size={large ? "large" : "small"} />
+            <Text className="text-center text-xl dark:text-white">
                 {message}
             </Text>
         </View>

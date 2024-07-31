@@ -6,12 +6,12 @@ export interface PageProgressProperties {
     totalPages: number;
 }
 
-//To do: make this a visual progress bar 
+//TODO: make this a visual progress bar
 
 const PageProgressBar = ({ currentPage, totalPages }: PageProgressProperties) => {
     return (
         <View className="flex items-center">
-            <Text className="text-xl font-semibold font-medium text-gray-900 dark:text-white">Page {currentPage}/{totalPages}</Text>
+            <Text className="text-xl font-semibold text-gray-900 dark:text-white">Page {currentPage}/{totalPages}</Text>
         </View>
     );
 };
