@@ -19,8 +19,6 @@ export default function ConfirmJoinCommunityModal(){
 
     useEffect(() => {
         if(!inviteCode){
-            console.log("here");
-            console.log(verificationUrl);
             setInviteCode(verificationUrl?.slice(-10) ?? '');
         }
         refetch();
@@ -61,7 +59,9 @@ export default function ConfirmJoinCommunityModal(){
                         text="Cancel"
                         buttonClass="bg-red self-center rounded-xl" 
                         textClass="text-white text-lg font-semibold"
-                        onPress={() => {router.back()}}/>
+                        onPress={() => {
+                            router.canGoBack() ? router.back() :  
+                            router.replace("(modals)/join-community-modal")}}/>
         </View>
     );
 }

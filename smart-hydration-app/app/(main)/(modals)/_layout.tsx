@@ -21,7 +21,8 @@ export default function ModalLayout() {
                 headerLeft: () => {
                     const router = useRouter();
                     return (
-                        <Pressable onPress={() => router.back()}>
+                        <Pressable onPress={() => {
+                            router.canGoBack() ? router.back() : router.replace("(tabs)")}}>
                             <Entypo
                                 name={
                                     Platform.OS == "android"
@@ -54,18 +55,6 @@ export default function ModalLayout() {
                 options={{
                     title: "Enter a New Device Name",
                     headerBackVisible: false,
-                    headerLeft: () => {
-                        const router = useRouter();
-                        return (
-                            <Pressable onPress={() => router.back()}>
-                                <Entypo
-                                    name="chevron-left"
-                                    size={24}
-                                    color="rgb(80, 80, 80)"
-                                />
-                            </Pressable>
-                        );
-                    },
                 }}
             />
             <Stack.Screen
