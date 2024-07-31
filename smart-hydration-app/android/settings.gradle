@@ -1,4 +1,4 @@
-rootProject.name = 'smart-hydration-app'
+rootProject.name = 'Smart Hydration'
 
 dependencyResolutionManagement {
   versionCatalogs {
