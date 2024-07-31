@@ -239,3 +239,57 @@ export const linkJugsToCommunityMemberMAtom = atomWithMutation((get) => ({
         console.log("Linked jugs to user");
     },
 }));
+
+export const createTagMAtom = atomWithMutation((get) => ({
+    mutationKey: ["create-tag", get(authTokenAtom)],
+    mutationFn: async (formData: { tagName: string, communityName: string }) => {
+        const token = get(authTokenAtom);
+        const response = await request(ENDPOINTS.CREATE_TAG, {
+            method: "post",
+            body: formData,
+            auth: token as string,
+        });
+
+        if (!response.ok) {
+            return;
+        }
+    },
+    onSuccess: () => {},
+    // only enabled if auth and user doesn't have a community
+    enabled: !!get(authTokenAtom) && !get(userHasCommunityAtom),
+}));
+
+export const updateTagMAtom = atomWithMutation((get) => ({
+    mutationKey: ["update-tag", get(authTokenAtom)],
+    enabled: !!get(authTokenAtom),
+    mutationFn: async (formData: { tagName: string, communityName: string }) => {
+        const token = get(authTokenAtom);
+        const response = await request(ENDPOINTS.UPDATE_TAG, {
+            method: "post",
+            body: formData,
+            auth: token as string,
+        });
+
+        if (!response.ok) {
+            return;
+        }
+    },
+}));
+
+export const deleteTagMAtom = atomWithMutation((get) => ({
+    mutationKey: ["delete-tag", get(authTokenAtom)],
+    enabled: !!get(authTokenAtom),
+    mutationFn: async (formData: { tagName: string, communityName: string }) => {
+        const token = get(authTokenAtom);
+        const response = await request(ENDPOINTS.DELETE_TAG, {
+            method: "post",
+            body: formData,
+            auth: token as string,
+        });
+
+        if (!response.ok) {
+            return;
+        }
+    },
+    onSuccess: () => {},
+}));

@@ -35,6 +35,9 @@ export const ENDPOINTS = {
     COMMUNITY_USERS: "/community/users",
     DELETE_COMMUNITY_MEMBER: "/community/delete-member",
     PATIENT_INFO: "/community/patient-info", // get the info through this endpoint
+    CREATE_TAG: "/community/create-tag",
+    UPDATE_TAG: "/community/update-tag",
+    DELETE_TAG: "/community/delete-tag",
 
     CREATE_JUG_USER: "/jug-user/create",
     VERIFY_EMAIL: "/user/verify",
