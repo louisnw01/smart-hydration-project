@@ -1,4 +1,4 @@
-import { View, Pressable, Text } from "react-native";
+import { View } from "react-native";
 import Drop from "@/assets/svgs/water-drop-svgrepo-com.svg";
 import { useRouter } from "expo-router";
 import useColorPalette from "@/util/palette";

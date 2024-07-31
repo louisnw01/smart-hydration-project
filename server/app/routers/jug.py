@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from pony.orm.core import db_session, select
 
-from ..api import login_and_get_session, get_jug_latest, get_hydration_events
+from ..api import get_jug_latest, get_hydration_events
 from ..auth import auth_user
 from ..models import User, Jug
 from ..schemas import UpdateJugForm

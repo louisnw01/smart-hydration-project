@@ -1,7 +1,8 @@
+import asyncio
 from fastapi import APIRouter, Depends, HTTPException
 from pony.orm.core import db_session, select
 
-from ..api import login_and_get_session, get_jug_latest, get_hydration_events
+from ..api import SmartHydrationSession, get_jug_latest, get_hydration_events
 from ..auth import auth_user
 from ..models import User, OtherDrink
 
@@ -21,15 +22,15 @@ async def get_community_jug_status(user_id: str = Depends(auth_user)):
         user = User.get(id=user_id)
         if not user or not user.jug_user:
             raise HTTPException(status_code=400, detail='user not found')
-        jugs = user.jug_user.jugs
-        devices_info = []
-        session = login_and_get_session()
+        jugs = [jug.to_dict() for jug in user.jug_user.jugs]
+    devices_info = []
+    async with SmartHydrationSession() as session:
         for jug in jugs:
-            jug_data = get_jug_latest(session, jug.smart_hydration_id)
+            jug_data = await get_jug_latest(session, jug['smart_hydration_id'])
             if jug_data is None:
                 continue
-            jug_data['name'] = jug.name
-            jug_data['id'] = jug.smart_hydration_id
+            jug_data['name'] = jug['name']
+            jug_data['id'] = jug['smart_hydration_id']
             devices_info.append(jug_data)
         return devices_info
 
@@ -39,6 +40,8 @@ async def get_historical_jug_data(timestamp: int, user_id: str = Depends(auth_us
     # atm only works for one jug per user
     # check if the user_id OWNS or follows the jugusers community
 
+    big_list = []
+
     with db_session:
         user = User.get(id=user_id)
         juguser = user.jug_user
@@ -46,18 +49,17 @@ async def get_historical_jug_data(timestamp: int, user_id: str = Depends(auth_us
             # raise HTTPException(status_code=400, detail='unauthorized')
         if not juguser:
             return []
-        jugs = juguser.jugs
 
-        session = login_and_get_session()
-
-        big_list = []
-        for jug in jugs:
-            big_list.extend(get_hydration_events(session, jug, timestamp))
-
-        other_drinks = select(o for o in OtherDrink if (o.juguser == juguser))
+        other_drinks = juguser.otherdrinks
 
         for drink in other_drinks:
-            print(drink.timestamp , " " , drink.capacity)
             big_list.append({"time": drink.timestamp, "value": drink.capacity})
 
-        return sorted(big_list, key=lambda x: x['time'])
+        jugs = [jug.to_dict() for jug in juguser.jugs]
+
+    async with SmartHydrationSession() as session:
+        tasks = [get_hydration_events(session, jug['smart_hydration_id'], jug['name'], timestamp) for jug in jugs]
+        results = await asyncio.gather(*tasks)
+    big_list.extend([event for sublist in results for event in sublist])
+
+    return sorted(big_list, key=lambda x: x['time'])

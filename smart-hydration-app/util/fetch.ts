@@ -3,7 +3,9 @@
 export const SERVER_ADDRESS = "localhost:8085";
 // export const SERVER_ADDRESS = "hydrationapi.louisnw.com";
 
-const SERVER_URL = `http${SERVER_ADDRESS.includes(".com") ? "s" : ""}://${SERVER_ADDRESS}`;
+export const SERVER_URL = `http${
+    SERVER_ADDRESS.includes(".com") ? "s" : ""
+}://${SERVER_ADDRESS}`;
 
 export const ENDPOINTS = {
     HELLO_WORLD: "/",
@@ -15,17 +17,31 @@ export const ENDPOINTS = {
     FETCH_HISTORICAL_JUG_DATA: "/data/historical",
     GET_ALL_JUGS: "/get-all-jugs",
     UPDATE: "/jug-user/update",
-    FETCH_USER: "/user/user-name",
+    USER_INFO: "/user/info",
     DELETE_USER: "/user/delete",
     UPDATE_JUG_NAME: "/jug/update-name",
     USER_EXISTS: "/user/exists",
     ADD_DRINK: "/jug-user/add-drink-event",
+    UPDATE_USER_TARGET: "/user/update-user-target",
 
+    SEND_VERIFICATION_EMAIL: "/user/send-verification-email",
+
+    COMMUNITY_INFO: "/community/info",
     CREATE_COMMUNITY: "/community/create",
     UPDATE_COMMUNITY: "/community/update",
     DELETE_COMMUNITY: "/community/delete",
+    COMMUNITY_GENERATE_INVITE: "/community/generate-invite",
+    COMMUNITY_USERS: "/community/users",
+    DELETE_COMMUNITY_MEMBER: "/community/delete-member",
+    PATIENT_INFO: "/community/patient-info", // get the info through this endpoint
 
     CREATE_JUG_USER: "/jug-user/create",
+    VERIFY_EMAIL: "/user/verify",
+
+    ADD_PUSH_TOKEN: "/user/add-push-token",
+    REMOVE_PUSH_TOKEN: "/user/remove-push-token",
+    TOGGLE_NOTIFICATIONS: "/user/toggle-notifications",
+    TOGGLE_NOTIFICATIONS_FREQUENCY: "/user/toggle-notifications-frequency",
 };
 
 interface RequestOptions {
@@ -33,13 +49,14 @@ interface RequestOptions {
     query: { [key: string]: any };
     body: { [key: string]: any };
     auth?: string;
+    rawUrl?: boolean;
 }
 
 export async function request(
     endpoint: string,
     options: Partial<RequestOptions>,
 ) {
-    let url = SERVER_URL + endpoint;
+    let url = options.rawUrl ? endpoint : SERVER_URL + endpoint;
 
     if (options.query) {
         url += "?";

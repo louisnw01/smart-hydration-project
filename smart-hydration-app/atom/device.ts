@@ -11,3 +11,6 @@ export const selectedDeviceAtom = atom<DeviceInfo | null>((get) => {
 
     return data.find((row) => row.id == jugId);
 });
+
+// this holds the device id of the jug being used to measure the cup
+export const isMeasuringNewCupSizeAtom = atom<string | null>(null);
