@@ -6,11 +6,11 @@ from pony.orm.core import commit, db_session, delete
 from ..api import get_hydration_events
 from ..routers import jug_user
 from ..services import get_user_by_id, try_get_users_community, try_get_users_community
-from ..models import Community, CommunityMember, InviteLink, Jug, User, JugUser
-from ..schemas import CreateCommunityForm, CreateInvitationForm, AddJugsToMemberForm, DeleteCommunityMemberForm
+from ..models import Community, CommunityMember, InviteLink, Jug, User, JugUser, Tag
+from ..schemas import CreateCommunityForm, CreateInvitationForm, AddJugsToMemberForm, DeleteCommunityMemberForm, \
+    CreateTagForm, UpdateTagForm, DeleteTagForm
 from ..auth import auth_user, generate_invite_link
 import pprint
-
 
 router = APIRouter(
     prefix="/community",
@@ -41,8 +41,6 @@ async def patient_info(user_id: str = Depends(auth_user)):
         # get targets for users
         patient_info = []
         for juguser in community.jug_users:
-
-
             patient_info.append({
                 "id": juguser.id,
                 "name": juguser.name,
@@ -106,7 +104,6 @@ async def delete_community(user_id: str = Depends(auth_user)):
         community.delete()
 
 
-
 @router.post("/delete-member")
 async def delete_community_member(form: DeleteCommunityMemberForm, user_id: str = Depends(auth_user)):
     with db_session:
@@ -128,6 +125,7 @@ async def delete_community_member(form: DeleteCommunityMemberForm, user_id: str 
             raise HTTPException(400, "member is the owner of this community")
 
         member_to_delete.delete()
+
 
 @router.post("/invite/{code}")
 async def validate_invitation(code: str, user_id: str = Depends(auth_user)):
@@ -166,7 +164,7 @@ async def create_invitation(user_id: str = Depends(auth_user)):
 
         TIME_TO_EXPIRE = dt.timedelta(days=1)
 
-        expire_time = (dt.datetime.now()+TIME_TO_EXPIRE).timestamp()
+        expire_time = (dt.datetime.now() + TIME_TO_EXPIRE).timestamp()
 
         link = InviteLink(
             id=generate_invite_link(),
@@ -176,20 +174,66 @@ async def create_invitation(user_id: str = Depends(auth_user)):
 
         return link.id
 
+
 @router.post("/link-jug-to-member")
 async def link_jugs_to_community_member(form: AddJugsToMemberForm, user_id: str = Depends(auth_user)):
     pprint.pprint(form)
     with db_session:
         user = User.get(id=user_id)
-        user_juser = JugUser.get(user = user)
+        user_juser = JugUser.get(user=user)
         user_community = user_juser.community
-        juguser = JugUser.get(id = form.communityMember)
+        juguser = JugUser.get(id=form.communityMember)
         juser_community = juguser.community
         if user_community != juser_community:
             return HTTPException(400, 'user is not part of the same community')
 
         for jug in form.jugIds:
-            jug_to_add = Jug.get(smart_hydration_id = jug)
+            jug_to_add = Jug.get(smart_hydration_id=jug)
             juguser.jugs.add(jug_to_add)
 
         return {"message": "Jugs successfully linked to community member"}
+
+
+@router.post("/create-tag")
+async def create_tag(form: CreateTagForm, user_id: str = Depends(auth_user)):
+    with db_session:
+        user = User.get(id=user_id)
+        if not user:
+            raise HTTPException(status_code=400, detail="User not found")
+        community = Community.get(name=form.community_name)
+        if not community:
+            raise HTTPException(status_code=400, detail="Community not found")
+        tag = Tag(name=form.tagName, community=community)
+        commit()
+
+
+@router.post("/update-tag")
+async def update_tag(form: UpdateTagForm, user_id: str = Depends(auth_user)):
+    with db_session:
+        user = User.get(id=user_id)
+        if not user:
+            raise HTTPException(status_code=400, detail="User not found")
+        member = user.community_member
+        if member is None:
+            raise HTTPException(status_code=400, detail="User is not associated with a community")
+        tag = Tag.get(name=form.currentName, community=member.community)
+        if not tag:
+            raise HTTPException(status_code=400, detail="Tag not found or does not belong to the user's community")
+        tag.name = form.newName
+        commit()
+
+
+@router.post("/delete-tag")
+async def delete_tag(form: DeleteTagForm, user_id: str = Depends(auth_user)):
+    with db_session:
+        user = User.get(id=user_id)
+        if not user:
+            raise HTTPException(status_code=400, detail="User not found")
+        member = user.community_member
+        if member is None:
+            raise HTTPException(status_code=400, detail="User is not associated with a community")
+        tag = Tag.get(name=form.tagName, community=member.community)
+        if not tag:
+            raise HTTPException(status_code=400, detail="Tag not found or does not belong to the user's community")
+        tag.delete()
+        commit()
