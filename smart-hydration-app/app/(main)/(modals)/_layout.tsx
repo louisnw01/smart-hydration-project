@@ -88,6 +88,25 @@ export default function ModalLayout() {
                 name="member-info-modal"
                 options={{ title: "Member details" }}
             />
+            <Stack.Screen
+                name="add-device-to-juguser-modal"
+                options={{
+                    title: "Link device to user",
+                    headerBackVisible: false,
+                    headerLeft: () => {
+                        const router = useRouter();
+                        return (
+                            <Pressable onPress={() => router.back()}>
+                                <Entypo
+                                    name="chevron-left"
+                                    size={24}
+                                    color="rgb(80, 80, 80)"
+                                />
+                            </Pressable>
+                        );
+                    },
+                }}
+            />
         </Stack>
     );
 }
