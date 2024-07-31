@@ -6,7 +6,7 @@ import EditTagRow from "@/components/community/edit-tag-row";
 import StyledTextInput from "@/components/common/text-input";
 import PageWrapper from "@/components/common/page-wrapper";
 import { FilterObject, TagInfo } from "@/interfaces/community";
-import { createTagMAtom, updateTagMAtom, deleteTagMAtom } from "@/atom/query/community";
+import { createTagMAtom, updateTagMAtom, deleteTagMAtom, communityTagsQAtom } from "@/atom/query/community";
 import { useAtomValue } from "jotai";
 
 export interface EditTagsProps { }
@@ -17,7 +17,9 @@ export default function EditTags({ }: EditTagsProps) {
   const [showEditTagBox, setShowEditTagBox] = useState(false);
   const [newTextInput, setNewTextInput] = useState("");
   const [editTextInput, setEditTextInput] = useState("");
-  const [currentTagName, setCurrentTagName] = useState("");
+  const [currentTagName, setCurrentTagName] = useState("");   
+  const { data, refetch: refetchTags } = useAtomValue(communityTagsQAtom);
+  console.log("Data from target atom:", data);
   const createTagMutate = useAtomValue(createTagMAtom).mutate;
   const updateTagMutate = useAtomValue(updateTagMAtom).mutate;
   const deleteTagMutate = useAtomValue(deleteTagMAtom).mutate;
@@ -40,18 +42,23 @@ export default function EditTags({ }: EditTagsProps) {
   const handleStartup = async () => { };
 
   useEffect(() => {
+    refetchTags();
+  }, []);
+
+  useEffect(() => {
     handleStartup();
   }, []);
 
   const router = useRouter();
-  //static data placeholder until we get real data from endpoint
-  const [tags, setTags] = useState([
-    { name: "independent" },
-    { name: "tea" },
-    { name: "aggressive" },
-    { name: "friendly" },
-    { name: "coffee" }
-  ]);
+  
+  const [tags, setTags] = useState<TagInfo[]>([]);
+
+  useEffect(() => {
+    if (data) {
+      const updatedTags: TagInfo[] = data.map((tag: any) => ({ id: tag.id, name: tag.name }));
+      setTags(updatedTags);
+    }
+  }, [data]);
 
   const sortData = (filterObj: FilterObject) => {
     if (!tags) return;
@@ -98,10 +105,11 @@ export default function EditTags({ }: EditTagsProps) {
   const handleAddTag = (newTagName: string) => {
     if (newTagName !== '') {
       const newTag = { name: newTagName };
-      setTags([...tags, newTag]);
+      setTags([...tags, { name: newTagName } as TagInfo]);
       setNewTextInput("");
       toggleNewTagSection();
       createTagMutate({tagName: newTagName});
+      refetchTags();
     }
   };
 

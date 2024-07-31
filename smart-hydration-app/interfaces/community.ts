@@ -13,5 +13,6 @@ export interface FilterObject {
 }
 
 export interface TagInfo {
+  id: number,
   name: string,
 }
