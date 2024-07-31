@@ -41,7 +41,9 @@ export default function StyledButton(props: ButtonProps) {
         :props.buttonClass
         
     const finalButtonClass =
-        "flex-row gap-[3px] px-4 py-2 rounded-3xl " + buttonClass;
+        buttonClass && buttonClass.includes("gap-")
+            ? buttonClass
+            : "flex-row gap-[3px] px-4 py-2 rounded-3xl " + buttonClass;
 
     return (
         <Pressable

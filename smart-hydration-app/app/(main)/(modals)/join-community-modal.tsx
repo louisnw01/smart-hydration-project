@@ -1,5 +1,6 @@
 import StyledButton from "@/components/common/button";
 import StyledTextInput from "@/components/common/text-input";
+import { joinCommunityMAtom } from "@/atom/query/community";
 import { router } from "expo-router";
 import { useSetAtom } from "jotai";
 import { useState } from "react";
