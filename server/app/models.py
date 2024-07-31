@@ -63,7 +63,7 @@ class JugUser(db.Entity):
 class Jug(db.Entity):
     id = PrimaryKey(int, auto=True)
     smart_hydration_id = Required(str)
-    qr_hash = Required(str)
+    qr_hash = Optional(str)
     name = Optional(str)
     owners = Set('JugUser')
     system_id = Required(int)
@@ -117,7 +117,7 @@ class Tag(db.Entity):
     community = Required(Community)
     jug_users = Set(JugUser)
 
-    
+
 class Notifications(db.Entity):
     expo_token = PrimaryKey(str)
     active = Required(bool)

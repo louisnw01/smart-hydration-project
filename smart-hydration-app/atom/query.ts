@@ -5,6 +5,7 @@ import {
     atomWithQuery,
     queryClientAtom,
 } from "jotai-tanstack-query";
+import { selectedMemberAtom } from "./community";
 import { authTokenAtom, notificationFrequencyAtom, notificationsAtom, pushTokenAtom, registerInfoAtom } from "./user";
 import { jugUserInfoAtom } from "./jug-user";
 
@@ -205,22 +206,43 @@ export const userInfoQAtom = atomWithQuery((get) => ({
     enabled: !!get(authTokenAtom),
 }));
 
+async function fetchHistoricalJugData(jugUserId: number, token: string) {
+    const ts = new Date(2024, 5, 26).getTime();
+    const response = await request(ENDPOINTS.FETCH_HISTORICAL_JUG_DATA, {
+        query: {
+            jug_user_id: jugUserId,
+            timestamp: ts / 1000,
+        },
+        auth: token,
+    });
+    if (!response.ok) {
+        throw new Error();
+    }
+    return await response.json();
+}
+
 export const getHydrationQAtom = atomWithQuery((get) => ({
     queryKey: ["/data/historical", get(authTokenAtom)],
     queryFn: async ({ queryKey: [, token] }): Promise<ITimeSeries[]> => {
-        const ts = new Date(2024, 5, 26).getTime();
-        const response = await request(ENDPOINTS.FETCH_HISTORICAL_JUG_DATA, {
-            query: {
-                timestamp: ts / 1000,
-            },
-            auth: token,
-        });
-        if (!response.ok) {
-            throw new Error();
-        }
-        return await response.json();
+        const { data } = get(userInfoQAtom);
+
+        return await fetchHistoricalJugData(data.juguser, token);
     },
-    enabled: !!get(authTokenAtom),
+    enabled: !!get(authTokenAtom) && !get(userInfoQAtom).isLoading,
+}));
+
+export const historicalPatientJugDataQAtom = atomWithQuery((get) => ({
+    queryKey: [
+        "historical-patient",
+        get(authTokenAtom),
+        get(selectedMemberAtom),
+    ],
+    queryFn: async ({
+        queryKey: [, token, member],
+    }): Promise<ITimeSeries[]> => {
+        return await fetchHistoricalJugData(member.id, token);
+    },
+    enabled: !!get(authTokenAtom) && !!get(selectedMemberAtom),
 }));
 
 export const loginMAtom = atomWithMutation((get) => ({
