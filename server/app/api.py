@@ -109,3 +109,23 @@ async def get_hydration_events(session, jug_id, jug_name, start_timestamp, last_
         })
 
     return events
+
+async def fetch_all_registered_jugs():
+    async with SmartHydrationSession() as session:
+        real_org_id = 5
+        fake_org_id = 2
+
+        [real_jugs, fake_jugs] = await asyncio.gather(
+            query(session, f'/data/organisation/{real_org_id}/device/list'),
+            query(session, f'/data/organisation/{fake_org_id}/device/list')
+        )
+
+        full_jug_list = real_jugs+fake_jugs
+
+        final_jug_list = []
+        for jug in full_jug_list:
+            final_jug_list.append({
+                "sh_id": jug['identifier'],
+                "sys_id": jug['id'],
+            })
+        return final_jug_list

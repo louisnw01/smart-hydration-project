@@ -8,17 +8,16 @@ import {
     RefreshControl,
     ScrollView,
     Text,
-    TextInput,
     View,
 } from "react-native";
 
 import {
     communityInfoQAtom,
-    communityNameAtom,
     patientInfoQAtom,
     userHasCommunityAtom,
 } from "@/atom/query/community";
 import Loading from "@/components/common/loading";
+import StyledTextInput from "@/components/common/text-input";
 import MemberRow from "@/components/community/member-row";
 import { FilterObject, MemberInfo } from "@/interfaces/community";
 
@@ -35,46 +34,59 @@ export default function CommunityPage() {
         useAtomValue(patientInfoQAtom);
     const hasCommunity = useAtomValue(userHasCommunityAtom);
     const [refreshing, setRefreshing] = useState(false);
-    const communityName = useAtomValue(communityNameAtom);
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [filteredData, setFilteredData] = useState<MemberInfo[]>([]);
     const [textInput, setTextInput] = useState("");
     const [filters, setFilters] = useState<FilterObject>({
         searchTerm: "",
         sort: "asc",
     });
-    // const filterAndSortData = (filterObj: FilterObject) => {
-    //     if (!data) return;
-    //     const filteredData = data.filter((member) => {
-    //         return (
-    //             (member.name &&
-    //                 member.name
-    //                     .toLowerCase()
-    //                     .indexOf(filterObj.searchTerm.toLowerCase()) > -1) ||
-    //             (member.description &&
-    //                 member.description.indexOf(
-    //                     filterObj.searchTerm.toLowerCase(),
-    //                 ) > -1)
-    //         );
-    //     });
-    //     return filteredData.sort((a: any, b: any) => {
-    //         const nameA = a.name.toLowerCase();
-    //         const nameB = b.name.toLowerCase();
-    //         if (filterObj.sort === "desc") {
-    //             return nameB.localeCompare(nameA);
-    //         } else if (filterObj.sort === "asc") {
-    //             return nameA.localeCompare(nameB);
-    //         }
-    //         return 0;
-    //     });
-    // };
 
-    // //filtering only works on strings (not numbers) for now
+    useEffect(() => {
+        if (!data) return;
 
-    // useEffect(() => {
-    //     if (!data) return;
-    //     const result = filterAndSortData(filters);
-    //     setFilteredData(result);
-    // }, [textInput, filters, data, filterAndSortData]);
+        const filteredData = data.filter((member) => {
+            return (
+                member.name
+                    .toLowerCase()
+                    .indexOf(filters.searchTerm.toLowerCase()) > -1
+            );
+        });
+
+        const sortedData = filteredData.sort((a, b) => {
+            const comparison = a.name
+                .toLowerCase()
+                .localeCompare(b.name.toLowerCase());
+            return filters.sort === "asc" ? comparison : -comparison;
+        });
+
+        const filteredComponents = sortedData.map((member) => (
+            <MemberRow member={member} />
+        ));
+
+        filteredComponents.push(
+            <View className="mt-8 flex gap-6">
+                <View className="flex flex-row justify-center">
+                    <StyledButton
+                        text="+ Add a member"
+                        href="add-jug-user"
+                        textClass="text-lg"
+                    />
+                </View>
+            </View>,
+        );
+
+        setFilteredData(
+            filteredData.sort((a, b) => {
+                const comparison = a.name
+                    .toLowerCase()
+                    .localeCompare(b.name.toLowerCase());
+                return filters.sort === "asc" ? comparison : -comparison;
+            }),
+        );
+    }, [textInput, filters, data]);
+
 
     const handleSortPress = () => {
         setFilters((prev) => ({
@@ -155,13 +167,6 @@ export default function CommunityPage() {
                                 />
                             }
                         > */}
-                        <View className="mt-8 flex gap-6">
-                            <View className="flex flex-row justify-center">
-                                <Text className="dark:text-white text-2xl font-bold">
-                                    {communityName}
-                                </Text>
-                            </View>
-                        </View>
                         {/* change this to members.size > 0 when entered members are stored in members array*/}
                         {/*members.size === 0 && (
                             <Text className="text-center dark:text-white text-lg">
@@ -174,45 +179,27 @@ export default function CommunityPage() {
                                 className="bg-blue px-4 py-2 rounded-xl ml-2"
                             >
                                 <Text className="text-2l font-semibold text-white">
-                                    Sort by name{" "}
-                                    {filters.sort === "asc" ? "A-Z" : "Z-A"}
+                                    {`Sort by name ${filters.sort === "asc" ? "A-Z" : "Z-A"}`}
                                 </Text>
                             </Pressable>
                         </View>
 
-                        {!!data && data.length > 0 && (
-                            <FlatList
-                                data={data}
-                                contentContainerClassName="flex gap-6"
-                                keyExtractor={(patient) => patient.name}
-                                renderItem={({ item }) => (
-                                    <MemberRow member={item} />
-                                )}
-                            />
-                        )}
+                        <FlatList
+                            data={filteredData || []}
+                            contentContainerClassName="flex gap-6"
+                            keyExtractor={(patient, idx) => idx}
+                            renderItem={({ item }) => (
+                                <MemberRow member={item} />
+                            )}
+                        />
 
-                        {/* {Array.from(filteredData.values()).map((member) => (
-                            <View key={member.name} className="my-3">
-                                <MemberRow member={member} />
-                            </View>
-                        ))} */}
-                        <View className="mt-8 flex gap-6">
-                            <View className="flex flex-row justify-center">
-                                <StyledButton
-                                    text="+ Add a member"
-                                    href="add-jug-user"
-                                    textClass="text-lg"
-                                />
-                            </View>
-                        </View>
                         {/* </ScrollView> */}
                     </View>
-                    <View className="flex flex-row items-center p-2">
+                    <View className="flex-row items-center p-2 gap-4">
                         <View className="flex-1">
-                            <TextInput
+                            <StyledTextInput
                                 value={textInput}
-                                placeholder={`Search members...`}
-                                className="bg-gray-200 h-14 placeholder-black text-xl rounded-xl px-3 m-1 border"
+                                placeholder="Search members..."
                                 onChangeText={(val) => {
                                     setTextInput(val);
                                     setFilters((prev) => ({
@@ -221,19 +208,15 @@ export default function CommunityPage() {
                                     }));
                                 }}
                                 textContentType="name"
-                                returnKeyType="done"
+                                returnKeyType="search"
                             />
                         </View>
-                        <View>
-                            <Pressable
-                                onPress={handleClearPress}
-                                className="bg-blue px-4 py-2 rounded-xl ml-2"
-                            >
-                                <Text className="text-2l font-semibold text-white">
-                                    Clear search
-                                </Text>
-                            </Pressable>
-                        </View>
+                        <StyledButton
+                            text="Clear search"
+                            buttonClass="rounded-xl"
+                            textClass="font-semibold"
+                            onPress={handleClearPress}
+                        />
                     </View>
                 </View>
             </PageWrapper>

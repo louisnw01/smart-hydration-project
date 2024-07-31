@@ -1,93 +1,115 @@
-import { useState } from "react";
-import { View, Text, Pressable, TextInput } from "react-native";
-import { useNavigation } from "expo-router";
-import { useAtom } from "jotai";
-import { MemberInfo } from "@/interfaces/community"
-import { membersAtom, selectedJugsForMemberAtom } from "@/atom/community";
+import Jug from "@/assets/svgs/jug.svg";
+import { selectedMemberAtom } from "@/atom/community";
 import StyledButton from "@/components/common/button";
-import { useEffect } from "react";
-import Tag from "@/components/community/tag";
+import { ScrollPageWrapper } from "@/components/common/page-wrapper";
+import useColorPalette from "@/util/palette";
+import { FontAwesome, MaterialCommunityIcons } from "@expo/vector-icons";
+import { router } from "expo-router";
+import { useAtomValue } from "jotai";
+import { Text, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+
+function MemberInfoBlock({ children, title }) {
+    return (
+        <View className="bg-gray-100 px-5 py-4 rounded-xl dark:bg-neutral-900">
+            <Text className="text-xl font-bold dark:text-white">{title}</Text>
+            {children}
+        </View>
+    );
+}
 
 export default function MemberInfoModal() {
-    const navigation = useNavigation();
-
+    const palette = useColorPalette();
+    const insets = useSafeAreaInsets();
+    const member = useAtomValue(selectedMemberAtom);
     return (
-        <View className="mt-8 flex gap-6">
-            <Text className="dark:text-white text-2xl text-center">
-                This page is a non-functional placeholder
+        <ScrollPageWrapper
+            className="mt-8 flex gap-6 mx-6 pb-20"
+            style={{
+                paddingBottom: insets.bottom,
+            }}
+        >
+            <Text className="dark:text-white text-3xl font-semibold">
+                {member.name}
             </Text>
-            <View className="mx-6 bg-gray-200 px-7 py-4 flex flex-col justify-between rounded-xl dark:bg-neutral-800">
-                <Text className="text-xl font-bold dark:text-white">
-                    Profile details
-                </Text>
+
+            <MemberInfoBlock title="Profile Details">
+                <Text className="text-xl dark:text-white">Name</Text>
+                <Text className="text-xl dark:text-white">Jugs</Text>
+                <Text className="text-xl dark:text-white">Last drank</Text>
+                <Text className="text-xl dark:text-white">Tags</Text>
+            </MemberInfoBlock>
+            <MemberInfoBlock title="Progress to Target">
                 <Text className="text-xl dark:text-white">
-                    Name
+                    Data here (tap to read more)
                 </Text>
+            </MemberInfoBlock>
+
+            <MemberInfoBlock title="Trends Page">
                 <Text className="text-xl dark:text-white">
-                    Jugs
+                    Embed graph here
+
                 </Text>
+            </MemberInfoBlock>
+
+            <MemberInfoBlock title="Devices Page">
                 <Text className="text-xl dark:text-white">
-                    Last drank
+                    Embed graph here
                 </Text>
-                <View className="flex-row flex-wrap my-2">
-                    <Tag name="Independent"></Tag>
-                    <Tag name="Likes coffee"></Tag>
-                    <Tag name="Aggressive"></Tag>
-                    <Tag name="Four"></Tag>
-                    <Tag name="Five"></Tag>
-                    <Tag name="Six"></Tag>
-                    <Tag name="Seven"></Tag>
-                    <Tag name="Eight"></Tag>
-                    <Tag name="Nine"></Tag>
-                </View>
-            </View>
-            <View className="mx-6 bg-gray-200 px-7 py-4 flex flex-col justify-between rounded-xl dark:bg-neutral-800">
-                <View>
-                    <Text className="text-xl font-bold dark:text-white">
-                        Progress to target
-                    </Text>
-                    <Text className="text-xl dark:text-white">
-                        Data here (tap to read more)
-                    </Text>
-                </View>
-            </View>
-            <View className="mx-6 bg-gray-200 px-7 py-4 flex flex-col justify-between rounded-xl dark:bg-neutral-800">
-                <Text className="text-xl font-bold dark:text-white">
-                    Favourite drink
-                </Text>
-                <Text className="text-xl dark:text-white">
-                    Tea
-                </Text>
-            </View>
-            <View className="mx-6 bg-gray-200 px-7 py-4 flex flex-col justify-between rounded-xl dark:bg-neutral-800">
-                <Text className="text-xl font-bold dark:text-white">
-                    Location
-                </Text>
-                <Text className="text-xl dark:text-white">
-                    Room 101
-                </Text>
-            </View>
-            <View className="flex flex-col justify-center items-center">
-                <View className="my-2">
-                    <StyledButton
-                        text="Link jug to member"
-                        textClass="text-lg"
-                    />
-                </View>
-                <View className="my-2">
-                    <StyledButton
-                        text="Add drink"
-                        textClass="text-lg"
-                    />
-                </View>
-                <View className="my-2">
-                    <StyledButton
-                        text="Apply tags"
-                        href="apply-tags"
-                        textClass="text-lg"
-                    />
-                </View>
-            </View>
-        </View>
+
+            </MemberInfoBlock>
+
+            <MemberInfoBlock title="Favourite Drink">
+                <Text className="text-xl dark:text-white">Tea</Text>
+            </MemberInfoBlock>
+
+            <MemberInfoBlock title="Location">
+                <Text className="text-xl dark:text-white">Room 101</Text>
+            </MemberInfoBlock>
+
+            <StyledButton
+                text="Add a Device"
+                buttonClass="mt-16 flex flex-row items-center gap-3 rounded-xl px-4 py-3 bg-gray-100 dark:bg-neutral-900"
+                textClass="text-xl dark:text-gray-200"
+                icon={
+                    <View className="flex flex-row w-6">
+                        <Jug width={18} fill={palette.fg} />
+                        <View className="aboslute top-[13px] right-[9px] w-[8px] h-[8px] rounded-xl bg-gray-200 dark:bg-black" />
+                        <FontAwesome
+                            name="plus-circle"
+                            size={14}
+                            left={-16}
+                            top={6}
+                            color={palette.fg}
+                        />
+                    </View>
+                }
+                onPress={() => router.push("edit-device-name-modal")}
+            />
+
+            <StyledButton
+                text="Add a Drink"
+                buttonClass="flex flex-row items-center gap-3 rounded-xl px-4 py-3 bg-gray-100 dark:bg-neutral-900"
+                textClass="text-xl dark:text-gray-200 -ml-[2px]"
+                icon=<MaterialCommunityIcons
+                    name="water-plus-outline"
+                    size={23}
+                    color={palette.fg}
+                />
+                onPress={() => router.push("edit-device-name-modal")}
+            />
+
+           <StyledButton
+                text="Modify Tags"
+                buttonClass="flex flex-row items-center gap-3 rounded-xl px-4 py-3 bg-gray-100 dark:bg-neutral-900"
+                textClass="text-xl dark:text-gray-200 -ml-[2px]"
+                icon=<MaterialCommunityIcons
+                    name="water-plus-outline"
+                    size={23}
+                    color={palette.fg}
+                />
+                onPress={() => router.push("apply-tags")}
+            />
+        </ScrollPageWrapper>
     );
 }
