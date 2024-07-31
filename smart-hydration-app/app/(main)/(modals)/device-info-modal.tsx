@@ -188,7 +188,9 @@ export default function DeviceInfoModal() {
                             size={17}
                             color={palette.border}
                         />
-                        onPress={() => alert("todo: edit device user")}
+                        onPress={() => {
+                            router.push("add-device-to-juguser-modal");
+                        }}
                     />
                 )}
                 <StyledButton

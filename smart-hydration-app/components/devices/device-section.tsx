@@ -30,6 +30,10 @@ export default function DeviceSection({
         return <Loading message="Getting your jugs..." isLoading />;
     }
 
+    if (isInCommunity) {
+        // todo get list of all jugs if in community
+    }
+
     const listItems =
         data?.map((device) => (
             <DeviceRow
