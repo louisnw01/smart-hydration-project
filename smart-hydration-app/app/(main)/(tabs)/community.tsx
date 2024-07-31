@@ -68,7 +68,7 @@ export default function CommunityPage() {
     //     });
     // };
 
-    //filtering only works on strings (not numbers) for now
+    // //filtering only works on strings (not numbers) for now
 
     // useEffect(() => {
     //     if (!data) return;
