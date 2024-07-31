@@ -35,6 +35,7 @@ export const ENDPOINTS = {
     DELETE_COMMUNITY_MEMBER: "/community/delete-member",
     PATIENT_INFO: "/community/patient-info", // get the info through this endpoint
     NAME_FROM_LINK: "/community/name-from-link",
+    JOIN_COMMUNITY: "/community/join",
 
     CREATE_JUG_USER: "/jug-user/create",
     VERIFY_EMAIL: "/user/verify",

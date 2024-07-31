@@ -130,21 +130,21 @@ export const communityInviteLinkQAtom = atomWithQuery((get) => ({
 
 export const joinCommunityMAtom = atomWithMutation((get) => ({
     mutationKey: ["join-community", get(authTokenAtom)],
-    enabled: !!get(authTokenAtom),
-    mutationFn: async (formData: { code: string }) => {
+    enabled: !!get(authTokenAtom) && !!get(inviteCodeAtom),
+    mutationFn: async () => {
         const token = get(authTokenAtom);
-        const response = await request(
-            SERVER_URL + `/community/invite/${formData.code}`,
+        const code = get(inviteCodeAtom);
+        const response = await request(ENDPOINTS.JOIN_COMMUNITY,
             {
                 method: "post",
                 auth: token as string,
-                rawUrl: true,
+                body: {code: code},
             },
         );
 
         if (!response.ok) {
             const error = await response.json();
-            return error.detail;
+            throw new Error(error.detail);
         }
     },
     onSuccess: () => {

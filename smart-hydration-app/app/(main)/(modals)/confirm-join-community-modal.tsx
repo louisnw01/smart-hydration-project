@@ -5,7 +5,7 @@ import { useAtom, useAtomValue } from "jotai";
 import { inviteCodeAtom } from "@/atom/user";
 import { useEffect, useState } from "react";
 import { router } from "expo-router";
-import { communityNameQAtom } from "@/atom/query/community";
+import { communityNameQAtom, joinCommunityMAtom } from "@/atom/query/community";
 import Loading from "@/components/common/loading";
 
 export default function ConfirmJoinCommunityModal(){
@@ -16,6 +16,7 @@ export default function ConfirmJoinCommunityModal(){
     const [errorMessage, setErrorMessage] = useState("");
     const [name, setName] = useState("");
     const [disabled, setDisabled] = useState(true);
+    const {mutate, isSuccess, error: mutateError} = useAtomValue(joinCommunityMAtom);
 
     useEffect(() => {
         if(!inviteCode){
@@ -28,6 +29,7 @@ export default function ConfirmJoinCommunityModal(){
         if(error) {
             setDisabled(true);
             setErrorMessage(error.message);
+            setInviteCode("");
             return;
         }
         if(data){
@@ -37,6 +39,20 @@ export default function ConfirmJoinCommunityModal(){
         }
 
     }, [error, data])
+
+    useEffect(() => {
+        if(mutateError) {
+            setDisabled(true);
+            setErrorMessage(mutateError.message);
+            return;
+        } else if(isSuccess) {
+            setDisabled(false);
+            setErrorMessage("");
+            setInviteCode("");
+            router.replace("(tabs)/community");
+        }
+
+    }, [isSuccess, mutateError])
 
     return (
         <View className="mt-8 flex gap-6 mx-6">
@@ -49,14 +65,16 @@ export default function ConfirmJoinCommunityModal(){
             <Text className="text-xl font-light text-center text-red">
                 {errorMessage}
             </Text> )}
+            {!error && (
             <StyledButton 
                         text="Join"
                         buttonClass="bg-green self-center rounded-xl" 
                         textClass="text-white text-lg font-semibold"
                         disabled={disabled}
-                        />
+                        onPress={() => mutate()}
+                        />)}
             <StyledButton 
-                        text="Cancel"
+                        text={error ? "Back" : "Cancel"}
                         buttonClass="bg-red self-center rounded-xl" 
                         textClass="text-white text-lg font-semibold"
                         onPress={() => {
