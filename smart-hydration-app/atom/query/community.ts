@@ -255,7 +255,6 @@ export const createTagMAtom = atomWithMutation((get) => ({
         }
     },
     onSuccess: () => {},
-    // only enabled if auth and user doesn't have a community
     enabled: !!get(authTokenAtom) && !get(userHasCommunityAtom),
 }));
 

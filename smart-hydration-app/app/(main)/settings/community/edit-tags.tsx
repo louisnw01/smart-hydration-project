@@ -19,7 +19,6 @@ export default function EditTags({ }: EditTagsProps) {
   const [editTextInput, setEditTextInput] = useState("");
   const [currentTagName, setCurrentTagName] = useState("");   
   const { data, refetch: refetchTags } = useAtomValue(communityTagsQAtom);
-  console.log("Data from target atom:", data);
   const createTagMutate = useAtomValue(createTagMAtom).mutate;
   const updateTagMutate = useAtomValue(updateTagMAtom).mutate;
   const deleteTagMutate = useAtomValue(deleteTagMAtom).mutate;
@@ -50,7 +49,6 @@ export default function EditTags({ }: EditTagsProps) {
   }, []);
 
   const router = useRouter();
-  
   const [tags, setTags] = useState<TagInfo[]>([]);
 
   useEffect(() => {
@@ -129,6 +127,11 @@ export default function EditTags({ }: EditTagsProps) {
             textClass="text-lg"
             onPress={toggleSortDirection}
           />
+          {tags.length === 0 && (
+            <Text className="dark:text-white text-xl">
+              There are no tags in this community. Please add some
+            </Text>
+          )}
           <View className="flex-col justify-start mx-6">
             {tags.map((tag) => (
               <View key={tag.name} className="">
