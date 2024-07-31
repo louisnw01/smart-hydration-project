@@ -6,6 +6,8 @@ import GenericOnboardContent from "./generic-onboard-content";
 import { jugUserInfoAtom } from "@/atom/jug-user";
 import StyledTextInput from "../common/text-input";
 import { router } from "expo-router";
+import KeyboardScrollView from "../common/keyboard-scrollview";
+import OnboardingHeader from "./onboarding-header";
 
 interface NameProps {
     isOnboarding: boolean;
@@ -34,6 +36,8 @@ export default function Name({ isOnboarding, pronoun, nextHref }: NameProps) {
 
     return (
         <GenericOnboardContent nextHref={nextHref} proceed={proceed}>
+            <View className="py-4"/>
+            <OnboardingHeader text="What is your name?" />
             <StyledTextInput
                 title="Name"
                 placeholder="John Doe"
@@ -52,6 +56,7 @@ export default function Name({ isOnboarding, pronoun, nextHref }: NameProps) {
                     {errorMessage}
                 </Text>
             </View>
+          
         </GenericOnboardContent>
     );
 }

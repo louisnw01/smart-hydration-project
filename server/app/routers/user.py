@@ -176,6 +176,8 @@ async def add_push_token(form: PushTokenForm, user_id: str = Depends(auth_user))
 
 @router.post("/remove-push-token")
 async def delete_push_token(form: PushTokenForm, user_id: str = Depends(auth_user)):
+    if not form.pushToken:
+        return
     with db_session:
         token = Notifications.get(expo_token=form.pushToken, user=user_id)
         if token is not None:

@@ -6,6 +6,7 @@ import GenericOnboardContent from "./generic-onboard-content";
 import { jugUserInfoAtom } from "@/atom/jug-user";
 import StyledTextInput from "../common/text-input";
 import { router } from "expo-router";
+import OnboardingHeader from "./onboarding-header";
 
 interface DobProps {
     isOnboarding: boolean;
@@ -64,6 +65,8 @@ export default function Dob({ isOnboarding, nextHref }: DobProps) {
 
     return (
         <GenericOnboardContent nextHref={nextHref} proceed={proceed}>
+        <View className="py-4"/>
+        <OnboardingHeader text="What is your date of birth?" />
             <StyledTextInput
                 requiredIcon
                 title="Date of Birth"
