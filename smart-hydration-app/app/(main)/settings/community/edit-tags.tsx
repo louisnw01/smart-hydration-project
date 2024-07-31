@@ -6,7 +6,7 @@ import EditTagRow from "@/components/community/edit-tag-row";
 import StyledTextInput from "@/components/common/text-input";
 import PageWrapper from "@/components/common/page-wrapper";
 import { FilterObject, TagInfo } from "@/interfaces/community";
-import { createTagMAtom, updateTagMAtom, deleteTagMAtom, communityInfoQAtom } from "@/atom/query/community";
+import { createTagMAtom, updateTagMAtom, deleteTagMAtom } from "@/atom/query/community";
 import { useAtomValue } from "jotai";
 
 export interface EditTagsProps { }
@@ -19,9 +19,8 @@ export default function EditTags({ }: EditTagsProps) {
   const [editTextInput, setEditTextInput] = useState("");
   const [currentTagName, setCurrentTagName] = useState("");
   const createTagMutate = useAtomValue(createTagMAtom).mutate;
-  const updateTagMutate = useAtomValue(createTagMAtom).mutate;
-  const deleteTagMutate = useAtomValue(createTagMAtom).mutate;
-  const communityInfo = useAtomValue(communityInfoQAtom); //needed to get name of community
+  const updateTagMutate = useAtomValue(updateTagMAtom).mutate;
+  const deleteTagMutate = useAtomValue(deleteTagMAtom).mutate;
   const [filters, setFilters] = useState<FilterObject>({
     searchTerm: "",
     sort: "asc",
@@ -82,13 +81,15 @@ export default function EditTags({ }: EditTagsProps) {
       setCurrentTagName("");
       setEditTextInput("");
       setShowEditTagBox(false);
+      updateTagMutate({currentName: currentTagName, newName: editTextInput})
     }
   };
 
-  const handleDeleteTag = (tagName: string) => {
-    if (tagName !== '') {
-      const filteredArray = tags.filter(item => item.name !== tagName);
+  const handleDeleteTag = (deletedTagName: string) => {
+    if (deletedTagName !== '') {
+      const filteredArray = tags.filter(item => item.name !== deletedTagName);
       setTags(filteredArray);
+      deleteTagMutate({tagName: deletedTagName})
     }
   };
 
@@ -100,7 +101,7 @@ export default function EditTags({ }: EditTagsProps) {
       setTags([...tags, newTag]);
       setNewTextInput("");
       toggleNewTagSection();
-      createTagMutate({tagName: newTagName, communityName: communityInfo.data.name});
+      createTagMutate({tagName: newTagName});
     }
   };
 

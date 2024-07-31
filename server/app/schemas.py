@@ -83,8 +83,7 @@ class ToggleNotificationsForm(BaseModel):
 
 class CreateTagForm(BaseModel):
     tagName: str
-    communityName: str
-
+    
 
 class UpdateTagForm(BaseModel):
     currentName: str

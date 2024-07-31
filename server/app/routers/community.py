@@ -200,7 +200,10 @@ async def create_tag(form: CreateTagForm, user_id: str = Depends(auth_user)):
         user = User.get(id=user_id)
         if not user:
             raise HTTPException(status_code=400, detail="User not found")
-        community = Community.get(name=form.communityName)
+        member = user.community_member
+        if member is None:
+            raise HTTPException(status_code=400, detail="User is not associated with a community")
+        community = member.community
         if not community:
             raise HTTPException(status_code=400, detail="Community not found")
         tag = Tag(name=form.tagName, community=community)
