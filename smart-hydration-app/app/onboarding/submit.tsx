@@ -5,10 +5,11 @@ import StyledButton from "@/components/common/button";
 import Loading from "@/components/common/loading";
 import GenericOnboardContent from "@/components/onboarding/generic-onboard-content";
 import OnboardingButton from "@/components/onboarding/onboarding-button";
+import OnboardingHeader from "@/components/onboarding/onboarding-header";
 import { useRouter } from "expo-router";
 import { useAtomValue, useSetAtom } from "jotai";
 import { useEffect } from "react";
-import { Text } from "react-native";
+import { Text, View } from "react-native";
 
 export default function SubmitPage() {
     const router = useRouter();
@@ -32,6 +33,8 @@ export default function SubmitPage() {
 
     return (
         <GenericOnboardContent proceed={true}>
+            <View className="py-4"/>
+            <OnboardingHeader text="You're almost there!" />
             <Text className="text-xl font-light text-center">
                 Tap the button to set up your Smart Hydration profile.
             </Text>

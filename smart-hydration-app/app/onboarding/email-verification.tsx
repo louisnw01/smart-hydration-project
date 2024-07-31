@@ -10,6 +10,7 @@ import * as Linking from "expo-linking";
 import StyledButton from "@/components/common/button";
 import { FontAwesome } from '@expo/vector-icons';
 import useColorPalette from "@/util/palette";
+import OnboardingHeader from "@/components/onboarding/onboarding-header";
 
 
 export default function EmailVerificationPage() {
@@ -51,6 +52,8 @@ export default function EmailVerificationPage() {
 
     return (
         <GenericOnboardContent proceed={true}>
+            <View className="py-4"/>
+            <OnboardingHeader text="Verify your email" />
             <Text className="text-xl font-light dark:text-white">
                 You haven't verified your email address yet. Please check your emails and click on the verification link to allow login.
             </Text>
