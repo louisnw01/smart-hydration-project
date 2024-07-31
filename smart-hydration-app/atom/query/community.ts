@@ -242,7 +242,7 @@ export const linkJugsToCommunityMemberMAtom = atomWithMutation((get) => ({
 
 export const createTagMAtom = atomWithMutation((get) => ({
     mutationKey: ["create-tag", get(authTokenAtom)],
-    mutationFn: async (formData: { tagName: string, communityName: string }) => {
+    mutationFn: async (formData: { tagName: string }) => {
         const token = get(authTokenAtom);
         const response = await request(ENDPOINTS.CREATE_TAG, {
             method: "post",
@@ -262,7 +262,7 @@ export const createTagMAtom = atomWithMutation((get) => ({
 export const updateTagMAtom = atomWithMutation((get) => ({
     mutationKey: ["update-tag", get(authTokenAtom)],
     enabled: !!get(authTokenAtom),
-    mutationFn: async (formData: { tagName: string, communityName: string }) => {
+    mutationFn: async (formData: { currentName: string, newName: string }) => {
         const token = get(authTokenAtom);
         const response = await request(ENDPOINTS.UPDATE_TAG, {
             method: "post",
@@ -279,7 +279,7 @@ export const updateTagMAtom = atomWithMutation((get) => ({
 export const deleteTagMAtom = atomWithMutation((get) => ({
     mutationKey: ["delete-tag", get(authTokenAtom)],
     enabled: !!get(authTokenAtom),
-    mutationFn: async (formData: { tagName: string, communityName: string }) => {
+    mutationFn: async (formData: { tagName: string }) => {
         const token = get(authTokenAtom);
         const response = await request(ENDPOINTS.DELETE_TAG, {
             method: "post",
