@@ -9,6 +9,8 @@ import { FilterObject, TagInfo } from "@/interfaces/community";
 import { createTagMAtom, updateTagMAtom, deleteTagMAtom, communityTagsQAtom } from "@/atom/query/community";
 import { useAtomValue } from "jotai";
 
+//to do: add loading spinner while tags load
+
 export interface EditTagsProps { }
 
 export default function EditTags({ }: EditTagsProps) {
