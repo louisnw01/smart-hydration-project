@@ -1,16 +1,15 @@
-import { useState } from "react";
-import { View, Text, SectionList, Pressable } from "react-native";
-import { useAtom, useAtomValue } from "jotai";
-import { getAllJugsQAtom, getJugDataQAtom } from "@/atom/query";
-import { useNavigation } from "expo-router";
-import Loading from "@/components/common/loading";
 import {
-    selectedCommunityMemberAtom,
     selectedJugsForMemberAtom,
     selectedMemberAtom,
 } from "@/atom/community";
+import { getJugDataQAtom } from "@/atom/query";
 import { linkJugsToCommunityMemberMAtom } from "@/atom/query/community";
-
+import StyledButton from "@/components/common/button";
+import Loading from "@/components/common/loading";
+import { useNavigation } from "expo-router";
+import { useAtom, useAtomValue } from "jotai";
+import { useState } from "react";
+import { Pressable, SectionList, Text, View } from "react-native";
 
 export default function AddDeviceMemberModal() {
     const { data, isLoading, refetch } = useAtomValue(getJugDataQAtom);
@@ -71,8 +70,8 @@ export default function AddDeviceMemberModal() {
                             style={{
                                 ...(selectedJugs.has(item)
                                     ? {
-                                        backgroundColor: "rgb(90, 240, 130)",
-                                    }
+                                          backgroundColor: "rgb(90, 240, 130)",
+                                      }
                                     : undefined),
                                 // backgroundColor: selectedJugs.has(item)
                                 //     ? "rgb(90, 240, 130)"
