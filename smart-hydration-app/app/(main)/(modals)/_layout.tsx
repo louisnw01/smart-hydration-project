@@ -22,7 +22,7 @@ export default function ModalLayout() {
                     const router = useRouter();
                     return (
                         <Pressable onPress={() => {
-                            router.canGoBack() ? router.back() : router.replace("(tabs)")}}>
+                            router.canGoBack() ? router.back() : router.replace("(tabs)/community")}}>
                             <Entypo
                                 name={
                                     Platform.OS == "android"

@@ -42,7 +42,7 @@ async def register(form: UserRegister):
         raise HTTPException(status_code=400, detail="email already registered")
     hashed_password = get_hash(form.password)
     with db_session:
-        user = create_user(form.name, form.email, hashed_password)
+        user = create_user(form.name, form.email, hashed_password, form.mode)
         if not user.jug_user:
             create_jug_user(user)
             jug_user_id = user.jug_user.id

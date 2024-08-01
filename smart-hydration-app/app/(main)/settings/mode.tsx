@@ -1,11 +1,11 @@
-import { userModeAtom } from "@/atom/user";
+import { authTokenAtom, userModeAtom } from "@/atom/user";
 import {
     MultiSelectOptionBlock,
 } from "@/components/common/option-block";
 import { SectionList, View } from "react-native";
 import { Ionicons, FontAwesome6, Fontisto } from "@expo/vector-icons";
 import { ISettingsSection } from "@/interfaces/settings";
-import { useAtomValue } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import { changeUserModeMAtom } from "@/atom/query/user";
 
 const settingsList: ISettingsSection[] = [
@@ -15,7 +15,7 @@ const settingsList: ISettingsSection[] = [
             {
                 name: "Standard",
                 component: (name, isFirst, isLast) => {
-                    const { mutate } = useAtomValue(changeUserModeMAtom)
+                    const { mutate } = useAtomValue(changeUserModeMAtom);
                     return (
                         <MultiSelectOptionBlock
                             text={name}
@@ -29,7 +29,7 @@ const settingsList: ISettingsSection[] = [
                             }
                             isFirst={isFirst}
                             isLast={isLast}
-                            onPress={mutate}
+                            onPress={ ()=> {!!authTokenAtom && mutate()}}
                         />
                     );
                 },
@@ -37,7 +37,7 @@ const settingsList: ISettingsSection[] = [
             {
                 name: "Accessible",
                 component: (name, isFirst, isLast) => {
-                    const { mutate } = useAtomValue(changeUserModeMAtom)
+                    const { mutate } = useAtomValue(changeUserModeMAtom);
                     return (
                         <MultiSelectOptionBlock
                             text={name}
@@ -51,7 +51,7 @@ const settingsList: ISettingsSection[] = [
                             }
                             isFirst={isFirst}
                             isLast={isLast}
-                            onPress={mutate}
+                            onPress={ ()=> {!!authTokenAtom && mutate()}}
                         />
                     );
                 },
@@ -59,7 +59,7 @@ const settingsList: ISettingsSection[] = [
             {
                 name: "Carer",
                 component: (name, isFirst, isLast) => {
-                    const { mutate } = useAtomValue(changeUserModeMAtom)
+                    const { mutate } = useAtomValue(changeUserModeMAtom);
                     return (
                         <MultiSelectOptionBlock
                             text={name}
@@ -73,7 +73,7 @@ const settingsList: ISettingsSection[] = [
                             }
                             isFirst={isFirst}
                             isLast={isLast}
-                            onPress={mutate}
+                            onPress={ ()=> {!!authTokenAtom && mutate()}}
                         />
                     );
                 },

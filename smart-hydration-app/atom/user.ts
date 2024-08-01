@@ -4,6 +4,7 @@ import { UserMode } from "@/constants/user";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { atomWithStorage, createJSONStorage } from "jotai/vanilla/utils";
+import { RegistrationInfo } from "@/interfaces/user";
 
 export const registerInfoAtom = atom<Partial<RegistrationInfo>>({});
 
