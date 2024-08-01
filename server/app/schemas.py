@@ -6,8 +6,10 @@ class UserLogin(BaseModel):
     email: str
     password: str
 
+
 class TargetUpdate(BaseModel):
     newValue: int
+
 
 class AddJugsToMemberForm(BaseModel):
     jugIds: List[str]
@@ -49,6 +51,11 @@ class AddDrinkForm(BaseModel):
     name: str
     capacity: int
 
+class AddCommunityDrinkForm(BaseModel):
+    juser_id: int
+    timestamp: int
+    name: str
+    capacity: int
 
 class CreateCommunityForm(BaseModel):
     name: str
@@ -78,6 +85,24 @@ class PushTokenForm(BaseModel):
 class ToggleNotificationsForm(BaseModel):
     notificationSelection: str
     pushToken: str
+
+
+class CreateTagForm(BaseModel):
+    tagName: str
+
+
+class UpdateTagForm(BaseModel):
+    currentName: str
+    newName: str
+
+
+class DeleteTagForm(BaseModel):
+    tagName: str
+
+
+class AddTagsPatientForm(BaseModel):
+    memberID: int
+    memberTags: List[str]
 
 
 class ChangeModeForm(BaseModel):

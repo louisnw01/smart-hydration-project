@@ -3,11 +3,20 @@ import {
     atomWithMutation,
     queryClientAtom,
 } from "jotai-tanstack-query";
-import { authTokenAtom, notificationFrequencyAtom, notificationsAtom, pushTokenAtom, registerInfoAtom } from "./user";
+import {
+    authTokenAtom,
+    notificationFrequencyAtom,
+    notificationsAtom,
+    pushTokenAtom,
+    registerInfoAtom,
+} from "./user";
 import { ENDPOINTS, request } from "@/util/fetch";
 import { DeviceInfo, ITimeSeries } from "@/interfaces/device";
 import { jugUserInfoAtom } from "./jug-user";
 import { selectedMemberAtom } from "./community";
+import { useAtomValue } from "jotai";
+import { MemberInfo } from "@/interfaces/community";
+import { communityInfoQAtom } from "./query/community";
 
 export const linkJugsToMemberMAtom = atomWithMutation((get) => ({
     mutationKey: ["/community/link-jug-to-member", get(authTokenAtom)],
@@ -205,7 +214,7 @@ export const userInfoQAtom = atomWithQuery((get) => ({
     enabled: !!get(authTokenAtom),
 }));
 
-async function fetchJugData(jugUserId: number, token: string) {
+export async function fetchJugData(jugUserId: number, token: string) {
     const response = await request(ENDPOINTS.FETCH_COMMUNITY, {
         query: { jug_user_id: jugUserId },
         auth: token as string,
@@ -399,21 +408,19 @@ export const removePushTokenMAtom = atomWithMutation((get) => ({
     },
 }));
 
-
 export const toggleNotificationsMAtom = atomWithMutation((get) => ({
     mutationKey: ["/user/toggle-notifications", get(authTokenAtom)],
     mutationFn: async () => {
         const token = get(authTokenAtom);
         const selection = get(notificationsAtom);
         const pushToken = get(pushTokenAtom);
-        const formData: {notificationSelection: string, pushToken: string} = 
-            {
-                notificationSelection: selection as string,
-                pushToken: pushToken as string
-            };
+        const formData: { notificationSelection: string; pushToken: string } = {
+            notificationSelection: selection as string,
+            pushToken: pushToken as string,
+        };
         const response = await request(ENDPOINTS.TOGGLE_NOTIFICATIONS, {
             method: "post",
-            body:formData,
+            body: formData,
             auth: token as string,
         });
 
@@ -434,16 +441,18 @@ export const toggleNotificationsFrequencyMAtom = atomWithMutation((get) => ({
         const token = get(authTokenAtom);
         const selection = get(notificationFrequencyAtom);
         const pushToken = get(pushTokenAtom);
-        const formData: {notificationSelection: string, pushToken: string} = 
+        const formData: { notificationSelection: string; pushToken: string } = {
+            notificationSelection: selection as string,
+            pushToken: pushToken as string,
+        };
+        const response = await request(
+            ENDPOINTS.TOGGLE_NOTIFICATIONS_FREQUENCY,
             {
-                notificationSelection: selection as string,
-                pushToken: pushToken as string
-            };
-        const response = await request(ENDPOINTS.TOGGLE_NOTIFICATIONS_FREQUENCY, {
-            method: "post",
-            body:formData,
-            auth: token as string,
-        });
+                method: "post",
+                body: formData,
+                auth: token as string,
+            },
+        );
 
         const object = await response.json();
 
@@ -557,4 +566,120 @@ export const addDrinkMAtom = atomWithMutation((get) => ({
             ],
         );
     },
+}));
+
+export const addTagsPatientMAtom = atomWithMutation((get) => ({
+    mutationKey: ["/jug-user/add-tags-patient", get(authTokenAtom)],
+    enabled: !!get(authTokenAtom),
+    mutationFn: async () => {
+        const member = get(selectedMemberAtom);
+        const formData: {memberID: number, memberTags: string[]} = 
+            {
+                memberID: member.id as number,
+                memberTags: member.tags as string[],
+            };
+            console.log("member id:", member.id);
+            console.log("member tags:", member.tags);
+        const token = get(authTokenAtom);
+        const response = await request(ENDPOINTS.ADD_TAGS_PATIENT, {
+            method: "post",
+            body: formData,
+            auth: token as string,
+        });
+
+        if (!response.ok) {
+            return "failure";
+        }
+      }, 
+    onSuccess: (data, formData) => {
+        const queryClient = get(queryClientAtom);
+        void queryClient.setQueryData(
+            ["/community/get-patient-info", get(authTokenAtom)],
+            (prev: MemberInfo[]) => [
+                ...prev,
+                { tags: formData.memberTags },
+            ],
+        );
+    },
+}));
+
+export const addCommunityDrinkMAtom = atomWithMutation((get) => ({
+    mutationKey: ["/community/add-community-drink-event", get(authTokenAtom)],
+    enabled: !!get(authTokenAtom),
+    mutationFn: async (formData: {
+        juser_id: number;
+        timestamp: number;
+        name: string;
+        capacity: number;
+    }) => {
+        const token = get(authTokenAtom);
+        const response = await request(ENDPOINTS.ADD_COMMUNITY_DRINK, {
+            method: "post",
+            body: formData,
+            auth: token as string,
+        });
+
+        if (!response.ok) {
+            return "failure";
+        }
+    },
+    onSuccess: (data, formData) => {
+        const queryClient = get(queryClientAtom);
+        void queryClient.setQueryData(
+            ["/data/historical", get(authTokenAtom)],
+            (prev: DeviceInfo[]) => [
+                ...prev,
+                { time: formData.timestamp * 1000, value: formData.capacity },
+            ],
+        );
+    },
+}));
+
+export const linkJugToMemberMAtom = atomWithMutation((get) => ({
+    mutationKey: ["/user/link-jug", get(authTokenAtom)],
+    enabled: !!get(authTokenAtom),
+    mutationFn: async (jugIds: string[]) => {
+        const token = get(authTokenAtom);
+        const response = await request(ENDPOINTS.LINK_JUG_TO_USER, {
+            method: "post",
+            body: { jugIds: jugIds },
+            auth: token as string,
+        });
+
+        if (!response.ok) {
+            throw new Error("Jug could not be linked to user");
+        }
+
+        return;
+    },
+    onSuccess: () => {
+        const queryClient = get(queryClientAtom);
+        void queryClient.invalidateQueries({ queryKey: ["get-jug-data"] });
+        void queryClient.invalidateQueries({
+            queryKey: ["/data/historical"],
+        });
+    },
+}));
+
+export async function fetchCommunityJugData(jugUserId: number, token: string) {
+    const response = await request(ENDPOINTS.FETCH_COMMUNITY_JUG_LIST, {
+        query: { jug_user_id: jugUserId },
+        auth: token as string,
+    });
+
+    if (!response.ok) {
+        throw new Error("Jug Data for Community Could Not Be Found");
+    }
+    return await response.json();
+}
+
+export const getCommunityJugDataQAtom = atomWithQuery((get) => ({
+    queryKey: ["get-community-jug-data", get(authTokenAtom)],
+    queryFn: async ({ queryKey: [, token] }): Promise<DeviceInfo[]> => {
+        const { data } = get(userInfoQAtom);
+        const jugUserId = data?.juguser;
+
+        return await fetchCommunityJugData(jugUserId, token);
+    },
+    enabled: !!get(authTokenAtom) && !get(userInfoQAtom).isLoading,
 }));
