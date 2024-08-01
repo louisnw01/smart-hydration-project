@@ -32,6 +32,7 @@ async def get_community_jug_status(jug_user_id: int, user_id: str = Depends(auth
             jug_data['name'] = jug['name']
             jug_data['id'] = jug['smart_hydration_id']
             devices_info.append(jug_data)
+        print(devices_info)
         return devices_info
 
 
