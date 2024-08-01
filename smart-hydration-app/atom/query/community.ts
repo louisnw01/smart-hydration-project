@@ -301,7 +301,6 @@ export const getCommunityJugDataQAtom = atomWithQuery((get) => ({
     queryFn: async ({ queryKey: [, token] }): Promise<DeviceInfo[]> => {
         const { data } = get(userInfoQAtom);
         const jugUserId = data?.juguser;
-        console.log("GOT ERE");
 
         return await fetchCommunityJugData(jugUserId, token);
     },
