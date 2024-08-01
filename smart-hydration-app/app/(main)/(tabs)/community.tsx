@@ -1,7 +1,7 @@
 import StyledButton from "@/components/common/button";
 import PageWrapper from "@/components/common/page-wrapper";
-import { useAtomValue } from "jotai";
-import { useEffect, useState } from "react";
+import { useAtomValue, useAtom } from "jotai";
+import React, { useEffect, useState } from "react";
 import {
     FlatList,
     Pressable,
@@ -20,6 +20,8 @@ import Loading from "@/components/common/loading";
 import StyledTextInput from "@/components/common/text-input";
 import MemberRow from "@/components/community/member-row";
 import { FilterObject, MemberInfo } from "@/interfaces/community";
+import { SelectList } from "react-native-dropdown-select-list";
+import { selectedSortMethodAtom } from "@/atom/community";
 
 //for now (basic user flow), Community tab is shown as 4th tab
 //TODO: for care home mode, replace home screen with Community tab
@@ -41,52 +43,61 @@ export default function CommunityPage() {
         searchTerm: "",
         sort: "asc",
     });
+    const [selected, setSelected] = useAtom(selectedSortMethodAtom);
+    const [ascDesc, setAscDesc] = React.useState("asc");
 
     useEffect(() => {
         if (!data) return;
 
-        const filteredData = data.filter((member) => {
-            return (
-                member.name
-                    .toLowerCase()
-                    .indexOf(filters.searchTerm.toLowerCase()) > -1
-            );
-        });
+        const filteredData = data.filter((member) =>
+            member.name
+                .toLowerCase()
+                .includes(filters.searchTerm.toLowerCase()),
+        );
 
         const sortedData = filteredData.sort((a, b) => {
-            const comparison = a.name
-                .toLowerCase()
-                .localeCompare(b.name.toLowerCase());
+            let comparison = 0;
+
+            switch (selected) {
+                case "1":
+                    comparison = a.name
+                        .toLowerCase()
+                        .localeCompare(b.name.toLowerCase());
+                    console.log("Sorting by name");
+                    break;
+                case "2":
+                    comparison = a.target_percentage - b.target_percentage;
+                    console.log("Sorting by %");
+
+                    break;
+                case "3":
+                    comparison = a.drank_today - b.drank_today;
+                    console.log("Sorting by drank today");
+
+                    break;
+                case "4":
+                    comparison = a.last_drank - b.last_drank;
+                    console.log("Sorting by last drank");
+
+                    break;
+            }
+
             return filters.sort === "asc" ? comparison : -comparison;
         });
 
-        const filteredComponents = sortedData.map((member) => (
-            <MemberRow member={member} />
-        ));
-
-        filteredComponents.push(
-            <View className="mt-8 flex gap-6">
-                <View className="flex flex-row justify-center">
-                    <StyledButton
-                        text="+ Add a member"
-                        href="add-jug-user"
-                        textClass="text-lg"
-                    />
-                </View>
-            </View>,
-        );
-
-        setFilteredData(
-            filteredData.sort((a, b) => {
-                const comparison = a.name
-                    .toLowerCase()
-                    .localeCompare(b.name.toLowerCase());
-                return filters.sort === "asc" ? comparison : -comparison;
-            }),
-        );
-    }, [textInput, filters, data]);
+        setFilteredData(sortedData);
+    }, [data, filters, selected, textInput]);
 
     const handleSortPress = () => {
+        setFilters((prev) => ({
+            ...prev,
+            sort: prev.sort === "asc" ? "desc" : "asc",
+        }));
+    };
+
+    const handleSortChange = (val: string) => {
+        console.log("changing sort to " + val);
+        setSelected(val);
         setFilters((prev) => ({
             ...prev,
             sort: prev.sort === "asc" ? "desc" : "asc",
@@ -116,6 +127,13 @@ export default function CommunityPage() {
     if (isLoading || patientInfoIsLoading) {
         return <Loading isLoading />;
     }
+
+    const sortMethod = [
+        { key: "1", value: "Name" },
+        { key: "2", value: "% To Target" },
+        { key: "3", value: "Amount Drank Today" },
+        { key: "4", value: "Last Drank" },
+    ];
 
     if (!hasCommunity) {
         return (
@@ -155,6 +173,36 @@ export default function CommunityPage() {
     } else {
         return (
             <PageWrapper>
+                <View className="flex-row px-4 pt-4 pr ">
+                    <Text className="py-3 text-xl font-semibold">
+                        Sort by:{" "}
+                    </Text>
+                    <SelectList
+                        setSelected={(val) => {
+                            handleSortChange(val);
+                        }}
+                        data={sortMethod}
+                        save="key"
+                        search={false}
+                        boxStyles={{
+                            borderColor: "#f0f0f0",
+                            width: "80%",
+                        }}
+                        dropdownStyles={{
+                            width: "125%",
+                            transform: [{ translateX: -68 }],
+                            borderColor: "#f0f0f0",
+                        }}
+                    />
+
+                    <View className="absolute w-20 h-[3.3rem] right-4 top-4 bg-blue px-4 py-2 rounded-xl ml-2">
+                        <Pressable onPress={handleSortPress}>
+                            <Text className="pt-2 text-center text-2l font-semibold text-white">
+                                {`${filters.sort === "asc" ? "Asc" : "Desc"}`}
+                            </Text>
+                        </Pressable>
+                    </View>
+                </View>
                 <View className="flex-1">
                     <View className="flex-1">
                         {/* <ScrollView
@@ -171,17 +219,7 @@ export default function CommunityPage() {
                                 This community only contains example members
                             </Text>
                         )*/}
-                        <View className="flex flex-row mx-2 items-center my-2">
-                            <Pressable
-                                onPress={handleSortPress}
-                                className="bg-blue px-4 py-2 rounded-xl ml-2"
-                            >
-                                <Text className="text-2l font-semibold text-white">
-                                    {`Sort by name ${filters.sort === "asc" ? "A-Z" : "Z-A"}`}
-                                </Text>
-                            </Pressable>
-                        </View>
-
+                        <View className="py-2"></View>
                         <FlatList
                             data={filteredData || []}
                             contentContainerClassName="flex gap-6"
