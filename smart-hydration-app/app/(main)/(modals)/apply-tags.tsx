@@ -6,7 +6,8 @@ import Tag from "@/components/community/tag";
 import { FilterObject, TagInfo } from "@/interfaces/community";
 import PageWrapper from "@/components/common/page-wrapper";
 import { communityTagsQAtom } from "@/atom/query/community";
-import { useAtomValue } from "jotai";
+import {  addTagsPatientMAtom } from "@/atom/query"
+import { useAtomValue, useSetAtom } from "jotai";
 import { selectedMemberAtom } from "@/atom/community";
 
 const filterAndSortData = (unappliedTags: TagInfo[], filterObj: FilterObject): TagInfo[] => {
@@ -31,7 +32,9 @@ const filterAndSortData = (unappliedTags: TagInfo[], filterObj: FilterObject): T
 export default function ApplyTags() {
     const navigation = useNavigation();
     const member = useAtomValue(selectedMemberAtom);
+    const setMember = useSetAtom(selectedMemberAtom);
     const { data } = useAtomValue(communityTagsQAtom);
+    const addTagsMutate = useAtomValue(addTagsPatientMAtom).mutate;
     //console.log("tag data", data);
     //console.log("current member", member);
     const [inviteLink, setInviteLink] = useState('');
@@ -112,7 +115,15 @@ export default function ApplyTags() {
         setTextInput("");
     };
 
+    const handleSaveTags = () => {
+        //add tags in applied array to member
+        const appliedTagNames = appliedTags.map(tag => tag.name);
+        setMember({ ...member, tags: appliedTagNames });
+        addTagsMutate();
+      };
+
     //to do: add messages for when no tags applied / all tags applied
+    //to do: show message "There are no tags in your community. Ask your owner to add some" when no data
 
     return (
         <PageWrapper>
@@ -146,6 +157,7 @@ export default function ApplyTags() {
                             text="Save member's tags"
                             href="member-info-modal"
                             textClass="text-lg"
+                            onPress={handleSaveTags} 
                         />
                     </View>
                 </View>
