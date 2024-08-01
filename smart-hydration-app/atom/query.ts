@@ -234,7 +234,7 @@ export const getJugDataQAtom = atomWithQuery((get) => ({
 
         return await fetchJugData(jugUserId, token);
     },
-    enabled: !!get(authTokenAtom) && !get(userInfoQAtom).isLoading,
+    enabled: !!get(authTokenAtom) && get(userInfoQAtom).isSuccess,
 }));
 
 export const getPatientJugDataQAtom = atomWithQuery((get) => ({
@@ -271,22 +271,6 @@ export const updateMAtom = atomWithMutation((get) => ({
         const object = await response.json();
         return object.access_token;
     },
-}));
-
-export const getUserQAtom = atomWithQuery((get) => ({
-    queryKey: ["/user/user-name", get(authTokenAtom)],
-    queryFn: async ({ queryKey: [, token] }): Promise<string> => {
-        const response = await request(ENDPOINTS.FETCH_USER, {
-            auth: token as string,
-        });
-
-        if (!response.ok) {
-            throw new Error("User Could Not Be Found");
-        }
-
-        return await response.json();
-    },
-    enabled: !!get(authTokenAtom),
 }));
 
 async function fetchHistoricalJugData(jugUserId: number, token: string) {
