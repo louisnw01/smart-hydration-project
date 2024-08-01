@@ -5,6 +5,7 @@ import StyledButton from "@/components/common/button";
 import Tag from "@/components/community/tag";
 import { FilterObject, TagInfo } from "@/interfaces/community";
 import PageWrapper from "@/components/common/page-wrapper";
+import { communityTagsQAtom } from "@/atom/query/community"; //all tags in community
 
 const filterAndSortData = (unappliedTags: TagInfo[], filterObj: FilterObject): TagInfo[] => {
     const filteredData = unappliedTags.filter((tag) => {
