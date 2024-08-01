@@ -9,12 +9,14 @@ import { router } from "expo-router";
 import * as Linking from "expo-linking";
 import StyledButton from "@/components/common/button";
 import { FontAwesome } from '@expo/vector-icons';
+import useColorPalette from "@/util/palette";
 
 
 export default function EmailVerificationPage() {
     const setAuthAtom = useSetAtom(authTokenAtom);
     const verificationUrl = Linking.useURL();
     const [code, setCode] = useState("");
+    const palette = useColorPalette();
 
     //function to extract verification code from link
     //format = smarthydration://verify_email/auth=xxxxxxxx
@@ -61,9 +63,9 @@ export default function EmailVerificationPage() {
             </View>
                 <View className="flex flex-row items-center justify-center">
                 <CountdownButton 
-                    text="Resend email" 
+                    text="Resend email"
                     mutateAtom={sendVerificationEmailMAtom}
-                    icon=<FontAwesome name="send" size={24} color="black" />/>
+                    icon=<FontAwesome name="send" size={24} color={palette.fg} />/>
                 </View>
                 <StyledButton
                 text="Login as another user"

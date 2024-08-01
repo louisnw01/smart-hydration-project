@@ -8,6 +8,10 @@ export interface MemberInfo {
 }
 
 export interface FilterObject {
-    searchTerm: string;
-    sort: "asc" | "desc";
+  searchTerm: string,
+  sort: "asc" | "desc"
+}
+
+export interface TagInfo {
+  name: string,
 }
