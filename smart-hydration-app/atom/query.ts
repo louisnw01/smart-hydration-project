@@ -440,3 +440,52 @@ export const addDrinkMAtom = atomWithMutation((get) => ({
         );
     },
 }));
+
+export const linkJugToMemberMAtom = atomWithMutation((get) => ({
+    mutationKey: ["/user/link-jug", get(authTokenAtom)],
+    enabled: !!get(authTokenAtom),
+    mutationFn: async (jugIds: string[]) => {
+        const token = get(authTokenAtom);
+        const response = await request(ENDPOINTS.LINK_JUG_TO_USER, {
+            method: "post",
+            body: { jugIds: jugIds },
+            auth: token as string,
+        });
+
+        if (!response.ok) {
+            throw new Error("Jug could not be linked to user");
+        }
+
+        return;
+    },
+    onSuccess: () => {
+        const queryClient = get(queryClientAtom);
+        void queryClient.invalidateQueries({ queryKey: ["get-jug-data"] });
+        void queryClient.invalidateQueries({
+            queryKey: ["/data/historical"],
+        });
+    },
+}));
+
+export async function fetchCommunityJugData(jugUserId: number, token: string) {
+    const response = await request(ENDPOINTS.FETCH_COMMUNITY_JUG_LIST, {
+        query: { jug_user_id: jugUserId },
+        auth: token as string,
+    });
+
+    if (!response.ok) {
+        throw new Error("Jug Data for Community Could Not Be Found");
+    }
+    return await response.json();
+}
+
+export const getCommunityJugDataQAtom = atomWithQuery((get) => ({
+    queryKey: ["get-community-jug-data", get(authTokenAtom)],
+    queryFn: async ({ queryKey: [, token] }): Promise<DeviceInfo[]> => {
+        const { data } = get(userInfoQAtom);
+        const jugUserId = data?.juguser;
+
+        return await fetchCommunityJugData(jugUserId, token);
+    },
+    enabled: !!get(authTokenAtom) && !get(userInfoQAtom).isLoading,
+}));
