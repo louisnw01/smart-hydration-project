@@ -8,8 +8,10 @@ import StyledButton from "../common/button";
 import Loading from "../common/loading";
 import DeviceRow from "./device-row";
 import { AtomWithQueryResult } from "jotai-tanstack-query";
-import { userHasCommunityAtom } from "@/atom/query/community";
-import { getCommunityJugDataQAtom } from "@/atom/community";
+import {
+    userHasCommunityAtom,
+    getCommunityJugDataQAtom,
+} from "@/atom/query/community";
 
 export default function DeviceSection({
     addJugButton,
