@@ -9,6 +9,7 @@ import { DeviceInfo, ITimeSeries } from "@/interfaces/device";
 import { jugUserInfoAtom } from "./jug-user";
 import { selectedMemberAtom } from "./community";
 import { useAtomValue } from "jotai";
+import { MemberInfo } from "@/interfaces/community";
 
 export const linkJugsToMemberMAtom = atomWithMutation((get) => ({
     mutationKey: ["/community/link-jug-to-member", get(authTokenAtom)],
@@ -584,5 +585,17 @@ export const addTagsPatientMAtom = atomWithMutation((get) => ({
         if (!response.ok) {
             return "failure";
         }
-    }
+    }, 
+    onSuccess: (data, formData) => {
+        const queryClient = get(queryClientAtom);
+        void queryClient.setQueryData(
+            ["/community/get-patient-info", get(authTokenAtom)],
+            (prev: MemberInfo[]) => [
+                ...prev,
+                { tags: formData.memberTags },
+            ],
+        );
+    },
 }));
+
+
