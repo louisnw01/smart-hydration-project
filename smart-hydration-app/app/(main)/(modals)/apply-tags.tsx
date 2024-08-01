@@ -5,7 +5,7 @@ import StyledButton from "@/components/common/button";
 import Tag from "@/components/community/tag";
 import { FilterObject, TagInfo } from "@/interfaces/community";
 import PageWrapper from "@/components/common/page-wrapper";
-import { communityTagsQAtom } from "@/atom/query/community"; //all tags in community
+import { communityTagsQAtom } from "@/atom/query/community";
 import { useAtomValue } from "jotai";
 import { selectedMemberAtom } from "@/atom/community";
 
@@ -31,9 +31,13 @@ const filterAndSortData = (unappliedTags: TagInfo[], filterObj: FilterObject): T
 export default function ApplyTags() {
     const navigation = useNavigation();
     const member = useAtomValue(selectedMemberAtom);
+    const { data } = useAtomValue(communityTagsQAtom);
+    //console.log("tag data", data);
+    //console.log("current member", member);
     const [inviteLink, setInviteLink] = useState('');
     const [textInput, setTextInput] = useState("");
     const [filteredUnappliedTags, setFilteredUnappliedTags] = useState<TagInfo[]>([]);
+    const [communityTags, setCommunityTags] = useState<TagInfo[]>([]);
     const [filters, setFilters] = useState<FilterObject>({
         searchTerm: "",
         sort: "asc",
@@ -45,22 +49,28 @@ export default function ApplyTags() {
     const handleUnappliedPress = (tag: TagInfo) => {
         moveToApplied(tag.name);
     };
-    const [appliedTags, setAppliedTags] = useState([
-        { id: 7, name: "independent" },
-        { id: 8, name: "tea" },
-        { id: 9, name: "aggressive" },
-        { id: 10, name: "friendly" },
-        { id: 11, name: "coffee" },
-        { id: 12, name: "one" }
-    ]);
-    const [unappliedTags, setUnappliedTags] = useState([
-        { id: 1, name: "squash" },
-        { id: 2, name: "soda" },
-        { id: 3, name: "needs help" },
-        { id: 4, name: "juice" },
-        { id: 5, name: "six" },
-        { id: 6, name: "seven" }
-    ]);
+    const [appliedTags, setAppliedTags] = useState<TagInfo[]>([]);
+    const [unappliedTags, setUnappliedTags] = useState<TagInfo[]>([]);
+
+    const filterUnappliedTags = () => {
+        const filteredUnappliedTags = communityTags.filter(item => !appliedTags.some(appliedTag => appliedTag.id === item.id));
+        setUnappliedTags(filteredUnappliedTags);
+    };
+
+
+    useEffect(() => {
+        if (data) {
+            const communityTagData: TagInfo[] = data.map((tag: any) => ({ id: tag.id, name: tag.name }));
+            setCommunityTags(communityTagData);
+            const filteredUnappliedTags = communityTagData.filter(item => !appliedTags.some(appliedTag => appliedTag.name === item.name));
+            setUnappliedTags(filteredUnappliedTags);
+        }
+    }, [data, appliedTags]);
+
+    useEffect(() => {
+        const result = filterAndSortData(unappliedTags, filters);
+        setFilteredUnappliedTags(result);
+    }, [textInput, filters, unappliedTags]);
 
     useEffect(() => {
         const result = filterAndSortData(unappliedTags, filters);
@@ -73,19 +83,27 @@ export default function ApplyTags() {
             const filteredArray = appliedTags.filter(item => item.name !== tagName);
             setAppliedTags(filteredArray);
             //add tag to unappliedTags array
-            const newTag = { id: 40, name: tagName }; //hardcoding id temporarily
-            setUnappliedTags([...unappliedTags, newTag]);
+            //const newTag = { id: 40, name: tagName }; //hardcoding id temporarily
+            //setUnappliedTags([...unappliedTags, newTag]);
         }
     };
 
+    const getTagFromName = (tagName: string) => {
+        return communityTags.find(tag => tag.name === tagName);
+    }
+
     const moveToApplied = (tagName: string) => {
         if (tagName !== '') {
-            //remove tag from unappliedTags array
-            const filteredArray = unappliedTags.filter(item => item.name !== tagName);
-            setUnappliedTags(filteredArray);
+            //remove tag from unappliedTags array]
+
+            // const filteredArray = unappliedTags.filter(item => item.name !== tagName);
+            // setUnappliedTags(filteredArray);
             //add tag to appliedTags array
-            const newTag = { id: 41, name: tagName }; //hardcoding id temporarily
-            setAppliedTags([...appliedTags, newTag]);
+            const tagToMove = getTagFromName(tagName);
+            if (tagToMove) {
+                setAppliedTags([...appliedTags, tagToMove]);
+                filterUnappliedTags();
+            }
         }
     };
 
