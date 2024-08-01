@@ -2,7 +2,7 @@ import { amountDrankTodayAtom } from "@/atom/hydration";
 import { userInfoQAtom } from "@/atom/query";
 import colors from "@/colors";
 import useColorPalette from "@/util/palette";
-import { useAtomValue, useSetAtom } from "jotai";
+import { useAtomValue } from "jotai";
 import { Text, TextInput, View } from "react-native";
 import Animated, {
     Easing,
@@ -13,7 +13,6 @@ import Animated, {
 } from "react-native-reanimated";
 import Svg, { Circle, G } from "react-native-svg";
 import WaterAmount from "../common/water-amount";
-import { isInCommunityAtom } from "@/atom/user";
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 const AnimatedTextInput = Animated.createAnimatedComponent(TextInput);
@@ -90,8 +89,7 @@ export function ProgressWheel({
 export default function HydrationProgress() {
     const palette = useColorPalette();
     const amountDrankToday = useAtomValue(amountDrankTodayAtom);
-    const { data, isLoading } = useAtomValue(userInfoQAtom);
-    const setIsInCommunity = useSetAtom(isInCommunityAtom);
+    const { data } = useAtomValue(userInfoQAtom);
     const animatedProgress = useSharedValue(0);
 
     const text = useDerivedValue(() => animatedProgress.value.toFixed(0));
@@ -99,17 +97,17 @@ export default function HydrationProgress() {
         text: text.value,
     }));
 
-    if (!data) return null;
+    const target = data?.target || 2200;
 
-    setIsInCommunity(data.has_community);
+    if (!data) return null;
 
     return (
         <ProgressWheel
             radius={130}
-            max={data.target || 2200}
+            max={target}
             progress={amountDrankToday}
             width={16}
-            color={amountDrankToday >= data.target ? colors.green : colors.blue}
+            color={amountDrankToday >= target ? colors.green : colors.blue}
             backgroundColor={palette.bglight}
             animatedProgress={animatedProgress}
         >
@@ -131,7 +129,7 @@ export default function HydrationProgress() {
                     <Text className="text-2xl font-semibold bottom-1 dark:text-white">
                         /
                     </Text>
-                    <WaterAmount value={data.target || 2200} size="md" />
+                    <WaterAmount value={target} size="md" />
                 </View>
                 <Text className="text-center text-lg dark:text-white mt-3">
                     of your daily target

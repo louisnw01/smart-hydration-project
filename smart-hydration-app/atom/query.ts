@@ -1,13 +1,14 @@
+import { DeviceInfo, ITimeSeries } from "@/interfaces/device";
+import { ENDPOINTS, request } from "@/util/fetch";
+import { atom } from "jotai";
 import {
-    atomWithQuery,
     atomWithMutation,
+    atomWithQuery,
     queryClientAtom,
 } from "jotai-tanstack-query";
-import { authTokenAtom, notificationFrequencyAtom, notificationsAtom, pushTokenAtom, registerInfoAtom } from "./user";
-import { ENDPOINTS, request } from "@/util/fetch";
-import { DeviceInfo, ITimeSeries } from "@/interfaces/device";
-import { jugUserInfoAtom } from "./jug-user";
 import { selectedMemberAtom } from "./community";
+import { jugUserInfoAtom } from "./jug-user";
+import { authTokenAtom, notificationFrequencyAtom, notificationsAtom, pushTokenAtom, registerInfoAtom } from "./user";
 
 export const linkJugsToMemberMAtom = atomWithMutation((get) => ({
     mutationKey: ["/community/link-jug-to-member", get(authTokenAtom)],
@@ -408,7 +409,7 @@ export const toggleNotificationsMAtom = atomWithMutation((get) => ({
         const token = get(authTokenAtom);
         const selection = get(notificationsAtom);
         const pushToken = get(pushTokenAtom);
-        const formData: {notificationSelection: string, pushToken: string} = 
+        const formData: {notificationSelection: string, pushToken: string} =
             {
                 notificationSelection: selection as string,
                 pushToken: pushToken as string
@@ -436,7 +437,7 @@ export const toggleNotificationsFrequencyMAtom = atomWithMutation((get) => ({
         const token = get(authTokenAtom);
         const selection = get(notificationFrequencyAtom);
         const pushToken = get(pushTokenAtom);
-        const formData: {notificationSelection: string, pushToken: string} = 
+        const formData: {notificationSelection: string, pushToken: string} =
             {
                 notificationSelection: selection as string,
                 pushToken: pushToken as string
@@ -560,3 +561,8 @@ export const addDrinkMAtom = atomWithMutation((get) => ({
         );
     },
 }));
+
+export const dailyTargetAtom = atom((get) => {
+    const { data, isLoading } = get(userInfoQAtom);
+    return isLoading ? null : data?.target;
+});
