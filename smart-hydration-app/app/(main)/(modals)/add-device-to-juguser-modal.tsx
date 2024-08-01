@@ -1,9 +1,18 @@
 import { selectedJugIdAtom } from "@/atom/device";
-import { getAllJugsQAtom, linkJugToUserMAtom } from "@/atom/query";
 import {
+    fetchJugData,
+    getAllJugsQAtom,
+    getCommunityJugDataQAtom,
+    getJugDataQAtom,
+    linkJugToUserMAtom,
+} from "@/atom/query";
+import {
+    communityInfoQAtom,
+    isCommunityOwnerAtom,
     linkJugsToCommunityMemberMAtom,
     patientInfoQAtom,
 } from "@/atom/query/community";
+import { authTokenAtom } from "@/atom/user";
 import Loading from "@/components/common/loading";
 import { useNavigation } from "expo-router";
 import { useAtomValue } from "jotai";
@@ -16,6 +25,7 @@ export default function MVPAddDeviceModal() {
     const navigation = useNavigation();
     const selectedJugId = useAtomValue(selectedJugIdAtom);
     const [selectedUser, setSelectedUser] = useState("0");
+    //const communityJugData = getCommunityJugDataQAtom();
     const { mutate: linkJugToCommunityMember } = useAtomValue(
         linkJugsToCommunityMemberMAtom,
     );

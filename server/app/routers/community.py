@@ -3,7 +3,7 @@ import datetime as dt
 from fastapi import APIRouter, Depends, HTTPException
 import pprint
 from pony.orm.core import commit, db_session, delete
-from ..api import get_hydration_events
+from ..api import get_hydration_events, SmartHydrationSession, get_jug_latest
 from ..routers import jug_user
 from ..services import get_user_by_id, try_get_users_community, try_get_users_community
 from ..models import Community, CommunityMember, InviteLink, Jug, User, JugUser
@@ -193,3 +193,28 @@ async def link_jugs_to_community_member(form: AddJugsToMemberForm, user_id: str 
             juguser.jugs.add(jug_to_add)
 
         return {"message": "Jugs successfully linked to community member"}
+
+@router.get("/get-community-jug-list")
+async def get_community_jug_list(user_id: str = Depends(auth_user)):
+    with db_session:
+        user = User.get(id=user_id)
+        juser = JugUser.get(user=user)
+        community = juser.community
+        jugusers = list(JugUser.select(community=community))
+        available_jugs = []
+        for juguser in jugusers:
+            available_jugs.extend(juguser.jugs)
+        unique_jugs = set()
+        devices_info = []
+        async with SmartHydrationSession() as session:
+            for jug in available_jugs:
+                if jug.smart_hydration_id in unique_jugs:
+                    continue
+                unique_jugs.add(jug.smart_hydration_id)
+                jug_data = await get_jug_latest(session, jug.smart_hydration_id)
+                if jug_data is None:
+                    continue
+                jug_data['name'] = jug.name
+                jug_data['id'] = jug.smart_hydration_id
+                devices_info.append(jug_data)
+            return devices_info

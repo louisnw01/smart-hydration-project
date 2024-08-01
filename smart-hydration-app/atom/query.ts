@@ -8,6 +8,7 @@ import { ENDPOINTS, request } from "@/util/fetch";
 import { DeviceInfo, ITimeSeries } from "@/interfaces/device";
 import { jugUserInfoAtom } from "./jug-user";
 import { selectedMemberAtom } from "./community";
+import { communityInfoQAtom } from "./query/community";
 
 export const linkJugsToMemberMAtom = atomWithMutation((get) => ({
     mutationKey: ["/community/link-jug-to-member", get(authTokenAtom)],
@@ -205,7 +206,7 @@ export const userInfoQAtom = atomWithQuery((get) => ({
     enabled: !!get(authTokenAtom),
 }));
 
-async function fetchJugData(jugUserId: number, token: string) {
+export async function fetchJugData(jugUserId: number, token: string) {
     const response = await request(ENDPOINTS.FETCH_COMMUNITY, {
         query: { jug_user_id: jugUserId },
         auth: token as string,
