@@ -12,16 +12,12 @@ import { Text } from "react-native";
 export default function SubmitPage() {
     const router = useRouter();
     const clearJugUserInfo = useSetAtom(jugUserInfoAtom);
-    const {
-        mutate,
-        isPending,
-        isSuccess,
-    } = useAtomValue(createJugUserMAtom);
+    const { mutate, isPending, isSuccess } = useAtomValue(createJugUserMAtom);
 
     useEffect(() => {
         if (!isSuccess) return;
         clearJugUserInfo({});
-        router.replace("(tabs)/devices");
+        router.replace("(tabs)/community");
     }, [isSuccess]);
 
     return (

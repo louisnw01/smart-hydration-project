@@ -8,7 +8,15 @@ import {
 } from "jotai-tanstack-query";
 import { selectedMemberAtom } from "./community";
 import { jugUserInfoAtom } from "./jug-user";
-import { authTokenAtom, notificationFrequencyAtom, notificationsAtom, pushTokenAtom, registerInfoAtom } from "./user";
+
+import {
+    authTokenAtom,
+    emailIsVerifiedAtom,
+    notificationFrequencyAtom,
+    notificationsAtom,
+    pushTokenAtom,
+    registerInfoAtom,
+} from "./user";
 
 export const linkJugsToMemberMAtom = atomWithMutation((get) => ({
     mutationKey: ["/community/link-jug-to-member", get(authTokenAtom)],
@@ -203,7 +211,7 @@ export const userInfoQAtom = atomWithQuery((get) => ({
 
         return await response.json();
     },
-    enabled: !!get(authTokenAtom),
+    enabled: !!get(authTokenAtom) && !!get(emailIsVerifiedAtom),
 }));
 
 async function fetchJugData(jugUserId: number, token: string) {
@@ -401,7 +409,6 @@ export const removePushTokenMAtom = atomWithMutation((get) => ({
     },
 }));
 
-
 export const toggleNotificationsMAtom = atomWithMutation((get) => ({
     enabled: !!get(authTokenAtom) && !!get(pushTokenAtom),
     mutationKey: ["/user/toggle-notifications", get(authTokenAtom)],
@@ -409,14 +416,13 @@ export const toggleNotificationsMAtom = atomWithMutation((get) => ({
         const token = get(authTokenAtom);
         const selection = get(notificationsAtom);
         const pushToken = get(pushTokenAtom);
-        const formData: {notificationSelection: string, pushToken: string} =
-            {
-                notificationSelection: selection as string,
-                pushToken: pushToken as string
-            };
+        const formData: { notificationSelection: string; pushToken: string } = {
+            notificationSelection: selection as string,
+            pushToken: pushToken as string,
+        };
         const response = await request(ENDPOINTS.TOGGLE_NOTIFICATIONS, {
             method: "post",
-            body:formData,
+            body: formData,
             auth: token as string,
         });
 
@@ -437,16 +443,18 @@ export const toggleNotificationsFrequencyMAtom = atomWithMutation((get) => ({
         const token = get(authTokenAtom);
         const selection = get(notificationFrequencyAtom);
         const pushToken = get(pushTokenAtom);
-        const formData: {notificationSelection: string, pushToken: string} =
+        const formData: { notificationSelection: string; pushToken: string } = {
+            notificationSelection: selection as string,
+            pushToken: pushToken as string,
+        };
+        const response = await request(
+            ENDPOINTS.TOGGLE_NOTIFICATIONS_FREQUENCY,
             {
-                notificationSelection: selection as string,
-                pushToken: pushToken as string
-            };
-        const response = await request(ENDPOINTS.TOGGLE_NOTIFICATIONS_FREQUENCY, {
-            method: "post",
-            body:formData,
-            auth: token as string,
-        });
+                method: "post",
+                body: formData,
+                auth: token as string,
+            },
+        );
 
         const object = await response.json();
 
@@ -494,8 +502,10 @@ export const createJugUserMAtom = atomWithMutation((get) => ({
         if (!response.ok) {
             throw new Error("Jug User could not be added");
         }
-
-        return;
+    },
+    onSuccess: () => {
+        const qc = get(queryClientAtom);
+        qc.invalidateQueries({ queryKey: ["get-patient-info"] });
     },
 }));
 

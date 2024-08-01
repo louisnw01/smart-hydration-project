@@ -1,7 +1,7 @@
 import useColorPalette from "@/util/palette";
+import { Entypo } from "@expo/vector-icons";
 import { Stack, useRouter } from "expo-router";
 import { Platform, Pressable } from "react-native";
-import { Entypo } from "@expo/vector-icons";
 
 export default function SettingsLayout() {
     const palette = useColorPalette();
@@ -29,7 +29,11 @@ export default function SettingsLayout() {
                         return (
                             <Pressable onPress={() => router.back()}>
                                 <Entypo
-                                    name= {Platform.OS == "android" ? "chevron-left" :"circle-with-cross"}
+                                    name={
+                                        Platform.OS == "android"
+                                            ? "chevron-left"
+                                            : "circle-with-cross"
+                                    }
                                     size={24}
                                     color="rgb(80, 80, 80)"
                                 />
@@ -147,9 +151,9 @@ export default function SettingsLayout() {
                 }}
             />
             <Stack.Screen
-                name="community/community-profile"
+                name="community/community-settings"
                 options={{
-                    title: "Transfer Community Ownership",
+                    title: "Community Settings",
                     headerLeft: () => {
                         const router = useRouter();
                         return (

@@ -38,3 +38,5 @@ export const drinkListAtom = atomWithStorage(
     [],
     nonSecureStorage,
 );
+
+export const emailIsVerifiedAtom = atom(false);

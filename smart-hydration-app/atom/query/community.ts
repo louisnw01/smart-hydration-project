@@ -35,7 +35,7 @@ export const communityInfoQAtom = atomWithQuery((get) => ({
         return await response.json();
     },
     enabled: !!get(authTokenAtom),
-    retry: false,
+    // retry: false,
 }));
 
 export const patientInfoQAtom = atomWithQuery((get) => ({
@@ -109,7 +109,17 @@ export const deleteCommunityMAtom = atomWithMutation((get) => ({
             return;
         }
     },
-    onSuccess: () => {},
+    onSuccess: () => {
+        const qc = get(queryClientAtom);
+        const authToken = get(authTokenAtom);
+        qc.setQueryData(["get-community-users", authToken], () => []);
+        qc.setQueryData(["get-community-info", authToken], () => null);
+        qc.setQueryData(["user-info", authToken], (prev) => ({
+            ...prev,
+            has_community: false,
+        }));
+        qc.setQueryData(["get-patient-info", authToken], []);
+    },
 }));
 
 export const communityInviteLinkQAtom = atomWithQuery((get) => ({
@@ -233,7 +243,7 @@ export const linkJugToMemberMAtom = atomWithMutation((get) => ({
         });
 
         if (!response.ok) {
-          throw new Error("Cannot retrieve members list");
+            throw new Error("Cannot retrieve members list");
         }
 
         return response.json();
