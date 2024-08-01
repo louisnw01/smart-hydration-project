@@ -1,12 +1,10 @@
-import { View, Text, Pressable, TextInput } from "react-native";
-import { useNavigation } from "expo-router";
-import { useAtom } from "jotai";
+import { joinCommunityMAtom } from "@/atom/query/community";
 import StyledButton from "@/components/common/button";
 import StyledTextInput from "@/components/common/text-input";
-import { joinCommunityMAtom } from "@/atom/query/community";
 import { router } from "expo-router";
 import { useAtomValue } from "jotai";
 import { useEffect, useState } from "react";
+import { Text, View } from "react-native";
 
 export default function JoinCommunityModal() {
     const [inviteLink, setInviteLink] = useState("");
@@ -55,7 +53,8 @@ export default function JoinCommunityModal() {
                 <StyledButton
                     text="Submit"
                     href="community"
-                    textClass="text-lg"
+                    textClass="text-lg text-white font-medium"
+                    buttonClass="bg-green"
                     onPress={handlePress}
                 />
             </View>
