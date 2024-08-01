@@ -101,8 +101,6 @@ export default function EditTags({ }: EditTagsProps) {
     }
   };
 
-  //to do: add logic to stop users adding tags with same name as existing tag in community
-
   const handleAddTag = async (newTagName: string) => {
     if (newTagName === '') {
       return;

@@ -92,3 +92,8 @@ class UpdateTagForm(BaseModel):
 
 class DeleteTagForm(BaseModel):
     tagName: str
+
+
+class AddTagsPatientForm(BaseModel):
+    memberID: int
+    memberTags: List[str]

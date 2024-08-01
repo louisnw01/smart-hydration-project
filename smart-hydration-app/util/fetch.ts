@@ -24,6 +24,8 @@ export const ENDPOINTS = {
     USER_EXISTS: "/user/exists",
     ADD_DRINK: "/jug-user/add-drink-event",
     UPDATE_USER_TARGET: "/user/update-user-target",
+    ADD_TAGS_PATIENT: "/jug-user/add-tags-patient",
+
 
     SEND_VERIFICATION_EMAIL: "/user/send-verification-email",
 

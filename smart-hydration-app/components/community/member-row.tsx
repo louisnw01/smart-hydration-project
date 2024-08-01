@@ -38,29 +38,23 @@ export default function MemberRow({ member }: { member: MemberInfo }) {
             </View>
 
             <View className="flex-1 h-full">
-                <MemberDetail title="Tags" tags />
+                <MemberDetail title="Tags" tags={member.tags} />
             </View>
         </Pressable>
     );
 }
 
-function MemberDetail({ title, value, tags }) {
+function MemberDetail({ title, value, tags }: { title: string, value?: string | number, tags?: { id: number; name: string }[] }) {
     return (
         <View className="bg-gray-200 rounded-lg px-2 py-2">
             <Text className="font-semibold">{title}</Text>
             <Text className="text-xl">{value || "No data"}</Text>
 
-            {tags && (
+            {tags && tags.length > 0 && (
                 <View className="flex-row flex-wrap">
-                    <Tag name="Independent"></Tag>
-                    <Tag name="Likes coffee"></Tag>
-                    <Tag name="Aggressive"></Tag>
-                    <Tag name="Four"></Tag>
-                    <Tag name="Five"></Tag>
-                    <Tag name="Six"></Tag>
-                    <Tag name="Seven"></Tag>
-                    <Tag name="Eight"></Tag>
-                    <Tag name="Nine"></Tag>
+                    {tags.map(tag => (
+                        <Tag key={tag.id} name={tag.name} />
+                    ))}
                 </View>
             )}
         </View>
