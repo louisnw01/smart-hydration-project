@@ -34,6 +34,7 @@ export const ENDPOINTS = {
     COMMUNITY_GENERATE_INVITE: "/community/generate-invite",
     COMMUNITY_USERS: "/community/users",
     DELETE_COMMUNITY_MEMBER: "/community/delete-member",
+    ADD_COMMUNITY_DRINK: "/community/add-community-drink-event",
     PATIENT_INFO: "/community/patient-info", // get the info through this endpoint
     NAME_FROM_LINK: "/community/name-from-link",
     JOIN_COMMUNITY: "/community/join",

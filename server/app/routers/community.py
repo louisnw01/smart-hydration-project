@@ -6,8 +6,8 @@ from pony.orm.core import commit, db_session, delete
 from ..api import get_hydration_events
 from ..routers import jug_user
 from ..services import get_user_by_id, try_get_users_community, try_get_users_community
-from ..models import Community, CommunityMember, InviteLink, Jug, User, JugUser
-from ..schemas import CreateCommunityForm, CreateInvitationForm, AddJugsToMemberForm, DeleteCommunityMemberForm, VerifyEmailForm
+from ..models import Community, CommunityMember, InviteLink, Jug, User, JugUser, OtherDrink
+from ..schemas import AddCommunityDrinkForm, CreateCommunityForm, CreateInvitationForm, AddJugsToMemberForm, DeleteCommunityMemberForm, VerifyEmailForm
 from ..auth import auth_user, generate_invite_link
 import pprint
 from starlette.responses import RedirectResponse
@@ -216,3 +216,12 @@ async def link_jugs_to_community_member(form: AddJugsToMemberForm, user_id: str 
             juguser.jugs.add(jug_to_add)
 
         return {"message": "Jugs successfully linked to community member"}
+
+
+@router.post("/add-community-drink-event")
+async def add_community_drink_event(form: AddCommunityDrinkForm, user_id: str = Depends(auth_user)):
+    with db_session:
+        juguser = JugUser.get(id=form.juser_id)
+        OtherDrink(juguser=juguser, timestamp=form.timestamp, name=form.name, capacity=form.capacity)
+        juguser.drank_today += form.capacity
+        commit()
