@@ -5,6 +5,7 @@ import {
     getCommunityJugDataQAtom,
     getJugDataQAtom,
     linkJugToUserMAtom,
+    unlinkJugFromUserMAtom,
 } from "@/atom/query";
 import {
     communityInfoQAtom,
@@ -24,6 +25,7 @@ export default function MVPAddDeviceModal() {
         useAtomValue(patientInfoQAtom);
     const navigation = useNavigation();
     const selectedJugId = useAtomValue(selectedJugIdAtom);
+    const { mutate: unlinkJugFromUser } = useAtomValue(unlinkJugFromUserMAtom);
     const [selectedUser, setSelectedUser] = useState("0");
     //const communityJugData = getCommunityJugDataQAtom();
     const { mutate: linkJugToCommunityMember } = useAtomValue(
@@ -45,6 +47,9 @@ export default function MVPAddDeviceModal() {
             jugIds: [selectedJugId],
             communityMember: Number(selectedUser),
         });
+        unlinkJugFromUser(selectedJugId);
+
+        navigation.goBack();
         navigation.goBack();
     };
 
