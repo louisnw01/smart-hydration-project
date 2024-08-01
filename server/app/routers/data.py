@@ -63,4 +63,6 @@ async def get_historical_jug_data(jug_user_id: int, timestamp: int, user_id: str
         results = await asyncio.gather(*tasks)
         big_list.extend([event for sublist in results for event in sublist])
 
+        print(big_list)
+
         return sorted(big_list, key=lambda x: x['time'])
