@@ -6,11 +6,11 @@ import { useAtomValue, useSetAtom } from "jotai";
 import { getJugDataQAtom } from "@/atom/query";
 import { getCommunityJugDataQAtom } from "@/atom/community";
 import { Text, View, ScrollView } from "react-native";
-import { isInCommunityAtom } from "@/atom/user";
+import { userHasCommunityAtom } from "@/atom/query/community";
 
 export default function DevicesPage() {
     const setJugId = useSetAtom(selectedJugIdAtom);
-    const isInCommunity = useAtomValue(isInCommunityAtom);
+    const isInCommunity = useAtomValue(userHasCommunityAtom);
 
     return (
         <PageWrapper className="mx-6 mt-6">
