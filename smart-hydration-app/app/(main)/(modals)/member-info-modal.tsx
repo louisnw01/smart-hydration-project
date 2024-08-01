@@ -35,7 +35,7 @@ export default function MemberInfoModal() {
             }}
         >
             <Text className="dark:text-white text-3xl font-semibold">
-                {member.name}
+                {member.name} {member.id}
             </Text>
             <MemberInfoBlock title="Profile Details">
                 <Text className="text-xl dark:text-white">

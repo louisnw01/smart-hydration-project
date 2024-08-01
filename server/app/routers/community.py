@@ -185,13 +185,13 @@ async def link_jugs_to_community_member(form: AddJugsToMemberForm, user_id: str 
         user_community = user_juser.community
         juguser = JugUser.get(id = form.communityMember)
         juser_community = juguser.community
-        if user_community != juser_community:
+        if user_community != juser_community or user_community is None or juser_community is None:
             return HTTPException(400, 'user is not part of the same community')
 
         for jug in form.jugIds:
             jug_to_add = Jug.get(smart_hydration_id = jug)
             juguser.jugs.add(jug_to_add)
-
+        commit
         return {"message": "Jugs successfully linked to community member"}
 
 @router.get("/get-community-jug-list")
