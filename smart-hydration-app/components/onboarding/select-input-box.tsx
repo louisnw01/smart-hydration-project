@@ -7,6 +7,8 @@ export interface SelectInputBoxProperties {
     onChange: (value: string) => void;
 }
 
+
+
 export const SelectInputBox: React.FC<SelectInputBoxProperties> = (props: SelectInputBoxProperties): React.ReactElement => {
     const { multiple, data, onChange } = props;
 
@@ -16,7 +18,7 @@ export const SelectInputBox: React.FC<SelectInputBoxProperties> = (props: Select
 
     return (
         <>
-            {!multiple && <SelectList  data={data} setSelected={onChange} save="value" />}
+            {!multiple && <SelectList boxStyles={{ width: 284 }} data={data} setSelected={onChange} save="value" />}
             {multiple && <MultipleSelectList data={data} setSelected={(val: any) => setSelectedMultiple(val)} save="value" />}
         </>
     );

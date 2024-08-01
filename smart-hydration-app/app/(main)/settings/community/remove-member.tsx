@@ -6,7 +6,7 @@ import StyledButton from "@/components/common/button";
 import Loading from "@/components/common/loading";
 import { useAtomValue } from "jotai";
 import React, { useEffect, useState } from "react";
-import { FlatList, Modal, Text, TouchableOpacity, View } from "react-native";
+import { FlatList, Modal, Text, Touchable, TouchableOpacity, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 interface Member {
@@ -60,10 +60,10 @@ export default function MemberList() {
                     <View className="flex-row justify-between items-center p-3 border-b border-gray-300 bg-gray-200 rounded-lg mb-2">
                         <Text className="text-lg">{item.name}</Text>
                         <TouchableOpacity
-                            className="bg-blue-700 border border-gray-400 py-1 px-4 rounded-lg"
+                            className="border border-gray-400 py-1 px-4 rounded-lg"
                             onPress={() => confirmRemoveMember(item)}
                         >
-                            <Text className="text-black text-lg">-</Text>
+                            <Text className="text-black text-lg">X</Text>
                         </TouchableOpacity>
                     </View>
                 )}
@@ -105,14 +105,14 @@ export default function MemberList() {
     );
 }
 
-function BottomSheet({ children, isVisible }) {
+function BottomSheet({ children, isVisible }: { children: React.ReactNode, isVisible: boolean }) {
     const insets = useSafeAreaInsets();
 
     return (
         <Modal transparent visible={isVisible} animationType="slide">
             <View className="flex-1 justify-end">
                 <View
-                    className="bg-gray-200 dark:bg-neutral-700 rounded-3xl pt-6"
+                    className="bg-gray-200 dark:bg-neutral-700 rounded-3xl p-6"
                     style={{
                         paddingBottom: insets.bottom,
                     }}

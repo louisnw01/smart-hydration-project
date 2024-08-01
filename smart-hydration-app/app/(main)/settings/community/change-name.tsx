@@ -1,6 +1,7 @@
 import { View, Pressable, Text, TextInput} from "react-native";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
+import StyledTextInput from "@/components/common/text-input";
 
 export interface ChangeNameProps {
   community_id: string;
@@ -25,19 +26,20 @@ export default function ChangeName({ community_id }: ChangeNameProps) {
                     <Text className="text-black text-2xl font-semibold text-center">
                       Enter Community Name
                     </Text>
-                    <TextInput
+                    <StyledTextInput
                         placeholder="Enter Community name"
                         textContentType="emailAddress"
                         autoCapitalize="none"
-                        defaultValue={communityName}
+                        // defaultValue={communityName}
                         onChangeText={(value) => setCommunityName(value)}
-                        className="bg-gray-200 w-full h-14 placeholder-black text-xl rounded-xl px-3"
+                        width={284}
+                        className="bg-gray-200 w-full h-14 placeholder-black text-xl rounded-xl px-3 m-7"
                     />
                 <Pressable
                     onPress={() => router.push("settings/community/community-profile")}
-                    className="bg-blue px-2 py-2 rounded-lg w-32"
+                    className="bg-blue px-2 py-2 rounded-lg w-80 h-16 flex content-center justify-center"
                 >
-                    <Text onPress={handleOnSubmit} className="text-white text-2xl font-semibold text-center">
+                    <Text className="text-white text-3xl font-semibold text-center">
                         Submit
                     </Text>
                 </Pressable>

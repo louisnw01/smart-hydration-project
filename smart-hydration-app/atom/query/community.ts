@@ -78,9 +78,13 @@ export const createCommunityMAtom = atomWithMutation((get) => ({
 }));
 
 export const updateCommunityMAtom = atomWithMutation((get) => ({
+  //should faciliate change community name and change community owner
     mutationKey: ["update-community", get(authTokenAtom)],
     enabled: !!get(authTokenAtom),
-    mutationFn: async (formData: { name: string }) => {
+    mutationFn: async (formData: { name: string, owner_name: string }) => { //check what name is - is name for community or for owner - need both?
+      //check any other changes in here?
+      //check if there can be 2 names name and owner name or can you only have 1
+      //owner_name is future owner
         const token = get(authTokenAtom);
         const response = await request(ENDPOINTS.UPDATE_COMMUNITY, {
             method: "post",
@@ -89,7 +93,7 @@ export const updateCommunityMAtom = atomWithMutation((get) => ({
         });
 
         if (!response.ok) {
-            return;
+            return; //check if you should output any error
         }
     },
 }));

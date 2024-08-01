@@ -4,7 +4,7 @@ import {
 import { useRouter } from "expo-router";
 import { atom } from "jotai";
 import { SectionList, View } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons,MaterialCommunityIcons,FontAwesome5 } from "@expo/vector-icons";
 import { ISettingsSection } from "@/interfaces/settings";
 
 const tempAtom = atom("");
@@ -24,8 +24,8 @@ const settingsList: ISettingsSection[] = [
                           isLast={isLast}
                           onPress={() => router.navigate("settings/community/change-name")}
                           icon={
-                              <Ionicons
-                                  name="color-palette"
+                              <MaterialCommunityIcons
+                                  name="google-circles-communities"
                                   size={19}
                                   color="gray"
                               />
@@ -45,8 +45,8 @@ const settingsList: ISettingsSection[] = [
                           text={name}
                           onPress={() => router.navigate("settings/community/change-owner")}
                           icon={
-                              <Ionicons
-                                  name="color-palette"
+                              <FontAwesome5
+                                  name="user-cog"
                                   size={19}
                                   color="gray"
                               />

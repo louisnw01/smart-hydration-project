@@ -72,16 +72,42 @@ async def create_community(form: CreateCommunityForm, user_id: str = Depends(aut
 
 
 @router.post("/update")
-#change name to update community owner?? 
+#change name to update community owner??
 async def update_community_info(form: CreateCommunityForm, user_id: str = Depends(auth_user)):
     with db_session:
         user = User.get(id=user_id)
         member = user.community_member
         if member is None:
             raise HTTPException(400, 'user is not associated with a community')
-        member.community.name = form.name
+        if form.owner_name:
+            if member.is_owner is None: #check if false? //check if member is owner
+                raise HTTPException(400, 'user does not have permissions to change ownership of this community')
+            new_owner = User.get(name=form.owner_name)
+            new_owner_member = new_owner.community_member
+            if new_owner_member is None:
+                raise HTTPException(400, 'new owner is not associated with a community') #check user in comunity
+            new_owner_member.is_owner = True
+            member.is_owner = False #should this be = none as it's a boolean? #member is previous owner
+        elif form.name: #check if name on form , updating community name
+            member.community.name = form.name
 
 
+'''
+class Community(db.Entity):
+    id = PrimaryKey(int, auto=True)
+    name = Required(str)
+    jug_users = Set(JugUser)
+    followers = Set('CommunityMember')
+    invite_links = Set('InviteLink')
+
+
+class CommunityMember(db.Entity):
+    id = PrimaryKey(int, auto=True)
+    community = Required(Community)
+    user = Required(User)
+    is_owner = Required(bool)
+
+'''
 @router.post("/delete")
 async def delete_community(user_id: str = Depends(auth_user)):
     with db_session:

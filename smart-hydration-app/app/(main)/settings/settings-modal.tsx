@@ -10,7 +10,7 @@ import { useAtomValue, useSetAtom } from "jotai";
 import { ReactElement, ReactNode, useEffect } from "react";
 import { Pressable, SectionList, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { Feather, MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
+import { Feather, MaterialCommunityIcons, Ionicons, Entypo,AntDesign } from "@expo/vector-icons";
 import { deleteUser } from "@/atom/query";
 import { ISettingsSection } from "@/interfaces/settings";
 import { amountDrankTodayAtom } from "@/atom/hydration";
@@ -140,8 +140,8 @@ const settingsList: ISettingsSection[] = [
                             text={name}
                             onPress={() => router.navigate("settings/community/community-profile")}
                             icon={
-                                <Ionicons
-                                    name="color-palette"
+                              <MaterialCommunityIcons
+                                    name="google-circles-communities"
                                     size={19}
                                     color="gray"
                                 />
@@ -160,8 +160,8 @@ const settingsList: ISettingsSection[] = [
                             text={name}
                             onPress={() => router.navigate("settings/community/remove-member")}
                             icon={
-                                <Ionicons
-                                    name="color-palette"
+                                <AntDesign
+                                    name="deleteuser"
                                     size={19}
                                     color="gray"
                                 />
@@ -180,8 +180,8 @@ const settingsList: ISettingsSection[] = [
                             text={name}
                             onPress={() => router.navigate("settings/community/invite-member")}
                             icon={
-                                <Ionicons
-                                    name="color-palette"
+                                <AntDesign
+                                    name="adduser"
                                     size={19}
                                     color="gray"
                                 />
