@@ -6,7 +6,7 @@ from ..auth import auth_user, generate_auth_token, get_hash, generate_invite_lin
 from ..mail import send_email_with_ses
 from ..models import User, VerifyEmail, Jug, JugUser, Notifications
 from ..schemas import LinkJugsForm, JugLink, UserRegister, UserLogin, VerifyEmailForm, TargetUpdate, PushTokenForm, \
-    ToggleNotificationsForm
+    ToggleNotificationsForm, ChangeModeForm
 from ..services import link_jugs_to_user_s, unlink_jug_from_user_s, delete_user, user_exists, create_user, \
     create_jug_user, update_jug_user_data, get_user_hash, get_user_by_email
 import datetime as dt
@@ -213,6 +213,14 @@ async def toggle_notifications_frequency(form: ToggleNotificationsForm, user_id:
         token = Notifications.get(expo_token=form.pushToken, user=user_id)
         token.send_time = int(send_time)
         token.frequency = 60 * 60 * 24 * hours
+        commit()
+
+
+@router.post("/change-mode")
+async def change_mode(form: ChangeModeForm, user_id: str = Depends(auth_user)):
+    with db_session:
+        user = User.get(id=user_id)
+        user.mode = form.mode
         commit()
 
 

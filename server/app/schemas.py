@@ -77,3 +77,7 @@ class PushTokenForm(BaseModel):
 class ToggleNotificationsForm(BaseModel):
     notificationSelection: str
     pushToken: str
+
+
+class ChangeModeForm(BaseModel):
+    mode: str
