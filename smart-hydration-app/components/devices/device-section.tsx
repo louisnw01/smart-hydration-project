@@ -1,14 +1,20 @@
 import Jug from "@/assets/svgs/jug.svg";
-import { userHasCommunityAtom } from "@/atom/query/community";
+
 import useColorPalette from "@/util/palette";
 import { useQueryRefetch } from "@/util/query-refetch";
 import { FontAwesome } from "@expo/vector-icons";
 import { Atom, useAtomValue } from "jotai";
 import { AtomWithQueryResult } from "jotai-tanstack-query";
+
 import { FlatList, RefreshControl, View } from "react-native";
 import StyledButton from "../common/button";
 import Loading from "../common/loading";
 import DeviceRow from "./device-row";
+import { AtomWithQueryResult } from "jotai-tanstack-query";
+import {
+    userHasCommunityAtom,
+    getCommunityJugDataQAtom,
+} from "@/atom/query/community";
 
 export default function DeviceSection({
     addJugButton,
