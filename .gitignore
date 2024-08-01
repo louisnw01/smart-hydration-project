@@ -25,3 +25,5 @@ __pycache__/
 /android
 sh-key-pair.pem
 .zed
+*firebase*
+google-services.json

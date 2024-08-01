@@ -3,7 +3,13 @@ import {
     atomWithMutation,
     queryClientAtom,
 } from "jotai-tanstack-query";
-import { authTokenAtom, registerInfoAtom } from "./user";
+import {
+    authTokenAtom,
+    notificationFrequencyAtom,
+    notificationsAtom,
+    pushTokenAtom,
+    registerInfoAtom,
+} from "./user";
 import { ENDPOINTS, request } from "@/util/fetch";
 import { DeviceInfo, ITimeSeries } from "@/interfaces/device";
 import { jugUserInfoAtom } from "./jug-user";
@@ -281,22 +287,43 @@ export const getUserQAtom = atomWithQuery((get) => ({
     enabled: !!get(authTokenAtom),
 }));
 
+async function fetchHistoricalJugData(jugUserId: number, token: string) {
+    const ts = new Date(2024, 5, 26).getTime();
+    const response = await request(ENDPOINTS.FETCH_HISTORICAL_JUG_DATA, {
+        query: {
+            jug_user_id: jugUserId,
+            timestamp: ts / 1000,
+        },
+        auth: token,
+    });
+    if (!response.ok) {
+        throw new Error();
+    }
+    return await response.json();
+}
+
 export const getHydrationQAtom = atomWithQuery((get) => ({
     queryKey: ["/data/historical", get(authTokenAtom)],
     queryFn: async ({ queryKey: [, token] }): Promise<ITimeSeries[]> => {
-        const ts = new Date(2024, 5, 26).getTime();
-        const response = await request(ENDPOINTS.FETCH_HISTORICAL_JUG_DATA, {
-            query: {
-                timestamp: ts / 1000,
-            },
-            auth: token,
-        });
-        if (!response.ok) {
-            throw new Error();
-        }
-        return await response.json();
+        const { data } = get(userInfoQAtom);
+
+        return await fetchHistoricalJugData(data.juguser, token);
     },
-    enabled: !!get(authTokenAtom),
+    enabled: !!get(authTokenAtom) && !get(userInfoQAtom).isLoading,
+}));
+
+export const historicalPatientJugDataQAtom = atomWithQuery((get) => ({
+    queryKey: [
+        "historical-patient",
+        get(authTokenAtom),
+        get(selectedMemberAtom),
+    ],
+    queryFn: async ({
+        queryKey: [, token, member],
+    }): Promise<ITimeSeries[]> => {
+        return await fetchHistoricalJugData(member.id, token);
+    },
+    enabled: !!get(authTokenAtom) && !!get(selectedMemberAtom),
 }));
 
 export const loginMAtom = atomWithMutation((get) => ({
@@ -318,6 +345,7 @@ export const loginMAtom = atomWithMutation((get) => ({
 }));
 
 export const verifyEmailMAtom = atomWithMutation((get) => ({
+    enabled: !!get(authTokenAtom),
     mutationKey: ["/user/verify", get(authTokenAtom)],
     mutationFn: async (formData: { code: string }) => {
         const token = get(authTokenAtom);
@@ -326,6 +354,105 @@ export const verifyEmailMAtom = atomWithMutation((get) => ({
             body: formData,
             auth: token as string,
         });
+
+        const object = await response.json();
+
+        if (!response.ok) {
+            return object.detail;
+        }
+
+        return;
+    },
+}));
+
+export const addPushTokenMAtom = atomWithMutation((get) => ({
+    enabled: !!get(authTokenAtom) && !!get(pushTokenAtom),
+    mutationKey: ["/user/add-push-token", get(authTokenAtom)],
+    mutationFn: async (formData: { pushToken: string }) => {
+        const token = get(authTokenAtom);
+        const response = await request(ENDPOINTS.ADD_PUSH_TOKEN, {
+            method: "post",
+            body: formData,
+            auth: token as string,
+        });
+
+        const object = await response.json();
+
+        if (!response.ok) {
+            return object.detail;
+        }
+
+        return;
+    },
+}));
+
+export const removePushTokenMAtom = atomWithMutation((get) => ({
+    enabled: !!get(authTokenAtom) && !!get(pushTokenAtom),
+    mutationKey: ["/user/remove-push-token", get(authTokenAtom)],
+    mutationFn: async (formData: { pushToken: string }) => {
+        const token = get(authTokenAtom);
+        const response = await request(ENDPOINTS.REMOVE_PUSH_TOKEN, {
+            method: "post",
+            body: formData,
+            auth: token as string,
+        });
+
+        const object = await response.json();
+
+        if (!response.ok) {
+            return object.detail;
+        }
+
+        return;
+    },
+}));
+
+export const toggleNotificationsMAtom = atomWithMutation((get) => ({
+    enabled: !!get(authTokenAtom) && !!get(pushTokenAtom),
+    mutationKey: ["/user/toggle-notifications", get(authTokenAtom)],
+    mutationFn: async () => {
+        const token = get(authTokenAtom);
+        const selection = get(notificationsAtom);
+        const pushToken = get(pushTokenAtom);
+        const formData: { notificationSelection: string; pushToken: string } = {
+            notificationSelection: selection as string,
+            pushToken: pushToken as string,
+        };
+        const response = await request(ENDPOINTS.TOGGLE_NOTIFICATIONS, {
+            method: "post",
+            body: formData,
+            auth: token as string,
+        });
+
+        const object = await response.json();
+
+        if (!response.ok) {
+            return object.detail;
+        }
+
+        return;
+    },
+}));
+
+export const toggleNotificationsFrequencyMAtom = atomWithMutation((get) => ({
+    enabled: !!get(authTokenAtom) && !!get(pushTokenAtom),
+    mutationKey: ["/user/toggle-notifications-frequency", get(authTokenAtom)],
+    mutationFn: async () => {
+        const token = get(authTokenAtom);
+        const selection = get(notificationFrequencyAtom);
+        const pushToken = get(pushTokenAtom);
+        const formData: { notificationSelection: string; pushToken: string } = {
+            notificationSelection: selection as string,
+            pushToken: pushToken as string,
+        };
+        const response = await request(
+            ENDPOINTS.TOGGLE_NOTIFICATIONS_FREQUENCY,
+            {
+                method: "post",
+                body: formData,
+                auth: token as string,
+            },
+        );
 
         const object = await response.json();
 
@@ -420,6 +547,38 @@ export const addDrinkMAtom = atomWithMutation((get) => ({
     }) => {
         const token = get(authTokenAtom);
         const response = await request(ENDPOINTS.ADD_DRINK, {
+            method: "post",
+            body: formData,
+            auth: token as string,
+        });
+
+        if (!response.ok) {
+            return "failure";
+        }
+    },
+    onSuccess: (data, formData) => {
+        const queryClient = get(queryClientAtom);
+        void queryClient.setQueryData(
+            ["/data/historical", get(authTokenAtom)],
+            (prev: DeviceInfo[]) => [
+                ...prev,
+                { time: formData.timestamp * 1000, value: formData.capacity },
+            ],
+        );
+    },
+}));
+
+export const addCommunityDrinkMAtom = atomWithMutation((get) => ({
+    mutationKey: ["/community/add-community-drink-event", get(authTokenAtom)],
+    enabled: !!get(authTokenAtom),
+    mutationFn: async (formData: {
+        juser_id: number;
+        timestamp: number;
+        name: string;
+        capacity: number;
+    }) => {
+        const token = get(authTokenAtom);
+        const response = await request(ENDPOINTS.ADD_COMMUNITY_DRINK, {
             method: "post",
             body: formData,
             auth: token as string,

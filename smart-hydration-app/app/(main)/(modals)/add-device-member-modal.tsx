@@ -1,20 +1,19 @@
-import { useState } from "react";
-import { View, Text, SectionList, Pressable } from "react-native";
-import { useAtom, useAtomValue } from "jotai";
-import { getAllJugsQAtom, getJugDataQAtom } from "@/atom/query";
-import { useNavigation } from "expo-router";
-import Loading from "@/components/common/loading";
 import {
-    selectedCommunityMemberAtom,
     selectedJugsForMemberAtom,
     selectedMemberAtom,
 } from "@/atom/community";
+import { getJugDataQAtom } from "@/atom/query";
 import { linkJugsToCommunityMemberMAtom } from "@/atom/query/community";
+import StyledButton from "@/components/common/button";
+import Loading from "@/components/common/loading";
+import { useNavigation } from "expo-router";
+import { useAtom, useAtomValue } from "jotai";
+import { useState } from "react";
+import { Pressable, SectionList, Text, View } from "react-native";
 
 export default function AddDeviceMemberModal() {
     const { data, isLoading, refetch } = useAtomValue(getJugDataQAtom);
     const [refreshing, setRefreshing] = useState(false);
-    console.log(JSON.stringify(data));
     const navigation = useNavigation();
     const [selectedJugs, setSelectedJugs] = useAtom(selectedJugsForMemberAtom);
     const selectedMember = useAtomValue(selectedMemberAtom);
@@ -95,14 +94,12 @@ export default function AddDeviceMemberModal() {
                 />
             )}
             {selectedJugs.size > 0 && (
-                <Pressable
-                    className="bg-blue items-center mx-16 justify-center px-3 py-3 rounded-3xl"
+                <StyledButton
+                    text={`Add ${selectedJugs.size} jug${selectedJugs.size > 1 ? "s" : ""} to member`}
+                    href="add-member-modal"
+                    textClass="text-lg"
                     onPress={handlePress}
-                >
-                    <Text className="text-white text-2xl">
-                        {`Add ${selectedJugs.size} jug${selectedJugs.size > 1 ? "s" : ""} to member`}
-                    </Text>
-                </Pressable>
+                />
             )}
         </View>
     );

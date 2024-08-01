@@ -1,32 +1,30 @@
-import { joinCommunityMAtom } from "@/atom/query/community";
+import StyledButton from "@/components/common/button";
 import StyledTextInput from "@/components/common/text-input";
+import { joinCommunityMAtom } from "@/atom/query/community";
 import { router } from "expo-router";
-import { useAtomValue } from "jotai";
-import { useEffect, useState } from "react";
-import { Pressable, Text, View } from "react-native";
+import { useSetAtom } from "jotai";
+import { useState } from "react";
+import { Text, View } from "react-native";
+import { inviteCodeAtom } from "@/atom/user";
+
+const regex = /^https:\/\/hydrationapi\.louisnw\.com\/community\/redirect_invite\/[A-Za-z0-9]{10}$/;
 
 export default function JoinCommunityModal() {
     const [inviteLink, setInviteLink] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
-    const { mutate, isSuccess, isPending, error } =
-        useAtomValue(joinCommunityMAtom);
+    const setInviteCode = useSetAtom(inviteCodeAtom);
 
     const handlePress = () => {
         if (!inviteLink) return;
-        // TODO: check invite link is valid
-        const code = inviteLink.slice(-10);
-        mutate({ code });
-    };
-
-    useEffect(() => {
-        if (error) setErrorMessage(error.message);
-    }, [error]);
-
-    useEffect(() => {
-        if (isSuccess && !isPending) {
-            router.back();
+        if(!regex.test(inviteLink)){
+            setErrorMessage("This link is not valid");
+            return;
         }
-    }, [isSuccess]);
+        setErrorMessage("");
+        const code = inviteLink.slice(-10);
+        setInviteCode(code);
+        router.push('(modals)/confirm-join-community-modal');
+    };
 
     return (
         <View className="mt-8 flex gap-6 mx-6">
@@ -41,22 +39,20 @@ export default function JoinCommunityModal() {
                 textContentType="name"
                 returnKeyType="done"
             />
-            {!!error && (
-                <View className="bg-red px-4 py-2 rounded-xl">
-                    <Text className="dark:text-white text-lg w-full">
+            {errorMessage && (
+                <View className="px-4 py-2 rounded-xl">
+                    <Text className="text-red text-lg w-full">
                         {errorMessage}
                     </Text>
                 </View>
             )}
             <View className="flex flex-row justify-center items-center">
-                <Pressable
+                <StyledButton
+                    text="Submit"
                     onPress={handlePress}
-                    className="bg-blue px-4 py-2 rounded-xl mt-10"
-                >
-                    <Text className="text-2xl font-semibold text-white">
-                        Submit
-                    </Text>
-                </Pressable>
+                    buttonClass="bg-blue px-4 py-2 rounded-xl mt-10"
+                    textClass="text-2xl font-semibold text-white"
+                />
             </View>
         </View>
     );

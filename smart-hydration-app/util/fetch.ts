@@ -35,10 +35,18 @@ export const ENDPOINTS = {
     COMMUNITY_GENERATE_INVITE: "/community/generate-invite",
     COMMUNITY_USERS: "/community/users",
     DELETE_COMMUNITY_MEMBER: "/community/delete-member",
+    ADD_COMMUNITY_DRINK: "/community/add-community-drink-event",
     PATIENT_INFO: "/community/patient-info", // get the info through this endpoint
+    NAME_FROM_LINK: "/community/name-from-link",
+    JOIN_COMMUNITY: "/community/join",
 
     CREATE_JUG_USER: "/jug-user/create",
     VERIFY_EMAIL: "/user/verify",
+
+    ADD_PUSH_TOKEN: "/user/add-push-token",
+    REMOVE_PUSH_TOKEN: "/user/remove-push-token",
+    TOGGLE_NOTIFICATIONS: "/user/toggle-notifications",
+    TOGGLE_NOTIFICATIONS_FREQUENCY: "/user/toggle-notifications-frequency",
 };
 
 interface RequestOptions {
