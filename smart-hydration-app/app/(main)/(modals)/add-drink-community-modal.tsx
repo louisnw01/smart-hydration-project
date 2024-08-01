@@ -8,7 +8,7 @@ import {
 import { useAtom } from "jotai";
 import { drinkListAtom } from "@/atom/user";
 import { useAtomValue } from "jotai/index";
-import { addDrinkMAtom, updateJugNameMAtom } from "@/atom/query";
+import { addCommunityDrinkMAtom, updateJugNameMAtom } from "@/atom/query";
 import { selectedDeviceAtom } from "@/atom/device";
 import { ReactNode, useEffect, useState } from "react";
 import { useRouter } from "expo-router";
@@ -17,6 +17,7 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
 import SodaCan from "@/assets/svgs/soda-can-svgrepo-com.svg";
+import { selectedMemberAtom } from "@/atom/community";
 
 interface DrinkType {
     name: string;
@@ -110,16 +111,22 @@ function constructDrinkEvent(drinkName) {
 // TODO define the object before pushing to prod
 function DrinkButton({ drinkType }: { drinkType: DrinkType }) {
     const [drinkList, setDrinkList] = useAtom(drinkListAtom);
-    const { mutate, isSuccess, isPending } = useAtomValue(addDrinkMAtom);
+    const { mutate, isSuccess, isPending } = useAtomValue(
+        addCommunityDrinkMAtom,
+    );
+    const juser_id = useAtomValue(selectedMemberAtom);
     const router = useRouter();
 
-    function postDrinkToDB(drinkJSON, drinkName: string) {
+    function postCommunityDrinkToDB(drinkJSON, drinkName: string, juser_id) {
         if (!drinkJSON) return;
         mutate({
+            juser_id: juser_id.id,
             timestamp: drinkJSON.timestamp,
             name: drinkName,
             capacity: drinkJSON.value,
         });
+        juser_id.drank_today += drinkJSON.value;
+        console.log("Current amount: " + juser_id.drank_today);
     }
 
     function handleAddDrink() {
@@ -129,7 +136,7 @@ function DrinkButton({ drinkType }: { drinkType: DrinkType }) {
         }
         const drinkJSON = constructDrinkEvent(drinkType.name);
         drinkList.push(drinkJSON);
-        postDrinkToDB(drinkJSON, drinkType.name);
+        postCommunityDrinkToDB(drinkJSON, drinkType.name, juser_id);
         setDrinkList(drinkList);
         return;
     }
@@ -159,7 +166,7 @@ function DrinkButton({ drinkType }: { drinkType: DrinkType }) {
 }
 
 export default function AddDrinkPane() {
-    const { isPending, isSuccess } = useAtomValue(addDrinkMAtom);
+    const { isPending, isSuccess } = useAtomValue(addCommunityDrinkMAtom);
     const router = useRouter();
 
     useEffect(() => {

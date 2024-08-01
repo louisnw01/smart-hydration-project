@@ -3,7 +3,13 @@ import {
     atomWithMutation,
     queryClientAtom,
 } from "jotai-tanstack-query";
-import { authTokenAtom, notificationFrequencyAtom, notificationsAtom, pushTokenAtom, registerInfoAtom } from "./user";
+import {
+    authTokenAtom,
+    notificationFrequencyAtom,
+    notificationsAtom,
+    pushTokenAtom,
+    registerInfoAtom,
+} from "./user";
 import { ENDPOINTS, request } from "@/util/fetch";
 import { DeviceInfo, ITimeSeries } from "@/interfaces/device";
 import { jugUserInfoAtom } from "./jug-user";
@@ -400,7 +406,6 @@ export const removePushTokenMAtom = atomWithMutation((get) => ({
     },
 }));
 
-
 export const toggleNotificationsMAtom = atomWithMutation((get) => ({
     enabled: !!get(authTokenAtom) && !!get(pushTokenAtom),
     mutationKey: ["/user/toggle-notifications", get(authTokenAtom)],
@@ -408,14 +413,13 @@ export const toggleNotificationsMAtom = atomWithMutation((get) => ({
         const token = get(authTokenAtom);
         const selection = get(notificationsAtom);
         const pushToken = get(pushTokenAtom);
-        const formData: {notificationSelection: string, pushToken: string} = 
-            {
-                notificationSelection: selection as string,
-                pushToken: pushToken as string
-            };
+        const formData: { notificationSelection: string; pushToken: string } = {
+            notificationSelection: selection as string,
+            pushToken: pushToken as string,
+        };
         const response = await request(ENDPOINTS.TOGGLE_NOTIFICATIONS, {
             method: "post",
-            body:formData,
+            body: formData,
             auth: token as string,
         });
 
@@ -436,16 +440,18 @@ export const toggleNotificationsFrequencyMAtom = atomWithMutation((get) => ({
         const token = get(authTokenAtom);
         const selection = get(notificationFrequencyAtom);
         const pushToken = get(pushTokenAtom);
-        const formData: {notificationSelection: string, pushToken: string} = 
+        const formData: { notificationSelection: string; pushToken: string } = {
+            notificationSelection: selection as string,
+            pushToken: pushToken as string,
+        };
+        const response = await request(
+            ENDPOINTS.TOGGLE_NOTIFICATIONS_FREQUENCY,
             {
-                notificationSelection: selection as string,
-                pushToken: pushToken as string
-            };
-        const response = await request(ENDPOINTS.TOGGLE_NOTIFICATIONS_FREQUENCY, {
-            method: "post",
-            body:formData,
-            auth: token as string,
-        });
+                method: "post",
+                body: formData,
+                auth: token as string,
+            },
+        );
 
         const object = await response.json();
 
@@ -540,6 +546,38 @@ export const addDrinkMAtom = atomWithMutation((get) => ({
     }) => {
         const token = get(authTokenAtom);
         const response = await request(ENDPOINTS.ADD_DRINK, {
+            method: "post",
+            body: formData,
+            auth: token as string,
+        });
+
+        if (!response.ok) {
+            return "failure";
+        }
+    },
+    onSuccess: (data, formData) => {
+        const queryClient = get(queryClientAtom);
+        void queryClient.setQueryData(
+            ["/data/historical", get(authTokenAtom)],
+            (prev: DeviceInfo[]) => [
+                ...prev,
+                { time: formData.timestamp * 1000, value: formData.capacity },
+            ],
+        );
+    },
+}));
+
+export const addCommunityDrinkMAtom = atomWithMutation((get) => ({
+    mutationKey: ["/community/add-community-drink-event", get(authTokenAtom)],
+    enabled: !!get(authTokenAtom),
+    mutationFn: async (formData: {
+        juser_id: number;
+        timestamp: number;
+        name: string;
+        capacity: number;
+    }) => {
+        const token = get(authTokenAtom);
+        const response = await request(ENDPOINTS.ADD_COMMUNITY_DRINK, {
             method: "post",
             body: formData,
             auth: token as string,
