@@ -18,13 +18,13 @@ export default function InviteMember() {
 
     useEffect(() => {
         if (!data) return
-        setLink(`hydrationapi.louisnw.com/community/${data}`)
+        setLink(`hydrationapi.louisnw.com/community/redirect_invite/${data}`)
     }, [data])
 
     const handleOnCopyToClipboard = async () => {
         if (!link) return;
 
-        await Clipboard.setStringAsync(`smarthydration://${link}`);
+        await Clipboard.setStringAsync(`https://${link}`);
         const clipboardContent = await Clipboard.getStringAsync();
         alert('todo: Copied to Clipboard modal')
     }
@@ -41,7 +41,7 @@ export default function InviteMember() {
     const handleOnShare = async () => {
       try {
         const result = await Share.share({
-          url: `smarthydration://${link}`,
+          url: `https://${link}`,
           message: 'Hey, use this link to join our community!',
         })
 
@@ -57,7 +57,7 @@ export default function InviteMember() {
           // sharing was dismissed
             // alert('Dismissed');
             //change this to something more user friendly
-        }
+        } 
       } catch (error: any) {
         alert(error.message);
       }
@@ -73,16 +73,6 @@ export default function InviteMember() {
                     <Text className="text-black text-xl font-semibold text-center">
                       Here’s your invite link! This link can only be used once and will expire in 3 hours.
                     </Text>
-                  {/*
-                  //for testing whether copy link works
-                    <TextInput
-                        placeholder="Enter Community name"
-                        textContentType="emailAddress"
-                        autoCapitalize="none"
-                        defaultValue={''}
-                        className="bg-gray-200 w-full h-14 placeholder-black text-xl rounded-xl px-3"
-                    />
-    */}
                     <View className="flex gap-4 bg-gray-200 rounded-xl px-4 py-4">
                         <Text className="text-black font-medium text-center">
                           {link}

@@ -22,16 +22,24 @@ export default function StyledButton(props: ButtonProps) {
         : props.textClass;
 
     const buttonColors =
-        touched || props.disabled
+        touched && !props.disabled
             ? props.touchButtonColors || "bg-gray-300 dark:bg-neutral-700"
             : props.buttonColors || "bg-gray-200 dark:bg-neutral-800";
+        props.disabled
+            ? "bg-gray-300 dark:bg-neutral-700"
+            : props.buttonColors || "bg-gray-200 dark:bg-neutral-800"
+    
 
-    const buttonClass = !props.buttonClass
+    const buttonClass = 
+    !props.buttonClass
         ? buttonColors
         : !props.buttonClass.includes("bg-")
-          ? (props.buttonClass += " " + buttonColors)
+          ? (props.buttonClass +" " + buttonColors)
           : props.buttonClass;
-
+    props.disabled
+        ? (buttonColors + " " + buttonClass)
+        :props.buttonClass
+        
     const finalButtonClass =
         buttonClass && buttonClass.includes("gap-")
             ? buttonClass
