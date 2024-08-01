@@ -35,8 +35,6 @@ export default function ApplyTags() {
     const setMember = useSetAtom(selectedMemberAtom);
     const { data } = useAtomValue(communityTagsQAtom);
     const addTagsMutate = useAtomValue(addTagsPatientMAtom).mutate;
-    //console.log("tag data", data);
-    //console.log("current member", member);
     const [inviteLink, setInviteLink] = useState('');
     const [textInput, setTextInput] = useState("");
     const [filteredUnappliedTags, setFilteredUnappliedTags] = useState<TagInfo[]>([]);
@@ -52,7 +50,14 @@ export default function ApplyTags() {
     const handleUnappliedPress = (tag: TagInfo) => {
         moveToApplied(tag.name);
     };
-    const [appliedTags, setAppliedTags] = useState<TagInfo[]>([]);
+
+    const getMemberTags = () => {
+        const initialAppliedTags: TagInfo[] = member.tags;
+        return initialAppliedTags;
+    };
+    const initialApplied = getMemberTags();
+    
+    const [appliedTags, setAppliedTags] = useState<TagInfo[]>(initialApplied);
     const [unappliedTags, setUnappliedTags] = useState<TagInfo[]>([]);
 
     const filterUnappliedTags = () => {
@@ -82,12 +87,8 @@ export default function ApplyTags() {
 
     const moveFromApplied = (tagName: string) => {
         if (tagName !== '') {
-            //remove tag from appliedTags array
             const filteredArray = appliedTags.filter(item => item.name !== tagName);
             setAppliedTags(filteredArray);
-            //add tag to unappliedTags array
-            //const newTag = { id: 40, name: tagName }; //hardcoding id temporarily
-            //setUnappliedTags([...unappliedTags, newTag]);
         }
     };
 
@@ -97,11 +98,6 @@ export default function ApplyTags() {
 
     const moveToApplied = (tagName: string) => {
         if (tagName !== '') {
-            //remove tag from unappliedTags array]
-
-            // const filteredArray = unappliedTags.filter(item => item.name !== tagName);
-            // setUnappliedTags(filteredArray);
-            //add tag to appliedTags array
             const tagToMove = getTagFromName(tagName);
             if (tagToMove) {
                 setAppliedTags([...appliedTags, tagToMove]);
