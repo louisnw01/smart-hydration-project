@@ -6,8 +6,10 @@ class UserLogin(BaseModel):
     email: str
     password: str
 
+
 class TargetUpdate(BaseModel):
     newValue: int
+
 
 class AddJugsToMemberForm(BaseModel):
     jugIds: List[str]
@@ -82,3 +84,21 @@ class PushTokenForm(BaseModel):
 class ToggleNotificationsForm(BaseModel):
     notificationSelection: str
     pushToken: str
+
+
+class CreateTagForm(BaseModel):
+    tagName: str
+
+
+class UpdateTagForm(BaseModel):
+    currentName: str
+    newName: str
+
+
+class DeleteTagForm(BaseModel):
+    tagName: str
+
+
+class AddTagsPatientForm(BaseModel):
+    memberID: int
+    memberTags: List[str]
