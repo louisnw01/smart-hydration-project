@@ -6,7 +6,7 @@ import Tag from "@/components/community/tag";
 import { FilterObject, TagInfo } from "@/interfaces/community";
 import PageWrapper from "@/components/common/page-wrapper";
 import { communityTagsQAtom } from "@/atom/query/community";
-import {  addTagsPatientMAtom } from "@/atom/query"
+import { addTagsPatientMAtom } from "@/atom/query"
 import { useAtomValue, useSetAtom } from "jotai";
 import { selectedMemberAtom } from "@/atom/community";
 
@@ -56,7 +56,7 @@ export default function ApplyTags() {
         return initialAppliedTags;
     };
     const initialApplied = getMemberTags();
-    
+
     const [appliedTags, setAppliedTags] = useState<TagInfo[]>(initialApplied);
     const [unappliedTags, setUnappliedTags] = useState<TagInfo[]>([]);
 
@@ -116,7 +116,7 @@ export default function ApplyTags() {
         const appliedTagNames = appliedTags.map(tag => tag.name);
         setMember({ ...member, tags: appliedTagNames });
         addTagsMutate();
-      };
+    };
 
     //to do: add messages for when no tags applied / all tags applied
     //to do: show message "There are no tags in your community. Ask your owner to add some" when no data
@@ -131,6 +131,11 @@ export default function ApplyTags() {
                     <Text className="dark:text-white font-bold text-2xl mx-6">
                         Applied tags
                     </Text>
+                    {appliedTags.length === 0 && (
+                        <Text className="dark:text-white text-xl">
+                            No tags applied to user
+                        </Text>
+                    )}
                     <View className="flex-row flex-wrap my-2 mx-3">
                         {appliedTags.map((tag, index) => (
                             <Pressable key={index} onPress={() => handleAppliedPress(tag)}>
@@ -141,6 +146,11 @@ export default function ApplyTags() {
                     <Text className="dark:text-white font-bold text-2xl mx-6">
                         Unapplied tags
                     </Text>
+                    {communityTags.length === 0 && (
+                        <Text className="dark:text-white text-xl">
+                            No tags in this community. Ask community owner to add some
+                        </Text>
+                    )}
                     <View className="flex-row flex-wrap my-2 mx-3">
                         {filteredUnappliedTags.map((tag, index) => (
                             <Pressable key={index} onPress={() => handleUnappliedPress(tag)}>
@@ -153,7 +163,7 @@ export default function ApplyTags() {
                             text="Save member's tags"
                             href="member-info-modal"
                             textClass="text-lg"
-                            onPress={handleSaveTags} 
+                            onPress={handleSaveTags}
                         />
                     </View>
                 </View>
