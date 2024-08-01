@@ -18,6 +18,7 @@ class UserRegister(BaseModel):
     name: str
     email: str
     password: str
+    mode: str
     dob: Optional[str] = None
 
     # class Config:

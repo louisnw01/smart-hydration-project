@@ -13,6 +13,7 @@ import StyledTextInput from "@/components/common/text-input";
 import StyledButton from "@/components/common/button";
 import { registerForPushNotificationsAsync } from "@/util/notifications";
 import { addPushTokenMAtom } from "@/atom/query";
+import useSettings from "../hooks/user";
 
 export default function LoginPage() {
     const router = useRouter();
@@ -21,6 +22,7 @@ export default function LoginPage() {
     const setAuthToken = useSetAtom(authTokenAtom);
     const [storedPushToken, setStoredPushToken] = useAtom(pushTokenAtom);
     const palette = useColorPalette();
+    const { isCarer } = useSettings();
 
     const passwordRef = useRef<TextInput>();
 
@@ -48,7 +50,7 @@ export default function LoginPage() {
             )   
             .catch((error: any) => console.error(error));
             }
-            router.replace("(tabs)");
+            isCarer ? router.replace("(tabs)/community") : router.replace("(tabs)");
         },[isSuccess, data])
 
     return (

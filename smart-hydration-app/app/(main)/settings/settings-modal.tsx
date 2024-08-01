@@ -236,23 +236,28 @@ const settingsList: ISettingsSection[] = [
 
 export default function SettingsModal() {
     const insets = useSafeAreaInsets();
+    const {mutate, isSuccess, data} = useAtomValue(removePushTokenMAtom);
+    const pushToken = useAtomValue(pushTokenAtom);
+
     const setAuthAtom = useSetAtom(authTokenAtom);
     const setAmounDrankTodayAtom = useSetAtom(amountDrankTodayAtom);
     const setNotifications = useSetAtom(notificationsAtom);
     const setNotificationFrequency = useSetAtom(notificationFrequencyAtom);
     const setDrinksList = useSetAtom(drinkListAtom);
-    const {mutate, isSuccess, data} = useAtomValue(removePushTokenMAtom);
-    const pushToken = useAtomValue(pushTokenAtom);
     const router = useRouter();
 
-    useEffect(() => {
-        if(!isSuccess) return;
+    function logOut() {
         setAuthAtom("");
         setAmounDrankTodayAtom(0);
         setDrinksList([]);
         setNotificationFrequency("1 hour");
         setNotifications("On");
-        router.replace("onboarding/login-register");
+        router.replace("onboarding/login-register")
+    }
+
+    useEffect(() => {
+        if(!isSuccess) return;
+        logOut();
     },[isSuccess, data])
 
     return (
@@ -286,7 +291,11 @@ export default function SettingsModal() {
                 <Pressable
                     className="items-center bg-red rounded-xl px-7 py-3"
                     onPress={() => {
-                        mutate({pushToken: pushToken as string});
+                        if(!!pushToken){
+                            mutate({pushToken: pushToken as string});
+                        } else {
+                            logOut();
+                        }
                     }}
                 >
                     <Text className="text-xl mt-1 text-white">Log Out</Text>
