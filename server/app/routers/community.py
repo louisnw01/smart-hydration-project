@@ -7,10 +7,10 @@ from ..api import get_hydration_events
 from ..routers import jug_user
 from ..services import get_user_by_id, try_get_users_community, try_get_users_community
 from ..models import Community, CommunityMember, InviteLink, Jug, User, JugUser
-from ..schemas import CreateCommunityForm, CreateInvitationForm, AddJugsToMemberForm, DeleteCommunityMemberForm
+from ..schemas import CreateCommunityForm, CreateInvitationForm, AddJugsToMemberForm, DeleteCommunityMemberForm, VerifyEmailForm
 from ..auth import auth_user, generate_invite_link
 import pprint
-
+from starlette.responses import RedirectResponse
 
 router = APIRouter(
     prefix="/community",
@@ -33,6 +33,23 @@ async def community_info(user_id: str = Depends(auth_user)):
         return {"name": community.name, "is_owner": member.is_owner}
 
 
+@router.get("/name-from-link")
+async def community_info(code: str, user_id: str = Depends(auth_user)):
+    with db_session:
+        link = InviteLink.get(id=code)
+
+        if link is None:
+            raise HTTPException(400, 'This link is invalid. Please try another link')
+
+        if link.expire_time < dt.datetime.now().timestamp():
+            link.delete()
+            raise HTTPException(403, 'This link has expired. Please get a new one')
+
+        community_name = link.community.name
+
+        return community_name
+
+
 @router.get("/patient-info")
 async def patient_info(user_id: str = Depends(auth_user)):
     with db_session:
@@ -41,8 +58,6 @@ async def patient_info(user_id: str = Depends(auth_user)):
         # get targets for users
         patient_info = []
         for juguser in community.jug_users:
-
-
             patient_info.append({
                 "id": juguser.id,
                 "name": juguser.name,
@@ -106,7 +121,6 @@ async def delete_community(user_id: str = Depends(auth_user)):
         community.delete()
 
 
-
 @router.post("/delete-member")
 async def delete_community_member(form: DeleteCommunityMemberForm, user_id: str = Depends(auth_user)):
     with db_session:
@@ -129,18 +143,27 @@ async def delete_community_member(form: DeleteCommunityMemberForm, user_id: str 
 
         member_to_delete.delete()
 
-@router.post("/invite/{code}")
-async def validate_invitation(code: str, user_id: str = Depends(auth_user)):
+
+@router.get("/redirect_invite/{code}")
+async def redirect_verify(code: str):
+    return RedirectResponse("smarthydration://(modals)/confirm-join-community-modal?code=" + code)
+
+
+@router.post("/join")
+async def join_community(form: VerifyEmailForm, user_id: str = Depends(auth_user)):
     with db_session:
         user = User.get(id=user_id)
-        link = InviteLink.get(id=code)
+        link = InviteLink.get(id=form.code)
 
-        if link is None or link.expire_time < dt.datetime.now().timestamp():
-            link.delete() if link is not None else None
-            raise HTTPException(400, 'This link is invalid. Please try again')
+        if link is None:
+            raise HTTPException(400, 'This link is invalid. Please try another link')
+
+        if link.expire_time < dt.datetime.now().timestamp():
+            link.delete()
+            raise HTTPException(403, 'This link has expired. Please get a new one')
 
         if user.community_member is not None:
-            raise HTTPException(400, 'user is already within a community')
+            raise HTTPException(400, "You're already in a community")
 
         if user.jug_user:
             user.jug_user.community = link.community
@@ -166,7 +189,7 @@ async def create_invitation(user_id: str = Depends(auth_user)):
 
         TIME_TO_EXPIRE = dt.timedelta(days=1)
 
-        expire_time = (dt.datetime.now()+TIME_TO_EXPIRE).timestamp()
+        expire_time = (dt.datetime.now() + TIME_TO_EXPIRE).timestamp()
 
         link = InviteLink(
             id=generate_invite_link(),

@@ -1,12 +1,14 @@
+/* eslint-disable import/namespace */
 import { MemberInfo } from "@/interfaces/community";
-import { ENDPOINTS, request, SERVER_URL } from "@/util/fetch";
+import { ENDPOINTS, request } from "@/util/fetch";
 import { atom } from "jotai";
 import {
     atomWithMutation,
     atomWithQuery,
     queryClientAtom,
 } from "jotai-tanstack-query";
-import { authTokenAtom } from "../user";
+// eslint-disable-next-line import/namespace
+import { authTokenAtom, inviteCodeAtom } from "../user";
 
 export const userHasCommunityAtom = atom((get) => {
     const { data, isLoading } = get(communityInfoQAtom);
@@ -141,17 +143,15 @@ export const communityInviteLinkQAtom = atomWithQuery((get) => ({
 
 export const joinCommunityMAtom = atomWithMutation((get) => ({
     mutationKey: ["join-community", get(authTokenAtom)],
-    enabled: !!get(authTokenAtom),
-    mutationFn: async (formData: { code: string }) => {
+    enabled: !!get(authTokenAtom) && !!get(inviteCodeAtom),
+    mutationFn: async () => {
         const token = get(authTokenAtom);
-        const response = await request(
-            SERVER_URL + `/community/invite/${formData.code}`,
-            {
-                method: "post",
-                auth: token as string,
-                rawUrl: true,
-            },
-        );
+        const code = get(inviteCodeAtom);
+        const response = await request(ENDPOINTS.JOIN_COMMUNITY, {
+            method: "post",
+            auth: token as string,
+            body: { code: code },
+        });
 
         if (!response.ok) {
             const error = await response.json();
@@ -227,6 +227,25 @@ export const linkJugToMemberMAtom = atomWithMutation((get) => ({
             queryKey: ["/data/historical"],
         });
     },
+}));
+
+export const communityNameQAtom = atomWithQuery((get) => ({
+    queryKey: ["name-from-link", get(authTokenAtom)],
+    queryFn: async ({ queryKey: [, token] }) => {
+        const code = get(inviteCodeAtom);
+        const response = await request(ENDPOINTS.NAME_FROM_LINK, {
+            auth: token as string,
+            query: { code },
+        });
+
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.detail);
+        }
+
+        return await response.json();
+    },
+    enabled: !!get(authTokenAtom) && !!get(inviteCodeAtom),
 }));
 
 {

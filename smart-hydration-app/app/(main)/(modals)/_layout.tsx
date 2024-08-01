@@ -21,7 +21,8 @@ export default function ModalLayout() {
                 headerLeft: () => {
                     const router = useRouter();
                     return (
-                        <Pressable onPress={() => router.back()}>
+                        <Pressable onPress={() => {
+                            router.canGoBack() ? router.back() : router.replace("(tabs)")}}>
                             <Entypo
                                 name={
                                     Platform.OS == "android"
@@ -54,18 +55,6 @@ export default function ModalLayout() {
                 options={{
                     title: "Enter a New Device Name",
                     headerBackVisible: false,
-                    headerLeft: () => {
-                        const router = useRouter();
-                        return (
-                            <Pressable onPress={() => router.back()}>
-                                <Entypo
-                                    name="chevron-left"
-                                    size={24}
-                                    color="rgb(80, 80, 80)"
-                                />
-                            </Pressable>
-                        );
-                    },
                 }}
             />
             <Stack.Screen
@@ -75,6 +64,10 @@ export default function ModalLayout() {
             <Stack.Screen
                 name="join-community-modal"
                 options={{ title: "Join a Community" }}
+            />
+            <Stack.Screen
+                name="confirm-join-community-modal"
+                options={{ title: "Are you sure you want to join?" }}
             />
             <Stack.Screen
                 name="add-member-modal"

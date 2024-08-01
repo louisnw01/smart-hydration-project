@@ -40,3 +40,7 @@ export const drinkListAtom = atomWithStorage(
 );
 
 export const emailIsVerifiedAtom = atom(false);
+
+export const dailyTargetAtom = atom(2200);
+
+export const inviteCodeAtom = atom("");
