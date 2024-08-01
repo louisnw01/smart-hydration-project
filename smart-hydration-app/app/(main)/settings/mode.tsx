@@ -1,17 +1,12 @@
-import { authTokenAtom, colorSchemeAtom } from "@/atom/user";
+import { userModeAtom } from "@/atom/user";
 import {
     MultiSelectOptionBlock,
-    OptionBlock,
 } from "@/components/common/option-block";
-import { useRouter } from "expo-router";
-import { atom, useSetAtom } from "jotai";
-import { ReactElement, ReactNode } from "react";
-import { Pressable, SectionList, Text, View } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { SectionList, View } from "react-native";
 import { Ionicons, FontAwesome6, Fontisto } from "@expo/vector-icons";
 import { ISettingsSection } from "@/interfaces/settings";
-
-const tempAtom = atom("");
+import { useAtomValue } from "jotai";
+import { changeUserModeMAtom } from "@/atom/query/user";
 
 const settingsList: ISettingsSection[] = [
     {
@@ -20,10 +15,11 @@ const settingsList: ISettingsSection[] = [
             {
                 name: "Standard",
                 component: (name, isFirst, isLast) => {
+                    const { mutate } = useAtomValue(changeUserModeMAtom)
                     return (
                         <MultiSelectOptionBlock
                             text={name}
-                            atom={tempAtom}
+                            atom={userModeAtom}
                             icon={
                                 <Ionicons
                                     name="water-outline"
@@ -33,6 +29,7 @@ const settingsList: ISettingsSection[] = [
                             }
                             isFirst={isFirst}
                             isLast={isLast}
+                            onPress={mutate}
                         />
                     );
                 },
@@ -40,10 +37,11 @@ const settingsList: ISettingsSection[] = [
             {
                 name: "Accessible",
                 component: (name, isFirst, isLast) => {
+                    const { mutate } = useAtomValue(changeUserModeMAtom)
                     return (
                         <MultiSelectOptionBlock
                             text={name}
-                            atom={tempAtom}
+                            atom={userModeAtom}
                             icon={
                                 <FontAwesome6
                                     name="universal-access"
@@ -53,6 +51,7 @@ const settingsList: ISettingsSection[] = [
                             }
                             isFirst={isFirst}
                             isLast={isLast}
+                            onPress={mutate}
                         />
                     );
                 },
@@ -60,10 +59,11 @@ const settingsList: ISettingsSection[] = [
             {
                 name: "Carer",
                 component: (name, isFirst, isLast) => {
+                    const { mutate } = useAtomValue(changeUserModeMAtom)
                     return (
                         <MultiSelectOptionBlock
                             text={name}
-                            atom={tempAtom}
+                            atom={userModeAtom}
                             icon={
                                 <Fontisto
                                     name="heartbeat"
@@ -73,6 +73,7 @@ const settingsList: ISettingsSection[] = [
                             }
                             isFirst={isFirst}
                             isLast={isLast}
+                            onPress={mutate}
                         />
                     );
                 },
@@ -81,7 +82,7 @@ const settingsList: ISettingsSection[] = [
     },
 ];
 
-export default function Theme() {
+export default function Mode() {
     return (
         <View className="flex flex-1 justify-between mx-4 mt-4">
             <SectionList

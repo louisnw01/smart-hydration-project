@@ -1,5 +1,6 @@
 import { deleteItemAsync, getItem, setItem } from "expo-secure-store";
 import { atom } from "jotai";
+import { UserMode } from "@/constants/user";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { atomWithStorage, createJSONStorage } from "jotai/vanilla/utils";
@@ -22,6 +23,8 @@ export const notificationFrequencyAtom = atomWithStorage("notification-frequency
 export const authTokenAtom = atomWithStorage("auth-token", "", storage);
 
 export const pushTokenAtom = atomWithStorage("push-token", "", storage);
+
+export const userModeAtom = atomWithStorage("user-mode", UserMode.STANDARD , storage);
 
 export const nonSecureStorage = createJSONStorage(() => AsyncStorage);
 
