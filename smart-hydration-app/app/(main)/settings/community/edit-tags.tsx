@@ -20,7 +20,7 @@ export default function EditTags({ }: EditTagsProps) {
   const [newTextInput, setNewTextInput] = useState("");
   const [editTextInput, setEditTextInput] = useState("");
   const [tagExists, setTagExists] = useState(false);
-  const [currentTagName, setCurrentTagName] = useState("");   
+  const [currentTagName, setCurrentTagName] = useState("");
   const { data, refetch: refetchTags } = useAtomValue(communityTagsQAtom);
   const createTagMutate = useAtomValue(createTagMAtom).mutate;
   const updateTagMutate = useAtomValue(updateTagMAtom).mutate;
@@ -89,7 +89,7 @@ export default function EditTags({ }: EditTagsProps) {
       setCurrentTagName("");
       setEditTextInput("");
       setShowEditTagBox(false);
-      updateTagMutate({currentName: currentTagName, newName: editTextInput})
+      updateTagMutate({ currentName: currentTagName, newName: editTextInput })
     }
   };
 
@@ -97,37 +97,36 @@ export default function EditTags({ }: EditTagsProps) {
     if (deletedTagName !== '') {
       const filteredArray = tags.filter(item => item.name !== deletedTagName);
       setTags(filteredArray);
-      deleteTagMutate({tagName: deletedTagName})
+      deleteTagMutate({ tagName: deletedTagName })
     }
   };
 
   //to do: add logic to stop users adding tags with same name as existing tag in community
 
-  const handleAddTag = (newTagName: string) => {
+  const handleAddTag = async (newTagName: string) => {
     if (newTagName === '') {
       return;
     }
-      
-      if(tags.some(tag => tag.name.toLowerCase() === newTagName.toLowerCase())){
-        setTagExists(true);
-        return;
-      }
-    if(!tagExists){
+
+    if (tags.some(tag => tag.name.toLowerCase() === newTagName.toLowerCase())) {
+      setTagExists(true);
+      return;
+    }
+    if (!tagExists) {
       const newTag = { name: newTagName };
       setTags([...tags, { name: newTagName } as TagInfo]);
       setNewTextInput("");
       toggleNewTagSection();
-      createTagMutate({tagName: newTagName});
-      refetchTags();
+      createTagMutate({ tagName: newTagName });
     }
-    };
+  };
 
-    const isTagInArray = (textEntry: string) => {
-      const exists = tags.some(tag => tag.name.toLowerCase() === textEntry.toLowerCase());
-      setTagExists(exists);
-      return exists;
-    };
-    
+  const isTagInArray = (textEntry: string) => {
+    const exists = tags.some(tag => tag.name.toLowerCase() === textEntry.toLowerCase());
+    setTagExists(exists);
+    return exists;
+  };
+
 
   const toggleSortDirection = () => {
     setFilters((prev) => ({
@@ -169,10 +168,10 @@ export default function EditTags({ }: EditTagsProps) {
                 <Text className="dark:text-white text-xl font-bold">Create new tag</Text>
               </View>
               {tagExists && (
-            <Text className="dark:text-white text-xl mb-2">
-              You can't create a tag with an existing name
-            </Text>
-          )}
+                <Text className="dark:text-white text-xl mb-2">
+                  You can't create a tag with an existing name
+                </Text>
+              )}
               <View className="flex-row items-center">
                 <View className="mr-4">
                   <StyledTextInput
@@ -197,13 +196,13 @@ export default function EditTags({ }: EditTagsProps) {
                   />
                 </View>
                 {!tagExists && (
-                <View className="mr-2">
-                  <StyledButton
-                    text="Create"
-                    textClass="text-lg"
-                    onPress={() => handleAddTag(newTextInput)}
-                  />
-                </View>
+                  <View className="mr-2">
+                    <StyledButton
+                      text="Create"
+                      textClass="text-lg"
+                      onPress={() => handleAddTag(newTextInput)}
+                    />
+                  </View>
                 )}
               </View>
             </View>
