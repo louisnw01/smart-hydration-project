@@ -8,6 +8,8 @@ import {
 } from "jotai-tanstack-query";
 import { authTokenAtom, inviteCodeAtom } from "../user";
 
+import { userInfoQAtom } from "../query";
+
 export const userHasCommunityAtom = atom((get) => {
     const { data, isLoading } = get(communityInfoQAtom);
     return !isLoading && !!data?.name;
@@ -135,13 +137,12 @@ export const joinCommunityMAtom = atomWithMutation((get) => ({
     mutationFn: async () => {
         const token = get(authTokenAtom);
         const code = get(inviteCodeAtom);
-        const response = await request(ENDPOINTS.JOIN_COMMUNITY,
-            {
-                method: "post",
-                auth: token as string,
-                body: {code: code},
-            },
-        );
+
+        const response = await request(ENDPOINTS.JOIN_COMMUNITY, {
+            method: "post",
+            auth: token as string,
+            body: { code: code },
+        });
 
         if (!response.ok) {
             const error = await response.json();
@@ -193,7 +194,6 @@ export const deleteCommunityMemberMAtom = atomWithMutation((get) => ({
     },
 }));
 
-
 export const linkJugToMemberMAtom = atomWithMutation((get) => ({
     mutationKey: ["/user/link-jug", get(authTokenAtom)],
     enabled: !!get(authTokenAtom),
@@ -226,11 +226,11 @@ export const communityNameQAtom = atomWithQuery((get) => ({
         const code = get(inviteCodeAtom);
         const response = await request(ENDPOINTS.NAME_FROM_LINK, {
             auth: token as string,
-            query: {code},
+            query: { code },
         });
 
         if (!response.ok) {
-            const error = await response.json()
+            const error = await response.json();
             throw new Error(error.detail);
         }
 
@@ -241,23 +241,23 @@ export const communityNameQAtom = atomWithQuery((get) => ({
 
 {
     /*export const getCommunityMembersMAtom = atomWithQuery((get) => ({
-    queryKey: ["get-community-members", get(authTokenAtom)],
-    enabled: !!get(authTokenAtom),
-    // TODO: replace this user interface with the expected one from the db
-    queryFn: async (formData: { community_id: string }): Promise<{name: string, id: string}[]> => {
-        const token = get(authTokenAtom);
-        const response = await request(ENDPOINTS.COMMUNITY_MEMBER, {
-            method: "post",
-            body: formData,
-            auth: token as string,
-        });
+  queryKey: ["get-community-members", get(authTokenAtom)],
+  enabled: !!get(authTokenAtom),
+  // TODO: replace this user interface with the expected one from the db
+  queryFn: async (formData: { community_id: string }): Promise<{name: string, id: string}[]> => {
+      const token = get(authTokenAtom);
+      const response = await request(ENDPOINTS.COMMUNITY_MEMBER, {
+          method: "post",
+          body: formData,
+          auth: token as string,
+      });
 
-        if (!response.ok) {
-          throw new Error("Cannot retrieve members list");
-        }
+      if (!response.ok) {
+        throw new Error("Cannot retrieve members list");
+      }
 
-        return response.json();
-    }
+      return response.json();
+  }
 }));
 */
 }
@@ -354,3 +354,25 @@ export const communityTagsQAtom = atomWithQuery((get) => ({
     retry: false,
 }));
 
+export async function fetchCommunityJugData(jugUserId: number, token: string) {
+    const response = await request(ENDPOINTS.FETCH_COMMUNITY_JUG_LIST, {
+        query: { jug_user_id: jugUserId },
+        auth: token as string,
+    });
+
+    if (!response.ok) {
+        throw new Error("Jug Data for Community Could Not Be Found");
+    }
+    return await response.json();
+}
+
+export const getCommunityJugDataQAtom = atomWithQuery((get) => ({
+    queryKey: ["get-community-jug-data", get(authTokenAtom)],
+    queryFn: async ({ queryKey: [, token] }): Promise<DeviceInfo[]> => {
+        const { data } = get(userInfoQAtom);
+        const jugUserId = data?.juguser;
+
+        return await fetchCommunityJugData(jugUserId, token);
+    },
+    enabled: !!get(authTokenAtom) && !get(userInfoQAtom).isLoading,
+}));

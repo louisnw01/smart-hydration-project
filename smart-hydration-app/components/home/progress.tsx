@@ -13,7 +13,7 @@ import Animated, {
 } from "react-native-reanimated";
 import Svg, { Circle, G } from "react-native-svg";
 import WaterAmount from "../common/water-amount";
-import { isInCommunityAtom } from "@/atom/user";
+import { userHasCommunityAtom } from "@/atom/query/community";
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 const AnimatedTextInput = Animated.createAnimatedComponent(TextInput);
@@ -91,7 +91,7 @@ export default function HydrationProgress() {
     const palette = useColorPalette();
     const amountDrankToday = useAtomValue(amountDrankTodayAtom);
     const { data, isLoading } = useAtomValue(userInfoQAtom);
-    const setIsInCommunity = useSetAtom(isInCommunityAtom);
+    const setIsInCommunity = useSetAtom(userHasCommunityAtom);
     const animatedProgress = useSharedValue(0);
 
     const text = useDerivedValue(() => animatedProgress.value.toFixed(0));
@@ -100,8 +100,6 @@ export default function HydrationProgress() {
     }));
 
     if (!data) return null;
-
-    setIsInCommunity(data.has_community);
 
     return (
         <ProgressWheel
