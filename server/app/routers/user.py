@@ -221,6 +221,9 @@ async def change_mode(form: ChangeModeForm, user_id: str = Depends(auth_user)):
     with db_session:
         user = User.get(id=user_id)
         user.mode = form.mode
+        # add jug user if changing from carer to user
+        if user.jug_user is None and form.mode != 'Carer':
+            create_jug_user(user)
         commit()
 
 
