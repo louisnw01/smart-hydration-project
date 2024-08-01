@@ -14,6 +14,8 @@ import { ENDPOINTS, request } from "@/util/fetch";
 import { DeviceInfo, ITimeSeries } from "@/interfaces/device";
 import { jugUserInfoAtom } from "./jug-user";
 import { selectedMemberAtom } from "./community";
+import { useAtomValue } from "jotai";
+import { MemberInfo } from "@/interfaces/community";
 import { communityInfoQAtom } from "./query/community";
 
 export const linkJugsToMemberMAtom = atomWithMutation((get) => ({
@@ -563,6 +565,41 @@ export const addDrinkMAtom = atomWithMutation((get) => ({
             (prev: DeviceInfo[]) => [
                 ...prev,
                 { time: formData.timestamp * 1000, value: formData.capacity },
+            ],
+        );
+    },
+}));
+
+export const addTagsPatientMAtom = atomWithMutation((get) => ({
+    mutationKey: ["/jug-user/add-tags-patient", get(authTokenAtom)],
+    enabled: !!get(authTokenAtom),
+    mutationFn: async () => {
+        const member = get(selectedMemberAtom);
+        const formData: {memberID: number, memberTags: string[]} = 
+            {
+                memberID: member.id as number,
+                memberTags: member.tags as string[],
+            };
+            console.log("member id:", member.id);
+            console.log("member tags:", member.tags);
+        const token = get(authTokenAtom);
+        const response = await request(ENDPOINTS.ADD_TAGS_PATIENT, {
+            method: "post",
+            body: formData,
+            auth: token as string,
+        });
+
+        if (!response.ok) {
+            return "failure";
+        }
+      }, 
+    onSuccess: (data, formData) => {
+        const queryClient = get(queryClientAtom);
+        void queryClient.setQueryData(
+            ["/community/get-patient-info", get(authTokenAtom)],
+            (prev: MemberInfo[]) => [
+                ...prev,
+                { tags: formData.memberTags },
             ],
         );
     },

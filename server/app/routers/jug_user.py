@@ -2,8 +2,8 @@ from fastapi import APIRouter, Depends, HTTPException
 from pony.orm.core import db_session, commit
 
 from ..auth import auth_user
-from ..models import User, OtherDrink
-from ..schemas import AddJugUserForm, JugUserUpdate, AddDrinkForm
+from ..models import User, OtherDrink, JugUser, Tag
+from ..schemas import AddJugUserForm, JugUserUpdate, AddDrinkForm, AddTagsPatientForm
 from ..services import create_jug_user_no_owner, update_jug_user_data, get_user_by_id
 
 router = APIRouter(
@@ -37,4 +37,16 @@ async def add_drink_event(form: AddDrinkForm, user_id: str = Depends(auth_user))
         user = User.get(id=user_id)
         juguser = user.jug_user
         OtherDrink(juguser=juguser, timestamp=form.timestamp, name=form.name, capacity=form.capacity)
+        commit()
+
+
+@router.post("/add-tags-patient")
+async def add_tags_patient(form: AddTagsPatientForm, user_id: str = Depends(auth_user)):
+    with db_session:
+        user = get_user_by_id(user_id)
+        if not user:
+            raise HTTPException(status_code=400, detail='user not found')
+        juguser = JugUser.get(id=form.memberID)
+        tags = [Tag.get(name=name) for name in form.memberTags]
+        juguser.tags = tags
         commit()

@@ -286,6 +286,74 @@ export const linkJugsToCommunityMemberMAtom = atomWithMutation((get) => ({
     },
 }));
 
+export const createTagMAtom = atomWithMutation((get) => ({
+    mutationKey: ["create-tag", get(authTokenAtom)],
+    mutationFn: async (formData: { tagName: string }) => {
+        const token = get(authTokenAtom);
+        const response = await request(ENDPOINTS.CREATE_TAG, {
+            method: "post",
+            body: formData,
+            auth: token as string,
+        });
+
+        if (!response.ok) {
+            return;
+        }
+    },
+    onSuccess: () => {},
+    enabled: !!get(authTokenAtom) && !get(userHasCommunityAtom),
+}));
+
+export const updateTagMAtom = atomWithMutation((get) => ({
+    mutationKey: ["update-tag", get(authTokenAtom)],
+    enabled: !!get(authTokenAtom),
+    mutationFn: async (formData: { currentName: string, newName: string }) => {
+        const token = get(authTokenAtom);
+        const response = await request(ENDPOINTS.UPDATE_TAG, {
+            method: "post",
+            body: formData,
+            auth: token as string,
+        });
+
+        if (!response.ok) {
+            return;
+        }
+    },
+}));
+
+export const deleteTagMAtom = atomWithMutation((get) => ({
+    mutationKey: ["delete-tag", get(authTokenAtom)],
+    enabled: !!get(authTokenAtom),
+    mutationFn: async (formData: { tagName: string }) => {
+        const token = get(authTokenAtom);
+        const response = await request(ENDPOINTS.DELETE_TAG, {
+            method: "post",
+            body: formData,
+            auth: token as string,
+        });
+
+        if (!response.ok) {
+            return;
+        }
+    },
+    onSuccess: () => {},
+}));
+
+export const communityTagsQAtom = atomWithQuery((get) => ({
+    queryKey: ["get-community-tags", get(authTokenAtom)],
+    queryFn: async ({ queryKey: [, token] }) => {
+        const response = await request(ENDPOINTS.COMMUNITY_TAGS, {
+            auth: token as string,
+        });
+        if (!response.ok) {
+            return null;
+        }
+        return await response.json();
+    },
+    enabled: !!get(authTokenAtom),
+    retry: false,
+}));
+
 export async function fetchCommunityJugData(jugUserId: number, token: string) {
     const response = await request(ENDPOINTS.FETCH_COMMUNITY_JUG_LIST, {
         query: { jug_user_id: jugUserId },

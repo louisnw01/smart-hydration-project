@@ -6,10 +6,9 @@ from pony.orm.core import commit, db_session, delete
 from ..api import get_hydration_events, SmartHydrationSession, get_jug_latest
 from ..routers import jug_user
 from ..services import get_user_by_id, try_get_users_community, try_get_users_community
-from ..models import Community, CommunityMember, InviteLink, Jug, User, JugUser, OtherDrink
-from ..schemas import AddCommunityDrinkForm, CreateCommunityForm, CreateInvitationForm, AddJugsToMemberForm, DeleteCommunityMemberForm, VerifyEmailForm
+from ..models import Community, CommunityMember, InviteLink, Jug, User, JugUser, Tag, OtherDrink
+from ..schemas import AddCommunityDrinkForm, CreateCommunityForm, CreateInvitationForm, AddJugsToMemberForm, DeleteCommunityMemberForm, VerifyEmailForm, CreateTagForm, UpdateTagForm, DeleteTagForm
 from ..auth import auth_user, generate_invite_link
-import pprint
 from starlette.responses import RedirectResponse
 
 router = APIRouter(
@@ -64,6 +63,7 @@ async def patient_info(user_id: str = Depends(auth_user)):
                 "jugs": [{"name": jug.name, "id": jug.smart_hydration_id} for jug in juguser.jugs],
                 "target": juguser.target or 2200,
                 "drank_today": juguser.drank_today,
+                "tags": [{"id": tag.id, "name": tag.name} for tag in juguser.tags]
             })
 
         return patient_info
@@ -199,6 +199,7 @@ async def create_invitation(user_id: str = Depends(auth_user)):
 
         return link.id
 
+
 @router.post("/link-jug-to-member")
 async def link_jugs_to_community_member(form: AddJugsToMemberForm, user_id: str = Depends(auth_user)):
     pprint.pprint(form)
@@ -212,11 +213,76 @@ async def link_jugs_to_community_member(form: AddJugsToMemberForm, user_id: str 
             return HTTPException(400, 'user is not part of the same community')
 
         for jug in form.jugIds:
-            jug_to_add = Jug.get(smart_hydration_id = jug)
+            jug_to_add = Jug.get(smart_hydration_id=jug)
             juguser.jugs.add(jug_to_add)
         commit()
         return {"message": "Jugs successfully linked to community member"}
 
+
+
+@router.post("/create-tag")
+async def create_tag(form: CreateTagForm, user_id: str = Depends(auth_user)):
+    with db_session:
+        user = User.get(id=user_id)
+        if not user:
+            raise HTTPException(status_code=400, detail="User not found")
+        member = user.community_member
+        if member is None:
+            raise HTTPException(status_code=400, detail="User is not associated with a community")
+        community = member.community
+        if not community:
+            raise HTTPException(status_code=400, detail="Community not found")
+        tag = Tag(name=form.tagName, community=community)
+        commit()
+
+
+@router.post("/update-tag")
+async def update_tag(form: UpdateTagForm, user_id: str = Depends(auth_user)):
+    with db_session:
+        user = User.get(id=user_id)
+        if not user:
+            raise HTTPException(status_code=400, detail="User not found")
+        member = user.community_member
+        if member is None:
+            raise HTTPException(status_code=400, detail="User is not associated with a community")
+        tag = Tag.get(name=form.currentName, community=member.community)
+        if not tag:
+            raise HTTPException(status_code=400, detail="Tag not found or does not belong to the user's community")
+        tag.name = form.newName
+        commit()
+
+
+@router.post("/delete-tag")
+async def delete_tag(form: DeleteTagForm, user_id: str = Depends(auth_user)):
+    with db_session:
+        user = User.get(id=user_id)
+        if not user:
+            raise HTTPException(status_code=400, detail="User not found")
+        member = user.community_member
+        if member is None:
+            raise HTTPException(status_code=400, detail="User is not associated with a community")
+        tag = Tag.get(name=form.tagName, community=member.community)
+        if not tag:
+            raise HTTPException(status_code=400, detail="Tag not found or does not belong to the user's community")
+        tag.delete()
+        commit()
+
+
+@router.get("/get-tags")
+async def community_tags(user_id: str = Depends(auth_user)):
+    print("get tags endpoint hit")
+    with db_session:
+        community = try_get_users_community(user_id)
+        if community is None:
+            raise HTTPException(400, "User is not associated with a community")
+        data = []
+        for tag in community.tags:
+            data.append({
+                "id": tag.id,
+                "name": tag.name,
+            })
+
+        return data
 
 @router.get("/get-community-jug-list")
 async def get_community_jug_list(user_id: str = Depends(auth_user)):
@@ -259,3 +325,4 @@ async def add_community_drink_event(form: AddCommunityDrinkForm, user_id: str = 
         OtherDrink(juguser=juguser, timestamp=form.timestamp, name=form.name, capacity=form.capacity)
         juguser.drank_today += form.capacity
         commit()
+
