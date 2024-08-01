@@ -616,7 +616,6 @@ export const addCommunityDrinkMAtom = atomWithMutation((get) => ({
     }) => {
         const token = get(authTokenAtom);
         const response = await request(ENDPOINTS.ADD_COMMUNITY_DRINK, {
-const response = await request(ENDPOINTS.ADD_TAGS_PATIENT, {
             method: "post",
             body: formData,
             auth: token as string,
