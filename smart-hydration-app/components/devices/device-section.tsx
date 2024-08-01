@@ -6,15 +6,11 @@ import { FontAwesome } from "@expo/vector-icons";
 import { Atom, useAtomValue } from "jotai";
 import { AtomWithQueryResult } from "jotai-tanstack-query";
 
+import { userHasCommunityAtom } from "@/atom/query/community";
 import { FlatList, RefreshControl, View } from "react-native";
 import StyledButton from "../common/button";
 import Loading from "../common/loading";
 import DeviceRow from "./device-row";
-import { AtomWithQueryResult } from "jotai-tanstack-query";
-import {
-    userHasCommunityAtom,
-    getCommunityJugDataQAtom,
-} from "@/atom/query/community";
 
 export default function DeviceSection({
     addJugButton,
