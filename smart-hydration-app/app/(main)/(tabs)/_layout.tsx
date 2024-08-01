@@ -1,4 +1,5 @@
 import SHDrop from "@/assets/svgs/SH_Drop.svg";
+import { userHasCommunityAtom } from "@/atom/query/community";
 import PageHeader from "@/components/common/header";
 import useColorPalette from "@/util/palette";
 import {
@@ -9,10 +10,12 @@ import {
 } from "@expo/vector-icons";
 
 import { Link, router, Tabs } from "expo-router";
+import { useAtomValue } from "jotai";
 import { Pressable } from "react-native";
 
 export default function TabLayout() {
     const palette = useColorPalette();
+    const hasCommunity = useAtomValue(userHasCommunityAtom);
     return (
         <Tabs
             screenOptions={{
@@ -103,15 +106,18 @@ export default function TabLayout() {
                             color={color}
                         />
                     ),
-                    headerRight: () => (
-                        <Link className="px-5" href="add-jug-user">
-                            <Entypo
-                                name="circle-with-plus"
-                                size={26}
-                                color={palette.fg}
-                            />
-                        </Link>
-                    ),
+                    headerRight: () => {
+                        if (!hasCommunity) return null;
+                        return (
+                            <Link className="px-5" href="add-jug-user">
+                                <Entypo
+                                    name="circle-with-plus"
+                                    size={26}
+                                    color={palette.fg}
+                                />
+                            </Link>
+                        );
+                    },
                 }}
             />
         </Tabs>
