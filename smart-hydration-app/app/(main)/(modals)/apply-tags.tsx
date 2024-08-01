@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import { View, Text, Pressable, TextInput, ScrollView } from "react-native";
-import { useNavigation } from "expo-router";
+import { router, useNavigation } from "expo-router";
 import StyledButton from "@/components/common/button";
 import Tag from "@/components/community/tag";
 import { FilterObject, TagInfo } from "@/interfaces/community";
 import PageWrapper from "@/components/common/page-wrapper";
 import { communityTagsQAtom } from "@/atom/query/community"; //all tags in community
+import { useAtomValue } from "jotai";
+import { selectedMemberAtom } from "@/atom/community";
 
 const filterAndSortData = (unappliedTags: TagInfo[], filterObj: FilterObject): TagInfo[] => {
     const filteredData = unappliedTags.filter((tag) => {
@@ -28,6 +30,7 @@ const filterAndSortData = (unappliedTags: TagInfo[], filterObj: FilterObject): T
 
 export default function ApplyTags() {
     const navigation = useNavigation();
+    const member = useAtomValue(selectedMemberAtom);
     const [inviteLink, setInviteLink] = useState('');
     const [textInput, setTextInput] = useState("");
     const [filteredUnappliedTags, setFilteredUnappliedTags] = useState<TagInfo[]>([]);
@@ -43,27 +46,20 @@ export default function ApplyTags() {
         moveToApplied(tag.name);
     };
     const [appliedTags, setAppliedTags] = useState([
-        { name: "independent" },
-        { name: "tea" },
-        { name: "aggressive" },
-        { name: "friendly" },
-        { name: "coffee" },
-        { name: "one" },
-        { name: "two" },
-        { name: "three" },
-        { name: "four" },
-        { name: "five" }
+        { id: 7, name: "independent" },
+        { id: 8, name: "tea" },
+        { id: 9, name: "aggressive" },
+        { id: 10, name: "friendly" },
+        { id: 11, name: "coffee" },
+        { id: 12, name: "one" }
     ]);
     const [unappliedTags, setUnappliedTags] = useState([
-        { name: "squash" },
-        { name: "soda" },
-        { name: "needs help" },
-        { name: "juice" },
-        { name: "six" },
-        { name: "seven" },
-        { name: "eight" },
-        { name: "nine" },
-        { name: "ten" }
+        { id: 1, name: "squash" },
+        { id: 2, name: "soda" },
+        { id: 3, name: "needs help" },
+        { id: 4, name: "juice" },
+        { id: 5, name: "six" },
+        { id: 6, name: "seven" }
     ]);
 
     useEffect(() => {
@@ -77,7 +73,7 @@ export default function ApplyTags() {
             const filteredArray = appliedTags.filter(item => item.name !== tagName);
             setAppliedTags(filteredArray);
             //add tag to unappliedTags array
-            const newTag = { name: tagName };
+            const newTag = { id: 40, name: tagName }; //hardcoding id temporarily
             setUnappliedTags([...unappliedTags, newTag]);
         }
     };
@@ -88,7 +84,7 @@ export default function ApplyTags() {
             const filteredArray = unappliedTags.filter(item => item.name !== tagName);
             setUnappliedTags(filteredArray);
             //add tag to appliedTags array
-            const newTag = { name: tagName };
+            const newTag = { id: 41, name: tagName }; //hardcoding id temporarily
             setAppliedTags([...appliedTags, newTag]);
         }
     };
