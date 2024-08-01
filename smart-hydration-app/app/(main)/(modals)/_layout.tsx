@@ -21,8 +21,13 @@ export default function ModalLayout() {
                 headerLeft: () => {
                     const router = useRouter();
                     return (
-                        <Pressable onPress={() => {
-                            router.canGoBack() ? router.back() : router.replace("(tabs)")}}>
+                        <Pressable
+                            onPress={() => {
+                                router.canGoBack()
+                                    ? router.back()
+                                    : router.replace("(tabs)");
+                            }}
+                        >
                             <Entypo
                                 name={
                                     Platform.OS == "android"
@@ -89,6 +94,25 @@ export default function ModalLayout() {
                 name="add-device-to-juguser-modal"
                 options={{
                     title: "Link device to user",
+                    headerBackVisible: false,
+                    headerLeft: () => {
+                        const router = useRouter();
+                        return (
+                            <Pressable onPress={() => router.back()}>
+                                <Entypo
+                                    name="chevron-left"
+                                    size={24}
+                                    color="rgb(80, 80, 80)"
+                                />
+                            </Pressable>
+                        );
+                    },
+                }}
+            />
+            <Stack.Screen
+                name="add-drink-community-modal"
+                options={{
+                    title: "Add a drink for a member",
                     headerBackVisible: false,
                     headerLeft: () => {
                         const router = useRouter();

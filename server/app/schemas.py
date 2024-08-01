@@ -48,6 +48,11 @@ class AddDrinkForm(BaseModel):
     name: str
     capacity: int
 
+class AddCommunityDrinkForm(BaseModel):
+    juser_id: int
+    timestamp: int
+    name: str
+    capacity: int
 
 class CreateCommunityForm(BaseModel):
     name: str

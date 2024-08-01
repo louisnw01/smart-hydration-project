@@ -14,6 +14,9 @@ import Animated, {
 import Svg, { Circle, G } from "react-native-svg";
 import WaterAmount from "../common/water-amount";
 
+import { userHasCommunityAtom } from "@/atom/query/community";
+
+
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 const AnimatedTextInput = Animated.createAnimatedComponent(TextInput);
 
@@ -92,6 +95,7 @@ export default function HydrationProgress() {
     const palette = useColorPalette();
     const amountDrankToday = useAtomValue(amountDrankTodayAtom);
     const { data } = useAtomValue(userInfoQAtom);
+
     const animatedProgress = useSharedValue(0);
 
     const text = useDerivedValue(() => animatedProgress.value.toFixed(0));
@@ -100,7 +104,7 @@ export default function HydrationProgress() {
     }));
 
     const target = data?.target || 2200;
-
+  
     if (!data) return null;
 
     return (
