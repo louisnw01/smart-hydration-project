@@ -204,8 +204,8 @@ async def link_jugs_to_community_member(form: AddJugsToMemberForm, user_id: str 
     pprint.pprint(form)
     with db_session:
         user = User.get(id=user_id)
-        user_juser = JugUser.get(user = user)
-        user_community = user_juser.community
+        member = user.community_member
+        user_community = member.community
         juguser = JugUser.get(id = form.communityMember)
         juser_community = juguser.community
         if user_community != juser_community or user_community is None or juser_community is None:
