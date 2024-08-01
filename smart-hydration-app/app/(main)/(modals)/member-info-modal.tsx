@@ -126,7 +126,7 @@ export default function MemberInfoModal() {
                     size={23}
                     color={palette.fg}
                 />
-                onPress={() => router.push("apply-tags")}
+                onPress={() => router.push({ pathname: "apply-tags", params: { member: JSON.stringify(member) } })}
             />
         </ScrollPageWrapper>
     );
