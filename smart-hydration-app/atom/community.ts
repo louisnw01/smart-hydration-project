@@ -2,12 +2,19 @@ import { MemberInfo } from "@/interfaces/community";
 import { atom } from "jotai";
 
 import { ENDPOINTS, request } from "@/util/fetch";
-import { atomWithMutation, queryClientAtom } from "jotai-tanstack-query";
+import {
+    atomWithMutation,
+    atomWithQuery,
+    queryClientAtom,
+} from "jotai-tanstack-query";
 import { authTokenAtom } from "./user";
+import { DeviceInfo } from "@/interfaces/device";
+import { userInfoQAtom } from "./query";
 
 export const membersAtom = atom(new Map());
 export const selectedJugsForMemberAtom = atom<Set<string>>(new Set<string>());
 export const selectedMemberAtom = atom<Partial<MemberInfo>>({});
+export const selectedCommunityMemberAtom = atom(0);
 
 export const linkJugToMemberMAtom = atomWithMutation((get) => ({
     mutationKey: ["/user/link-jug", get(authTokenAtom)],
@@ -33,4 +40,28 @@ export const linkJugToMemberMAtom = atomWithMutation((get) => ({
             queryKey: ["/data/historical"],
         });
     },
+}));
+
+export async function fetchCommunityJugData(jugUserId: number, token: string) {
+    const response = await request(ENDPOINTS.FETCH_COMMUNITY_JUG_LIST, {
+        query: { jug_user_id: jugUserId },
+        auth: token as string,
+    });
+
+    if (!response.ok) {
+        throw new Error("Jug Data for Community Could Not Be Found");
+    }
+    return await response.json();
+}
+
+export const getCommunityJugDataQAtom = atomWithQuery((get) => ({
+    queryKey: ["get-community-jug-data", get(authTokenAtom)],
+    queryFn: async ({ queryKey: [, token] }): Promise<DeviceInfo[]> => {
+        const { data } = get(userInfoQAtom);
+        const jugUserId = data?.juguser;
+        console.log("GOT ERE");
+
+        return await fetchCommunityJugData(jugUserId, token);
+    },
+    enabled: !!get(authTokenAtom) && !get(userInfoQAtom).isLoading,
 }));
