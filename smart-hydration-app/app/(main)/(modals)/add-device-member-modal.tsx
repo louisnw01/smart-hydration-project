@@ -32,7 +32,6 @@ export default function AddDeviceMemberModal() {
     };
 
     const handlePress = () => {
-        console.log("Selected member: " + JSON.stringify(selectedMember));
         let jugIdArray = [];
         for (let j of selectedJugs) {
             jugIdArray.push(j.id);
@@ -41,7 +40,6 @@ export default function AddDeviceMemberModal() {
             jugIds: jugIdArray,
             communityMember: selectedMember.id,
         };
-        console.log(queryData);
         linkJugsToCommunityMember(queryData);
         navigation.goBack();
     };

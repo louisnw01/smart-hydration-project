@@ -30,7 +30,9 @@ export function ProgressWheel({
     const circumference = 2 * Math.PI * radius;
 
     const realProgress = useDerivedValue(() => {
-        return ((max - animatedProgress.value) / max) * circumference;
+        const value = ((max - animatedProgress.value) / max) * circumference;
+        console.log(value);
+        return value <= 0 ? 0 : value;
     });
 
     animatedProgress.value = withTiming(progress, {

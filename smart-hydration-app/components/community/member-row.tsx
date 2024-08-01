@@ -33,24 +33,6 @@ export default function MemberRow({ member }: { member: MemberInfo }) {
                         unit="ml"
                     />
                 </View>
-
-                <MemberDetail title="Target Progress" />
-            </View>
-
-            <View className="flex-1 h-full">
-                <MemberDetail title="Tags" tags />
-            </View>
-        </Pressable>
-    );
-}
-
-function MemberDetail({ title, value, tags }) {
-    return (
-        <View className="bg-gray-200 rounded-lg px-2 py-2">
-            <Text className="font-semibold">{title}</Text>
-            <Text className="text-xl">{value || "No data"}</Text>
-
-            {tags && (
                 <View className="flex-row flex-wrap">
                     <Tag name="Independent"></Tag>
                     <Tag name="Likes coffee"></Tag>
@@ -62,7 +44,19 @@ function MemberDetail({ title, value, tags }) {
                     <Tag name="Eight"></Tag>
                     <Tag name="Nine"></Tag>
                 </View>
-            )}
+                <MemberDetail title="Target Progress" />
+            </View>
+        </Pressable>
+    );
+}
+
+function MemberDetail({ title, value }) {
+    return (
+        <View className="border border-gray-200 dark:border-neutral-700 rounded-lg px-2 py-2">
+            <Text className="font-semibold dark:text-white">{title}</Text>
+            <Text className="text-xl dark:text-white">
+                {value || "No data"}
+            </Text>
         </View>
     );
 }
