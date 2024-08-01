@@ -221,6 +221,14 @@ async def link_jugs_to_community_member(form: AddJugsToMemberForm, user_id: str 
 @router.post("/add-community-drink-event")
 async def add_community_drink_event(form: AddCommunityDrinkForm, user_id: str = Depends(auth_user)):
     with db_session:
+        user = User.get(id=user_id)
+
+        member = user.community_member
+        if member is None:
+            raise HTTPException(400, 'user is not associated with a community')
+
+        if member.is_owner is None:
+            raise HTTPException(400, 'user does not have permissions to add drinks for this community')
         juguser = JugUser.get(id=form.juser_id)
         OtherDrink(juguser=juguser, timestamp=form.timestamp, name=form.name, capacity=form.capacity)
         juguser.drank_today += form.capacity
