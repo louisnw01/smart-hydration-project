@@ -11,6 +11,7 @@ import StyledButton from "@/components/common/button";
 import { FontAwesome } from '@expo/vector-icons';
 import useColorPalette from "@/util/palette";
 import OnboardingHeader from "@/components/onboarding/onboarding-header";
+import useSettings from "../hooks/user";
 
 
 export default function EmailVerificationPage() {
@@ -18,6 +19,7 @@ export default function EmailVerificationPage() {
     const verificationUrl = Linking.useURL();
     const [code, setCode] = useState("");
     const palette = useColorPalette();
+    const { isCarer } = useSettings();
 
     //function to extract verification code from link
     //format = smarthydration://verify_email/auth=xxxxxxxx
@@ -34,7 +36,7 @@ export default function EmailVerificationPage() {
 
     useEffect(() => {
         if(!isSuccess || data) return;
-        router.replace("(tabs)");
+        isCarer ? router.replace("(tabs)/community") : router.replace("(tabs)");
     },[isSuccess, data])
 
     useEffect(() => {

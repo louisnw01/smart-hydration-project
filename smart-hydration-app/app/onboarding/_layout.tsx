@@ -41,6 +41,12 @@ export default function OnboardingLayout() {
                 }}
             />
             <Stack.Screen
+                name="user-mode"
+                options={{
+                    title: "What mode would you like to use?",
+                }}
+            />
+            <Stack.Screen
                 name="dob"
                 options={{
                     title: "What is your date of birth?",

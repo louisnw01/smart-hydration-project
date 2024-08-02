@@ -377,7 +377,6 @@ export const addPushTokenMAtom = atomWithMutation((get) => ({
 }));
 
 export const removePushTokenMAtom = atomWithMutation((get) => ({
-    enabled: !!get(authTokenAtom) && !!get(pushTokenAtom),
     mutationKey: ["/user/remove-push-token", get(authTokenAtom)],
     mutationFn: async (formData: { pushToken: string }) => {
         const token = get(authTokenAtom);
@@ -398,7 +397,6 @@ export const removePushTokenMAtom = atomWithMutation((get) => ({
 }));
 
 export const toggleNotificationsMAtom = atomWithMutation((get) => ({
-    enabled: !!get(authTokenAtom) && !!get(pushTokenAtom),
     mutationKey: ["/user/toggle-notifications", get(authTokenAtom)],
     mutationFn: async () => {
         const token = get(authTokenAtom);

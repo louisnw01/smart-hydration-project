@@ -10,7 +10,7 @@ import StyledButton from "@/components/common/button";
 import { OptionBlock } from "@/components/common/option-block";
 import { ISettingsSection } from "@/interfaces/settings";
 import { Feather, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
-import { router, useRouter } from "expo-router";
+import { router } from "expo-router";
 import { useAtomValue, useSetAtom } from "jotai";
 import { useEffect } from "react";
 import { SectionList, Text, View } from "react-native";
@@ -23,7 +23,6 @@ const settingsList: ISettingsSection[] = [
             {
                 name: "Profile",
                 component: (name, isFirst, isLast) => {
-                    const router = useRouter();
                     return (
                         <OptionBlock
                             isLast={isLast}
@@ -39,7 +38,6 @@ const settingsList: ISettingsSection[] = [
             {
                 name: "User Mode",
                 component: (name, isFirst, isLast) => {
-                    const router = useRouter();
                     return (
                         <OptionBlock
                             isLast={isLast}
@@ -64,7 +62,6 @@ const settingsList: ISettingsSection[] = [
             {
                 name: "Other Drinks",
                 component: (name, isFirst, isLast) => {
-                    const router = useRouter();
                     return (
                         <OptionBlock
                             isLast={isLast}
@@ -84,7 +81,6 @@ const settingsList: ISettingsSection[] = [
             {
                 name: "Daily Target",
                 component: (name, isFirst, isLast) => {
-                    const router = useRouter();
                     return (
                         <OptionBlock
                             isLast={isLast}
@@ -111,7 +107,6 @@ const settingsList: ISettingsSection[] = [
             {
                 name: "Theme",
                 component: (name, isFirst, isLast) => {
-                    const router = useRouter();
                     return (
                         <OptionBlock
                             isLast={isLast}
@@ -164,7 +159,6 @@ const settingsList: ISettingsSection[] = [
             {
                 name: "Notification settings",
                 component: (name, isFirst, isLast) => {
-                    const router = useRouter();
                     return (
                         <OptionBlock
                             isLast={isLast}
@@ -189,7 +183,7 @@ const settingsList: ISettingsSection[] = [
         data: [
             {
                 component: () => {
-                    const { mutate, isSuccess, data } =
+                    const { mutate, isSuccess } =
                         useAtomValue(removePushTokenMAtom);
                     const pushToken = useAtomValue(pushTokenAtom);
                     const setAuthAtom = useSetAtom(authTokenAtom);
@@ -199,14 +193,18 @@ const settingsList: ISettingsSection[] = [
                     );
                     const setDrinksList = useSetAtom(drinkListAtom);
 
-                    useEffect(() => {
-                        if (!isSuccess) return;
+                    function handleLogout() {
                         setAuthAtom("");
                         setDrinksList([]);
                         setNotificationFrequency("1 hour");
                         setNotifications("On");
                         router.replace("onboarding/login-register");
-                    }, [isSuccess, data]);
+                    }
+
+                    useEffect(() => {
+                        if (!isSuccess) return;
+                        handleLogout();
+                    }, [isSuccess]);
 
                     return (
                         <View className="">
@@ -215,9 +213,15 @@ const settingsList: ISettingsSection[] = [
                                 text="Log Out"
                                 buttonClass="bg-red rounded-xl py-3 justify-center"
                                 textClass="text-xl text-white"
-                                onPress={() =>
-                                    mutate({ pushToken: pushToken as string })
-                                }
+                                onPress={() => {
+                                    if (!!pushToken) {
+                                        mutate({
+                                            pushToken: pushToken as string,
+                                        });
+                                    } else {
+                                        handleLogout();
+                                    }
+                                }}
                             />
                         </View>
                     );

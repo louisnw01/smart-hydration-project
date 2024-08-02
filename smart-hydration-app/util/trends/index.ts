@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable no-unreachable */
 import { chartTimeWindowAtom } from "@/atom/nav";
 import { getHydrationQAtom } from "@/atom/query";
 import { MS_DAY, MS_HOUR, MS_MONTH, MS_WEEK, MS_YEAR } from "@/constants/data";
@@ -110,11 +108,6 @@ export function getAggregates(data: any[], type: string) {
         }
     }
     return Array.from(aggs, ([x, y]) => ({ x, y }));
-
-    // eslint-disable-next-line no-unreachable
-    const arr = Array.from(aggs.values());
-    arr.sort((a, b) => a.x - b.x);
-    return arr;
 }
 
 export const formattedDataAtom = atom((get) => {
@@ -131,7 +124,6 @@ export interface FormattedData {
     y: number;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function avgOfNumberList(list: number[]) {
     return list.reduce((curr, num) => curr + num, 0) / list.length;
 }
