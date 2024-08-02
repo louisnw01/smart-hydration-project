@@ -175,7 +175,7 @@ export default function CommunityPage() {
     } else {
         return (
             <PageWrapper>
-                <View className="flex-row px-4 pt-4 pr ">
+                <View className="flex-row px-4 pt-4 pr mb-4 ">
                     <Text className="py-3 text-xl font-semibold">
                         Sort by:{" "}
                     </Text>
@@ -215,17 +215,6 @@ export default function CommunityPage() {
                                 />
                             }
                         > */}
-                        <View className="flex flex-row mx-2 items-center my-2">
-                            <Pressable
-                                onPress={handleSortPress}
-                                className="bg-blue px-4 py-2 rounded-xl ml-2"
-                            >
-                                <Text className="text-2l font-semibold text-white">
-                                    {`Sort by name ${filters.sort === "asc" ? "A-Z" : "Z-A"}`}
-                                </Text>
-                            </Pressable>
-                        </View>
-
                         <FlatList
                             data={filteredData || []}
                             contentContainerClassName="flex gap-6"
