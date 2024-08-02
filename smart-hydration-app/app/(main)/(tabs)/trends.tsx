@@ -1,4 +1,3 @@
-import { chartTimeWindowAtom } from "@/atom/nav";
 import { getHydrationQAtom } from "@/atom/query";
 import { ScrollPageWrapper } from "@/components/common/page-wrapper";
 import WaterAmount from "@/components/common/water-amount";
@@ -12,11 +11,11 @@ import { ActivityIndicator, Text, View } from "react-native";
 
 import { mostHydratedDayOfWeekAtom } from "@/atom/hydration";
 import TrendsChart from "@/components/trends/chart";
-import { isInCommunityAtom } from "@/atom/user";
 import useSettings from "@/app/hooks/user";
 import StyledButton from "@/components/common/button";
 import { FontAwesome6 } from "@expo/vector-icons"
 import useColorPalette from "@/util/palette";
+import { userHasCommunityAtom } from "@/atom/query/community";
 
 function MostHydratedDayOfWeek() {
     const { name, value } = useAtomValue(mostHydratedDayOfWeekAtom);
@@ -30,7 +29,6 @@ function MostHydratedDayOfWeek() {
 
 function Insights() {
     const data = useAtomValue(formattedDataAtom);
-    const timeframe = useAtomValue(chartTimeWindowAtom);
 
     if (!data || data.length === 0) {
         return (
@@ -58,7 +56,7 @@ function Insights() {
 
 export default function TrendsPage() {
     const { isLoading } = useAtomValue(getHydrationQAtom);
-    const isInCommunity = useAtomValue(isInCommunityAtom);
+    const isInCommunity = useAtomValue(userHasCommunityAtom);
     const { isCarer } = useSettings();
     const palette = useColorPalette();
     return (
