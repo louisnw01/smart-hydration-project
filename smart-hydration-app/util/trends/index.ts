@@ -56,6 +56,7 @@ export function getTimeInMins(timestamp: number) {
 }
 
 export function getAggregates(data: any[], type: string) {
+    if (!data || data.length == 0) return [];
     const timeWindowMap = {
         D: MS_HOUR,
         W: MS_DAY,
