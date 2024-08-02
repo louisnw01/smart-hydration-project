@@ -115,7 +115,7 @@ export function getAggregates(data: any[], type: string) {
 export const formattedDataAtom = atom((get) => {
   const type = get(chartTimeWindowAtom);
   const { data, isLoading } = get(getHydrationQAtom);
-  if (isLoading || !data) {
+  if (isLoading || !data || data.length == 0) {
     return [];
   }
   return getAggregates(data, type);

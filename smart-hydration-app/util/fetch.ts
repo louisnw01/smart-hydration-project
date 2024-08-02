@@ -52,6 +52,8 @@ export const ENDPOINTS = {
     REMOVE_PUSH_TOKEN: "/user/remove-push-token",
     TOGGLE_NOTIFICATIONS: "/user/toggle-notifications",
     TOGGLE_NOTIFICATIONS_FREQUENCY: "/user/toggle-notifications-frequency",
+
+    CHANGE_MODE :"/user/change-mode",
 };
 
 interface RequestOptions {

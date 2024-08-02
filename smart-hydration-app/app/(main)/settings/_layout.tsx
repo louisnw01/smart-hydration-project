@@ -2,9 +2,11 @@ import useColorPalette from "@/util/palette";
 import { Stack, useRouter } from "expo-router";
 import { Platform, Pressable } from "react-native";
 import { Entypo } from "@expo/vector-icons";
+import useSettings from "@/app/hooks/user";
 
 export default function SettingsLayout() {
     const palette = useColorPalette();
+    const { isCarer } = useSettings();
     return (
         <Stack
             screenOptions={{
@@ -27,7 +29,9 @@ export default function SettingsLayout() {
                     headerLeft: () => {
                         const router = useRouter();
                         return (
-                            <Pressable onPress={() => router.back()}>
+                            <Pressable onPress={() => {
+                                isCarer ? router.replace('(tabs)/community') : router.replace('(tabs)');
+                                }}>
                                 <Entypo
                                     name= {Platform.OS == "android" ? "chevron-left" :"circle-with-cross"}
                                     size={24}
