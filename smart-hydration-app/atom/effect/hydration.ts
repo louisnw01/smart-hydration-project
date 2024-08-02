@@ -1,19 +1,17 @@
-import { atomEffect } from "jotai-effect";
-import { getHydrationQAtom } from "../query";
+import { MS_DAY } from "@/constants/data";
 import {
     getAllAggregates,
-    getAmountDrankToday,
     getAvgAmountDrankByNow,
     getMostHydratedDayOfWeek,
 } from "@/util/trends";
-import { MS_DAY } from "@/constants/data";
+import { atomEffect } from "jotai-effect";
 import {
-    amountDrankTodayAtom,
     avgAmountDrankByTimeNowAtom,
     avgAmountDrankLastMonthAtom,
     avgAmountDrankThisMonthAtom,
     mostHydratedDayOfWeekAtom,
 } from "../hydration";
+import { getHydrationQAtom } from "../query";
 
 export const hydrationInsightsEAtom = atomEffect((get, set) => {
     const { data, isLoading } = get(getHydrationQAtom);
@@ -22,7 +20,6 @@ export const hydrationInsightsEAtom = atomEffect((get, set) => {
 
     const dailyAggregates = getAllAggregates(data, MS_DAY);
 
-    set(amountDrankTodayAtom, getAmountDrankToday(data));
     set(avgAmountDrankByTimeNowAtom, getAvgAmountDrankByNow(dailyAggregates));
 
     set(mostHydratedDayOfWeekAtom, getMostHydratedDayOfWeek(dailyAggregates));

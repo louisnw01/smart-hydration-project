@@ -1,11 +1,13 @@
+/* eslint-disable import/namespace */
 import { MemberInfo } from "@/interfaces/community";
-import { ENDPOINTS, request, SERVER_URL } from "@/util/fetch";
+import { ENDPOINTS, request } from "@/util/fetch";
 import { atom } from "jotai";
 import {
     atomWithMutation,
     atomWithQuery,
     queryClientAtom,
 } from "jotai-tanstack-query";
+// eslint-disable-next-line import/namespace
 import { authTokenAtom, inviteCodeAtom } from "../user";
 
 import { userInfoQAtom } from "../query";
@@ -37,7 +39,7 @@ export const communityInfoQAtom = atomWithQuery((get) => ({
         return await response.json();
     },
     enabled: !!get(authTokenAtom),
-    retry: false,
+    // retry: false,
 }));
 
 export const patientInfoQAtom = atomWithQuery((get) => ({
@@ -111,7 +113,17 @@ export const deleteCommunityMAtom = atomWithMutation((get) => ({
             return;
         }
     },
-    onSuccess: () => {},
+    onSuccess: () => {
+        const qc = get(queryClientAtom);
+        const authToken = get(authTokenAtom);
+        qc.setQueryData(["get-community-users", authToken], () => []);
+        qc.setQueryData(["get-community-info", authToken], () => null);
+        qc.setQueryData(["user-info", authToken], (prev) => ({
+            ...prev,
+            has_community: false,
+        }));
+        qc.setQueryData(["get-patient-info", authToken], []);
+    },
 }));
 
 export const communityInviteLinkQAtom = atomWithQuery((get) => ({
@@ -252,9 +264,7 @@ export const communityNameQAtom = atomWithQuery((get) => ({
           auth: token as string,
       });
 
-      if (!response.ok) {
-        throw new Error("Cannot retrieve members list");
-      }
+
 
       return response.json();
   }

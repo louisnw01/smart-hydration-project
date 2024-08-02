@@ -4,7 +4,7 @@ export default function NamePage() {
         <Name
             isOnboarding={true}
             pronoun="your"
-            nextHref="onboarding/dob"
+            nextHref="onboarding/user-mode"
         />
     )
 }

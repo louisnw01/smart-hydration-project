@@ -1,17 +1,17 @@
 import Jug from "@/assets/svgs/jug.svg";
 import { selectedMemberAtom } from "@/atom/community";
+import { selectedJugIdAtom } from "@/atom/device";
+import { getPatientJugDataQAtom } from "@/atom/query";
 import StyledButton from "@/components/common/button";
 import { ScrollPageWrapper } from "@/components/common/page-wrapper";
+import Tag from "@/components/community/tag";
+import DeviceSection from "@/components/devices/device-section";
 import useColorPalette from "@/util/palette";
 import { FontAwesome, MaterialCommunityIcons } from "@expo/vector-icons";
+import { router } from "expo-router";
 import { useAtomValue, useSetAtom } from "jotai";
 import { Text, View } from "react-native";
-import { router } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import DeviceSection from "@/components/devices/device-section";
-import { getPatientJugDataQAtom } from "@/atom/query";
-import { selectedJugIdAtom } from "@/atom/device";
-import Tag from "@/components/community/tag";
 
 function MemberInfoBlock({ children, title }) {
     return (
@@ -34,9 +34,14 @@ export default function MemberInfoModal() {
                 paddingBottom: insets.bottom,
             }}
         >
-            <Text className="dark:text-white text-3xl font-semibold">
-                {member.name}
-            </Text>
+            <View className="flex flex-row justify-between items-center">
+                <Text className="dark:text-white text-3xl font-semibold">
+                    {member.name}
+                </Text>
+                <Text className="text-neutral-700 font-medium dark:text-gray-300">
+                    ID #: {member.id}
+                </Text>
+            </View>
 
             <MemberInfoBlock title="Profile Details">
                 <Text className="text-xl dark:text-white">

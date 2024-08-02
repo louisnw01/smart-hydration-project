@@ -1,10 +1,13 @@
+/** eslint-disable no-unused-expressions */
+import useSettings from "@/app/hooks/user";
 import useColorPalette from "@/util/palette";
-import { Stack, useRouter } from "expo-router";
-import { Platform, Pressable } from "react-native";
 import { Entypo } from "@expo/vector-icons";
+import { router, Stack } from "expo-router";
+import { Platform, Pressable } from "react-native";
 
 export default function SettingsLayout() {
     const palette = useColorPalette();
+    const { isCarer } = useSettings();
     return (
         <Stack
             screenOptions={{
@@ -25,11 +28,21 @@ export default function SettingsLayout() {
                 options={{
                     title: "Settings",
                     headerLeft: () => {
-                        const router = useRouter();
                         return (
-                            <Pressable onPress={() => router.back()}>
+                            <Pressable
+                                onPress={() => {
+                                    // eslint-disable-next-line no-unused-expressions
+                                    isCarer
+                                        ? router.replace("(tabs)/community")
+                                        : router.replace("(tabs)");
+                                }}
+                            >
                                 <Entypo
-                                    name= {Platform.OS == "android" ? "chevron-left" :"circle-with-cross"}
+                                    name={
+                                        Platform.OS == "android"
+                                            ? "chevron-left"
+                                            : "circle-with-cross"
+                                    }
                                     size={24}
                                     color="rgb(80, 80, 80)"
                                 />
@@ -43,7 +56,6 @@ export default function SettingsLayout() {
                 options={{
                     title: "Theme",
                     headerLeft: () => {
-                        const router = useRouter();
                         return (
                             <Pressable onPress={() => router.back()}>
                                 <Entypo
@@ -61,7 +73,6 @@ export default function SettingsLayout() {
                 options={{
                     title: "User Mode",
                     headerLeft: () => {
-                        const router = useRouter();
                         return (
                             <Pressable onPress={() => router.back()}>
                                 <Entypo
@@ -79,7 +90,6 @@ export default function SettingsLayout() {
                 options={{
                     title: "Profile",
                     headerLeft: () => {
-                        const router = useRouter();
                         return (
                             <Pressable onPress={() => router.back()}>
                                 <Entypo
@@ -97,7 +107,6 @@ export default function SettingsLayout() {
                 options={{
                     title: "Invite a Member",
                     headerLeft: () => {
-                        const router = useRouter();
                         return (
                             <Pressable onPress={() => router.back()}>
                                 <Entypo
@@ -115,7 +124,6 @@ export default function SettingsLayout() {
                 options={{
                     title: "Change Community Name",
                     headerLeft: () => {
-                        const router = useRouter();
                         return (
                             <Pressable onPress={() => router.back()}>
                                 <Entypo
@@ -133,7 +141,6 @@ export default function SettingsLayout() {
                 options={{
                     title: "Transfer Community Ownership",
                     headerLeft: () => {
-                        const router = useRouter();
                         return (
                             <Pressable onPress={() => router.back()}>
                                 <Entypo
@@ -147,11 +154,10 @@ export default function SettingsLayout() {
                 }}
             />
             <Stack.Screen
-                name="community/community-profile"
+                name="community/community-settings"
                 options={{
-                    title: "Transfer Community Ownership",
+                    title: "Community Settings",
                     headerLeft: () => {
-                        const router = useRouter();
                         return (
                             <Pressable onPress={() => router.back()}>
                                 <Entypo
@@ -169,7 +175,6 @@ export default function SettingsLayout() {
                 options={{
                     title: "Remove a Member",
                     headerLeft: () => {
-                        const router = useRouter();
                         return (
                             <Pressable onPress={() => router.back()}>
                                 <Entypo
@@ -187,7 +192,6 @@ export default function SettingsLayout() {
                 options={{
                     title: "Edit community tags",
                     headerLeft: () => {
-                        const router = useRouter();
                         return (
                             <Pressable onPress={() => router.back()}>
                                 <Entypo
@@ -205,7 +209,6 @@ export default function SettingsLayout() {
                 options={{
                     title: "Notifications",
                     headerLeft: () => {
-                        const router = useRouter();
                         return (
                             <Pressable onPress={() => router.back()}>
                                 <Entypo
