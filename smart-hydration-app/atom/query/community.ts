@@ -207,6 +207,28 @@ export const deleteCommunityMemberMAtom = atomWithMutation((get) => ({
     },
 }));
 
+
+export const leaveCommunityMAtom = atomWithMutation((get) => ({
+    mutationKey: ["leave-community", get(authTokenAtom)],
+    enabled: !!get(authTokenAtom),
+    mutationFn: async () => {
+        const token = get(authTokenAtom);
+        const response = await request(ENDPOINTS.LEAVE_COMMUNITY, {
+            method: "post",
+            auth: token as string,
+        });
+
+        if (!response.ok) {
+            throw new Error("could not delete community member");
+        }
+    },
+    onSuccess: () => {
+        const qc = get(queryClientAtom);
+        qc.invalidateQueries({ queryKey: ["get-community-info"] });
+        qc.invalidateQueries({ queryKey: ["get-patient-info"] });
+    },
+}));
+
 export const linkJugToMemberMAtom = atomWithMutation((get) => ({
     mutationKey: ["/user/link-jug", get(authTokenAtom)],
     enabled: !!get(authTokenAtom),

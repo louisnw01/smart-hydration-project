@@ -130,7 +130,7 @@ async def delete_community_member(form: DeleteCommunityMemberForm, user_id: str 
         if member is None:
             raise HTTPException(400, 'user is not associated with a community')
 
-        if member.is_owner is None:
+        if member.is_owner is False:
             raise HTTPException(400, 'user does not have permissions to remove members')
         community = member.community
 
@@ -142,6 +142,21 @@ async def delete_community_member(form: DeleteCommunityMemberForm, user_id: str 
             raise HTTPException(400, "member is the owner of this community")
 
         member_to_delete.delete()
+
+
+@router.post("/leave")
+async def delete_community_member(user_id: str = Depends(auth_user)):
+    with db_session:
+        user = User.get(id=user_id)
+
+        member = user.community_member
+        if member is None:
+            raise HTTPException(400, 'user is not associated with a community')
+
+        if member.is_owner is True:
+            raise HTTPException(404, 'You cannot leave a community which you own')
+
+        member.delete()
 
 
 @router.get("/redirect_invite/{code}")
