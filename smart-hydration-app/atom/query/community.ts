@@ -164,6 +164,7 @@ export const joinCommunityMAtom = atomWithMutation((get) => ({
     onSuccess: () => {
         const qc = get(queryClientAtom);
         qc.invalidateQueries({ queryKey: ["get-community-info"] });
+        qc.invalidateQueries({ queryKey: ["get-patient-info"] });
     },
 }));
 

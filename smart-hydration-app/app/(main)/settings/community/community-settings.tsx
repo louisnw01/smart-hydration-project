@@ -96,7 +96,10 @@ const settingsList: ISettingsSection[] = [
             {
                 name: "Remove Member",
                 component: (name, isFirst, isLast) => {
+                    const { data } = useAtomValue(communityInfoQAtom);
                     return (
+                        <>
+                        {data?.isOwner && (
                         <OptionBlock
                             isLast={isLast}
                             text={name}
@@ -112,7 +115,8 @@ const settingsList: ISettingsSection[] = [
                                     color="gray"
                                 />
                             }
-                        />
+                        />)}
+                        </>
                     );
                 },
             },
