@@ -11,6 +11,8 @@ import { router } from "expo-router";
 import { useAtomValue, useSetAtom } from "jotai";
 import { Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import Tag from "@/components/community/tag";
+
 
 function MemberInfoBlock({ children, title }) {
     return (
@@ -43,7 +45,13 @@ export default function MemberInfoModal() {
                 </Text>
                 <Text className="text-xl dark:text-white">Jugs</Text>
                 <Text className="text-xl dark:text-white">Last drank</Text>
-                <Text className="text-xl dark:text-white">Tags</Text>
+                {member.tags && member.tags.length > 0 && (
+                <View className="flex-row flex-wrap my-2">
+                    {member.tags.map(tag => (
+                        <Tag key={tag.id} name={tag.name} />
+                    ))}
+                </View>
+            )}
             </MemberInfoBlock>
             <MemberInfoBlock title="Progress to Target">
                 <View className="flex-row justify-between">
@@ -124,7 +132,7 @@ export default function MemberInfoModal() {
                     size={23}
                     color={palette.fg}
                 />
-                onPress={() => router.push("apply-tags")}
+                onPress={() => router.push({ pathname: "apply-tags", params: { member: JSON.stringify(member) } })}
             />
         </ScrollPageWrapper>
     );
