@@ -137,8 +137,8 @@ export default function ApplyTags() {
                         </Text>
                     )}
                     <View className="flex-row flex-wrap my-2 mx-3">
-                        {appliedTags.map((tag, index) => (
-                            <Pressable key={index} onPress={() => handleAppliedPress(tag)}>
+                        {appliedTags.map((tag) => (
+                            <Pressable key={tag.id} onPress={() => handleAppliedPress(tag)}>
                                 <Tag name={tag.name} />
                             </Pressable>
                         ))}
@@ -152,8 +152,8 @@ export default function ApplyTags() {
                         </Text>
                     )}
                     <View className="flex-row flex-wrap my-2 mx-3">
-                        {filteredUnappliedTags.map((tag, index) => (
-                            <Pressable key={index} onPress={() => handleUnappliedPress(tag)}>
+                        {filteredUnappliedTags.map((tag) => (
+                            <Pressable key={tag.id} onPress={() => handleUnappliedPress(tag)}>
                                 <Tag name={tag.name} />
                             </Pressable>
                         ))}
