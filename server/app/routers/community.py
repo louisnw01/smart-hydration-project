@@ -63,6 +63,7 @@ async def patient_info(user_id: str = Depends(auth_user)):
                 "jugs": [{"name": jug.name, "id": jug.smart_hydration_id} for jug in juguser.jugs],
                 "target": juguser.target or 2200,
                 "drank_today": juguser.drank_today,
+                "last_drank": juguser.last_drank,
                 "tags": [{"id": tag.id, "name": tag.name} for tag in juguser.tags]
             })
 
@@ -323,6 +324,8 @@ async def add_community_drink_event(form: AddCommunityDrinkForm, user_id: str = 
             raise HTTPException(400, 'user does not have permissions to add drinks for this community')
         juguser = JugUser.get(id=form.juser_id)
         OtherDrink(juguser=juguser, timestamp=form.timestamp, name=form.name, capacity=form.capacity)
+        if juguser.drank_today == None:
+            juguser.drank_today = 0
         juguser.drank_today += form.capacity
+        juguser.last_drank = form.timestamp
         commit()
-

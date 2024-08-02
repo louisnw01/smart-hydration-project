@@ -8,6 +8,48 @@ import { Pressable, Text, View } from "react-native";
 import StyledButton from "../common/button";
 import Tag from "./tag";
 
+function getOrdinalSuffix(day) {
+    if (day > 3 && day < 21) return "th";
+    switch (day % 10) {
+        case 1:
+            return "st";
+        case 2:
+            return "nd";
+        case 3:
+            return "rd";
+        default:
+            return "th";
+    }
+}
+
+function generateDateString(timestamp) {
+    if (!timestamp) {
+        return null;
+    }
+    const date = new Date(timestamp);
+    const day = date.getDate();
+    const monthNames = [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+    ];
+    const month = monthNames[date.getMonth()];
+    const hours = date.getHours().toString().padStart(2, "0");
+    const minutes = date.getMinutes().toString().padStart(2, "0");
+    const ordinalSuffix = getOrdinalSuffix(day);
+
+    return `${day}${ordinalSuffix} ${month} ${hours}:${minutes}`;
+}
+
 export default function MemberRow({ member }: { member: MemberInfo }) {
     const palette = useColorPalette();
     const setMember = useSetAtom(selectedMemberAtom);
@@ -28,12 +70,16 @@ export default function MemberRow({ member }: { member: MemberInfo }) {
                     <View className="flex-row gap-4">
                         <MemberDetail
                             title="Last Drank"
-                            value={member.last_drank}
+                            value={generateDateString(member.last_drank * 1000)}
                             unit="hours ago"
                         />
                         <MemberDetail
                             title="Amount Drank"
-                            value={member.amount_drank}
+                            value={
+                                member.drank_today
+                                    ? member.drank_today.toString() + "ml" // this needs to adjust with the unit
+                                    : null
+                            }
                             unit="ml"
                         />
                     </View>
@@ -43,7 +89,14 @@ export default function MemberRow({ member }: { member: MemberInfo }) {
                                 <Tag key={tag.id} name={tag.name} />
                             ))}
                     </View>
-                    <MemberDetail title="Target Progress" />
+                    <MemberDetail
+                        title="Target Progress"
+                        value={
+                            ((member.drank_today / member.target) * 100)
+                                .toFixed(0)
+                                .toString() + "%"
+                        }
+                    />
                     <StyledButton
                         text="add a drink"
                         textClass="text-lg mt-[1px]"

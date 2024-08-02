@@ -44,7 +44,7 @@ export default function CommunityPage() {
         sort: "asc",
     });
     const [selected, setSelected] = useAtom(selectedSortMethodAtom);
-
+    console.log(JSON.stringify(data));
     useEffect(() => {
         if (data === undefined) return;
 
