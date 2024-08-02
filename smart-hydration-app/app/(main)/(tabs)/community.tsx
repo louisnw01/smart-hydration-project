@@ -23,13 +23,6 @@ import { FilterObject, MemberInfo } from "@/interfaces/community";
 import { SelectList } from "react-native-dropdown-select-list";
 import { selectedSortMethodAtom } from "@/atom/community";
 
-//for now (basic user flow), Community tab is shown as 4th tab
-//TODO: for care home mode, replace home screen with Community tab
-
-//TODO: add link handling logic to front end for invite link flow
-
-//TODO: add settings cog at top right
-
 export default function CommunityPage() {
     const { isLoading, refetch } = useAtomValue(communityInfoQAtom);
     const { data, isLoading: patientInfoIsLoading } =
@@ -47,11 +40,9 @@ export default function CommunityPage() {
 
     useEffect(() => {
         if (data === undefined) return;
-
+        const searchPattern = new RegExp(`\\b${filters.searchTerm}`, 'i');
         const filteredData = data.filter((member) =>
-            member.name
-                .toLowerCase()
-                .includes(filters.searchTerm.toLowerCase()),
+            searchPattern.test(member.name)
         );
 
         const sortedData = filteredData.sort((a, b) => {
