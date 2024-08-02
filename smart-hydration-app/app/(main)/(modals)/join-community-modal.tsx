@@ -1,13 +1,13 @@
+import { inviteCodeAtom } from "@/atom/user";
 import StyledButton from "@/components/common/button";
 import StyledTextInput from "@/components/common/text-input";
-import { joinCommunityMAtom } from "@/atom/query/community";
 import { router } from "expo-router";
 import { useSetAtom } from "jotai";
 import { useState } from "react";
 import { Text, View } from "react-native";
-import { inviteCodeAtom } from "@/atom/user";
 
-const regex = /^https:\/\/hydrationapi\.louisnw\.com\/community\/redirect_invite\/[A-Za-z0-9]{10}$/;
+const regex =
+    /^https:\/\/hydrationapi\.louisnw\.com\/community\/redirect_invite\/[A-Za-z0-9]{10}$/;
 
 export default function JoinCommunityModal() {
     const [inviteLink, setInviteLink] = useState("");
@@ -16,14 +16,14 @@ export default function JoinCommunityModal() {
 
     const handlePress = () => {
         if (!inviteLink) return;
-        if(!regex.test(inviteLink)){
+        if (!regex.test(inviteLink)) {
             setErrorMessage("This link is not valid");
             return;
         }
         setErrorMessage("");
         const code = inviteLink.slice(-10);
         setInviteCode(code);
-        router.push('(modals)/confirm-join-community-modal');
+        router.push("(modals)/confirm-join-community-modal");
     };
 
     return (
@@ -49,9 +49,9 @@ export default function JoinCommunityModal() {
             <View className="flex flex-row justify-center items-center">
                 <StyledButton
                     text="Submit"
+                    textClass="text-lg text-white font-medium"
+                    buttonClass="bg-green"
                     onPress={handlePress}
-                    buttonClass="bg-blue px-4 py-2 rounded-xl mt-10"
-                    textClass="text-2xl font-semibold text-white"
                 />
             </View>
         </View>

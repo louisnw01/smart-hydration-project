@@ -1,3 +1,4 @@
+import useSettings from "@/app/hooks/user";
 import SHDrop from "@/assets/svgs/SH_Drop.svg";
 import PageHeader from "@/components/common/header";
 import useColorPalette from "@/util/palette";
@@ -13,6 +14,7 @@ import { Pressable } from "react-native";
 
 export default function TabLayout() {
     const palette = useColorPalette();
+    const { isCarer } = useSettings();
     return (
         <Tabs
             screenOptions={{
@@ -37,6 +39,7 @@ export default function TabLayout() {
                 name="index"
                 options={{
                     title: "Home",
+                    href: isCarer ? null : undefined,
                     tabBarIcon: ({ color }) => (
                         <SHDrop
                             width={180}
@@ -55,6 +58,46 @@ export default function TabLayout() {
                         >
                             <Entypo name="cog" size={30} color={palette.fg} />
                         </Pressable>
+                    ),
+                }}
+            />
+            <Tabs.Screen
+                name="community"
+                options={{
+                    title: "Community",
+                    tabBarIcon: ({ color }) => (
+                        <FontAwesome6
+                            name="people-group"
+                            size={24}
+                            color={color}
+                        />
+                    ),
+                    headerRight: () => (
+                        <>
+                            {!isCarer && (
+                                <Link className="px-5" href="add-jug-user">
+                                    <Entypo
+                                        name="circle-with-plus"
+                                        size={26}
+                                        color={palette.fg}
+                                    />
+                                </Link>
+                            )}
+                            {isCarer && (
+                                <Pressable
+                                    className="px-5"
+                                    onPress={() =>
+                                        router.push("settings/settings-modal")
+                                    }
+                                >
+                                    <Entypo
+                                        name="cog"
+                                        size={30}
+                                        color={palette.fg}
+                                    />
+                                </Pressable>
+                            )}
+                        </>
                     ),
                 }}
             />
@@ -89,28 +132,6 @@ export default function TabLayout() {
                                 color={palette.fg}
                             />
                         </Pressable>
-                    ),
-                }}
-            />
-            <Tabs.Screen
-                name="community"
-                options={{
-                    title: "Community",
-                    tabBarIcon: ({ color }) => (
-                        <FontAwesome6
-                            name="people-group"
-                            size={24}
-                            color={color}
-                        />
-                    ),
-                    headerRight: () => (
-                        <Link className="px-5" href="add-jug-user">
-                            <Entypo
-                                name="circle-with-plus"
-                                size={26}
-                                color={palette.fg}
-                            />
-                        </Link>
                     ),
                 }}
             />

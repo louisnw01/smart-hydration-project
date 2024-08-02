@@ -1,75 +1,37 @@
-import { removePushTokenMAtom } from "@/atom/query";
 import {
-    authTokenAtom,
-    drinkListAtom,
-    notificationFrequencyAtom,
-    notificationsAtom,
-    pushTokenAtom,
-} from "@/atom/user";
+    communityInfoQAtom,
+    deleteCommunityMAtom,
+} from "@/atom/query/community";
 import StyledButton from "@/components/common/button";
 import { OptionBlock } from "@/components/common/option-block";
 import { ISettingsSection } from "@/interfaces/settings";
-import { Feather, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
-import { router } from "expo-router";
-import { useAtomValue, useSetAtom } from "jotai";
+import { Ionicons } from "@expo/vector-icons";
+import { router, useRouter } from "expo-router";
+import { useAtomValue } from "jotai";
 import { useEffect } from "react";
 import { SectionList, Text, View } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const settingsList: ISettingsSection[] = [
     {
-        title: "Account",
+        title: "Community Profile",
         data: [
             {
-                name: "Profile",
+                name: "Change community Name",
                 component: (name, isFirst, isLast) => {
+                    const router = useRouter();
                     return (
                         <OptionBlock
-                            isLast={isLast}
                             text={name}
-                            onPress={() => router.navigate("settings/profile")}
-                            icon={
-                                <Feather name="user" size={18} color="gray" />
+                            isFirst={isFirst}
+                            isLast={isLast}
+                            onPress={() =>
+                                router.navigate(
+                                    "settings/community/change-name",
+                                )
                             }
-                        />
-                    );
-                },
-            },
-            {
-                name: "User Mode",
-                component: (name, isFirst, isLast) => {
-                    return (
-                        <OptionBlock
-                            isLast={isLast}
-                            text={name}
-                            onPress={() => router.navigate("settings/mode")}
                             icon={
-                                <MaterialCommunityIcons
-                                    name="cards-playing-heart-multiple-outline"
-                                    size={16}
-                                    color="gray"
-                                />
-                            }
-                        />
-                    );
-                },
-            },
-        ],
-    },
-    {
-        title: "Data",
-        data: [
-            {
-                name: "Other Drinks",
-                component: (name, isFirst, isLast) => {
-                    return (
-                        <OptionBlock
-                            isLast={isLast}
-                            text={name}
-                            onPress={() => router.navigate("settings/theme")}
-                            icon={
-                                <MaterialCommunityIcons
-                                    name="cup-water"
+                                <Ionicons
+                                    name="color-palette"
                                     size={19}
                                     color="gray"
                                 />
@@ -79,18 +41,22 @@ const settingsList: ISettingsSection[] = [
                 },
             },
             {
-                name: "Daily Target",
+                name: "Transfer Ownership",
                 component: (name, isFirst, isLast) => {
+                    const router = useRouter();
                     return (
                         <OptionBlock
                             isLast={isLast}
+                            isFirst={isFirst}
                             text={name}
                             onPress={() =>
-                                router.navigate("settings/adjust-target")
+                                router.navigate(
+                                    "settings/community/change-owner",
+                                )
                             }
                             icon={
-                                <MaterialCommunityIcons
-                                    name="cup-water"
+                                <Ionicons
+                                    name="color-palette"
                                     size={19}
                                     color="gray"
                                 />
@@ -99,19 +65,18 @@ const settingsList: ISettingsSection[] = [
                     );
                 },
             },
-        ],
-    },
-    {
-        title: "Appearance",
-        data: [
             {
-                name: "Theme",
+                name: "Edit community tags",
                 component: (name, isFirst, isLast) => {
+                    const router = useRouter();
                     return (
                         <OptionBlock
                             isLast={isLast}
+                            isFirst={isFirst}
                             text={name}
-                            onPress={() => router.navigate("settings/theme")}
+                            onPress={() =>
+                                router.navigate("settings/community/edit-tags")
+                            }
                             icon={
                                 <Ionicons
                                     name="color-palette"
@@ -126,18 +91,42 @@ const settingsList: ISettingsSection[] = [
         ],
     },
     {
-        title: "Community",
+        title: "Members",
         data: [
             {
-                name: "Community Settings",
+                name: "Remove Member",
                 component: (name, isFirst, isLast) => {
                     return (
                         <OptionBlock
                             isLast={isLast}
                             text={name}
                             onPress={() =>
-                                router.push(
-                                    "settings/community/community-settings",
+                                router.navigate(
+                                    "settings/community/remove-member",
+                                )
+                            }
+                            icon={
+                                <Ionicons
+                                    name="color-palette"
+                                    size={19}
+                                    color="gray"
+                                />
+                            }
+                        />
+                    );
+                },
+            },
+            {
+                name: "Invite Member",
+                component: (name, isFirst, isLast) => {
+                    const router = useRouter();
+                    return (
+                        <OptionBlock
+                            isLast={isLast}
+                            text={name}
+                            onPress={() =>
+                                router.navigate(
+                                    "settings/community/invite-member",
                                 )
                             }
                             icon={
@@ -154,72 +143,36 @@ const settingsList: ISettingsSection[] = [
         ],
     },
     {
-        title: "Notifications",
-        data: [
-            {
-                name: "Notification settings",
-                component: (name, isFirst, isLast) => {
-                    return (
-                        <OptionBlock
-                            isLast={isLast}
-                            text={name}
-                            onPress={() =>
-                                router.navigate("settings/notifications")
-                            }
-                            icon={
-                                <Ionicons
-                                    name="notifications-outline"
-                                    size={19}
-                                    color="gray"
-                                />
-                            }
-                        />
-                    );
-                },
-            },
-        ],
-    },
-    {
         data: [
             {
                 component: () => {
-                    const { mutate, isSuccess } =
-                        useAtomValue(removePushTokenMAtom);
-                    const pushToken = useAtomValue(pushTokenAtom);
-                    const setAuthAtom = useSetAtom(authTokenAtom);
-                    const setNotifications = useSetAtom(notificationsAtom);
-                    const setNotificationFrequency = useSetAtom(
-                        notificationFrequencyAtom,
-                    );
-                    const setDrinksList = useSetAtom(drinkListAtom);
-
-                    function handleLogout() {
-                        setAuthAtom("");
-                        setDrinksList([]);
-                        setNotificationFrequency("1 hour");
-                        setNotifications("On");
-                        router.replace("onboarding/login-register");
-                    }
+                    const { data } = useAtomValue(communityInfoQAtom);
+                    const {
+                        mutate: deleteCommunity,
+                        isPending,
+                        isSuccess,
+                    } = useAtomValue(deleteCommunityMAtom);
 
                     useEffect(() => {
                         if (!isSuccess) return;
-                        handleLogout();
+                        router.back();
                     }, [isSuccess]);
 
+                    const isOwner = data?.is_owner;
                     return (
                         <View className="">
                             <View className="w-full h-[1px] bg-gray-300 dark:bg-neutral-800 mb-4 mt-16" />
                             <StyledButton
-                                text="Log Out"
+                                text={
+                                    isOwner
+                                        ? "Delete Community"
+                                        : "Leave Community"
+                                }
                                 buttonClass="bg-red rounded-xl py-3 justify-center"
                                 textClass="text-xl text-white"
                                 onPress={() => {
-                                    if (!!pushToken) {
-                                        mutate({
-                                            pushToken: pushToken as string,
-                                        });
-                                    } else {
-                                        handleLogout();
+                                    if (isOwner) {
+                                        deleteCommunity();
                                     }
                                 }}
                             />
@@ -231,11 +184,9 @@ const settingsList: ISettingsSection[] = [
     },
 ];
 
-export default function SettingsModal() {
-    const insets = useSafeAreaInsets();
-
+export default function CommunityProfile() {
     return (
-        <View className="flex flex-1 justify-between mx-4">
+        <View className="flex flex-1 justify-between mx-4 mt-4">
             <SectionList
                 sections={settingsList}
                 renderItem={({ item, index, section }) =>
@@ -245,9 +196,6 @@ export default function SettingsModal() {
                         index == section.data.length - 1,
                     )
                 }
-                contentContainerStyle={{
-                    paddingBottom: insets.bottom + 20,
-                }}
                 renderSectionHeader={({ section }) => {
                     if (!section.title) return null;
                     return (
@@ -258,7 +206,7 @@ export default function SettingsModal() {
                         </View>
                     );
                 }}
-                keyExtractor={(item) => `settings-${item.name}`}
+                keyExtractor={(item) => `settings-community-${item.name}`}
                 stickySectionHeadersEnabled={false}
             />
         </View>

@@ -1,18 +1,22 @@
-import { View, Text, ScrollView, TextInput } from "react-native";
+import { Text, TextInput, View } from "react-native";
 
-import { useEffect, useRef, useState } from "react";
-import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { loginMAtom } from "@/atom/query";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
+import { useEffect, useRef, useState } from "react";
 
-import { authTokenAtom, pushTokenAtom } from "@/atom/user";
-import PageWrapper from "@/components/common/page-wrapper";
 import Drop from "@/assets/svgs/water-drop-svgrepo-com.svg";
-import { Redirect, useRouter } from "expo-router";
-import useColorPalette from "@/util/palette";
-import StyledTextInput from "@/components/common/text-input";
-import StyledButton from "@/components/common/button";
-import { registerForPushNotificationsAsync } from "@/util/notifications";
 import { addPushTokenMAtom } from "@/atom/query";
+import { authTokenAtom, pushTokenAtom } from "@/atom/user";
+import StyledButton from "@/components/common/button";
+import KeyboardScrollView from "@/components/common/keyboard-scrollview";
+import PageWrapper from "@/components/common/page-wrapper";
+import StyledTextInput from "@/components/common/text-input";
+import OnboardingHeader from "@/components/onboarding/onboarding-header";
+import { registerForPushNotificationsAsync } from "@/util/notifications";
+import useColorPalette from "@/util/palette";
+import { useRouter } from "expo-router";
+import useSettings from "../hooks/user";
+
 
 export default function LoginPage() {
     const router = useRouter();
@@ -21,24 +25,29 @@ export default function LoginPage() {
     const setAuthToken = useSetAtom(authTokenAtom);
     const [storedPushToken, setStoredPushToken] = useAtom(pushTokenAtom);
     const palette = useColorPalette();
+    const { isCarer } = useSettings();
 
     const passwordRef = useRef<TextInput>();
 
-    const { mutate: login, data, isPending, isError, isSuccess } =
-        useAtomValue(loginMAtom);
+    const {
+        mutate: login,
+        data,
+        isPending,
+        isError,
+        isSuccess,
+    } = useAtomValue(loginMAtom);
 
-    const { mutate: addPushToken }= useAtomValue(addPushTokenMAtom);
+    const { mutate: addPushToken } = useAtomValue(addPushTokenMAtom);
 
     const handleSubmit = () => {
         login({ email, password });
     };
 
-
     useEffect(() => {
         if (!isSuccess && !data) return;
         setAuthToken(data);
-        if(storedPushToken){
-            addPushToken({pushToken: storedPushToken as string});
+        if (storedPushToken) {
+            addPushToken({ pushToken: storedPushToken as string });
         } else {
             registerForPushNotificationsAsync()
             .then(pushToken => {
@@ -48,15 +57,13 @@ export default function LoginPage() {
             )   
             .catch((error: any) => console.error(error));
             }
-            router.replace("(tabs)");
+            isCarer ? router.replace("(tabs)/community") : router.replace("(tabs)");
         },[isSuccess, data])
 
     return (
         <PageWrapper>
-            <ScrollView
-                className="mt-20 gap-10"
-                contentContainerClassName="flex flex-1"
-            >
+            <KeyboardScrollView keyboardVerticalOffset={-170}>
+                <OnboardingHeader text="Login" />
                 <View className="self-center">
                     <Drop width={100} height={100} fill={palette.border} />
                 </View>
@@ -69,6 +76,7 @@ export default function LoginPage() {
                         keyboardType="email-address"
                         title="Email Address"
                         onSubmitEditing={() => passwordRef.current?.focus()}
+                        returnKeyType="done"
                     />
                     <StyledTextInput
                         inputRef={passwordRef}
@@ -76,6 +84,8 @@ export default function LoginPage() {
                         textContentType="password"
                         secureTextEntry={true}
                         title="Password"
+                        returnKeyType="done"
+                        onSubmitEditing={() => handleSubmit()}
                     />
                     {isPending && <Text>Logging in..</Text>}
                     {isError && (
@@ -97,7 +107,7 @@ export default function LoginPage() {
                         onPress={() => router.push("onboarding/register")}
                     />
                 </View>
-            </ScrollView>
+            </KeyboardScrollView>
         </PageWrapper>
     );
 }

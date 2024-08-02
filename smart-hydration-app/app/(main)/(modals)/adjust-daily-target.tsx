@@ -1,5 +1,5 @@
-import { updateUserTarget } from "@/atom/query";
-import { dailyTargetAtom } from "@/atom/user";
+import { dailyTargetAtom, updateUserTarget } from "@/atom/query";
+
 import Slider from "@react-native-community/slider";
 import { useAtom } from "jotai";
 import { useAtomValue } from "jotai/index";

@@ -1,6 +1,5 @@
 import { amountDrankTodayAtom } from "@/atom/hydration";
-import { userInfoQAtom } from "@/atom/query";
-import { dailyTargetAtom } from "@/atom/user";
+import { dailyTargetAtom, userInfoQAtom } from "@/atom/query";
 import colors from "@/colors";
 import { HYDRATION_MESSAGE } from "@/constants/hydration-status";
 import { getRelativeTarget } from "@/util/trends";

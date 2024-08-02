@@ -1,10 +1,14 @@
+import { userInfoQAtom } from "@/atom/query";
 import { createCommunityMAtom } from "@/atom/query/community";
+import StyledTextInput from "@/components/common/text-input";
 import { router } from "expo-router";
 import { useAtomValue } from "jotai";
 import { useEffect, useState } from "react";
-import { Pressable, Text, TextInput, View } from "react-native";
+import { Pressable, Text, View } from "react-native";
 
 export default function CreateCommunityModal() {
+    const { data: userInfo, isLoading: userInfoIsLoading } =
+        useAtomValue(userInfoQAtom);
     const [communityName, setCommunityName] = useState("");
     const { mutate, isPending, isSuccess, data, isError } =
         useAtomValue(createCommunityMAtom);
@@ -32,24 +36,21 @@ export default function CreateCommunityModal() {
     };
 
     return (
-        <View className="mt-8 flex gap-6">
-            <View className="flex flex-row justify-center items-center">
-                <Text className="dark:text-white text-2xl">
-                    Enter a community name:
-                </Text>
-            </View>
-            <View className="flex flex-row justify-center items-center">
-                <TextInput
-                    placeholder={`Community name (required)`}
-                    className="bg-gray-200 h-14 placeholder-black text-xl rounded-xl px-3"
-                    onChangeText={(val) => {
-                        setCommunityName(val);
-                        setShowErrorMessage(false);
-                    }}
-                    textContentType="name"
-                    returnKeyType="done"
-                />
-            </View>
+        <View className="mt-8 flex gap-6 mx-6">
+            <Text className="dark:text-white text-2xl text-center">
+                Enter a community name:
+            </Text>
+            <StyledTextInput
+                requiredIcon
+                placeholder={`${userInfo?.name}'${userInfo?.name && userInfo.name[userInfo.name.length - 1] != "s" ? "s" : ""} Community`}
+                title="Community Name"
+                onChangeText={(val) => {
+                    setCommunityName(val);
+                    setShowErrorMessage(false);
+                }}
+                textContentType="name"
+                returnKeyType="done"
+            />
             {showErrorMessage && (
                 <View className="flex flex-row justify-center items-center">
                     <Text className="dark:text-white text-2xl">

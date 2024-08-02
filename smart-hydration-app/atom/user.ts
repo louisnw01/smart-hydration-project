@@ -1,8 +1,10 @@
 import { deleteItemAsync, getItem, setItem } from "expo-secure-store";
 import { atom } from "jotai";
+import { UserMode } from "@/constants/user";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { atomWithStorage, createJSONStorage } from "jotai/vanilla/utils";
+import { RegistrationInfo } from "@/interfaces/user";
 
 export const registerInfoAtom = atom<Partial<RegistrationInfo>>({});
 
@@ -15,13 +17,23 @@ const storage = createJSONStorage(() => ({
 
 export const colorSchemeAtom = atomWithStorage("color-scheme", "Auto", storage);
 
-export const notificationsAtom = atomWithStorage("notifications", "On", storage);
+export const notificationsAtom = atomWithStorage(
+    "notifications",
+    "On",
+    storage,
+);
 
-export const notificationFrequencyAtom = atomWithStorage("notification-frequency", "1 hour", storage);
+export const notificationFrequencyAtom = atomWithStorage(
+    "notification-frequency",
+    "1 hour",
+    storage,
+);
 
 export const authTokenAtom = atomWithStorage("auth-token", "", storage);
 
 export const pushTokenAtom = atomWithStorage("push-token", "", storage);
+
+export const userModeAtom = atomWithStorage("user-mode", UserMode.STANDARD , storage);
 
 export const nonSecureStorage = createJSONStorage(() => AsyncStorage);
 
@@ -31,8 +43,6 @@ export const drinkListAtom = atomWithStorage(
     nonSecureStorage,
 );
 
-export const dailyTargetAtom = atom(2200);
+export const emailIsVerifiedAtom = atom(false);
 
-export const isInCommunityAtom = atom(false);
-
-export const inviteCodeAtom = atom('');
+export const inviteCodeAtom = atom("");

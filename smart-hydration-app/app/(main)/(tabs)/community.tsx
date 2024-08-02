@@ -1,7 +1,7 @@
 import StyledButton from "@/components/common/button";
 import PageWrapper from "@/components/common/page-wrapper";
 import { useAtomValue, useAtom } from "jotai";
-import React, { useEffect, useState } from "react";
+import React, { ReactNode, useEffect, useState } from "react";
 import {
     FlatList,
     Pressable,
@@ -37,7 +37,7 @@ export default function CommunityPage() {
     const hasCommunity = useAtomValue(userHasCommunityAtom);
     const [refreshing, setRefreshing] = useState(false);
 
-    const [filteredData, setFilteredData] = useState<MemberInfo[]>([]);
+    const [filteredData, setFilteredData] = useState<ReactNode[]>([]);
     const [textInput, setTextInput] = useState("");
     const [filters, setFilters] = useState<FilterObject>({
         searchTerm: "",
@@ -46,7 +46,7 @@ export default function CommunityPage() {
     const [selected, setSelected] = useAtom(selectedSortMethodAtom);
 
     useEffect(() => {
-        if (!data) return;
+        if (data === undefined) return;
 
         const filteredData = data.filter((member) =>
             member.name
@@ -127,25 +127,22 @@ export default function CommunityPage() {
                     }
                 >
                     <View className="mt-8 flex gap-6">
-                        <View className="flex flex-row justify-center items-center">
-                            <Text className="dark:text-white text-2xl">
-                                You aren't in a community yet.
-                            </Text>
-                        </View>
-                        <View className="flex flex-row justify-center">
-                            <StyledButton
-                                text="+ Create a community"
-                                href="create-community-modal"
-                                textClass="text-lg"
-                            />
-                        </View>
-                        <View className="flex flex-row justify-center">
-                            <StyledButton
-                                text="+ Join a community"
-                                href="join-community-modal"
-                                textClass="text-lg"
-                            />
-                        </View>
+                        <Text className="dark:text-white text-xl text-center">
+                            You aren't in a community yet.
+                        </Text>
+
+                        <StyledButton
+                            text="+ Create a community"
+                            href="create-community-modal"
+                            buttonClass="w-56 self-center"
+                            textClass="text-lg text-center w-full"
+                        />
+                        <StyledButton
+                            text="+ Join a community"
+                            href="join-community-modal"
+                            buttonClass="w-56 self-center"
+                            textClass="text-lg text-center w-full"
+                        />
                     </View>
                 </ScrollView>
             </PageWrapper>
@@ -193,20 +190,22 @@ export default function CommunityPage() {
                                 />
                             }
                         > */}
-                        {/* change this to members.size > 0 when entered members are stored in members array*/}
-                        {/*members.size === 0 && (
-                            <Text className="text-center dark:text-white text-lg">
-                                This community only contains example members
-                            </Text>
-                        )*/}
-                        <View className="py-2"></View>
+                        <View className="flex flex-row mx-2 items-center my-2">
+                            <Pressable
+                                onPress={handleSortPress}
+                                className="bg-blue px-4 py-2 rounded-xl ml-2"
+                            >
+                                <Text className="text-2l font-semibold text-white">
+                                    {`Sort by name ${filters.sort === "asc" ? "A-Z" : "Z-A"}`}
+                                </Text>
+                            </Pressable>
+                        </View>
+
                         <FlatList
                             data={filteredData || []}
                             contentContainerClassName="flex gap-6"
                             keyExtractor={(patient, idx) => idx}
-                            renderItem={({ item }) => (
-                                <MemberRow member={item} />
-                            )}
+                            renderItem={({ item }) => item}
                         />
 
                         {/* </ScrollView> */}

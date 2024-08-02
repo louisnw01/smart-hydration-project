@@ -1,4 +1,3 @@
-import OnboardingHeader from "@/components/onboarding/onboarding-header";
 import useColorPalette from "@/util/palette";
 import { Stack } from "expo-router";
 
@@ -7,14 +6,14 @@ export default function OnboardingLayout() {
     return (
         <Stack
             screenOptions={{
-                // headerShown: false,
+                headerShown: false,
                 // headerTitleAlign: "left",
                 headerShadowVisible: false,
                 headerBackVisible: false,
                 contentStyle: {
                     backgroundColor: palette.bg,
                 },
-                header: (props) => <OnboardingHeader {...props} />,
+                // header: (props) => <OnboardingHeader {...props} />,
             }}
         >
             <Stack.Screen
@@ -39,6 +38,12 @@ export default function OnboardingLayout() {
                 name="name"
                 options={{
                     title: "What is your name?",
+                }}
+            />
+            <Stack.Screen
+                name="user-mode"
+                options={{
+                    title: "What mode would you like to use?",
                 }}
             />
             <Stack.Screen
