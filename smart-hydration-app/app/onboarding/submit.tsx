@@ -1,5 +1,5 @@
 import { registerMAtom, sendVerificationEmailMAtom } from "@/atom/query";
-import { authTokenAtom, registerInfoAtom } from "@/atom/user";
+import { authTokenAtom, registerInfoAtom, userModeAtom } from "@/atom/user";
 import colors from "@/colors";
 import StyledButton from "@/components/common/button";
 import Loading from "@/components/common/loading";
@@ -9,25 +9,29 @@ import { useRouter } from "expo-router";
 import { useAtomValue, useSetAtom } from "jotai";
 import { useEffect } from "react";
 import { Text } from "react-native";
+import useSettings from "../hooks/user";
 
 export default function SubmitPage() {
     const router = useRouter();
     const setAuthToken = useSetAtom(authTokenAtom);
     const clearRegisterInfo = useSetAtom(registerInfoAtom);
     const {mutate: sendVerificationEmail} = useAtomValue(sendVerificationEmailMAtom)
+    const setInfo = useSetAtom(registerInfoAtom);
+    const userMode = useAtomValue(userModeAtom);
     const {
         mutate: submitAndRegister,
         data,
         isPending,
         isSuccess,
     } = useAtomValue(registerMAtom);
+    const { isCarer } = useSettings();
 
     useEffect(() => {
         if (!isSuccess || !data) return;
         setAuthToken(data);
         clearRegisterInfo({});
         sendVerificationEmail();
-        router.replace("(tabs)");
+        isCarer ? router.replace("(tabs)/community") : router.replace("(tabs)");
     }, [isSuccess, data]);
 
     return (
@@ -42,7 +46,10 @@ export default function SubmitPage() {
                         text="Submit & Register"
                         buttonClass="bg-green self-center rounded-xl"
                         textClass="text-white text-lg font-semibold"
-                        onPress={() => submitAndRegister()}
+                        onPress={() => {
+                            setInfo((prev) => ({ ...prev, mode: userMode }));
+                            submitAndRegister();
+                        }}
                     />
                 )}
             </>
