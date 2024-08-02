@@ -56,7 +56,7 @@ export default function CommunityPage() {
 
         const sortedData = filteredData.sort((a, b) => {
             let comparison = 0;
-            if (selected == "name") {
+            if (selected === "name") {
                 comparison = a.name
                     .toLowerCase()
                     .localeCompare(b.name.toLowerCase());
@@ -66,7 +66,23 @@ export default function CommunityPage() {
             return filters.sort === "asc" ? comparison : -comparison;
         });
 
-        setFilteredData(sortedData);
+        const filteredComponents = sortedData.map((member) => (
+            <MemberRow member={member} />
+        ));
+
+        filteredComponents.push(
+            <View className="mt-8 flex gap-6">
+                <View className="flex flex-row justify-center">
+                    <StyledButton
+                        text="+ Add a member"
+                        href="add-jug-user"
+                        textClass="text-lg"
+                    />
+                </View>
+            </View>,
+        );
+
+        setFilteredData(filteredComponents);
     }, [data, filters, selected, textInput]);
 
     const handleSortPress = () => {
