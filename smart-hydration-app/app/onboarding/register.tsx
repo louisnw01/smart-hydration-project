@@ -10,6 +10,7 @@ import { getUserExistsQAtom } from "@/atom/query";
 import StyledTextInput from "@/components/common/text-input";
 import KeyboardScrollView from "@/components/common/keyboard-scrollview";
 import OnboardingHeader from "@/components/onboarding/onboarding-header";
+import Logo from "@/assets/svgs/SH_logo.svg";
 
 const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
@@ -79,6 +80,9 @@ export default function RegisterPage() {
     return (
         <GenericOnboardContent nextHref="onboarding/name" proceed={proceed}>
         <KeyboardScrollView keyboardVerticalOffset={-60}>
+            <View className="self-center mb-40">
+                <Logo width={350} height={125}/>
+            </View>
             <OnboardingHeader text="Sign Up" />
             <View className="gap-5 mt-16">
                 <StyledTextInput
@@ -156,31 +160,3 @@ export default function RegisterPage() {
         </GenericOnboardContent>
     );
 }
-
-// <PageWrapper>
-//            <View className='bg-gray-100 p-10 h-screen block'>
-//                <PageProgressBar currentPage={pageIndex + 1} totalPages={pages.length}></PageProgressBar>
-//                <View className='flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0'></View>
-//                <View className='items-center justify-center p-9 space-y-7 md:space-y-9 sm:p-8'>
-//                    <>
-//                        {pageIndex === 0 &&
-//                            <View className="flex gap-6">
-//                                <Text className='text-4xl font-bold'>Smart Hydration</Text>
-//                                <View className="flex flex-row justify-center">
-//                                    <Drop width={100} height={100} />
-//                                </View>
-//                            </View>
-//                        }
-//                    </>
-//                    <View>
-//                        <GenericOnboardContent title={currentPageContent.title}>
-//                            {currentPageContent.content}
-//                        </GenericOnboardContent>
-//                    </View>
-//                </View>
-//            </View>
-//            <>{pageIndex < maxPageIndex - 1 && <NextButton onPress={handleNext} />}</>
-//            <>{pageIndex === maxPageIndex - 1 && <SubmitButton onPress={handleSubmit} />}</>
-//            <>{pageIndex > 0 && <BackButton onPress={handleBack} />}</>
-//            <>{currentPageContent.skippable != 0 && <SkipButton onPress={handleSkip} />}</>
-//        </PageWrapper>
