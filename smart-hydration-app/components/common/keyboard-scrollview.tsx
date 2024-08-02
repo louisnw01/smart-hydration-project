@@ -15,7 +15,7 @@ export default function KeyboardScrollView({
             <ScrollView
                 contentContainerClassName="flex h-full justify-end"
                 style={{
-                    paddingBottom: insets.bottom + 20,
+                    paddingBottom: insets.bottom + 80,
                 }}
             >
                 {children}

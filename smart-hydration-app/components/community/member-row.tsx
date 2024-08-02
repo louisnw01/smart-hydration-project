@@ -1,12 +1,12 @@
 import { selectedMemberAtom } from "@/atom/community";
 import { MemberInfo } from "@/interfaces/community";
+import useColorPalette from "@/util/palette";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useSetAtom } from "jotai";
 import { Pressable, Text, View } from "react-native";
-import Tag from "./tag";
 import StyledButton from "../common/button";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import useColorPalette from "@/util/palette";
+import Tag from "./tag";
 
 export default function MemberRow({ member }: { member: MemberInfo }) {
     const palette = useColorPalette();
@@ -37,29 +37,29 @@ export default function MemberRow({ member }: { member: MemberInfo }) {
                             unit="ml"
                         />
                     </View>
-                      <View className="flex-row flex-wrap">
-                      {member.tags && member.tags.map(tag => (
-                          <Tag key={tag.id} name={tag.name} />
-                      ))}
+                    <View className="flex-row flex-wrap">
+                        {member.tags &&
+                            member.tags.map((tag) => (
+                                <Tag key={tag.id} name={tag.name} />
+                            ))}
                     </View>
                     <MemberDetail title="Target Progress" />
+                    <StyledButton
+                        text="add a drink"
+                        textClass="text-lg mt-[1px]"
+                        onPress={() => {
+                            setMember(member);
+                            router.push("add-drink-community-modal");
+                        }}
+                        icon=<MaterialCommunityIcons
+                            name="water-plus-outline"
+                            size={24}
+                            color={palette.fg}
+                        />
+                    />
                 </View>
             </Pressable>
-            <View className="flex flex-wrap h-16 absolute bottom-1 left-10">
-                <StyledButton
-                    text="add a drink"
-                    textClass="text-lg mt-[1px]"
-                    onPress={() => {
-                        setMember(member);
-                        router.push("add-drink-community-modal");
-                    }}
-                    icon=<MaterialCommunityIcons
-                        name="water-plus-outline"
-                        size={24}
-                        color={palette.fg}
-                    />
-                />
-            </View>
+            <View className=""></View>
         </View>
     );
 }
