@@ -129,13 +129,13 @@ export default function CommunityPage() {
                         <StyledButton
                             text="+ Create a community"
                             href="create-community-modal"
-                            buttonClass="mx-12"
+                            buttonClass="w-56 self-center"
                             textClass="text-lg text-center w-full"
                         />
                         <StyledButton
                             text="+ Join a community"
                             href="join-community-modal"
-                            buttonClass="mx-12"
+                            buttonClass="w-56 self-center"
                             textClass="text-lg text-center w-full"
                         />
                     </View>
