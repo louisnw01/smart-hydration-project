@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { View, Text, Pressable, TextInput, ScrollView } from "react-native";
-import { router, useNavigation } from "expo-router";
+import { useNavigation } from "expo-router";
 import StyledButton from "@/components/common/button";
 import Tag from "@/components/community/tag";
 import { FilterObject, TagInfo } from "@/interfaces/community";
@@ -52,13 +52,14 @@ export default function ApplyTags() {
     };
 
     const getMemberTags = () => {
-        const initialAppliedTags: TagInfo[] = member.tags;
+        const initialAppliedTags: TagInfo[] = member.tags || [];
         return initialAppliedTags;
     };
     const initialApplied = getMemberTags();
 
     const [appliedTags, setAppliedTags] = useState<TagInfo[]>(initialApplied);
     const [unappliedTags, setUnappliedTags] = useState<TagInfo[]>([]);
+    console.log("Applied tags in Apply Tags page: ", appliedTags);
 
     const filterUnappliedTags = () => {
         const filteredUnappliedTags = communityTags.filter(item => !appliedTags.some(appliedTag => appliedTag.id === item.id));
@@ -116,6 +117,7 @@ export default function ApplyTags() {
         const appliedTagNames = appliedTags.map(tag => tag.name);
         setMember({ ...member, tags: appliedTagNames });
         addTagsMutate();
+        console.log("Applied tags on save in Apply Tags page: ", appliedTags);
     };
 
     //to do: add messages for when no tags applied / all tags applied
