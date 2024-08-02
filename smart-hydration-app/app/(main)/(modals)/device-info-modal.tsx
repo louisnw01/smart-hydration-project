@@ -1,7 +1,7 @@
 import JugIcon from "@/assets/svgs/jug.svg";
 import { selectedDeviceAtom } from "@/atom/device";
 import { unlinkJugFromUserMAtom } from "@/atom/query";
-import { isInCommunityAtom } from "@/atom/user";
+import { userHasCommunityAtom } from "@/atom/query/community";
 import colors from "@/colors";
 import StyledButton from "@/components/common/button";
 import useColorPalette from "@/util/palette";
@@ -94,7 +94,7 @@ export default function DeviceInfoModal() {
     const device = useAtomValue(selectedDeviceAtom);
     const palette = useColorPalette();
     const { mutate: unlinkJugFromUser } = useAtomValue(unlinkJugFromUserMAtom);
-    const isInCommunity = useAtomValue(isInCommunityAtom);
+    const isInCommunity = useAtomValue(userHasCommunityAtom);
     if (!device) return;
     return (
         <View className="mt-8 mx-5">
