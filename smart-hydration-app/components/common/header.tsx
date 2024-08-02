@@ -15,7 +15,7 @@ export default function PageHeader({ children }: { children: string }) {
         >
             {children === "Home"
                 ? "smart hydration"
-                : children == "Community"
+                : children == "Community" && communityName
                   ? communityName
                   : children}
         </Text>

@@ -1,7 +1,7 @@
 import StyledButton from "@/components/common/button";
 import PageWrapper from "@/components/common/page-wrapper";
 import { useAtomValue } from "jotai";
-import { useEffect, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import {
     FlatList,
     Pressable,
@@ -19,7 +19,7 @@ import {
 import Loading from "@/components/common/loading";
 import StyledTextInput from "@/components/common/text-input";
 import MemberRow from "@/components/community/member-row";
-import { FilterObject, MemberInfo } from "@/interfaces/community";
+import { FilterObject } from "@/interfaces/community";
 
 //for now (basic user flow), Community tab is shown as 4th tab
 //TODO: for care home mode, replace home screen with Community tab
@@ -35,7 +35,7 @@ export default function CommunityPage() {
     const hasCommunity = useAtomValue(userHasCommunityAtom);
     const [refreshing, setRefreshing] = useState(false);
 
-    const [filteredData, setFilteredData] = useState<MemberInfo[]>([]);
+    const [filteredData, setFilteredData] = useState<ReactNode[]>([]);
     const [textInput, setTextInput] = useState("");
     const [filters, setFilters] = useState<FilterObject>({
         searchTerm: "",
@@ -43,7 +43,7 @@ export default function CommunityPage() {
     });
 
     useEffect(() => {
-        if (!data) return;
+        if (data === undefined) return;
 
         const filteredData = data.filter((member) => {
             return (
@@ -76,14 +76,7 @@ export default function CommunityPage() {
             </View>,
         );
 
-        setFilteredData(
-            filteredData.sort((a, b) => {
-                const comparison = a.name
-                    .toLowerCase()
-                    .localeCompare(b.name.toLowerCase());
-                return filters.sort === "asc" ? comparison : -comparison;
-            }),
-        );
+        setFilteredData(filteredComponents);
     }, [textInput, filters, data]);
 
     const handleSortPress = () => {
@@ -129,25 +122,22 @@ export default function CommunityPage() {
                     }
                 >
                     <View className="mt-8 flex gap-6">
-                        <View className="flex flex-row justify-center items-center">
-                            <Text className="dark:text-white text-2xl">
-                                You aren't in a community yet.
-                            </Text>
-                        </View>
-                        <View className="flex flex-row justify-center">
-                            <StyledButton
-                                text="+ Create a community"
-                                href="create-community-modal"
-                                textClass="text-lg"
-                            />
-                        </View>
-                        <View className="flex flex-row justify-center">
-                            <StyledButton
-                                text="+ Join a community"
-                                href="join-community-modal"
-                                textClass="text-lg"
-                            />
-                        </View>
+                        <Text className="dark:text-white text-xl text-center">
+                            You aren't in a community yet.
+                        </Text>
+
+                        <StyledButton
+                            text="+ Create a community"
+                            href="create-community-modal"
+                            buttonClass="w-56 self-center"
+                            textClass="text-lg text-center w-full"
+                        />
+                        <StyledButton
+                            text="+ Join a community"
+                            href="join-community-modal"
+                            buttonClass="w-56 self-center"
+                            textClass="text-lg text-center w-full"
+                        />
                     </View>
                 </ScrollView>
             </PageWrapper>
@@ -165,12 +155,6 @@ export default function CommunityPage() {
                                 />
                             }
                         > */}
-                        {/* change this to members.size > 0 when entered members are stored in members array*/}
-                        {/*members.size === 0 && (
-                            <Text className="text-center dark:text-white text-lg">
-                                This community only contains example members
-                            </Text>
-                        )*/}
                         <View className="flex flex-row mx-2 items-center my-2">
                             <Pressable
                                 onPress={handleSortPress}
@@ -186,9 +170,7 @@ export default function CommunityPage() {
                             data={filteredData || []}
                             contentContainerClassName="flex gap-6"
                             keyExtractor={(patient, idx) => idx}
-                            renderItem={({ item }) => (
-                                <MemberRow member={item} />
-                            )}
+                            renderItem={({ item }) => item}
                         />
 
                         {/* </ScrollView> */}

@@ -94,7 +94,7 @@ export default function DeviceInfoModal() {
     const device = useAtomValue(selectedDeviceAtom);
     const palette = useColorPalette();
     const { mutate: unlinkJugFromUser } = useAtomValue(unlinkJugFromUserMAtom);
-    const isInCommunity = useAtomValue(userHasCommunityAtom);
+    const userHasCommunity = useAtomValue(userHasCommunityAtom);
     if (!device) return;
     return (
         <View className="mt-8 mx-5">
@@ -178,7 +178,7 @@ export default function DeviceInfoModal() {
                     />
                     onPress={() => router.push("edit-device-name-modal")}
                 />
-                {isInCommunity && (
+                {userHasCommunity && (
                     <StyledButton
                         text="Change Device Jug User"
                         buttonClass="flex flex-row items-center gap-3 rounded-xl px-4 py-3 bg-gray-100 dark:bg-neutral-900"

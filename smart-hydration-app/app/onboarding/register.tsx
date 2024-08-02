@@ -8,6 +8,8 @@ import { useEffect, useRef, useState } from "react";
 import { textInputStyle } from "@/constants/styles";
 import { getUserExistsQAtom } from "@/atom/query";
 import StyledTextInput from "@/components/common/text-input";
+import KeyboardScrollView from "@/components/common/keyboard-scrollview";
+import OnboardingHeader from "@/components/onboarding/onboarding-header";
 
 const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
@@ -76,6 +78,8 @@ export default function RegisterPage() {
 
     return (
         <GenericOnboardContent nextHref="onboarding/name" proceed={proceed}>
+        <KeyboardScrollView keyboardVerticalOffset={-60}>
+            <OnboardingHeader text="Sign Up" />
             <View className="gap-5 mt-16">
                 <StyledTextInput
                     requiredIcon
@@ -148,6 +152,7 @@ export default function RegisterPage() {
                     )}
                 </Pressable>
             </View>
+            </KeyboardScrollView>
         </GenericOnboardContent>
     );
 }

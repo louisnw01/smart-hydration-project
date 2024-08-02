@@ -1,11 +1,12 @@
+import { jugUserInfoAtom } from "@/atom/jug-user";
 import { registerInfoAtom } from "@/atom/user";
+import { router } from "expo-router";
 import { useSetAtom } from "jotai";
 import { useState } from "react";
-import { View, Text } from "react-native";
-import GenericOnboardContent from "./generic-onboard-content";
-import { jugUserInfoAtom } from "@/atom/jug-user";
+import { Text, View } from "react-native";
 import StyledTextInput from "../common/text-input";
-import { router } from "expo-router";
+import GenericOnboardContent from "./generic-onboard-content";
+import OnboardingHeader from "./onboarding-header";
 
 interface NameProps {
     isOnboarding: boolean;
@@ -34,6 +35,8 @@ export default function Name({ isOnboarding, pronoun, nextHref }: NameProps) {
 
     return (
         <GenericOnboardContent nextHref={nextHref} proceed={proceed}>
+            <View className="py-4" />
+            <OnboardingHeader text={`What is ${pronoun} name?`} />
             <StyledTextInput
                 title="Name"
                 placeholder="John Doe"

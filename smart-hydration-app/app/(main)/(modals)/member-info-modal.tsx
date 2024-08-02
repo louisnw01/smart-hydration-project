@@ -1,17 +1,17 @@
 import Jug from "@/assets/svgs/jug.svg";
 import { selectedMemberAtom } from "@/atom/community";
+import { selectedJugIdAtom } from "@/atom/device";
+import { getPatientJugDataQAtom } from "@/atom/query";
 import StyledButton from "@/components/common/button";
 import { ScrollPageWrapper } from "@/components/common/page-wrapper";
+import Tag from "@/components/community/tag";
+import DeviceSection from "@/components/devices/device-section";
 import useColorPalette from "@/util/palette";
 import { FontAwesome, MaterialCommunityIcons } from "@expo/vector-icons";
+import { router } from "expo-router";
 import { useAtomValue, useSetAtom } from "jotai";
 import { Text, View } from "react-native";
-import { router } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import DeviceSection from "@/components/devices/device-section";
-import { getPatientJugDataQAtom } from "@/atom/query";
-import { selectedJugIdAtom } from "@/atom/device";
-import Tag from "@/components/community/tag";
 
 function MemberInfoBlock({ children, title }) {
     return (
@@ -34,9 +34,14 @@ export default function MemberInfoModal() {
                 paddingBottom: insets.bottom,
             }}
         >
-            <Text className="dark:text-white text-3xl font-semibold">
-                {member.name} {member.id}
-            </Text>
+            <View className="flex flex-row justify-between items-center">
+                <Text className="dark:text-white text-3xl font-semibold">
+                    {member.name}
+                </Text>
+                <Text className="text-neutral-700 font-medium dark:text-gray-300">
+                    ID #: {member.id}
+                </Text>
+            </View>
 
             <MemberInfoBlock title="Profile Details">
                 <Text className="text-xl dark:text-white">
@@ -45,12 +50,12 @@ export default function MemberInfoModal() {
                 <Text className="text-xl dark:text-white">Jugs</Text>
                 <Text className="text-xl dark:text-white">Last drank</Text>
                 {member.tags && member.tags.length > 0 && (
-                <View className="flex-row flex-wrap my-2">
-                    {member.tags.map(tag => (
-                        <Tag key={tag.id} name={tag.name} />
-                    ))}
-                </View>
-            )}
+                    <View className="flex-row flex-wrap my-2">
+                        {member.tags.map((tag) => (
+                            <Tag key={tag.id} name={tag.name} />
+                        ))}
+                    </View>
+                )}
             </MemberInfoBlock>
             <MemberInfoBlock title="Progress to Target">
                 <View className="flex-row justify-between">
@@ -69,7 +74,6 @@ export default function MemberInfoModal() {
             <MemberInfoBlock title="Trends Page">
                 <Text className="text-xl dark:text-white">
                     Embed graph here
-
                 </Text>
             </MemberInfoBlock>
 
@@ -123,7 +127,7 @@ export default function MemberInfoModal() {
                 onPress={() => router.push("edit-device-name-modal")}
             />
 
-           <StyledButton
+            <StyledButton
                 text="Modify Tags"
                 buttonClass="flex flex-row items-center gap-3 rounded-xl px-4 py-3 bg-gray-100 dark:bg-neutral-900"
                 textClass="text-xl dark:text-gray-200 -ml-[2px]"
@@ -132,7 +136,12 @@ export default function MemberInfoModal() {
                     size={23}
                     color={palette.fg}
                 />
-                onPress={() => router.push({ pathname: "apply-tags", params: { member: JSON.stringify(member) } })}
+                onPress={() =>
+                    router.push({
+                        pathname: "apply-tags",
+                        params: { member: JSON.stringify(member) },
+                    })
+                }
             />
         </ScrollPageWrapper>
     );

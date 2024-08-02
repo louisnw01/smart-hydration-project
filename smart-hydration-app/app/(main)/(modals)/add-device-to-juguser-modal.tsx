@@ -18,7 +18,7 @@ import Loading from "@/components/common/loading";
 import { useNavigation } from "expo-router";
 import { useAtomValue } from "jotai";
 import { useState } from "react";
-import { Pressable, FlatList, Text, View } from "react-native";
+import { FlatList, Pressable, Text, View } from "react-native";
 
 export default function MVPAddDeviceModal() {
     const { data, isLoading: patientInfoIsLoading } =
@@ -32,7 +32,6 @@ export default function MVPAddDeviceModal() {
         linkJugsToCommunityMemberMAtom,
     );
     const handleSelect = (juser_id: string) => {
-        console.log("Setting user to " + juser_id.id);
         if (selectedUser == juser_id.id) {
             setSelectedUser("0");
         } else {
@@ -40,7 +39,6 @@ export default function MVPAddDeviceModal() {
         }
         setSelectedUser(juser_id.id);
     };
-    console.log(JSON.stringify(data));
 
     const handlePress = () => {
         linkJugToCommunityMember({
