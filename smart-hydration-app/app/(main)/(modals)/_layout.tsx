@@ -25,7 +25,7 @@ export default function ModalLayout() {
                             onPress={() => {
                                 router.canGoBack()
                                     ? router.back()
-                                    : router.replace("(tabs)");
+                                    : router.replace("(tabs)/community");
                             }}
                         >
                             <Entypo

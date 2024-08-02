@@ -15,7 +15,8 @@ import OnboardingHeader from "@/components/onboarding/onboarding-header";
 import { registerForPushNotificationsAsync } from "@/util/notifications";
 import useColorPalette from "@/util/palette";
 import { useRouter } from "expo-router";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import useSettings from "../hooks/user";
+
 
 export default function LoginPage() {
     const router = useRouter();
@@ -24,6 +25,7 @@ export default function LoginPage() {
     const setAuthToken = useSetAtom(authTokenAtom);
     const [storedPushToken, setStoredPushToken] = useAtom(pushTokenAtom);
     const palette = useColorPalette();
+    const { isCarer } = useSettings();
 
     const passwordRef = useRef<TextInput>();
 
@@ -48,14 +50,15 @@ export default function LoginPage() {
             addPushToken({ pushToken: storedPushToken as string });
         } else {
             registerForPushNotificationsAsync()
-                .then((pushToken) => {
-                    addPushToken({ pushToken });
-                    setStoredPushToken(pushToken ?? "");
-                })
-                .catch((error: any) => console.error(error));
-        }
-        router.replace("(tabs)");
-    }, [isSuccess, data]);
+            .then(pushToken => {
+                addPushToken({pushToken});
+                setStoredPushToken(pushToken ?? "");
+            }
+            )   
+            .catch((error: any) => console.error(error));
+            }
+            isCarer ? router.replace("(tabs)/community") : router.replace("(tabs)");
+        },[isSuccess, data])
 
     return (
         <PageWrapper>

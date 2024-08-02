@@ -55,7 +55,8 @@ def test_community_invites():
         'name': 'TestInvite',
         'email': 'testinvite@gmail.com',
         'password': '1',
-        'dob': '01-01-2000'
+        'dob': '01-01-2000',
+        'mode': 'Standard'
     })
     assert response.status_code == 200
 

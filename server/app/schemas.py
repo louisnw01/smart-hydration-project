@@ -20,6 +20,7 @@ class UserRegister(BaseModel):
     name: str
     email: str
     password: str
+    mode: str
     dob: Optional[str] = None
 
     # class Config:
@@ -102,3 +103,7 @@ class DeleteTagForm(BaseModel):
 class AddTagsPatientForm(BaseModel):
     memberID: int
     memberTags: List[str]
+
+
+class ChangeModeForm(BaseModel):
+    mode: str
