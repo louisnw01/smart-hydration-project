@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, Pressable } from "react-native";
+import { View, Text, ScrollView } from "react-native";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import StyledButton from "@/components/common/button";
@@ -6,6 +6,10 @@ import EditTagRow from "@/components/community/edit-tag-row";
 import StyledTextInput from "@/components/common/text-input";
 import PageWrapper from "@/components/common/page-wrapper";
 import { FilterObject, TagInfo } from "@/interfaces/community";
+import { createTagMAtom, updateTagMAtom, deleteTagMAtom, communityTagsQAtom } from "@/atom/query/community";
+import { useAtomValue } from "jotai";
+
+//to do: add loading spinner while tags load
 
 export interface EditTagsProps { }
 
@@ -15,7 +19,12 @@ export default function EditTags({ }: EditTagsProps) {
   const [showEditTagBox, setShowEditTagBox] = useState(false);
   const [newTextInput, setNewTextInput] = useState("");
   const [editTextInput, setEditTextInput] = useState("");
+  const [tagExists, setTagExists] = useState(false);
   const [currentTagName, setCurrentTagName] = useState("");
+  const { data, refetch: refetchTags } = useAtomValue(communityTagsQAtom);
+  const createTagMutate = useAtomValue(createTagMAtom).mutate;
+  const updateTagMutate = useAtomValue(updateTagMAtom).mutate;
+  const deleteTagMutate = useAtomValue(deleteTagMAtom).mutate;
   const [filters, setFilters] = useState<FilterObject>({
     searchTerm: "",
     sort: "asc",
@@ -35,18 +44,22 @@ export default function EditTags({ }: EditTagsProps) {
   const handleStartup = async () => { };
 
   useEffect(() => {
+    refetchTags();
+  }, []);
+
+  useEffect(() => {
     handleStartup();
   }, []);
 
   const router = useRouter();
-  //static data placeholder until we get real data from endpoint
-  const [tags, setTags] = useState([
-    { name: "independent" },
-    { name: "tea" },
-    { name: "aggressive" },
-    { name: "friendly" },
-    { name: "coffee" }
-  ]);
+  const [tags, setTags] = useState<TagInfo[]>([]);
+
+  useEffect(() => {
+    if (data) {
+      const updatedTags: TagInfo[] = data.map((tag: any) => ({ id: tag.id, name: tag.name }));
+      setTags(updatedTags);
+    }
+  }, [data]);
 
   const sortData = (filterObj: FilterObject) => {
     if (!tags) return;
@@ -76,24 +89,42 @@ export default function EditTags({ }: EditTagsProps) {
       setCurrentTagName("");
       setEditTextInput("");
       setShowEditTagBox(false);
+      updateTagMutate({ currentName: currentTagName, newName: editTextInput })
     }
   };
 
-  const handleDeleteTag = (tagName: string) => {
-    if (tagName !== '') {
-      const filteredArray = tags.filter(item => item.name !== tagName);
+  const handleDeleteTag = (deletedTagName: string) => {
+    if (deletedTagName !== '') {
+      const filteredArray = tags.filter(item => item.name !== deletedTagName);
       setTags(filteredArray);
+      deleteTagMutate({ tagName: deletedTagName })
     }
   };
 
-  const handleAddTag = (tagName: string) => {
-    if (tagName !== '') {
-      const newTag = { name: tagName };
-      setTags([...tags, newTag]);
+  const handleAddTag = async (newTagName: string) => {
+    if (newTagName === '') {
+      return;
+    }
+
+    if (tags.some(tag => tag.name.toLowerCase() === newTagName.toLowerCase())) {
+      setTagExists(true);
+      return;
+    }
+    if (!tagExists) {
+      const newTag = { name: newTagName };
+      setTags([...tags, { name: newTagName } as TagInfo]);
       setNewTextInput("");
       toggleNewTagSection();
+      createTagMutate({ tagName: newTagName });
     }
   };
+
+  const isTagInArray = (textEntry: string) => {
+    const exists = tags.some(tag => tag.name.toLowerCase() === textEntry.toLowerCase());
+    setTagExists(exists);
+    return exists;
+  };
+
 
   const toggleSortDirection = () => {
     setFilters((prev) => ({
@@ -111,6 +142,11 @@ export default function EditTags({ }: EditTagsProps) {
             textClass="text-lg"
             onPress={toggleSortDirection}
           />
+          {tags.length === 0 && (
+            <Text className="dark:text-white text-xl">
+              There are no tags in this community. Please add some
+            </Text>
+          )}
           <View className="flex-col justify-start mx-6">
             {tags.map((tag) => (
               <View key={tag.name} className="">
@@ -129,12 +165,20 @@ export default function EditTags({ }: EditTagsProps) {
               <View className="mb-3">
                 <Text className="dark:text-white text-xl font-bold">Create new tag</Text>
               </View>
+              {tagExists && (
+                <Text className="dark:text-white text-xl mb-2">
+                  You can't create a tag with an existing name
+                </Text>
+              )}
               <View className="flex-row items-center">
                 <View className="mr-4">
                   <StyledTextInput
                     value={newTextInput}
                     placeholder="Enter tag name"
-                    onChangeText={(val) => setNewTextInput(val)}
+                    onChangeText={(val) => {
+                      setNewTextInput(val);
+                      isTagInArray(val);
+                    }}
                     textContentType="name"
                     returnKeyType="done"
                   />
@@ -149,13 +193,15 @@ export default function EditTags({ }: EditTagsProps) {
                     }}
                   />
                 </View>
-                <View className="mr-2">
-                  <StyledButton
-                    text="Create"
-                    textClass="text-lg"
-                    onPress={() => handleAddTag(newTextInput)}
-                  />
-                </View>
+                {!tagExists && (
+                  <View className="mr-2">
+                    <StyledButton
+                      text="Create"
+                      textClass="text-lg"
+                      onPress={() => handleAddTag(newTextInput)}
+                    />
+                  </View>
+                )}
               </View>
             </View>
           )}

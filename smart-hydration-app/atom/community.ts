@@ -17,28 +17,3 @@ export const selectedMemberAtom = atom<Partial<MemberInfo>>({});
 export const selectedCommunityMemberAtom = atom(0);
 export const selectedSortMethodAtom = atom<string>("1");
 
-export const linkJugToMemberMAtom = atomWithMutation((get) => ({
-    mutationKey: ["/user/link-jug", get(authTokenAtom)],
-    enabled: !!get(authTokenAtom),
-    mutationFn: async (jugIds: string[]) => {
-        const token = get(authTokenAtom);
-        const response = await request(ENDPOINTS.LINK_JUG_TO_USER, {
-            method: "post",
-            body: { jugIds: jugIds },
-            auth: token as string,
-        });
-
-        if (!response.ok) {
-            throw new Error("Jug could not be linked to user");
-        }
-
-        return;
-    },
-    onSuccess: () => {
-        const queryClient = get(queryClientAtom);
-        void queryClient.invalidateQueries({ queryKey: ["get-jug-data"] });
-        void queryClient.invalidateQueries({
-            queryKey: ["/data/historical"],
-        });
-    },
-}));
