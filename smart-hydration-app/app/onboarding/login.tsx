@@ -17,7 +17,6 @@ import useColorPalette from "@/util/palette";
 import { useRouter } from "expo-router";
 import useSettings from "../hooks/user";
 
-
 export default function LoginPage() {
     const router = useRouter();
     const [email, setEmail] = useState("");
