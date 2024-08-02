@@ -4,7 +4,6 @@ import { loginMAtom } from "@/atom/query";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { useEffect, useRef, useState } from "react";
 
-import Drop from "@/assets/svgs/water-drop-svgrepo-com.svg";
 import { addPushTokenMAtom } from "@/atom/query";
 import { authTokenAtom, pushTokenAtom } from "@/atom/user";
 import StyledButton from "@/components/common/button";
@@ -13,7 +12,6 @@ import PageWrapper from "@/components/common/page-wrapper";
 import StyledTextInput from "@/components/common/text-input";
 import OnboardingHeader from "@/components/onboarding/onboarding-header";
 import { registerForPushNotificationsAsync } from "@/util/notifications";
-import useColorPalette from "@/util/palette";
 import { useRouter } from "expo-router";
 import useSettings from "../hooks/user";
 import Logo from "@/assets/svgs/SH_logo.svg";
@@ -24,7 +22,6 @@ export default function LoginPage() {
     const [password, setPassword] = useState("");
     const setAuthToken = useSetAtom(authTokenAtom);
     const [storedPushToken, setStoredPushToken] = useAtom(pushTokenAtom);
-    const palette = useColorPalette();
     const { isCarer } = useSettings();
 
     const passwordRef = useRef<TextInput>();

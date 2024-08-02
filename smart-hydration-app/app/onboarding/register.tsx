@@ -5,7 +5,6 @@ import { registerInfoAtom } from "@/atom/user";
 import GenericOnboardContent from "@/components/onboarding/generic-onboard-content";
 import { useRouter } from "expo-router";
 import { useEffect, useRef, useState } from "react";
-import { textInputStyle } from "@/constants/styles";
 import { getUserExistsQAtom } from "@/atom/query";
 import StyledTextInput from "@/components/common/text-input";
 import KeyboardScrollView from "@/components/common/keyboard-scrollview";
