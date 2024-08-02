@@ -63,22 +63,15 @@ export default function CommunityPage() {
                     comparison = a.name
                         .toLowerCase()
                         .localeCompare(b.name.toLowerCase());
-                    console.log("Sorting by name");
                     break;
                 case "2":
                     comparison = a.target_percentage - b.target_percentage;
-                    console.log("Sorting by %");
-
                     break;
                 case "3":
                     comparison = a.drank_today - b.drank_today;
-                    console.log("Sorting by drank today");
-
                     break;
                 case "4":
                     comparison = a.last_drank - b.last_drank;
-                    console.log("Sorting by last drank");
-
                     break;
             }
 
@@ -96,7 +89,6 @@ export default function CommunityPage() {
     };
 
     const handleSortChange = (val: string) => {
-        console.log("changing sort to " + val);
         setSelected(val);
         setFilters((prev) => ({
             ...prev,
