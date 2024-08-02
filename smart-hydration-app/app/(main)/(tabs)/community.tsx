@@ -44,7 +44,6 @@ export default function CommunityPage() {
         sort: "asc",
     });
     const [selected, setSelected] = useAtom(selectedSortMethodAtom);
-    const [ascDesc, setAscDesc] = React.useState("asc");
 
     useEffect(() => {
         if (!data) return;
@@ -57,24 +56,13 @@ export default function CommunityPage() {
 
         const sortedData = filteredData.sort((a, b) => {
             let comparison = 0;
-
-            switch (selected) {
-                case "1":
-                    comparison = a.name
-                        .toLowerCase()
-                        .localeCompare(b.name.toLowerCase());
-                    break;
-                case "2":
-                    comparison = a.target_percentage - b.target_percentage;
-                    break;
-                case "3":
-                    comparison = a.drank_today - b.drank_today;
-                    break;
-                case "4":
-                    comparison = a.last_drank - b.last_drank;
-                    break;
+            if (selected == "name") {
+                comparison = a.name
+                    .toLowerCase()
+                    .localeCompare(b.name.toLowerCase());
+            } else {
+                comparison = a[selected] - b[selected];
             }
-
             return filters.sort === "asc" ? comparison : -comparison;
         });
 
@@ -121,10 +109,10 @@ export default function CommunityPage() {
     }
 
     const sortMethod = [
-        { key: "1", value: "Name" },
-        { key: "2", value: "% To Target" },
-        { key: "3", value: "Amount Drank Today" },
-        { key: "4", value: "Last Drank" },
+        { key: "name", value: "Name" },
+        { key: "target_percentage", value: "Progress To Target" },
+        { key: "drank_today", value: "Amount Drank Today" },
+        { key: "last_drank", value: "Last Drank" },
     ];
 
     if (!hasCommunity) {
