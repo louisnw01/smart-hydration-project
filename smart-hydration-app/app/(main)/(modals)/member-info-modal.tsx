@@ -27,6 +27,7 @@ export default function MemberInfoModal() {
     const insets = useSafeAreaInsets();
     const member = useAtomValue(selectedMemberAtom);
     const setJugId = useSetAtom(selectedJugIdAtom);
+    console.log("Tags in Member Info: ", member.tags);
     return (
         <ScrollPageWrapper
             className="mt-8 flex gap-6 mx-6 pb-20"
