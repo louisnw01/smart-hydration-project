@@ -114,14 +114,10 @@ export default function ApplyTags() {
 
     const handleSaveTags = () => {
         //add tags in applied array to member
-        const appliedTagNames = appliedTags.map(tag => tag.name);
-        setMember({ ...member, tags: appliedTagNames });
+        setMember({ ...member, tags: appliedTags });
         addTagsMutate();
         console.log("Applied tags on save in Apply Tags page: ", appliedTags);
     };
-
-    //to do: add messages for when no tags applied / all tags applied
-    //to do: show message "There are no tags in your community. Ask your owner to add some" when no data
 
     return (
         <PageWrapper>
