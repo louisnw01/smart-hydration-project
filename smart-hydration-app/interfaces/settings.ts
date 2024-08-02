@@ -7,11 +7,11 @@ type ActionComponentFunction = (
 ) => ReactElement;
 
 export interface ISettingsActions {
-    name: string;
+    name?: string;
     component: ActionComponentFunction;
 }
 
 export interface ISettingsSection {
-    title: string;
+    title?: string;
     data: ISettingsActions[];
 }

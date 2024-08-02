@@ -1,7 +1,7 @@
+import useSettings from "@/app/hooks/user";
 import SHDrop from "@/assets/svgs/SH_Drop.svg";
 import PageHeader from "@/components/common/header";
 import useColorPalette from "@/util/palette";
-import useSettings from "@/app/hooks/user";
 import {
     Entypo,
     FontAwesome6,
@@ -12,10 +12,9 @@ import {
 import { Link, router, Tabs } from "expo-router";
 import { Pressable } from "react-native";
 
-
 export default function TabLayout() {
     const palette = useColorPalette();
-    const { isCarer, isStandard } = useSettings()
+    const { isCarer } = useSettings();
     return (
         <Tabs
             screenOptions={{
@@ -82,7 +81,8 @@ export default function TabLayout() {
                                         size={26}
                                         color={palette.fg}
                                     />
-                                </Link>)}
+                                </Link>
+                            )}
                             {isCarer && (
                                 <Pressable
                                     className="px-5"
@@ -90,7 +90,11 @@ export default function TabLayout() {
                                         router.push("settings/settings-modal")
                                     }
                                 >
-                                    <Entypo name="cog" size={30} color={palette.fg} />
+                                    <Entypo
+                                        name="cog"
+                                        size={30}
+                                        color={palette.fg}
+                                    />
                                 </Pressable>
                             )}
                         </>
@@ -132,5 +136,5 @@ export default function TabLayout() {
                 }}
             />
         </Tabs>
-     );
+    );
 }

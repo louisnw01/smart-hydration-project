@@ -1,41 +1,11 @@
 import { useAtomValue } from "jotai";
 
-import { Redirect, Stack } from "expo-router";
 import { colorSchemeEAtom } from "@/atom/effect/user";
-import { getItemAsync } from "expo-secure-store";
-import { request } from "@/util/fetch";
-import { useEffect, useState } from "react";
 import Loading from "@/components/common/loading";
-import { View } from "react-native";
 import { tunnelInitEAtom } from "@/util/tunnel";
-
-function useSession() {
-    const [isLoading, setIsLoading] = useState(true);
-    const [isSuccess, setIsSuccess] = useState(false);
-    const [isEmailVerified, setIsEmailVerified] = useState(true)
-
-    const getTokenFromStorage = async () => {
-        const rawToken = await getItemAsync("auth-token");
-        const authToken = rawToken ? JSON.parse(rawToken) : null;
-        if (!authToken) {
-            setIsSuccess(false);
-            setIsLoading(false);
-            return;
-        }
-        const result = await request("/user/check-token", {
-            method: "post",
-            auth: authToken,
-        });
-        setIsSuccess(result.ok);
-        setIsEmailVerified(result.status != 403)
-        setIsLoading(false);
-    };
-
-    useEffect(() => {
-        getTokenFromStorage();
-    }, []);
-    return { isLoading, isSuccess, isEmailVerified };
-}
+import { Redirect, Stack } from "expo-router";
+import { View } from "react-native";
+import useSession from "@/util/auth";
 
 export default function MainLayout() {
     useAtomValue(colorSchemeEAtom);
@@ -47,7 +17,7 @@ export default function MainLayout() {
         <View className="flex flex-1 justify-center">
             <Loading isLoading large message="" />
         </View>;
-    } else if(!isEmailVerified) {
+    } else if (!isEmailVerified) {
         return <Redirect href="onboarding/email-verification" />;
     } else if (!isSuccess) {
         return <Redirect href="onboarding/login-register" />;

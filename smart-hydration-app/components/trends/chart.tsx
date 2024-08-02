@@ -10,9 +10,9 @@ import { ActivityIndicator, Dimensions, Text, View } from "react-native";
 import Animated, {
     scrollTo,
     useAnimatedRef,
+    useAnimatedScrollHandler,
     useAnimatedStyle,
     useDerivedValue,
-    useScrollViewOffset,
     useSharedValue,
 } from "react-native-reanimated";
 import { Bar, CartesianChart, useChartPressState } from "victory-native";
@@ -80,7 +80,12 @@ export default function TrendsChart() {
     const setCanvasInfo = useSetAtom(canvasInfoAtom);
 
     const scrollRef = useAnimatedRef<Animated.ScrollView>();
-    const scrollPosition = useScrollViewOffset(scrollRef);
+    const scrollPosition = useSharedValue(0);
+
+    const scrollHandler = useAnimatedScrollHandler((event) => {
+        scrollPosition.value = event.contentOffset.x;
+    });
+
     const scrollViewWidth = useSharedValue(screenWidth);
 
     const memoedData = useMemo(
@@ -109,8 +114,7 @@ export default function TrendsChart() {
             console.log("running..");
             scrollPosition.value = newValue;
         }, 100);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [data.length, scrollViewWidth, timeframe]);
+    }, [timeframe]);
 
     const animatedStyles = useAnimatedStyle(() => ({
         width: scrollViewWidth.value,
@@ -118,6 +122,7 @@ export default function TrendsChart() {
     }));
 
     if (!data || data.length === 0) {
+        console.log("ashdjkas");
         return (
             <View className="h-full justify-center text-center">
                 <ActivityIndicator />
@@ -135,6 +140,7 @@ export default function TrendsChart() {
     const hasNoData = zeroCount == memoedData.length;
 
     if (hasNoData) {
+        console.log("asdhjaslfdsbfhjdksfgdsbn");
         return (
             <View className="h-[300px] justify-center items-center">
                 <Text className="dark:text-white">
@@ -149,9 +155,7 @@ export default function TrendsChart() {
                 showsHorizontalScrollIndicator={false}
                 ref={scrollRef}
                 horizontal
-                onScroll={(e) => {
-                    scrollPosition.value = e.nativeEvent.contentOffset.x;
-                }}
+                onScroll={scrollHandler}
             >
                 <Animated.View style={animatedStyles}>
                     <CartesianChart
