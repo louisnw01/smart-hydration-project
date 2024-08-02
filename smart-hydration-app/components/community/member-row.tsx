@@ -37,22 +37,12 @@ export default function MemberRow({ member }: { member: MemberInfo }) {
                             unit="ml"
                         />
                     </View>
-                     <View className="flex-row flex-wrap">
-                    <Tag name="Independent"></Tag>
-                    <Tag name="Likes coffee"></Tag>
-                    <Tag name="Aggressive"></Tag>
-                    <Tag name="Four"></Tag>
-                    <Tag name="Five"></Tag>
-                    <Tag name="Six"></Tag>
-                    <Tag name="Seven"></Tag>
-                    <Tag name="Eight"></Tag>
-                    <Tag name="Nine"></Tag>
-                </View>
+                      <View className="flex-row flex-wrap">
+                      {member.tags && member.tags.map(tag => (
+                          <Tag key={tag.id} name={tag.name} />
+                      ))}
+                    </View>
                     <MemberDetail title="Target Progress" />
-                </View>
-
-                <View className="flex-1 h-full">
-                    <MemberDetail title="Tags" tags />
                 </View>
             </Pressable>
             <View className="flex flex-wrap h-16 absolute bottom-1 left-10">
@@ -73,7 +63,6 @@ export default function MemberRow({ member }: { member: MemberInfo }) {
         </View>
     );
 }
-
 
 function MemberDetail({ title, value }) {
     return (
