@@ -53,18 +53,20 @@ async def community_info(code: str, user_id: str = Depends(auth_user)):
 async def patient_info(user_id: str = Depends(auth_user)):
     with db_session:
         community = try_get_users_community(user_id)
+        user = User.get(id = user_id)
 
         # get targets for users
         patient_info = []
         for juguser in community.jug_users:
-            patient_info.append({
-                "id": juguser.id,
-                "name": juguser.name,
-                "jugs": [{"name": jug.name, "id": jug.smart_hydration_id} for jug in juguser.jugs],
-                "target": juguser.target or 2200,
-                "drank_today": juguser.drank_today,
-                "tags": [{"id": tag.id, "name": tag.name} for tag in juguser.tags]
-            })
+            if juguser.user is not user:
+                patient_info.append({
+                    "id": juguser.id,
+                    "name": juguser.name,
+                    "jugs": [{"name": jug.name, "id": jug.smart_hydration_id} for jug in juguser.jugs],
+                    "target": juguser.target or 2200,
+                    "drank_today": juguser.drank_today,
+                    "tags": [{"id": tag.id, "name": tag.name} for tag in juguser.tags]
+                })
 
         return patient_info
 
