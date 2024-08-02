@@ -22,6 +22,7 @@ import MemberRow from "@/components/community/member-row";
 import { FilterObject, MemberInfo } from "@/interfaces/community";
 import { SelectList } from "react-native-dropdown-select-list";
 import { selectedSortMethodAtom } from "@/atom/community";
+import { useFocusEffect } from "expo-router";
 
 //for now (basic user flow), Community tab is shown as 4th tab
 //TODO: for care home mode, replace home screen with Community tab
@@ -31,8 +32,8 @@ import { selectedSortMethodAtom } from "@/atom/community";
 //TODO: add settings cog at top right
 
 export default function CommunityPage() {
-    const { isLoading, refetch } = useAtomValue(communityInfoQAtom);
-    const { data, isLoading: patientInfoIsLoading } =
+    const { isLoading, refetch: refetchCommunityInfo } = useAtomValue(communityInfoQAtom);
+    const { data, isLoading: patientInfoIsLoading, refetch: refetchPatientInfo} =
         useAtomValue(patientInfoQAtom);
     const hasCommunity = useAtomValue(userHasCommunityAtom);
     const [refreshing, setRefreshing] = useState(false);
@@ -44,6 +45,13 @@ export default function CommunityPage() {
         sort: "asc",
     });
     const [selected, setSelected] = useAtom(selectedSortMethodAtom);
+
+    useFocusEffect(
+        React.useCallback(() => {
+            refetchCommunityInfo();
+            refetchPatientInfo();
+        }, [refetchCommunityInfo, refetchPatientInfo])
+    );
 
     useEffect(() => {
         if (data === undefined) return;
@@ -106,7 +114,8 @@ export default function CommunityPage() {
     };
 
     const handleRefresh = () => {
-        refetch();
+        refetchCommunityInfo();
+        refetchPatientInfo();
         setRefreshing(true);
     };
 
