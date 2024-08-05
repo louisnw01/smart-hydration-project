@@ -1,12 +1,12 @@
 import Jug from "@/assets/svgs/jug.svg";
 import { selectedMemberAtom } from "@/atom/community";
-import { selectedJugIdAtom } from "@/atom/device";
+import { selectedDeviceAtom, selectedJugIdAtom } from "@/atom/device";
 import { getPatientJugDataQAtom } from "@/atom/query";
 import StyledButton from "@/components/common/button";
 import { ScrollPageWrapper } from "@/components/common/page-wrapper";
 import Tag from "@/components/community/tag";
 import DeviceSection from "@/components/devices/device-section";
-import { processMemberData } from "@/util/community";
+import { processMemberData, useFormattedMemberData } from "@/util/community";
 import useColorPalette from "@/util/palette";
 import { FontAwesome, MaterialCommunityIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
@@ -28,7 +28,7 @@ export default function MemberInfoModal() {
     const insets = useSafeAreaInsets();
     const member = useAtomValue(selectedMemberAtom);
     const setJugId = useSetAtom(selectedJugIdAtom);
-    const memberData = processMemberData(member);
+    const memberData = useFormattedMemberData(member);
     return (
         <ScrollPageWrapper
             className="mt-8 flex gap-6 mx-6 pb-20"
@@ -49,7 +49,6 @@ export default function MemberInfoModal() {
                 <Text className="text-xl dark:text-white">
                     Name: {memberData.name}
                 </Text>
-                <Text className="text-xl dark:text-white">Jugs</Text>
                 <Text className="text-xl dark:text-white">
                     Last drank: {memberData.lastDrank}
                 </Text>
@@ -64,7 +63,7 @@ export default function MemberInfoModal() {
             <MemberInfoBlock title="Progress to Target">
                 <View className="flex-row justify-between">
                     <Text className="text-xl dark:text-white">
-                        {memberData.amountDrank} / {memberData.target}
+                        {memberData.amountDrank} / {memberData.target}ml
                     </Text>
                     <Text className="text-xl font-semibold dark:text-white">
                         {memberData.targetProgress}
