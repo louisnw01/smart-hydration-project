@@ -1,6 +1,8 @@
 import SFPro from "@/assets/fonts/SF-Pro-Display-Regular.otf";
+import { unitsAtom } from "@/atom/user";
 import useColorPalette from "@/util/palette";
 import { Line, RoundedRect, Text, useFont } from "@shopify/react-native-skia";
+import { useAtomValue } from "jotai";
 import { useEffect, useState } from "react";
 import { useColorScheme } from "react-native";
 import { useDerivedValue } from "react-native-reanimated";
@@ -26,6 +28,7 @@ export default function ToolTip({
     x: ValPosSkia;
     y: ValPosSkia;
 }) {
+    const unit = useAtomValue(unitsAtom);
     const scheme = useColorScheme();
     const palette = useColorPalette();
     const fontLarge = useFont(SFPro, 30);
@@ -92,6 +95,7 @@ export default function ToolTip({
         return null;
 
     const realTime = new Date(memoedData[clickedDataIndex].x);
+    
 
     return (
         <>
@@ -117,7 +121,7 @@ export default function ToolTip({
             <Text
                 x={textXPos}
                 y={BOX_Y + 50}
-                text={`${y.value.value.toFixed(0)}ml`}
+                text={`${y.value.value.toFixed(0)}${unit}`}
                 font={fontLarge}
                 color={palette.fg}
             />
