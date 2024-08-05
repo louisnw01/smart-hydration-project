@@ -1,6 +1,5 @@
 import { selectedMemberAtom } from "@/atom/community";
-import { getJugDataQAtom } from "@/atom/query";
-import { linkJugsToCommunityMemberMAtom } from "@/atom/query/community";
+import { getJugDataQAtom, linkJugsToCommunityMemberMAtom } from "@/atom/query";
 import StyledButton from "@/components/common/button";
 import Loading from "@/components/common/loading";
 import { DeviceInfo } from "@/interfaces/device";

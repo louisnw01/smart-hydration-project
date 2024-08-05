@@ -1,6 +1,5 @@
 import { selectedMemberAtom } from "@/atom/community";
-import { addTagsPatientMAtom } from "@/atom/query";
-import { communityTagsQAtom } from "@/atom/query/community";
+import { addTagsPatientMAtom, communityTagsQAtom } from "@/atom/query";
 import StyledButton from "@/components/common/button";
 import PageWrapper from "@/components/common/page-wrapper";
 import Tag from "@/components/community/tag";

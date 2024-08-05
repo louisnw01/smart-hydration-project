@@ -27,3 +27,7 @@ export interface CommunityInfo {
     name: string;
     isOwner: boolean;
 }
+// above, 'name' represents community name, below 'name' represents user name
+export interface CommunityUser extends CommunityInfo {
+    id: number;
+}

@@ -1,5 +1,4 @@
-import { userInfoQAtom } from "@/atom/query";
-import { createCommunityMAtom } from "@/atom/query/community";
+import { createCommunityMAtom, userInfoQAtom } from "@/atom/query";
 import StyledTextInput from "@/components/common/text-input";
 import { router } from "expo-router";
 import { useAtomValue } from "jotai";

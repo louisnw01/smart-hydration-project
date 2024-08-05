@@ -3,7 +3,7 @@ import {
     createTagMAtom,
     deleteTagMAtom,
     updateTagMAtom,
-} from "@/atom/query/community";
+} from "@/atom/query";
 import StyledButton from "@/components/common/button";
 import PageWrapper from "@/components/common/page-wrapper";
 import StyledTextInput from "@/components/common/text-input";

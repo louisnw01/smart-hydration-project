@@ -1,4 +1,4 @@
-import { deleteUser } from "@/atom/query";
+import { deleteUserMAtom } from "@/atom/query";
 import { OptionBlock } from "@/components/common/option-block";
 import { ISettingsSection } from "@/interfaces/settings";
 import { Feather } from "@expo/vector-icons";
@@ -56,7 +56,7 @@ export default function SettingsModal() {
         isPending,
         isSuccess,
         isError,
-    } = useAtomValue(deleteUser);
+    } = useAtomValue(deleteUserMAtom);
 
     useEffect(() => {
         if (isSuccess) {
