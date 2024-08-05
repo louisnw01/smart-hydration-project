@@ -1,5 +1,4 @@
 import { View, Text, ScrollView } from "react-native";
-import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import StyledButton from "@/components/common/button";
 import EditTagRow from "@/components/community/edit-tag-row";
@@ -51,7 +50,6 @@ export default function EditTags({ }: EditTagsProps) {
     handleStartup();
   }, []);
 
-  const router = useRouter();
   const [tags, setTags] = useState<TagInfo[]>([]);
 
   useEffect(() => {
@@ -143,11 +141,13 @@ export default function EditTags({ }: EditTagsProps) {
     <PageWrapper>
       <ScrollView>
         <View className="flex flex-1 gap-8 mx-16 items-center mt-10">
+        {tags.length > 1 && (
           <StyledButton
             text={`Sort tags by name ${filters.sort === "asc" ? "A-Z" : "Z-A"}`}
             textClass="text-lg"
             onPress={toggleSortDirection}
           />
+        )}
           {tags.length === 0 && (
             <Text className="dark:text-white text-xl">
               There are no tags in this community. Please add some
@@ -220,7 +220,7 @@ export default function EditTags({ }: EditTagsProps) {
               </View>
               {nameMatchesExisting && (
                 <Text className="dark:text-white text-xl mb-2">
-                  The tag already has this name
+                  Tag already has this name
                 </Text>
               )}
               <View className="flex-row items-center">
