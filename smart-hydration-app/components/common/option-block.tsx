@@ -3,6 +3,12 @@ import { WritableAtom, useAtom, useAtomValue, useSetAtom } from "jotai";
 import { Switch, View, Text, Pressable, GestureResponderEvent } from "react-native";
 import { Entypo } from "@expo/vector-icons";
 
+interface SettingsSwitchProps {
+    atom: WritableAtom<unknown, [unknown], void>;
+    label: string;
+    icon?: React.ReactNode;
+}
+
 interface OptionBlockProps {
     text?: string;
     atom?: WritableAtom<unknown, [unknown], void>;
@@ -67,14 +73,20 @@ export function OptionBlock({
     );
 }
 
-function SettingsSwitch({ atom }) {
+export function SettingsSwitch({ atom, label, icon }:SettingsSwitchProps) {
     const [toggled, setToggled] = useAtom(atom);
     return (
-        <Switch
-            trackColor={{ false: "gray", true: colors.blue }}
-            onValueChange={() => setToggled(!toggled)}
-            value={toggled as boolean}
-        />
+        <View className="mt-4 flex-row items-center justify-between h-14 bg-gray-100 px-4 dark:bg-neutral-900 rounded-b-xl rounded-t-xl">
+            <View className="flex flex-row items-center gap-3">
+                {icon}
+                <Text className="text-xl dark:text-white">{label}</Text>
+            </View>
+            <Switch
+                trackColor={{ false: "gray", true: colors.blue }}
+                onValueChange={() => setToggled(!toggled)}
+                value={toggled as boolean}
+            />
+        </View>
     );
 }
 
