@@ -79,7 +79,7 @@ async def community_users(user_id: str = Depends(auth_user)):
         for member in community.followers:
             data.append({
                 "name": member.user.name,
-                "owner": member.is_owner,
+                "isOwner": member.is_owner,
                 "id": member.id,
             })
 

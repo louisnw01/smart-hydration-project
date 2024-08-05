@@ -1,8 +1,4 @@
-import {
-    communityInfoQAtom,
-    communityUsersQAtom,
-    deleteCommunityMemberMAtom,
-} from "@/atom/query/community";
+import { communityUsersQAtom, deleteCommunityMemberMAtom } from "@/atom/query";
 import StyledButton from "@/components/common/button";
 import Loading from "@/components/common/loading";
 import { useAtomValue } from "jotai";

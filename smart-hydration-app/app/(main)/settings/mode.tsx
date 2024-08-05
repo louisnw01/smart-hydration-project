@@ -1,4 +1,4 @@
-import { changeUserModeMAtom } from "@/atom/query/user";
+import { changeUserModeMAtom } from "@/atom/query";
 import { authTokenAtom, userModeAtom } from "@/atom/user";
 import { MultiSelectOptionBlock } from "@/components/common/option-block";
 import { ISettingsSection } from "@/interfaces/settings";

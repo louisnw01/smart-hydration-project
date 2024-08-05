@@ -11,7 +11,6 @@ import { authTokenAtom } from "../user";
 
 interface GenericTanstackParams {
     endpoint: string;
-    enabled?: (get: Getter) => boolean;
 }
 
 // A generic atomWithQuery, which does all of the standard operations we do
@@ -21,9 +20,11 @@ interface GenericTanstackParams {
 // enabled will default to authTokenAtom, but can be given a custom lambda
 // that returns a boolean
 interface QueryInfoParams extends GenericTanstackParams {
-    queryKey: string;
+    queryKey: string | ((get: Getter) => any[]);
     staleTime?: number;
     initialData?: any;
+    query?: (get: Getter) => { [key: string]: unknown };
+    enabled?: (get: Getter) => boolean;
 }
 export function atomWithQueryInfo<T>({
     queryKey,
@@ -31,12 +32,17 @@ export function atomWithQueryInfo<T>({
     enabled,
     staleTime,
     initialData,
+    query,
 }: QueryInfoParams) {
     return atomWithQuery<T>((get) => ({
-        queryKey: [queryKey, get(authTokenAtom)],
+        queryKey:
+            typeof queryKey === "string"
+                ? [queryKey, get(authTokenAtom)]
+                : queryKey(get),
         queryFn: async ({ queryKey: [, token] }) => {
             const response = await request(endpoint, {
                 auth: token as string,
+                query: query ? query(get) : undefined,
             });
             if (!response.ok) {
                 throw new Error();
@@ -73,13 +79,7 @@ interface MutationCustomParams<T> extends GenericTanstackParams {
 }
 export function atomWithMutationCustom<
     T extends { [key: string]: unknown } | void,
->({
-    mutationKey,
-    endpoint,
-    enabled,
-    onSuccess,
-    body,
-}: MutationCustomParams<T>) {
+>({ mutationKey, endpoint, onSuccess, body }: MutationCustomParams<T>) {
     return atomWithMutation<void, T, Error>((get) => ({
         mutationKey: [mutationKey, get(authTokenAtom)],
         mutationFn: async (form: T) => {
@@ -99,6 +99,5 @@ export function atomWithMutationCustom<
             const queryClient = get(queryClientAtom);
             onSuccess(get, queryClient, form);
         },
-        enabled: enabled ? enabled(get) : !!get(authTokenAtom),
     }));
 }

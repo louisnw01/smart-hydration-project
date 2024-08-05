@@ -1,4 +1,4 @@
-import { getHydrationQAtom } from "@/atom/query";
+import { getHydrationQAtom, userHasCommunityAtom } from "@/atom/query";
 import { ScrollPageWrapper } from "@/components/common/page-wrapper";
 import WaterAmount from "@/components/common/water-amount";
 import InsightsPane from "@/components/trends/insights-pane";
@@ -9,13 +9,12 @@ import { formattedDataAtom } from "@/util/trends";
 import { useAtomValue } from "jotai";
 import { ActivityIndicator, Text, View } from "react-native";
 
-import { mostHydratedDayOfWeekAtom } from "@/atom/hydration";
-import TrendsChart from "@/components/trends/chart";
 import useSettings from "@/app/hooks/user";
+import { mostHydratedDayOfWeekAtom } from "@/atom/hydration";
 import StyledButton from "@/components/common/button";
-import { FontAwesome6 } from "@expo/vector-icons"
+import TrendsChart from "@/components/trends/chart";
 import useColorPalette from "@/util/palette";
-import { userHasCommunityAtom } from "@/atom/query/community";
+import { FontAwesome6 } from "@expo/vector-icons";
 
 function MostHydratedDayOfWeek() {
     const { name, value } = useAtomValue(mostHydratedDayOfWeekAtom);
@@ -66,38 +65,45 @@ export default function TrendsPage() {
             message="Loading your information..."
             className="bg-gray-100 dark:bg-black"
         >
-        <>
-        {!(isCarer && !isInCommunity) && (
-            <><View className="flex px-4 pb-5 bg-white dark:bg-black">
-                        <TrendsChart />
-                        <Switcher />
-                    </View><Insights /></>)
-                }
-        {(isCarer && !isInCommunity) && (
-                    <><View className="flex items-center py-10 px-10 bg-white dark:bg-black">
-                        <Text className="text-black dark:text-white text-xl font-light">
-                            You're not tracking anyone's hydration yet. Go to the Community tab to join a join a community or create your own.
-                        </Text>
-                        <View className="flex flex-row items-center justify-center">
-                            <StyledButton
-                                text="Community"
-                                href="(tabs)/community"
-                                textClass="text-lg self-center"
-                                buttonClass="self-center mt-20 px-3"
-                                icon={
-                                    <View className="flex flex-row w-6 pr-1">
-                                        <FontAwesome6
-                                            name="people-group"
-                                            size={22}
-                                            color={palette.fg}
-                                        />
-                                    </View>
-                                }
-                            />
+            <>
+                {!(isCarer && !isInCommunity) && (
+                    <>
+                        <View className="flex px-4 pb-5 bg-white dark:bg-black">
+                            <TrendsChart />
+                            <Switcher />
                         </View>
-                    </View></>)
-                }
-        </>
+                        <Insights />
+                    </>
+                )}
+                {isCarer && !isInCommunity && (
+                    <>
+                        <View className="flex items-center py-10 px-10 bg-white dark:bg-black">
+                            <Text className="text-black dark:text-white text-xl font-light">
+                                You're not tracking anyone's hydration yet. Go
+                                to the Community tab to join a join a community
+                                or create your own.
+                            </Text>
+                            <View className="flex flex-row items-center justify-center">
+                                <StyledButton
+                                    text="Community"
+                                    href="(tabs)/community"
+                                    textClass="text-lg self-center"
+                                    buttonClass="self-center mt-20 px-3"
+                                    icon={
+                                        <View className="flex flex-row w-6 pr-1">
+                                            <FontAwesome6
+                                                name="people-group"
+                                                size={22}
+                                                color={palette.fg}
+                                            />
+                                        </View>
+                                    }
+                                />
+                            </View>
+                        </View>
+                    </>
+                )}
+            </>
         </ScrollPageWrapper>
     );
 }

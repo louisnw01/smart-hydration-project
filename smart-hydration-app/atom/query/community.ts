@@ -1,12 +1,13 @@
-import { CommunityInfo, MemberInfo } from "@/interfaces/community";
+import {
+    CommunityInfo,
+    CommunityUser,
+    MemberInfo,
+    TagInfo,
+} from "@/interfaces/community";
 import { DeviceInfo } from "@/interfaces/device";
 import { UserInfo } from "@/interfaces/user";
-import { ENDPOINTS, request } from "@/util/fetch";
-import {
-    atomWithMutation,
-    atomWithQuery,
-    queryClientAtom,
-} from "jotai-tanstack-query";
+import { ENDPOINTS } from "@/util/fetch";
+import { jugUserInfoAtom } from "../jug-user";
 import { userInfoQAtom } from "../query";
 import { authTokenAtom, inviteCodeAtom } from "../user";
 import {
@@ -14,20 +15,6 @@ import {
     atomWithQueryDerivation,
     atomWithQueryInfo,
 } from "./common";
-
-// export const userHasCommunityAtom = atom((get) => {
-//     const { data, isLoading } = get(communityInfoQAtom);
-//     return !isLoading && !!data?.name;
-// });
-// export const communityNameAtom = atom((get) => {
-//     const { data, isLoading } = get(communityInfoQAtom);
-//     if (isLoading) return;
-//     return data?.name;
-// });
-// export const isCommunityOwnerAtom = atom((get) => {
-//     const { data, isLoading } = get(communityInfoQAtom);
-//     return !isLoading && data?.isOwner;
-// });
 
 export const communityInfoQAtom = atomWithQueryInfo<CommunityInfo>({
     queryKey: "get-community-info",
@@ -54,37 +41,6 @@ export const patientInfoQAtom = atomWithQueryInfo<MemberInfo[]>({
     endpoint: ENDPOINTS.PATIENT_INFO,
 });
 
-// export const communityInfoQAtom = atomWithQuery<CommunityInfo>((get) => ({
-//     queryKey: ["get-community-info", get(authTokenAtom)],
-//     queryFn: async ({ queryKey: [, token] }) => {
-//         const response = await request(ENDPOINTS.COMMUNITY_INFO, {
-//             auth: token as string,
-//         });
-//         if (!response.ok) {
-//             return;
-//         }
-
-//         return await response.json();
-//     },
-//     enabled: !!get(authTokenAtom),
-//     // retry: false,
-// }));
-
-// export const patientInfoQAtom = atomWithQuery<MemberInfo[]>((get) => ({
-//     queryKey: ["get-patient-info", get(authTokenAtom)],
-//     queryFn: async ({ queryKey: [, token] }) => {
-//         const response = await request(ENDPOINTS.PATIENT_INFO, {
-//             auth: token as string,
-//         });
-//         if (!response.ok) {
-//             throw new Error("");
-//         }
-
-//         return await response.json();
-//     },
-//     enabled: !!get(authTokenAtom),
-// }));
-
 export const createCommunityMAtom = atomWithMutationCustom<{ name: string }>({
     mutationKey: "create-community",
     endpoint: ENDPOINTS.CREATE_COMMUNITY,
@@ -94,55 +50,12 @@ export const createCommunityMAtom = atomWithMutationCustom<{ name: string }>({
             isOwner: true,
         });
     },
-    enabled: (get) => !!get(authTokenAtom) && !get(userHasCommunityAtom),
 });
-
-// export const createCommunityMAtom = atomWithMutation((get) => ({
-//     mutationKey: ["create-community", get(authTokenAtom)],
-//     mutationFn: async (formData: { name: string }) => {
-//         const token = get(authTokenAtom);
-//         const response = await request(ENDPOINTS.CREATE_COMMUNITY, {
-//             method: "post",
-//             body: formData,
-//             auth: token as string,
-//         });
-
-//         if (!response.ok) {
-//             return;
-//         }
-//     },
-//     onSuccess: (data, formData) => {
-//         const qc = get(queryClientAtom);
-//         qc.setQueryData(["get-community-info", get(authTokenAtom)], {
-//             name: formData.name,
-//             is_owner: true,
-//         });
-//     },
-//     // only enabled if auth and user doesn't have a community
-//     enabled: !!get(authTokenAtom) && !get(userHasCommunityAtom),
-// }));
 
 export const updateCommunityMAtom = atomWithMutationCustom<{ name: string }>({
     mutationKey: "update-community",
     endpoint: ENDPOINTS.UPDATE_COMMUNITY,
 });
-
-// export const oldupdateCommunityMAtom = atomWithMutation((get) => ({
-//     mutationKey: ["update-community", get(authTokenAtom)],
-//     enabled: !!get(authTokenAtom),
-//     mutationFn: async (formData: { name: string }) => {
-//         const token = get(authTokenAtom);
-//         const response = await request(ENDPOINTS.UPDATE_COMMUNITY, {
-//             method: "post",
-//             body: formData,
-//             auth: token as string,
-//         });
-
-//         if (!response.ok) {
-//             return;
-//         }
-//     },
-// }));
 
 export const deleteCommunityMAtom = atomWithMutationCustom({
     mutationKey: "delete-community",
@@ -162,35 +75,6 @@ export const deleteCommunityMAtom = atomWithMutationCustom({
         qc.setQueryData(["get-patient-info", authToken], []);
     },
 });
-
-// export const odeleteCommunityMAtom = atomWithMutation((get) => ({
-//     mutationKey: ["delete-community", get(authTokenAtom)],
-//     enabled: !!get(authTokenAtom),
-//     mutationFn: async () => {
-//         const token = get(authTokenAtom);
-//         const response = await request(ENDPOINTS.DELETE_COMMUNITY, {
-//             method: "post",
-//             auth: token as string,
-//         });
-
-//         if (!response.ok) {
-//             return;
-//         }
-//     },
-//     onSuccess: () => {
-//         const qc = get(queryClientAtom);
-//         const authToken = get(authTokenAtom);
-//         qc.setQueryData(["get-community-users", authToken], () => []);
-//         qc.setQueryData(["get-community-info", authToken], () => null);
-//         qc.setQueryData(["user-info", authToken], (prev) => ({
-//             ...prev,
-//             has_community: false,
-//         }));
-//         qc.setQueryData(["get-patient-info", authToken], []);
-//     },
-// }));
-//
-//
 
 export const addCommunityDrinkMAtom = atomWithMutationCustom<{
     juser_id: number;
@@ -219,299 +103,114 @@ export const communityInviteLinkQAtom = atomWithQueryInfo({
     initialData: undefined,
 });
 
-// export const communityInviteLinkQAtom = atomWithQuery((get) => ({
-//     queryKey: ["community-invite-link", get(authTokenAtom)],
-//     queryFn: async ({ queryKey: [, token] }) => {
-//         const response = await request(ENDPOINTS.COMMUNITY_GENERATE_INVITE, {
-//             auth: token as string,
-//         });
-//         if (!response.ok) {
-//             throw new Error("could not generate invite link");
-//         }
-
-//         return await response.json();
-//     },
-//     enabled: !!get(authTokenAtom) && !!get(userIsCommunityOwnerAtom),
-//     staleTime: 0,
-//     initialData: undefined,
-// }));
-
-// export const joinCommunityMAtom = atomWithMutation((get) => ({
-//     mutationKey: ["join-community", get(authTokenAtom)],
-//     enabled: !!get(authTokenAtom) && !!get(inviteCodeAtom),
-//     mutationFn: async () => {
-//         const token = get(authTokenAtom);
-//         const code = get(inviteCodeAtom);
-
-//         const response = await request(ENDPOINTS.JOIN_COMMUNITY, {
-//             method: "post",
-//             auth: token as string,
-//             body: { code: code },
-//         });
-
-//         if (!response.ok) {
-//             const error = await response.json();
-//             throw new Error(error.detail);
-//         }
-//     },
-//     onSuccess: () => {
-//         const qc = get(queryClientAtom);
-//         qc.invalidateQueries({ queryKey: ["get-community-info"] });
-//     },
-// }));
-
 export const joinCommunityMAtom = atomWithMutationCustom({
     mutationKey: "join-community",
     endpoint: ENDPOINTS.COMMUNITY_GENERATE_INVITE,
     body: (get) => ({ code: get(inviteCodeAtom) }),
-    enabled: (get) => !!get(authTokenAtom) && !!get(inviteCodeAtom),
     onSuccess: (get, qc, form) => {
         qc.invalidateQueries({ queryKey: ["get-community-info"] });
         qc.invalidateQueries({ queryKey: ["get-patient-info"] });
     },
 });
 
-export const communityUsersQAtom = atomWithQuery((get) => ({
-    queryKey: ["get-community-users", get(authTokenAtom)],
-    queryFn: async ({ queryKey: [, token] }) => {
-        const response = await request(ENDPOINTS.COMMUNITY_USERS, {
-            auth: token as string,
-        });
-        if (!response.ok) {
-            throw new Error("could not generate invite link");
-        }
+export const communityUsersQAtom = atomWithQueryInfo<CommunityUser[]>({
+    queryKey: "get-community-users",
+    endpoint: ENDPOINTS.COMMUNITY_USERS,
+    enabled: (get) => !!get(authTokenAtom) && !!get(userHasCommunityAtom),
+});
 
-        return await response.json();
-    },
-    enabled: !!get(authTokenAtom) && !!get(userHasCommunityAtom),
-}));
-
-export const deleteCommunityMemberMAtom = atomWithMutation<
-    void,
-    { id: number }
->((get) => ({
-    mutationKey: ["delete-community-member", get(authTokenAtom)],
-    enabled: !!get(authTokenAtom),
-    mutationFn: async (formData) => {
-        const token = get(authTokenAtom);
-        const response = await request(ENDPOINTS.DELETE_COMMUNITY_MEMBER, {
-            method: "post",
-            body: formData,
-            auth: token as string,
-        });
-
-        if (!response.ok) {
-            throw new Error("could not delete community member");
-        }
-    },
-    onSuccess: (data, formData) => {
-        const qc = get(queryClientAtom);
-        void qc.setQueryData<{ id: number }[]>(
+export const deleteCommunityMemberMAtom = atomWithMutationCustom<{
+    id: number;
+}>({
+    mutationKey: "delete-community-member",
+    endpoint: ENDPOINTS.DELETE_COMMUNITY_MEMBER,
+    onSuccess: (get, qc, form) => {
+        qc.setQueryData<{ id: number }[]>(
             ["get-community-users", get(authTokenAtom)],
-            (prev) => prev?.filter((member) => member.id != formData.id),
+            (prev) => prev?.filter((member) => member.id != form.id),
         );
     },
-}));
+});
 
-
-export const leaveCommunityMAtom = atomWithMutation((get) => ({
-    mutationKey: ["leave-community", get(authTokenAtom)],
-    enabled: !!get(authTokenAtom),
-    mutationFn: async () => {
-        const token = get(authTokenAtom);
-        const response = await request(ENDPOINTS.LEAVE_COMMUNITY, {
-            method: "post",
-            auth: token as string,
-        });
-
-        if (!response.ok) {
-            throw new Error("could not delete community member");
-        }
-    },
-    onSuccess: () => {
-        const qc = get(queryClientAtom);
+export const leaveCommunityMAtom = atomWithMutationCustom({
+    mutationKey: "leave-community",
+    endpoint: ENDPOINTS.LEAVE_COMMUNITY,
+    onSuccess: (get, qc, form) => {
         qc.invalidateQueries({ queryKey: ["get-community-info"] });
         qc.invalidateQueries({ queryKey: ["get-patient-info"] });
     },
-}));
+});
 
-export const linkJugToMemberMAtom = atomWithMutation((get) => ({
-    mutationKey: ["/user/link-jug", get(authTokenAtom)],
-    enabled: !!get(authTokenAtom),
-    mutationFn: async (jugIds: string[]) => {
-        const token = get(authTokenAtom);
-        const response = await request(ENDPOINTS.LINK_JUG_TO_USER, {
-            method: "post",
-            body: { jugIds: jugIds },
-            auth: token as string,
-        });
-
-        if (!response.ok) {
-            throw new Error("Jug could not be linked to user");
-        }
-
-        return;
+export const linkJugToMemberMAtom = atomWithMutationCustom<{
+    jugIds: string[];
+}>({
+    mutationKey: "/user/link-jug",
+    endpoint: ENDPOINTS.LINK_JUG_TO_USER,
+    onSuccess: (get, qc, form) => {
+        qc.invalidateQueries({ queryKey: ["get-jug-data"] });
+        qc.invalidateQueries({ queryKey: ["/data/historical"] });
     },
-    onSuccess: () => {
-        const queryClient = get(queryClientAtom);
-        void queryClient.invalidateQueries({ queryKey: ["get-jug-data"] });
-        void queryClient.invalidateQueries({
-            queryKey: ["/data/historical"],
-        });
-    },
-}));
+});
 
-export const communityNameQAtom = atomWithQuery((get) => ({
-    queryKey: ["name-from-link", get(authTokenAtom)],
-    queryFn: async ({ queryKey: [, token] }) => {
-        const code = get(inviteCodeAtom);
-        const response = await request(ENDPOINTS.NAME_FROM_LINK, {
-            auth: token as string,
-            query: { code },
-        });
+export const communityNameQAtom = atomWithQueryInfo<string>({
+    queryKey: "name-from-link",
+    endpoint: ENDPOINTS.NAME_FROM_LINK,
+    enabled: (get) => !!get(authTokenAtom) && !!get(inviteCodeAtom),
+});
 
-        if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.detail);
-        }
+export const linkJugsToCommunityMemberMAtom = atomWithMutationCustom<{
+    jugIds: string[];
+    communityMember: number;
+}>({
+    mutationKey: "/community/link-jug-to-member",
+    endpoint: ENDPOINTS.LINK_JUG_TO_COMMUNITY_MEMBER,
+});
 
-        return await response.json();
-    },
-    enabled: !!get(authTokenAtom) && !!get(inviteCodeAtom),
-}));
+export const createTagMAtom = atomWithMutationCustom<{
+    tagName: string;
+}>({
+    mutationKey: "create-tag",
+    endpoint: ENDPOINTS.CREATE_TAG,
+});
 
-{
-    /*export const getCommunityMembersMAtom = atomWithQuery((get) => ({
-  queryKey: ["get-community-members", get(authTokenAtom)],
-  enabled: !!get(authTokenAtom),
-  // TODO: replace this user interface with the expected one from the db
-  queryFn: async (formData: { community_id: string }): Promise<{name: string, id: string}[]> => {
-      const token = get(authTokenAtom);
-      const response = await request(ENDPOINTS.COMMUNITY_MEMBER, {
-          method: "post",
-          body: formData,
-          auth: token as string,
-      });
+export const updateTagMAtom = atomWithMutationCustom<{
+    currentName: string;
+    newName: string;
+}>({
+    mutationKey: "update-tag",
+    endpoint: ENDPOINTS.UPDATE_TAG,
+});
 
+export const deleteTagMAtom = atomWithMutationCustom<{
+    tagName: string;
+}>({
+    mutationKey: "delete-tag",
+    endpoint: ENDPOINTS.DELETE_TAG,
+});
 
+export const communityTagsQAtom = atomWithQueryInfo<TagInfo[]>({
+    queryKey: "get-community-tags",
+    endpoint: ENDPOINTS.COMMUNITY_TAGS,
+    enabled: (get) => !!get(authTokenAtom) && !!get(userHasCommunityAtom),
+});
 
-      return response.json();
-  }
-}));
-*/
-}
-
-export const linkJugsToCommunityMemberMAtom = atomWithMutation((get) => ({
-    mutationKey: ["/community/link-jug-to-member", get(authTokenAtom)],
-    enabled: !!get(authTokenAtom),
-    mutationFn: async (formData: {
-        jugIds: string[];
-        communityMember: number;
-    }) => {
-        const token = get(authTokenAtom);
-        const response = await request(ENDPOINTS.LINK_JUG_TO_COMMUNITY_MEMBER, {
-            method: "post",
-            body: formData,
-            auth: token as string,
-        });
-        if (!response.ok) {
-            alert("Cannot add jug");
-            throw new Error("Jug could not be linked to community member");
-        }
-        return;
-    },
-    onSuccess: () => {
-        console.log("Linked jugs to user");
-    },
-}));
-
-export const createTagMAtom = atomWithMutation((get) => ({
-    mutationKey: ["create-tag", get(authTokenAtom)],
-    mutationFn: async (formData: { tagName: string }) => {
-        const token = get(authTokenAtom);
-        const response = await request(ENDPOINTS.CREATE_TAG, {
-            method: "post",
-            body: formData,
-            auth: token as string,
-        });
-
-        if (!response.ok) {
-            return;
-        }
-    },
-    onSuccess: () => {},
-    enabled: !!get(authTokenAtom) && !get(userHasCommunityAtom),
-}));
-
-export const updateTagMAtom = atomWithMutation((get) => ({
-    mutationKey: ["update-tag", get(authTokenAtom)],
-    enabled: !!get(authTokenAtom),
-    mutationFn: async (formData: { currentName: string; newName: string }) => {
-        const token = get(authTokenAtom);
-        const response = await request(ENDPOINTS.UPDATE_TAG, {
-            method: "post",
-            body: formData,
-            auth: token as string,
-        });
-
-        if (!response.ok) {
-            return;
-        }
-    },
-}));
-
-export const deleteTagMAtom = atomWithMutation((get) => ({
-    mutationKey: ["delete-tag", get(authTokenAtom)],
-    enabled: !!get(authTokenAtom),
-    mutationFn: async (formData: { tagName: string }) => {
-        const token = get(authTokenAtom);
-        const response = await request(ENDPOINTS.DELETE_TAG, {
-            method: "post",
-            body: formData,
-            auth: token as string,
-        });
-
-        if (!response.ok) {
-            return;
-        }
-    },
-    onSuccess: () => {},
-}));
-
-export const communityTagsQAtom = atomWithQuery((get) => ({
-    queryKey: ["get-community-tags", get(authTokenAtom)],
-    queryFn: async ({ queryKey: [, token] }) => {
-        const response = await request(ENDPOINTS.COMMUNITY_TAGS, {
-            auth: token as string,
-        });
-        if (!response.ok) {
-            return null;
-        }
-        return await response.json();
-    },
-    enabled: !!get(authTokenAtom),
-    retry: false,
-}));
-
-export async function fetchCommunityJugData(jugUserId: number, token: string) {
-    const response = await request(ENDPOINTS.FETCH_COMMUNITY_JUG_LIST, {
-        query: { jug_user_id: jugUserId },
-        auth: token as string,
-    });
-
-    if (!response.ok) {
-        throw new Error("Jug Data for Community Could Not Be Found");
-    }
-    return await response.json();
-}
-
-export const getCommunityJugDataQAtom = atomWithQuery((get) => ({
-    queryKey: ["get-community-jug-data", get(authTokenAtom)],
-    queryFn: async ({ queryKey: [, token] }): Promise<DeviceInfo[]> => {
+export const getCommunityJugDataQAtom = atomWithQueryInfo<DeviceInfo[]>({
+    queryKey: "get-community-jug-data",
+    endpoint: ENDPOINTS.FETCH_COMMUNITY_JUG_LIST,
+    query: (get) => {
         const { data } = get(userInfoQAtom);
-        const jugUserId = data?.juguser;
-
-        return await fetchCommunityJugData(jugUserId, token as string);
+        return {
+            jug_user_id: data?.juguser,
+        };
     },
-    enabled: !!get(authTokenAtom) && !get(userInfoQAtom).isLoading,
-}));
+    enabled: (get) => !!get(authTokenAtom) && !!get(userInfoQAtom).isLoading,
+});
+
+export const createJugUserMAtom = atomWithMutationCustom({
+    mutationKey: "/jug-user/create",
+    endpoint: ENDPOINTS.CREATE_JUG_USER,
+    body: (get) => get(jugUserInfoAtom),
+    onSuccess: (get, qc, form) => {
+        qc.invalidateQueries({ queryKey: ["get-patient-info"] });
+    },
+});

@@ -1,9 +1,6 @@
 import { selectedJugIdAtom } from "@/atom/device";
-import { unlinkJugFromUserMAtom } from "@/atom/query";
-import {
-    linkJugsToCommunityMemberMAtom,
-    patientInfoQAtom,
-} from "@/atom/query/community";
+import { unlinkJugFromUserMAtom } from "@/atom/jugs";
+import { linkJugsToCommunityMemberMAtom, patientInfoQAtom } from "@/atom/query";
 import Loading from "@/components/common/loading";
 import { MemberInfo } from "@/interfaces/community";
 import { useNavigation } from "expo-router";
@@ -39,7 +36,7 @@ export default function MVPAddDeviceModal() {
             jugIds: [selectedJugId],
             communityMember: Number(selectedUser),
         });
-        unlinkJugFromUser(selectedJugId);
+        unlinkJugFromUser({ jugId: selectedJugId });
 
         navigation.goBack();
         navigation.goBack();

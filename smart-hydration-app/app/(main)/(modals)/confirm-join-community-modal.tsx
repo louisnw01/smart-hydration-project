@@ -1,4 +1,4 @@
-import { communityNameQAtom, joinCommunityMAtom } from "@/atom/query/community";
+import { communityNameQAtom, joinCommunityMAtom } from "@/atom/query";
 import { inviteCodeAtom } from "@/atom/user";
 import StyledButton from "@/components/common/button";
 import Loading from "@/components/common/loading";

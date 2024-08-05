@@ -1,11 +1,10 @@
 import { Text, TextInput, View } from "react-native";
 
-import { loginMAtom } from "@/atom/query";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { useEffect, useRef, useState } from "react";
 
 import Logo from "@/assets/svgs/SH_logo.svg";
-import { addPushTokenMAtom } from "@/atom/query";
+import { addPushTokenMAtom, loginMAtom } from "@/atom/query";
 import { authTokenAtom, pushTokenAtom } from "@/atom/user";
 import StyledButton from "@/components/common/button";
 import KeyboardScrollView from "@/components/common/keyboard-scrollview";

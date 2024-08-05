@@ -2,7 +2,7 @@ import {
     communityInfoQAtom,
     deleteCommunityMAtom,
     leaveCommunityMAtom,
-} from "@/atom/query/community";
+} from "@/atom/query";
 import StyledButton from "@/components/common/button";
 import { OptionBlock } from "@/components/common/option-block";
 import { ISettingsSection } from "@/interfaces/settings";

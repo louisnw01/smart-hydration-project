@@ -1,7 +1,6 @@
 import JugIcon from "@/assets/svgs/jug.svg";
 import { selectedDeviceAtom } from "@/atom/device";
-import { unlinkJugFromUserMAtom } from "@/atom/query";
-import { userHasCommunityAtom } from "@/atom/query/community";
+import { unlinkJugFromUserMAtom, userHasCommunityAtom } from "@/atom/query";
 import colors from "@/colors";
 import StyledButton from "@/components/common/button";
 import useColorPalette from "@/util/palette";
@@ -204,7 +203,7 @@ export default function DeviceInfoModal() {
                         left={2}
                     />
                     onPress={() => {
-                        device.id && unlinkJugFromUser(device.id);
+                        device.id && unlinkJugFromUser({ jugId: device.id });
                         router.back();
                     }}
                 />

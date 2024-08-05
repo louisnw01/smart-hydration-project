@@ -16,7 +16,7 @@ import {
     communityInfoQAtom,
     patientInfoQAtom,
     userHasCommunityAtom,
-} from "@/atom/query/community";
+} from "@/atom/query";
 import Loading from "@/components/common/loading";
 import StyledTextInput from "@/components/common/text-input";
 import MemberRow from "@/components/community/member-row";
@@ -41,9 +41,9 @@ export default function CommunityPage() {
     useEffect(() => {
         if (data === undefined) return;
         //search each word in string from beginning, don't match substrings after beginning, case insensitive
-        const searchPattern = new RegExp(`\\b${filters.searchTerm}`, 'i');
+        const searchPattern = new RegExp(`\\b${filters.searchTerm}`, "i");
         const filteredData = data.filter((member) =>
-            searchPattern.test(member.name)
+            searchPattern.test(member.name),
         );
         const sortedData = filteredData.sort((a, b) => {
             let comparison = 0;
