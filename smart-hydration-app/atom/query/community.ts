@@ -267,6 +267,7 @@ export const joinCommunityMAtom = atomWithMutationCustom({
     enabled: (get) => !!get(authTokenAtom) && !!get(inviteCodeAtom),
     onSuccess: (get, qc, form) => {
         qc.invalidateQueries({ queryKey: ["get-community-info"] });
+        qc.invalidateQueries({ queryKey: ["get-patient-info"] });
     },
 });
 
@@ -309,6 +310,28 @@ export const deleteCommunityMemberMAtom = atomWithMutation<
             ["get-community-users", get(authTokenAtom)],
             (prev) => prev?.filter((member) => member.id != formData.id),
         );
+    },
+}));
+
+
+export const leaveCommunityMAtom = atomWithMutation((get) => ({
+    mutationKey: ["leave-community", get(authTokenAtom)],
+    enabled: !!get(authTokenAtom),
+    mutationFn: async () => {
+        const token = get(authTokenAtom);
+        const response = await request(ENDPOINTS.LEAVE_COMMUNITY, {
+            method: "post",
+            auth: token as string,
+        });
+
+        if (!response.ok) {
+            throw new Error("could not delete community member");
+        }
+    },
+    onSuccess: () => {
+        const qc = get(queryClientAtom);
+        qc.invalidateQueries({ queryKey: ["get-community-info"] });
+        qc.invalidateQueries({ queryKey: ["get-patient-info"] });
     },
 }));
 

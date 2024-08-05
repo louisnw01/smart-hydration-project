@@ -53,20 +53,21 @@ async def name_from_link(code: str, user_id: str = Depends(auth_user)):
 async def patient_info(user_id: str = Depends(auth_user)):
     with db_session:
         community = try_get_users_community(user_id)
+        user = User.get(id = user_id)
 
         # get targets for users
         patient_info = []
         for juguser in community.jug_users:
-            patient_info.append({
-                "id": juguser.id,
-                "name": juguser.name,
-                "jugs": [{"name": jug.name, "id": jug.smart_hydration_id} for jug in juguser.jugs],
-                "lastDrank": juguser.last_drank,
-                "drankToday": juguser.drank_today,
-                "dailyTarget": juguser.target or 2200,
-                "tags": [{"id": tag.id, "name": tag.name} for tag in juguser.tags]
+            if juguser.user is not user:
+                patient_info.append({
+                    "id": juguser.id,
+                    "name": juguser.name,
+                    "jugs": [{"name": jug.name, "id": jug.smart_hydration_id} for jug in juguser.jugs],
+                    "lastDrank": juguser.last_drank,
+                    "drankToday": juguser.drank_today,
+                    "dailyTarget": juguser.target or 2200,
+                    "tags": [{"id": tag.id, "name": tag.name} for tag in juguser.tags]
             })
-
         return patient_info
 
 
@@ -131,7 +132,7 @@ async def delete_community_member(form: DeleteCommunityMemberForm, user_id: str 
         if member is None:
             raise HTTPException(400, 'user is not associated with a community')
 
-        if member.is_owner is None:
+        if member.is_owner is False:
             raise HTTPException(400, 'user does not have permissions to remove members')
         community = member.community
 
@@ -143,6 +144,21 @@ async def delete_community_member(form: DeleteCommunityMemberForm, user_id: str 
             raise HTTPException(400, "member is the owner of this community")
 
         member_to_delete.delete()
+
+
+@router.post("/leave")
+async def delete_community_member(user_id: str = Depends(auth_user)):
+    with db_session:
+        user = User.get(id=user_id)
+
+        member = user.community_member
+        if member is None:
+            raise HTTPException(400, 'user is not associated with a community')
+
+        if member.is_owner is True:
+            raise HTTPException(404, 'You cannot leave a community which you own')
+
+        member.delete()
 
 
 @router.get("/redirect_invite/{code}")

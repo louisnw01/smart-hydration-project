@@ -13,11 +13,10 @@ const filterAndSortData = (
     unappliedTags: TagInfo[],
     filterObj: FilterObject,
 ): TagInfo[] => {
+    //search each word in string from beginning, don't match substrings after beginning, case insensitive
+    const searchPattern = new RegExp(`\\b${filterObj.searchTerm}`, "i");
     const filteredData = unappliedTags.filter((tag) => {
-        return (
-            tag.name &&
-            tag.name.toLowerCase().includes(filterObj.searchTerm.toLowerCase())
-        );
+        return tag.name && searchPattern.test(tag.name);
     });
     return filteredData.sort((a, b) => {
         const nameA = a.name.toLowerCase();
