@@ -40,11 +40,11 @@ export default function CommunityPage() {
 
     useEffect(() => {
         if (data === undefined) return;
+        //search each word in string from beginning, don't match substrings after beginning, case insensitive
         const searchPattern = new RegExp(`\\b${filters.searchTerm}`, 'i');
         const filteredData = data.filter((member) =>
             searchPattern.test(member.name)
         );
-
         const sortedData = filteredData.sort((a, b) => {
             let comparison = 0;
             if (selected === "name") {
