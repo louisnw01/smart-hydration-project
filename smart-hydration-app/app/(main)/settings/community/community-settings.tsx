@@ -69,23 +69,27 @@ const settingsList: ISettingsSection[] = [
             {
                 name: "Edit community tags",
                 component: (name, isFirst, isLast) => {
+                    const { data } = useAtomValue(communityInfoQAtom);
                     const router = useRouter();
                     return (
-                        <OptionBlock
-                            isLast={isLast}
-                            isFirst={isFirst}
-                            text={name}
-                            onPress={() =>
-                                router.navigate("settings/community/edit-tags")
-                            }
-                            icon={
-                                <Ionicons
-                                    name="color-palette"
-                                    size={19}
-                                    color="gray"
-                                />
-                            }
-                        />
+                        <>
+                            {data?.is_owner && (
+                                <OptionBlock
+                                    isLast={isLast}
+                                    isFirst={isFirst}
+                                    text={name}
+                                    onPress={() =>
+                                        router.navigate("settings/community/edit-tags")
+                                    }
+                                    icon={
+                                        <Ionicons
+                                            name="color-palette"
+                                            size={19}
+                                            color="gray"
+                                        />
+                                    }
+                                />)}
+                        </>
                     );
                 },
             },
