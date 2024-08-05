@@ -11,10 +11,12 @@ import { useAtomValue, useSetAtom } from "jotai";
 import { selectedMemberAtom } from "@/atom/community";
 
 const filterAndSortData = (unappliedTags: TagInfo[], filterObj: FilterObject): TagInfo[] => {
+     //search each word in string from beginning, don't match substrings after beginning, case insensitive
+    const searchPattern = new RegExp(`\\b${filterObj.searchTerm}`, 'i');
     const filteredData = unappliedTags.filter((tag) => {
         return (
             tag.name &&
-            tag.name.toLowerCase().includes(filterObj.searchTerm.toLowerCase())
+            searchPattern.test(tag.name)
         );
     });
     return filteredData.sort((a, b) => {
@@ -64,7 +66,6 @@ export default function ApplyTags() {
         const filteredUnappliedTags = communityTags.filter(item => !appliedTags.some(appliedTag => appliedTag.id === item.id));
         setUnappliedTags(filteredUnappliedTags);
     };
-
 
     useEffect(() => {
         if (data) {
