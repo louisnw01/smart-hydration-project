@@ -19,6 +19,7 @@ export default function EditTags({ }: EditTagsProps) {
   const [newTextInput, setNewTextInput] = useState("");
   const [editTextInput, setEditTextInput] = useState("");
   const [tagExists, setTagExists] = useState(false);
+  const [nameMatchesExisting, setNameMatchesExisting] = useState(false);
   const [currentTagName, setCurrentTagName] = useState("");
   const { data, refetch: refetchTags } = useAtomValue(communityTagsQAtom);
   const createTagMutate = useAtomValue(createTagMAtom).mutate;
@@ -104,13 +105,11 @@ export default function EditTags({ }: EditTagsProps) {
     if (newTagName === '') {
       return;
     }
-
     if (tags.some(tag => tag.name.toLowerCase() === newTagName.toLowerCase())) {
       setTagExists(true);
       return;
     }
     if (!tagExists) {
-      const newTag = { name: newTagName };
       setTags([...tags, { name: newTagName } as TagInfo]);
       setNewTextInput("");
       toggleNewTagSection();
@@ -119,11 +118,19 @@ export default function EditTags({ }: EditTagsProps) {
   };
 
   const isTagInArray = (textEntry: string) => {
-    const exists = tags.some(tag => tag.name.toLowerCase() === textEntry.toLowerCase());
-    setTagExists(exists);
-    return exists;
+    const tagExists = tags.some(tag => tag.name.toLowerCase() === textEntry.toLowerCase());
+    setTagExists(tagExists);
+    return tagExists;
   };
 
+  const checkNameMatchesExisting = (editedName: string) => {
+    if (currentTagName === editedName) {
+      setNameMatchesExisting(true);
+    }
+    else {
+      setNameMatchesExisting(false);
+    }
+  };
 
   const toggleSortDirection = () => {
     setFilters((prev) => ({
@@ -172,8 +179,9 @@ export default function EditTags({ }: EditTagsProps) {
               <View className="flex-row items-center">
                 <View className="mr-4">
                   <StyledTextInput
-                    value={newTextInput}
-                    placeholder="Enter tag name"
+                    requiredIcon
+                    placeholder="Tag name"
+                    title="New tag name"
                     onChangeText={(val) => {
                       setNewTextInput(val);
                       isTagInArray(val);
@@ -210,12 +218,21 @@ export default function EditTags({ }: EditTagsProps) {
                 <Text className="dark:text-white text-xl font-bold">Edit tag</Text>
                 <Text className="dark:text-white text-xl">Current name: {currentTagName}</Text>
               </View>
+              {nameMatchesExisting && (
+                <Text className="dark:text-white text-xl mb-2">
+                  The tag already has this name
+                </Text>
+              )}
               <View className="flex-row items-center">
                 <View className="mr-4">
                   <StyledTextInput
-                    value={editTextInput}
-                    placeholder="Enter new tag name"
-                    onChangeText={(val) => setEditTextInput(val)}
+                    requiredIcon
+                    placeholder="Tag name"
+                    title="Edit tag name"
+                    onChangeText={(val) => {
+                      setEditTextInput(val);
+                      checkNameMatchesExisting(val);
+                    }}
                     textContentType="name"
                     returnKeyType="done"
                   />
@@ -230,17 +247,18 @@ export default function EditTags({ }: EditTagsProps) {
                     }}
                   />
                 </View>
-                <View className="mr-2">
-                  <StyledButton
-                    text="Save"
-                    textClass="text-lg"
-                    onPress={handleEditTag}
-                  />
-                </View>
+                {!nameMatchesExisting && (
+                  <View className="mr-2">
+                    <StyledButton
+                      text="Save"
+                      textClass="text-lg"
+                      onPress={handleEditTag}
+                    />
+                  </View>
+                )}
               </View>
             </View>
           )}
-
         </View>
       </ScrollView>
     </PageWrapper>
