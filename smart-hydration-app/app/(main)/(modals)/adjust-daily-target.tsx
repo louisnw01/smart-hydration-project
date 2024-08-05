@@ -1,6 +1,7 @@
 import { dailyTargetAtom, updateUserTarget } from "@/atom/query";
 
 import Slider from "@react-native-community/slider";
+import { useNavigation } from "expo-router";
 import { useAtom } from "jotai";
 import { useAtomValue } from "jotai/index";
 import React from "react";
@@ -9,8 +10,9 @@ import { Button, Text, View } from "react-native";
 export default function AdjustDailyTarget() {
     const [currentDailyTarget, setCurrentDailyTarget] =
         useAtom(dailyTargetAtom);
-    const [textToDisplay, setText] = React.useState(2200);
+    const [textToDisplay, setText] = React.useState(currentDailyTarget);
     const { mutate: updateUserTargetAtom } = useAtomValue(updateUserTarget);
+    const navigation = useNavigation();
 
     function updateText(value: number) {
         setText(value.toPrecision(4));
@@ -34,6 +36,7 @@ export default function AdjustDailyTarget() {
             <Button
                 onPress={() => {
                     updateUserTargetAtom({ newValue: textToDisplay });
+                    navigation.goBack();
                 }}
                 title="Submit"
             />
