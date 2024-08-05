@@ -11,8 +11,7 @@ interface StyledTextInputProps extends TextInputProps {
 }
 export default function StyledTextInput(props: StyledTextInputProps) {
     const palette = useColorPalette();
-    const [showPassword, setShowPassword] = useState(props.secureTextEntry)
-    // const showIcon = useState(props.secureTextEntry != undefined ? true : false);
+    const [showPassword, setShowPassword] = useState(false)
     const toggleShowPassword = () => {
         setShowPassword(!showPassword);
     };
@@ -37,8 +36,9 @@ export default function StyledTextInput(props: StyledTextInputProps) {
                 ref={props.inputRef}
                 placeholderTextColor={palette.fglight}
                 className="flex-1 h-8 text-xl dark:bg-neutral-800 dark:text-white"
-                secureTextEntry={props.secureTextEntry == undefined ? undefined : !showPassword}
                 {...props}
+                secureTextEntry={props.secureTextEntry == undefined ? undefined : !showPassword}
+                
             />
             { props.secureTextEntry != undefined && (
             <MaterialCommunityIcons

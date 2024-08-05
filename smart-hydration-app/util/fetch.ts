@@ -44,6 +44,7 @@ export const ENDPOINTS = {
     COMMUNITY_TAGS: "/community/get-tags",
     NAME_FROM_LINK: "/community/name-from-link",
     JOIN_COMMUNITY: "/community/join",
+    LEAVE_COMMUNITY: "/community/leave",
 
     CREATE_JUG_USER: "/jug-user/create",
     VERIFY_EMAIL: "/user/verify",
