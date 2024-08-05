@@ -46,6 +46,7 @@ export default function CommunityPage() {
     });
     const [selected, setSelected] = useAtom(selectedSortMethodAtom);
 
+    //refetch CommunityInfo and PatientInfo when the user navigates to this page
     useFocusEffect(
         React.useCallback(() => {
             refetchCommunityInfo();
