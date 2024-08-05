@@ -14,7 +14,6 @@ import { useAtomValue } from "jotai";
 export interface EditTagsProps { }
 
 export default function EditTags({ }: EditTagsProps) {
-  const [communityOwner, setCommunityOwner] = useState<string>('');
   const [showNewTagBox, setShowNewTagBox] = useState(false);
   const [showEditTagBox, setShowEditTagBox] = useState(false);
   const [newTextInput, setNewTextInput] = useState("");
