@@ -4,7 +4,6 @@ import { loginMAtom } from "@/atom/query";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { useEffect, useRef, useState } from "react";
 
-import Drop from "@/assets/svgs/water-drop-svgrepo-com.svg";
 import { addPushTokenMAtom } from "@/atom/query";
 import { authTokenAtom, pushTokenAtom } from "@/atom/user";
 import StyledButton from "@/components/common/button";
@@ -13,10 +12,9 @@ import PageWrapper from "@/components/common/page-wrapper";
 import StyledTextInput from "@/components/common/text-input";
 import OnboardingHeader from "@/components/onboarding/onboarding-header";
 import { registerForPushNotificationsAsync } from "@/util/notifications";
-import useColorPalette from "@/util/palette";
 import { useRouter } from "expo-router";
 import useSettings from "../hooks/user";
-
+import Logo from "@/assets/svgs/SH_logo.svg";
 
 export default function LoginPage() {
     const router = useRouter();
@@ -24,7 +22,6 @@ export default function LoginPage() {
     const [password, setPassword] = useState("");
     const setAuthToken = useSetAtom(authTokenAtom);
     const [storedPushToken, setStoredPushToken] = useAtom(pushTokenAtom);
-    const palette = useColorPalette();
     const { isCarer } = useSettings();
 
     const passwordRef = useRef<TextInput>();
@@ -63,10 +60,10 @@ export default function LoginPage() {
     return (
         <PageWrapper>
             <KeyboardScrollView keyboardVerticalOffset={-170}>
-                <OnboardingHeader text="Login" />
-                <View className="self-center">
-                    <Drop width={100} height={100} fill={palette.border} />
+                <View className="self-center mb-40">
+                    <Logo width={350} height={125}/>
                 </View>
+                <OnboardingHeader text="Login" />
                 <View className="mx-6 gap-5 mt-16">
                     <StyledTextInput
                         placeholder="example@gmail.com"

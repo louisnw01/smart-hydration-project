@@ -1,6 +1,7 @@
 import useColorPalette from "@/util/palette";
-import { Ref } from "react";
+import { Ref, useState } from "react";
 import { Text, TextInput, TextInputProps, View } from "react-native";
+import { MaterialCommunityIcons } from "@expo/vector-icons"
 
 interface StyledTextInputProps extends TextInputProps {
     requiredIcon?: boolean;
@@ -10,6 +11,11 @@ interface StyledTextInputProps extends TextInputProps {
 }
 export default function StyledTextInput(props: StyledTextInputProps) {
     const palette = useColorPalette();
+    const [showPassword, setShowPassword] = useState(false)
+    const toggleShowPassword = () => {
+        setShowPassword(!showPassword);
+    };
+
     return (
         <View
             style={{ width: props.width }}
@@ -25,12 +31,23 @@ export default function StyledTextInput(props: StyledTextInputProps) {
                     )}
                 </View>
             )}
+            <View className="flex-row">
             <TextInput
                 ref={props.inputRef}
                 placeholderTextColor={palette.fglight}
-                className="h-8 text-xl dark:bg-neutral-800 dark:text-white"
+                className="flex-1 h-8 text-xl dark:bg-neutral-800 dark:text-white"
                 {...props}
+                secureTextEntry={props.secureTextEntry == undefined ? undefined : !showPassword}
+                
             />
+            { props.secureTextEntry != undefined && (
+            <MaterialCommunityIcons
+                name={showPassword ? 'eye-off' : 'eye'}
+                size={24}
+                color="#aaa"
+                onPress={toggleShowPassword}
+            />)}
+            </View>
         </View>
     );
 }
