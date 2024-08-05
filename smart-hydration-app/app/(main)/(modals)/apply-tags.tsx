@@ -107,7 +107,6 @@ export default function ApplyTags() {
         //add tags in applied array to member
         setMember({ ...member, tags: appliedTags });
         addTagsMutate();
-        console.log("Applied tags on save in Apply Tags page: ", appliedTags);
     };
 
     return (
