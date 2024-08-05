@@ -1,37 +1,39 @@
-import OnboardingHeader from "@/components/onboarding/onboarding-header";
-import { Stack, useRouter } from "expo-router";
-import React from "react";
-import { Pressable, Platform } from "react-native";
-import { Entypo } from "@expo/vector-icons";
 import useColorPalette from "@/util/palette";
+import { Entypo } from "@expo/vector-icons";
+import { router, Stack } from "expo-router";
+import React from "react";
+import { Platform, Pressable } from "react-native";
 
 export default function AddJugUserLayout() {
     const palette = useColorPalette();
     return (
         <Stack
-        screenOptions={{
-            contentStyle: {
-                backgroundColor: palette.bg,
-            },
-            headerTitleStyle: {
-                fontWeight: "bold",
-                color: palette.fg,
-            },
-            headerStyle: {
-                backgroundColor: palette.bg,
-            },
-        }}
+            screenOptions={{
+                contentStyle: {
+                    backgroundColor: palette.bg,
+                },
+                headerTitleStyle: {
+                    fontWeight: "bold",
+                    color: palette.fg,
+                },
+                headerStyle: {
+                    backgroundColor: palette.bg,
+                },
+            }}
         >
             <Stack.Screen
                 name="add-jug-user-modal"
                 options={{
                     title: "Add a new jug user",
                     headerLeft: () => {
-                        const router = useRouter();
                         return (
                             <Pressable onPress={() => router.back()}>
                                 <Entypo
-                                    name= {Platform.OS == "android" ? "chevron-left" :"circle-with-cross"}
+                                    name={
+                                        Platform.OS == "android"
+                                            ? "chevron-left"
+                                            : "circle-with-cross"
+                                    }
                                     size={24}
                                     color="rgb(80, 80, 80)"
                                 />

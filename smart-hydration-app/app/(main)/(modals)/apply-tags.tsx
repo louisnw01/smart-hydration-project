@@ -1,16 +1,18 @@
-import { useEffect, useState } from "react";
-import { View, Text, Pressable, TextInput, ScrollView } from "react-native";
-import { router, useNavigation } from "expo-router";
+import { selectedMemberAtom } from "@/atom/community";
+import { addTagsPatientMAtom } from "@/atom/query";
+import { communityTagsQAtom } from "@/atom/query/community";
 import StyledButton from "@/components/common/button";
+import PageWrapper from "@/components/common/page-wrapper";
 import Tag from "@/components/community/tag";
 import { FilterObject, TagInfo } from "@/interfaces/community";
-import PageWrapper from "@/components/common/page-wrapper";
-import { communityTagsQAtom } from "@/atom/query/community";
-import { addTagsPatientMAtom } from "@/atom/query"
-import { useAtomValue, useSetAtom } from "jotai";
-import { selectedMemberAtom } from "@/atom/community";
+import { useAtom, useAtomValue } from "jotai";
+import { useEffect, useState } from "react";
+import { Pressable, ScrollView, Text, TextInput, View } from "react-native";
 
-const filterAndSortData = (unappliedTags: TagInfo[], filterObj: FilterObject): TagInfo[] => {
+const filterAndSortData = (
+    unappliedTags: TagInfo[],
+    filterObj: FilterObject,
+): TagInfo[] => {
     const filteredData = unappliedTags.filter((tag) => {
         return (
             tag.name &&
@@ -30,14 +32,13 @@ const filterAndSortData = (unappliedTags: TagInfo[], filterObj: FilterObject): T
 };
 
 export default function ApplyTags() {
-    const navigation = useNavigation();
-    const member = useAtomValue(selectedMemberAtom);
-    const setMember = useSetAtom(selectedMemberAtom);
+    const [member, setMember] = useAtom(selectedMemberAtom);
     const { data } = useAtomValue(communityTagsQAtom);
     const addTagsMutate = useAtomValue(addTagsPatientMAtom).mutate;
-    const [inviteLink, setInviteLink] = useState('');
     const [textInput, setTextInput] = useState("");
-    const [filteredUnappliedTags, setFilteredUnappliedTags] = useState<TagInfo[]>([]);
+    const [filteredUnappliedTags, setFilteredUnappliedTags] = useState<
+        TagInfo[]
+    >([]);
     const [communityTags, setCommunityTags] = useState<TagInfo[]>([]);
     const [filters, setFilters] = useState<FilterObject>({
         searchTerm: "",
@@ -51,26 +52,34 @@ export default function ApplyTags() {
         moveToApplied(tag.name);
     };
 
-    const getMemberTags = () => {
-        const initialAppliedTags: TagInfo[] = member.tags;
-        return initialAppliedTags;
-    };
-    const initialApplied = getMemberTags();
-
-    const [appliedTags, setAppliedTags] = useState<TagInfo[]>(initialApplied);
+    const [appliedTags, setAppliedTags] = useState<TagInfo[] | null>(
+        member?.tags || null,
+    );
     const [unappliedTags, setUnappliedTags] = useState<TagInfo[]>([]);
 
     const filterUnappliedTags = () => {
-        const filteredUnappliedTags = communityTags.filter(item => !appliedTags.some(appliedTag => appliedTag.id === item.id));
+        if (appliedTags == null) return;
+        const filteredUnappliedTags = communityTags.filter(
+            (item) =>
+                !appliedTags.some((appliedTag) => appliedTag.id === item.id),
+        );
         setUnappliedTags(filteredUnappliedTags);
     };
 
-
     useEffect(() => {
+        if (appliedTags == null) return;
         if (data) {
-            const communityTagData: TagInfo[] = data.map((tag: any) => ({ id: tag.id, name: tag.name }));
+            const communityTagData: TagInfo[] = data.map((tag: any) => ({
+                id: tag.id,
+                name: tag.name,
+            }));
             setCommunityTags(communityTagData);
-            const filteredUnappliedTags = communityTagData.filter(item => !appliedTags.some(appliedTag => appliedTag.name === item.name));
+            const filteredUnappliedTags = communityTagData.filter(
+                (item) =>
+                    !appliedTags.some(
+                        (appliedTag) => appliedTag.name === item.name,
+                    ),
+            );
             setUnappliedTags(filteredUnappliedTags);
         }
     }, [data, appliedTags]);
@@ -86,18 +95,22 @@ export default function ApplyTags() {
     }, [textInput, filters, unappliedTags]);
 
     const moveFromApplied = (tagName: string) => {
-        if (tagName !== '') {
-            const filteredArray = appliedTags.filter(item => item.name !== tagName);
+        if (appliedTags == null) return;
+        if (tagName !== "") {
+            const filteredArray = appliedTags.filter(
+                (item) => item.name !== tagName,
+            );
             setAppliedTags(filteredArray);
         }
     };
 
     const getTagFromName = (tagName: string) => {
-        return communityTags.find(tag => tag.name === tagName);
-    }
+        return communityTags.find((tag) => tag.name === tagName);
+    };
 
     const moveToApplied = (tagName: string) => {
-        if (tagName !== '') {
+        if (appliedTags == null) return;
+        if (tagName !== "") {
             const tagToMove = getTagFromName(tagName);
             if (tagToMove) {
                 setAppliedTags([...appliedTags, tagToMove]);
@@ -112,14 +125,16 @@ export default function ApplyTags() {
     };
 
     const handleSaveTags = () => {
+        if (appliedTags == null || member == null) return;
         //add tags in applied array to member
-        const appliedTagNames = appliedTags.map(tag => tag.name);
-        setMember({ ...member, tags: appliedTagNames });
+        setMember({ ...member, tags: appliedTags });
         addTagsMutate();
     };
 
     //to do: add messages for when no tags applied / all tags applied
     //to do: show message "There are no tags in your community. Ask your owner to add some" when no data
+
+    if (appliedTags == null) return null;
 
     return (
         <PageWrapper>
@@ -138,7 +153,10 @@ export default function ApplyTags() {
                     )}
                     <View className="flex-row flex-wrap my-2 mx-3">
                         {appliedTags.map((tag, index) => (
-                            <Pressable key={index} onPress={() => handleAppliedPress(tag)}>
+                            <Pressable
+                                key={index}
+                                onPress={() => handleAppliedPress(tag)}
+                            >
                                 <Tag name={tag.name} />
                             </Pressable>
                         ))}
@@ -148,12 +166,16 @@ export default function ApplyTags() {
                     </Text>
                     {communityTags.length === 0 && (
                         <Text className="dark:text-white text-xl">
-                            No tags in this community. Ask community owner to add some
+                            No tags in this community. Ask community owner to
+                            add some
                         </Text>
                     )}
                     <View className="flex-row flex-wrap my-2 mx-3">
                         {filteredUnappliedTags.map((tag, index) => (
-                            <Pressable key={index} onPress={() => handleUnappliedPress(tag)}>
+                            <Pressable
+                                key={index}
+                                onPress={() => handleUnappliedPress(tag)}
+                            >
                                 <Tag name={tag.name} />
                             </Pressable>
                         ))}

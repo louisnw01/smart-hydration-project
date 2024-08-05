@@ -17,7 +17,6 @@ import useColorPalette from "@/util/palette";
 import { useRouter } from "expo-router";
 import useSettings from "../hooks/user";
 
-
 export default function LoginPage() {
     const router = useRouter();
     const [email, setEmail] = useState("");
@@ -47,18 +46,18 @@ export default function LoginPage() {
         if (!isSuccess && !data) return;
         setAuthToken(data);
         if (storedPushToken) {
-            addPushToken({ pushToken: storedPushToken as string });
+            addPushToken({ pushToken: storedPushToken });
         } else {
             registerForPushNotificationsAsync()
-            .then(pushToken => {
-                addPushToken({pushToken});
-                setStoredPushToken(pushToken ?? "");
-            }
-            )   
-            .catch((error: any) => console.error(error));
-            }
-            isCarer ? router.replace("(tabs)/community") : router.replace("(tabs)");
-        },[isSuccess, data])
+                .then((pushToken) => {
+                    if (!pushToken) return;
+                    addPushToken({ pushToken });
+                    setStoredPushToken(pushToken);
+                })
+                .catch((error: any) => console.error(error));
+        }
+        router.replace(isCarer ? "(tabs)/community" : "(tabs)");
+    }, [isSuccess, data]);
 
     return (
         <PageWrapper>

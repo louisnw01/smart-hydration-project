@@ -7,10 +7,9 @@ import { useEffect, useState } from "react";
 import { Pressable, Text, View } from "react-native";
 
 export default function CreateCommunityModal() {
-    const { data: userInfo, isLoading: userInfoIsLoading } =
-        useAtomValue(userInfoQAtom);
+    const { data: userInfo } = useAtomValue(userInfoQAtom);
     const [communityName, setCommunityName] = useState("");
-    const { mutate, isPending, isSuccess, data, isError } =
+    const { mutate, isPending, isSuccess, isError } =
         useAtomValue(createCommunityMAtom);
     const [showErrorMessage, setShowErrorMessage] = useState(false);
 
@@ -21,7 +20,7 @@ export default function CreateCommunityModal() {
         } else if (isError) {
             // TODO: show an error message
         }
-    }, [isPending]);
+    }, [isPending, isSuccess, isError]);
 
     const handlePress = () => {
         //TODO: check if community exists before allowing creation

@@ -2,20 +2,23 @@ import { interpolate } from "@shopify/react-native-skia";
 import { atom, useAtomValue } from "jotai";
 import { useEffect, useState } from "react";
 import { FlatList, Text, View } from "react-native";
+import { ChartBounds } from "victory-native";
 
-export const canvasInfoAtom = atom([null, null]);
+export const canvasInfoAtom = atom<[any, ChartBounds | null]>([null, null]);
 
 const NUM_TICKS = 4;
 
 export default function ChartAxis() {
-    const [tickPoints, setTickPoints] = useState([]);
+    const [tickPoints, setTickPoints] = useState<
+        { y: number; yValue: number }[]
+    >([]);
 
     const [points, chartBounds] = useAtomValue(canvasInfoAtom);
 
     useEffect(() => {
         if (!points || !chartBounds) return;
         const newHighestY = points.reduce(
-            (prev, curr) => (curr.yValue > prev.yValue ? curr : prev),
+            (prev: any, curr: any) => (curr.yValue > prev.yValue ? curr : prev),
             points[0],
         );
         const rangeCoords = [chartBounds.bottom - 8, newHighestY.y - 8];

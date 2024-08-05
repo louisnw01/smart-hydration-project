@@ -1,6 +1,6 @@
 import { Text, View } from "react-native";
 
-function getSize(size) {
+function getSize(size: "md" | undefined) {
     switch (size) {
         case "md":
             return ["2xl", "lg"];
@@ -9,7 +9,15 @@ function getSize(size) {
     }
 }
 
-export default function WaterAmount({ value, unit, size }) {
+export default function WaterAmount({
+    value,
+    unit,
+    size,
+}: {
+    value: number;
+    unit?: string;
+    size?: "md";
+}) {
     if (value == null || value == undefined) return null;
     unit = unit || "ml";
 

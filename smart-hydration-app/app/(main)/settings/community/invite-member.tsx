@@ -1,14 +1,13 @@
-import { View, Pressable, Text, TextInput, Share } from "react-native";
+import { Share, Text, View } from "react-native";
 // import Clipboard from "@react-native-clipboard/clipboard";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
-import { useEffect, useState } from "react";
-import * as Clipboard from 'expo-clipboard';
-import { useAtomValue } from "jotai";
 import { communityInviteLinkQAtom as communityInviteCodeQAtom } from "@/atom/query/community";
+import StyledButton from "@/components/common/button";
 import Loading from "@/components/common/loading";
 import PageWrapper from "@/components/common/page-wrapper";
-import StyledButton from "@/components/common/button";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import * as Clipboard from 'expo-clipboard';
+import { useAtomValue } from "jotai";
+import { useEffect, useState } from "react";
 
 
 
@@ -25,7 +24,6 @@ export default function InviteMember() {
         if (!link) return;
 
         await Clipboard.setStringAsync(`https://${link}`);
-        const clipboardContent = await Clipboard.getStringAsync();
         alert('todo: Copied to Clipboard modal')
     }
 
@@ -57,7 +55,7 @@ export default function InviteMember() {
           // sharing was dismissed
             // alert('Dismissed');
             //change this to something more user friendly
-        } 
+        }
       } catch (error: any) {
         alert(error.message);
       }

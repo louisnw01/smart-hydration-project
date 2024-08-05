@@ -1,16 +1,16 @@
-import { authTokenAtom } from "@/atom/user";
-import GenericOnboardContent from "@/components/onboarding/generic-onboard-content";
-import { useAtomValue, useSetAtom } from "jotai";
-import { Text, View } from "react-native";
-import CountdownButton from "@/components/common/countdown-button";
 import { sendVerificationEmailMAtom, verifyEmailMAtom } from "@/atom/query";
-import { useEffect, useState } from "react";
-import { router } from "expo-router";
-import * as Linking from "expo-linking";
+import { authTokenAtom } from "@/atom/user";
 import StyledButton from "@/components/common/button";
-import { FontAwesome } from '@expo/vector-icons';
-import useColorPalette from "@/util/palette";
+import CountdownButton from "@/components/common/countdown-button";
+import GenericOnboardContent from "@/components/onboarding/generic-onboard-content";
 import OnboardingHeader from "@/components/onboarding/onboarding-header";
+import useColorPalette from "@/util/palette";
+import { FontAwesome } from '@expo/vector-icons';
+import * as Linking from "expo-linking";
+import { router } from "expo-router";
+import { useAtomValue, useSetAtom } from "jotai";
+import { useEffect, useState } from "react";
+import { Text, View } from "react-native";
 import useSettings from "../hooks/user";
 
 
@@ -36,7 +36,7 @@ export default function EmailVerificationPage() {
 
     useEffect(() => {
         if(!isSuccess || data) return;
-        isCarer ? router.replace("(tabs)/community") : router.replace("(tabs)");
+        router.replace(isCarer ? "(tabs)/community" : "(tabs)")
     },[isSuccess, data])
 
     useEffect(() => {
@@ -67,7 +67,7 @@ export default function EmailVerificationPage() {
                 </Text>)}
             </View>
                 <View className="flex flex-row items-center justify-center">
-                <CountdownButton 
+                <CountdownButton
                     text="Resend email"
                     mutateAtom={sendVerificationEmailMAtom}
                     icon=<FontAwesome name="send" size={24} color={palette.fg} />/>
@@ -84,5 +84,3 @@ export default function EmailVerificationPage() {
         </GenericOnboardContent>
     );
 }
-
-

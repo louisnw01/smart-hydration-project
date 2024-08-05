@@ -7,3 +7,10 @@ export interface RegistrationInfo {
     mode: UserMode;
     dob?: string;
 }
+
+export interface UserInfo {
+    name: string;
+    juguser: number;
+    has_community: boolean;
+    target: number;
+}

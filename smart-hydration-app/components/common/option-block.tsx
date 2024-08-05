@@ -1,20 +1,27 @@
 import colors from "@/colors";
-import { WritableAtom, useAtom, useAtomValue, useSetAtom } from "jotai";
-import { Switch, View, Text, Pressable, GestureResponderEvent } from "react-native";
 import { Entypo } from "@expo/vector-icons";
+import { WritableAtom, useAtom, useAtomValue, useSetAtom } from "jotai";
+import { Pressable, Switch, Text, View } from "react-native";
 
 interface OptionBlockProps {
     text?: string;
-    atom?: WritableAtom<unknown, [unknown], void>;
+    atom: WritableAtom<unknown, [unknown], void>;
     href?: string;
     isFirst?: boolean;
     isLast?: boolean;
     multiSelect?: boolean;
     icon?: React.ReactNode;
-    onPress?: (event: GestureResponderEvent) => void;
+    onPress?: Function;
 }
 
-export function MultiSelectOptionBlock({ text, atom, onPress, icon, isFirst, isLast }:OptionBlockProps) {
+export function MultiSelectOptionBlock({
+    text,
+    atom,
+    onPress,
+    icon,
+    isFirst,
+    isLast,
+}: OptionBlockProps) {
     const setValue = useSetAtom(atom);
     return (
         <OptionBlock
@@ -24,7 +31,7 @@ export function MultiSelectOptionBlock({ text, atom, onPress, icon, isFirst, isL
             atom={atom}
             onPress={() => {
                 setValue(text);
-                if(onPress) onPress();
+                if (onPress) onPress();
             }}
             isFirst={isFirst}
             isLast={isLast}
@@ -48,7 +55,9 @@ export function OptionBlock({
     return (
         <Pressable
             className={`flex-row items-center justify-between h-14 bg-gray-100 px-4 dark:bg-neutral-900 ${className}`}
-            onPress={()=>{if(onPress) onPress();}}
+            onPress={() => {
+                if (onPress) onPress();
+            }}
         >
             <View className="flex flex-row items-center gap-3">
                 {icon}
@@ -67,7 +76,11 @@ export function OptionBlock({
     );
 }
 
-function SettingsSwitch({ atom }) {
+function SettingsSwitch({
+    atom,
+}: {
+    atom: WritableAtom<unknown, [unknown], void>;
+}) {
     const [toggled, setToggled] = useAtom(atom);
     return (
         <Switch
@@ -78,7 +91,13 @@ function SettingsSwitch({ atom }) {
     );
 }
 
-function MultiSelectSwitch({ atom, name }) {
+function MultiSelectSwitch({
+    atom,
+    name,
+}: {
+    atom: WritableAtom<unknown, [unknown], void>;
+    name: string | undefined;
+}) {
     const selectedValue = useAtomValue(atom);
     const isSelected = selectedValue == name;
     return (

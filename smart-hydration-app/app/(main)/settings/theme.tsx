@@ -1,9 +1,7 @@
-import { authTokenAtom, colorSchemeAtom } from "@/atom/user";
+import { colorSchemeAtom } from "@/atom/user";
 import { MultiSelectOptionBlock } from "@/components/common/option-block";
-import { useRouter } from "expo-router";
-import { useSetAtom } from "jotai";
-import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
 import { ISettingsSection } from "@/interfaces/settings";
+import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
 import { SectionList, View } from "react-native";
 
 const settingsList: ISettingsSection[] = [
@@ -12,7 +10,7 @@ const settingsList: ISettingsSection[] = [
         data: [
             {
                 name: "Light",
-                component: (name, isFirst, isLast) => {
+                Component: (name, isFirst, isLast) => {
                     return (
                         <MultiSelectOptionBlock
                             text={name}
@@ -26,7 +24,7 @@ const settingsList: ISettingsSection[] = [
             },
             {
                 name: "Dark",
-                component: (name, isFirst, isLast) => {
+                Component: (name, isFirst, isLast) => {
                     return (
                         <MultiSelectOptionBlock
                             text={name}
@@ -42,7 +40,7 @@ const settingsList: ISettingsSection[] = [
             },
             {
                 name: "Auto",
-                component: (name, isFirst, isLast) => {
+                Component: (name, isFirst, isLast) => {
                     return (
                         <MultiSelectOptionBlock
                             text={name}
@@ -65,16 +63,13 @@ const settingsList: ISettingsSection[] = [
 ];
 
 export default function Theme() {
-    const setAuthAtom = useSetAtom(authTokenAtom);
-    const router = useRouter();
-
     return (
         <View className="flex flex-1 justify-between mx-4 mt-4">
             <SectionList
                 sections={settingsList}
                 renderItem={({ item, index, section }) =>
-                    item.component(
-                        item.name,
+                    item.Component(
+                        item.name || "",
                         index == 0,
                         index == section.data.length - 1,
                     )

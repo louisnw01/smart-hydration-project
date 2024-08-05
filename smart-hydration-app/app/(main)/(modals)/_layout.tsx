@@ -1,7 +1,7 @@
 import useColorPalette from "@/util/palette";
-import { Stack, useRouter } from "expo-router";
-import { Platform, Pressable } from "react-native";
 import { Entypo } from "@expo/vector-icons";
+import { router, Stack } from "expo-router";
+import { Platform, Pressable } from "react-native";
 
 export default function ModalLayout() {
     const palette = useColorPalette();
@@ -19,13 +19,14 @@ export default function ModalLayout() {
                     backgroundColor: palette.bg,
                 },
                 headerLeft: () => {
-                    const router = useRouter();
                     return (
                         <Pressable
                             onPress={() => {
-                                router.canGoBack()
-                                    ? router.back()
-                                    : router.replace("(tabs)/community");
+                                if (router.canGoBack()) {
+                                    router.back();
+                                } else {
+                                    router.replace("(tabs)/community");
+                                }
                             }}
                         >
                             <Entypo
@@ -96,7 +97,6 @@ export default function ModalLayout() {
                     title: "Link device to user",
                     headerBackVisible: false,
                     headerLeft: () => {
-                        const router = useRouter();
                         return (
                             <Pressable onPress={() => router.back()}>
                                 <Entypo
@@ -115,7 +115,6 @@ export default function ModalLayout() {
                     title: "Add a drink for a member",
                     headerBackVisible: false,
                     headerLeft: () => {
-                        const router = useRouter();
                         return (
                             <Pressable onPress={() => router.back()}>
                                 <Entypo

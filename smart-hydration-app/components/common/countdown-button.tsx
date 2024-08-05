@@ -1,7 +1,7 @@
 import { Atom, useAtomValue } from 'jotai';
 import { AtomWithMutationResult } from 'jotai-tanstack-query';
-import React, { useState, useEffect, ReactNode } from 'react';
-import { View, Text } from 'react-native';
+import React, { ReactNode, useEffect, useState } from 'react';
+import { Text, View } from 'react-native';
 import Svg, { Circle, G } from 'react-native-svg';
 import StyledButton from './button';
 
@@ -31,7 +31,7 @@ export default function CountdownButton({text, mutateAtom, icon}:CountdownProps)
   };
 
   useEffect(() => {
-    let timer;
+    let timer: NodeJS.Timeout | undefined;
     if (countdown > 0) {
       timer = setTimeout(() => {
         setCountdown(countdown - 1);
@@ -56,8 +56,8 @@ export default function CountdownButton({text, mutateAtom, icon}:CountdownProps)
         />
     {isDisabled && (
       <View className='flex flex-row absolute left-40 py-3 px-5 mt-20'>
-        <Svg height={radius * 3 + strokeWidth} 
-             width={radius * 3 + strokeWidth} 
+        <Svg height={radius * 3 + strokeWidth}
+             width={radius * 3 + strokeWidth}
              viewBox={`0 0 ${radius * 3 + strokeWidth} ${radius * 3 + strokeWidth}`}>
             <G transform={{ translateX: strokeWidth / 2, translateY: strokeWidth / 2 }}>
               <Circle

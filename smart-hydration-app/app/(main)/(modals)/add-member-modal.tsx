@@ -1,19 +1,19 @@
 import { membersAtom } from "@/atom/community";
 import StyledButton from "@/components/common/button";
+import StyledTextInput from "@/components/common/text-input";
 import { MemberInfo } from "@/interfaces/community";
 import { useNavigation } from "expo-router";
-import { useAtom } from "jotai";
+import { useSetAtom } from "jotai";
 import { useState } from "react";
-import { Pressable, Text, TextInput, View } from "react-native";
-import StyledTextInput from "@/components/common/text-input";
+import { Text, View } from "react-native";
 
 //assume names are unique for now. later, will get unique id for each member from backend
 
 export default function AddMemberModal() {
     const navigation = useNavigation();
     const [showErrorMessage, setShowErrorMessage] = useState(false);
-    const [members, setMembers] = useAtom(membersAtom);
-    const [memberName, setMemberName] = useState('');
+    const setMembers = useSetAtom(membersAtom);
+    const [memberName, setMemberName] = useState("");
     const createMember = ({ name }: MemberInfo) => ({
         name,
     });
@@ -28,11 +28,10 @@ export default function AddMemberModal() {
                 return newMembers;
             });
             //TODO later: send member details to DB when each member added
-            setMemberName('');
+            setMemberName("");
             setShowErrorMessage(false);
             navigation.goBack();
-        }
-        else {
+        } else {
             setShowErrorMessage(true);
         }
     };

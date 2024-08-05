@@ -1,11 +1,7 @@
-import { userHasJugsAtom } from "@/atom/hydration";
 import StyledButton from "@/components/common/button";
-import { useAtomValue } from "jotai";
-import { View, Text } from "react-native";
+import { Text, View } from "react-native";
 
 export default function AddCupSizeInMls() {
-    const hasJugs = useAtomValue(userHasJugsAtom);
-
     return (
         <View className="mx-6 mt-20">
             <Text className="text-xl font-bold dark:text-white">

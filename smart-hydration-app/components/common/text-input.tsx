@@ -1,5 +1,4 @@
 import useColorPalette from "@/util/palette";
-import { Ref } from "react";
 import { Text, TextInput, TextInputProps, View } from "react-native";
 
 interface StyledTextInputProps extends TextInputProps {
