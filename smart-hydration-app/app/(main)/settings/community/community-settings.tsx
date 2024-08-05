@@ -100,7 +100,7 @@ const settingsList: ISettingsSection[] = [
                     const { data } = useAtomValue(communityInfoQAtom);
                     return (
                         <>
-                        {data?.isOwner && (
+                        {data?.is_owner && (
                         <OptionBlock
                             isLast={isLast}
                             text={name}
