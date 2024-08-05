@@ -10,10 +10,16 @@ import useColorPalette from "@/util/palette";
 import { FontAwesome, MaterialCommunityIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useAtomValue, useSetAtom } from "jotai";
+import { ReactNode } from "react";
 import { Text, View } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-function MemberInfoBlock({ children, title }) {
+function MemberInfoBlock({
+    children,
+    title,
+}: {
+    children: ReactNode;
+    title: string;
+}) {
     return (
         <View className="bg-gray-100 px-5 py-4 rounded-xl dark:bg-neutral-900">
             <Text className="text-xl font-bold dark:text-white">{title}</Text>
@@ -24,16 +30,11 @@ function MemberInfoBlock({ children, title }) {
 
 export default function MemberInfoModal() {
     const palette = useColorPalette();
-    const insets = useSafeAreaInsets();
     const member = useAtomValue(selectedMemberAtom);
     const setJugId = useSetAtom(selectedJugIdAtom);
+    if (!member) return null;
     return (
-        <ScrollPageWrapper
-            className="mt-8 flex gap-6 mx-6 pb-20"
-            style={{
-                paddingBottom: insets.bottom,
-            }}
-        >
+        <ScrollPageWrapper className="mt-8 flex gap-6 mx-6 pb-20">
             <View className="flex flex-row justify-between items-center">
                 <Text className="dark:text-white text-3xl font-semibold">
                     {member.name}
@@ -60,12 +61,13 @@ export default function MemberInfoModal() {
             <MemberInfoBlock title="Progress to Target">
                 <View className="flex-row justify-between">
                     <Text className="text-xl dark:text-white">
-                        {member.drank_today | 0} / {member.target}ml
+                        {member.drankToday | 0} / {member.dailyTarget}ml
                     </Text>
                     <Text className="text-xl font-semibold dark:text-white">
-                        {((member.drank_today / member.target) * 100).toFixed(
-                            0,
-                        )}
+                        {(
+                            (member.drankToday / member.dailyTarget) *
+                            100
+                        ).toFixed(0)}
                         %
                     </Text>
                 </View>

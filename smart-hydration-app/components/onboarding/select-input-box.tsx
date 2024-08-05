@@ -10,7 +10,7 @@ export interface SelectInputBoxProperties {
 export const SelectInputBox: React.FC<SelectInputBoxProperties> = (props: SelectInputBoxProperties): React.ReactElement => {
     const { multiple, data, onChange } = props;
 
-    const [selected, setSelected] = useState<string | undefined>();
+
     const [selectedMultiple, setSelectedMultiple] = useState<string[]>([]);
 
 

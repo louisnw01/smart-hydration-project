@@ -1,171 +1,274 @@
-/* eslint-disable import/namespace */
-import { MemberInfo } from "@/interfaces/community";
+import { CommunityInfo, MemberInfo } from "@/interfaces/community";
+import { DeviceInfo } from "@/interfaces/device";
+import { UserInfo } from "@/interfaces/user";
 import { ENDPOINTS, request } from "@/util/fetch";
-import { atom } from "jotai";
 import {
     atomWithMutation,
     atomWithQuery,
     queryClientAtom,
 } from "jotai-tanstack-query";
-// eslint-disable-next-line import/namespace
-import { authTokenAtom, inviteCodeAtom } from "../user";
-
 import { userInfoQAtom } from "../query";
+import { authTokenAtom, inviteCodeAtom } from "../user";
+import {
+    atomWithMutationCustom,
+    atomWithQueryDerivation,
+    atomWithQueryInfo,
+} from "./common";
 
-export const userHasCommunityAtom = atom((get) => {
-    const { data, isLoading } = get(communityInfoQAtom);
-    return !isLoading && !!data?.name;
+// export const userHasCommunityAtom = atom((get) => {
+//     const { data, isLoading } = get(communityInfoQAtom);
+//     return !isLoading && !!data?.name;
+// });
+// export const communityNameAtom = atom((get) => {
+//     const { data, isLoading } = get(communityInfoQAtom);
+//     if (isLoading) return;
+//     return data?.name;
+// });
+// export const isCommunityOwnerAtom = atom((get) => {
+//     const { data, isLoading } = get(communityInfoQAtom);
+//     return !isLoading && data?.isOwner;
+// });
+
+export const communityInfoQAtom = atomWithQueryInfo<CommunityInfo>({
+    queryKey: "get-community-info",
+    endpoint: ENDPOINTS.COMMUNITY_INFO,
 });
-export const communityNameAtom = atom((get) => {
-    const { data, isLoading } = get(communityInfoQAtom);
-    if (isLoading) return;
-    return data?.name;
+
+export const userHasCommunityAtom = atomWithQueryDerivation(
+    communityInfoQAtom,
+    (data) => !!data.name,
+);
+
+export const communityNameAtom = atomWithQueryDerivation(
+    communityInfoQAtom,
+    (data) => data.name,
+);
+
+export const userIsCommunityOwnerAtom = atomWithQueryDerivation(
+    communityInfoQAtom,
+    (data) => data.isOwner,
+);
+
+export const patientInfoQAtom = atomWithQueryInfo<MemberInfo[]>({
+    queryKey: "get-patient-info",
+    endpoint: ENDPOINTS.PATIENT_INFO,
 });
-export const isCommunityOwnerAtom = atom((get) => {
-    const { data, isLoading } = get(communityInfoQAtom);
-    return !isLoading && data?.is_owner;
-});
 
-export const communityInfoQAtom = atomWithQuery((get) => ({
-    queryKey: ["get-community-info", get(authTokenAtom)],
-    queryFn: async ({ queryKey: [, token] }) => {
-        const response = await request(ENDPOINTS.COMMUNITY_INFO, {
-            auth: token as string,
-        });
-        if (!response.ok) {
-            return null;
-        }
+// export const communityInfoQAtom = atomWithQuery<CommunityInfo>((get) => ({
+//     queryKey: ["get-community-info", get(authTokenAtom)],
+//     queryFn: async ({ queryKey: [, token] }) => {
+//         const response = await request(ENDPOINTS.COMMUNITY_INFO, {
+//             auth: token as string,
+//         });
+//         if (!response.ok) {
+//             return;
+//         }
 
-        return await response.json();
-    },
-    enabled: !!get(authTokenAtom),
-    // retry: false,
-}));
+//         return await response.json();
+//     },
+//     enabled: !!get(authTokenAtom),
+//     // retry: false,
+// }));
 
-export const patientInfoQAtom = atomWithQuery((get) => ({
-    queryKey: ["get-patient-info", get(authTokenAtom)],
-    queryFn: async ({ queryKey: [, token] }): Promise<MemberInfo[]> => {
-        const response = await request(ENDPOINTS.PATIENT_INFO, {
-            auth: token as string,
-        });
-        if (!response.ok) {
-            throw new Error("");
-        }
+// export const patientInfoQAtom = atomWithQuery<MemberInfo[]>((get) => ({
+//     queryKey: ["get-patient-info", get(authTokenAtom)],
+//     queryFn: async ({ queryKey: [, token] }) => {
+//         const response = await request(ENDPOINTS.PATIENT_INFO, {
+//             auth: token as string,
+//         });
+//         if (!response.ok) {
+//             throw new Error("");
+//         }
 
-        return await response.json();
-    },
-    enabled: !!get(authTokenAtom),
-}));
+//         return await response.json();
+//     },
+//     enabled: !!get(authTokenAtom),
+// }));
 
-export const createCommunityMAtom = atomWithMutation((get) => ({
-    mutationKey: ["create-community", get(authTokenAtom)],
-    mutationFn: async (formData: { name: string }) => {
-        const token = get(authTokenAtom);
-        const response = await request(ENDPOINTS.CREATE_COMMUNITY, {
-            method: "post",
-            body: formData,
-            auth: token as string,
-        });
-
-        if (!response.ok) {
-            return;
-        }
-    },
-    onSuccess: (data, formData) => {
-        const qc = get(queryClientAtom);
+export const createCommunityMAtom = atomWithMutationCustom<{ name: string }>({
+    mutationKey: "create-community",
+    endpoint: ENDPOINTS.CREATE_COMMUNITY,
+    onSuccess: (get, qc, form) => {
         qc.setQueryData(["get-community-info", get(authTokenAtom)], {
-            name: formData.name,
-            is_owner: true,
+            name: form.name,
+            isOwner: true,
         });
     },
-    // only enabled if auth and user doesn't have a community
-    enabled: !!get(authTokenAtom) && !get(userHasCommunityAtom),
-}));
+    enabled: (get) => !!get(authTokenAtom) && !get(userHasCommunityAtom),
+});
 
-export const updateCommunityMAtom = atomWithMutation((get) => ({
-    mutationKey: ["update-community", get(authTokenAtom)],
-    enabled: !!get(authTokenAtom),
-    mutationFn: async (formData: { name: string }) => {
-        const token = get(authTokenAtom);
-        const response = await request(ENDPOINTS.UPDATE_COMMUNITY, {
-            method: "post",
-            body: formData,
-            auth: token as string,
-        });
+// export const createCommunityMAtom = atomWithMutation((get) => ({
+//     mutationKey: ["create-community", get(authTokenAtom)],
+//     mutationFn: async (formData: { name: string }) => {
+//         const token = get(authTokenAtom);
+//         const response = await request(ENDPOINTS.CREATE_COMMUNITY, {
+//             method: "post",
+//             body: formData,
+//             auth: token as string,
+//         });
 
-        if (!response.ok) {
-            return;
-        }
-    },
-}));
+//         if (!response.ok) {
+//             return;
+//         }
+//     },
+//     onSuccess: (data, formData) => {
+//         const qc = get(queryClientAtom);
+//         qc.setQueryData(["get-community-info", get(authTokenAtom)], {
+//             name: formData.name,
+//             is_owner: true,
+//         });
+//     },
+//     // only enabled if auth and user doesn't have a community
+//     enabled: !!get(authTokenAtom) && !get(userHasCommunityAtom),
+// }));
 
-export const deleteCommunityMAtom = atomWithMutation((get) => ({
-    mutationKey: ["delete-community", get(authTokenAtom)],
-    enabled: !!get(authTokenAtom),
-    mutationFn: async () => {
-        const token = get(authTokenAtom);
-        const response = await request(ENDPOINTS.DELETE_COMMUNITY, {
-            method: "post",
-            auth: token as string,
-        });
+export const updateCommunityMAtom = atomWithMutationCustom<{ name: string }>({
+    mutationKey: "update-community",
+    endpoint: ENDPOINTS.UPDATE_COMMUNITY,
+});
 
-        if (!response.ok) {
-            return;
-        }
-    },
-    onSuccess: () => {
-        const qc = get(queryClientAtom);
+// export const oldupdateCommunityMAtom = atomWithMutation((get) => ({
+//     mutationKey: ["update-community", get(authTokenAtom)],
+//     enabled: !!get(authTokenAtom),
+//     mutationFn: async (formData: { name: string }) => {
+//         const token = get(authTokenAtom);
+//         const response = await request(ENDPOINTS.UPDATE_COMMUNITY, {
+//             method: "post",
+//             body: formData,
+//             auth: token as string,
+//         });
+
+//         if (!response.ok) {
+//             return;
+//         }
+//     },
+// }));
+
+export const deleteCommunityMAtom = atomWithMutationCustom({
+    mutationKey: "delete-community",
+    endpoint: ENDPOINTS.DELETE_COMMUNITY,
+    onSuccess: (get, qc) => {
         const authToken = get(authTokenAtom);
         qc.setQueryData(["get-community-users", authToken], () => []);
         qc.setQueryData(["get-community-info", authToken], () => null);
-        qc.setQueryData(["user-info", authToken], (prev) => ({
-            ...prev,
-            has_community: false,
-        }));
+        qc.setQueryData<UserInfo>(
+            ["user-info", authToken],
+            (prev) =>
+                ({
+                    ...prev,
+                    has_community: false,
+                }) as UserInfo,
+        );
         qc.setQueryData(["get-patient-info", authToken], []);
     },
-}));
+});
 
-export const communityInviteLinkQAtom = atomWithQuery((get) => ({
-    queryKey: ["community-invite-link", get(authTokenAtom)],
-    queryFn: async ({ queryKey: [, token] }) => {
-        const response = await request(ENDPOINTS.COMMUNITY_GENERATE_INVITE, {
-            auth: token as string,
-        });
-        if (!response.ok) {
-            throw new Error("could not generate invite link");
-        }
+// export const odeleteCommunityMAtom = atomWithMutation((get) => ({
+//     mutationKey: ["delete-community", get(authTokenAtom)],
+//     enabled: !!get(authTokenAtom),
+//     mutationFn: async () => {
+//         const token = get(authTokenAtom);
+//         const response = await request(ENDPOINTS.DELETE_COMMUNITY, {
+//             method: "post",
+//             auth: token as string,
+//         });
 
-        return await response.json();
+//         if (!response.ok) {
+//             return;
+//         }
+//     },
+//     onSuccess: () => {
+//         const qc = get(queryClientAtom);
+//         const authToken = get(authTokenAtom);
+//         qc.setQueryData(["get-community-users", authToken], () => []);
+//         qc.setQueryData(["get-community-info", authToken], () => null);
+//         qc.setQueryData(["user-info", authToken], (prev) => ({
+//             ...prev,
+//             has_community: false,
+//         }));
+//         qc.setQueryData(["get-patient-info", authToken], []);
+//     },
+// }));
+//
+//
+
+export const addCommunityDrinkMAtom = atomWithMutationCustom<{
+    juser_id: number;
+    timestamp: number;
+    name: string;
+    capacity: number;
+}>({
+    mutationKey: "/community/add-community-drink-event",
+    endpoint: ENDPOINTS.ADD_COMMUNITY_DRINK,
+    onSuccess: (get, qc, form) => {
+        qc.setQueryData(
+            ["/data/historical", get(authTokenAtom)],
+            (prev: DeviceInfo[]) => [
+                ...prev,
+                { time: form.timestamp * 1000, value: form.capacity },
+            ],
+        );
     },
-    enabled: !!get(authTokenAtom) && !!get(isCommunityOwnerAtom),
+});
+
+export const communityInviteLinkQAtom = atomWithQueryInfo({
+    queryKey: "community-invite-link",
+    endpoint: ENDPOINTS.COMMUNITY_GENERATE_INVITE,
+    enabled: (get) => !!get(authTokenAtom) && !!get(userIsCommunityOwnerAtom),
     staleTime: 0,
     initialData: undefined,
-}));
+});
 
-export const joinCommunityMAtom = atomWithMutation((get) => ({
-    mutationKey: ["join-community", get(authTokenAtom)],
-    enabled: !!get(authTokenAtom) && !!get(inviteCodeAtom),
-    mutationFn: async () => {
-        const token = get(authTokenAtom);
-        const code = get(inviteCodeAtom);
+// export const communityInviteLinkQAtom = atomWithQuery((get) => ({
+//     queryKey: ["community-invite-link", get(authTokenAtom)],
+//     queryFn: async ({ queryKey: [, token] }) => {
+//         const response = await request(ENDPOINTS.COMMUNITY_GENERATE_INVITE, {
+//             auth: token as string,
+//         });
+//         if (!response.ok) {
+//             throw new Error("could not generate invite link");
+//         }
 
-        const response = await request(ENDPOINTS.JOIN_COMMUNITY, {
-            method: "post",
-            auth: token as string,
-            body: { code: code },
-        });
+//         return await response.json();
+//     },
+//     enabled: !!get(authTokenAtom) && !!get(userIsCommunityOwnerAtom),
+//     staleTime: 0,
+//     initialData: undefined,
+// }));
 
-        if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.detail);
-        }
-    },
-    onSuccess: () => {
-        const qc = get(queryClientAtom);
+// export const joinCommunityMAtom = atomWithMutation((get) => ({
+//     mutationKey: ["join-community", get(authTokenAtom)],
+//     enabled: !!get(authTokenAtom) && !!get(inviteCodeAtom),
+//     mutationFn: async () => {
+//         const token = get(authTokenAtom);
+//         const code = get(inviteCodeAtom);
+
+//         const response = await request(ENDPOINTS.JOIN_COMMUNITY, {
+//             method: "post",
+//             auth: token as string,
+//             body: { code: code },
+//         });
+
+//         if (!response.ok) {
+//             const error = await response.json();
+//             throw new Error(error.detail);
+//         }
+//     },
+//     onSuccess: () => {
+//         const qc = get(queryClientAtom);
+//         qc.invalidateQueries({ queryKey: ["get-community-info"] });
+//     },
+// }));
+
+export const joinCommunityMAtom = atomWithMutationCustom({
+    mutationKey: "join-community",
+    endpoint: ENDPOINTS.COMMUNITY_GENERATE_INVITE,
+    body: (get) => ({ code: get(inviteCodeAtom) }),
+    enabled: (get) => !!get(authTokenAtom) && !!get(inviteCodeAtom),
+    onSuccess: (get, qc, form) => {
         qc.invalidateQueries({ queryKey: ["get-community-info"] });
     },
-}));
+});
 
 export const communityUsersQAtom = atomWithQuery((get) => ({
     queryKey: ["get-community-users", get(authTokenAtom)],
@@ -182,10 +285,13 @@ export const communityUsersQAtom = atomWithQuery((get) => ({
     enabled: !!get(authTokenAtom) && !!get(userHasCommunityAtom),
 }));
 
-export const deleteCommunityMemberMAtom = atomWithMutation((get) => ({
+export const deleteCommunityMemberMAtom = atomWithMutation<
+    void,
+    { id: number }
+>((get) => ({
     mutationKey: ["delete-community-member", get(authTokenAtom)],
     enabled: !!get(authTokenAtom),
-    mutationFn: async (formData: { id: number }) => {
+    mutationFn: async (formData) => {
         const token = get(authTokenAtom);
         const response = await request(ENDPOINTS.DELETE_COMMUNITY_MEMBER, {
             method: "post",
@@ -199,7 +305,7 @@ export const deleteCommunityMemberMAtom = atomWithMutation((get) => ({
     },
     onSuccess: (data, formData) => {
         const qc = get(queryClientAtom);
-        void qc.setQueryData(
+        void qc.setQueryData<{ id: number }[]>(
             ["get-community-users", get(authTokenAtom)],
             (prev) => prev?.filter((member) => member.id != formData.id),
         );
@@ -317,7 +423,7 @@ export const createTagMAtom = atomWithMutation((get) => ({
 export const updateTagMAtom = atomWithMutation((get) => ({
     mutationKey: ["update-tag", get(authTokenAtom)],
     enabled: !!get(authTokenAtom),
-    mutationFn: async (formData: { currentName: string, newName: string }) => {
+    mutationFn: async (formData: { currentName: string; newName: string }) => {
         const token = get(authTokenAtom);
         const response = await request(ENDPOINTS.UPDATE_TAG, {
             method: "post",
@@ -382,7 +488,7 @@ export const getCommunityJugDataQAtom = atomWithQuery((get) => ({
         const { data } = get(userInfoQAtom);
         const jugUserId = data?.juguser;
 
-        return await fetchCommunityJugData(jugUserId, token);
+        return await fetchCommunityJugData(jugUserId, token as string);
     },
     enabled: !!get(authTokenAtom) && !get(userInfoQAtom).isLoading,
 }));

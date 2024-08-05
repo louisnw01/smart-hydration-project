@@ -1,6 +1,8 @@
 import { chartTimeWindowAtom } from "@/atom/nav";
 import { getHydrationQAtom } from "@/atom/query";
-import { MS_DAY, MS_HOUR, MS_MONTH, MS_WEEK, MS_YEAR } from "@/constants/data";
+import { MS_DAY, MS_HOUR, MS_MONTH, MS_WEEK } from "@/constants/data";
+import { Timeframe } from "@/interfaces/data";
+import { ITimeSeries } from "@/interfaces/device";
 import { atom } from "jotai";
 
 // returns the floor of a number based on an interval.
@@ -29,7 +31,7 @@ export function getRelativeTarget(target: number) {
 export function getAllAggregates(
     data: any[],
     interval: number,
-    conditional?: (row: {}) => boolean,
+    conditional?: (row: ITimeSeries) => boolean,
 ) {
     if (!data) return [];
     const aggs: Map<number, number> = new Map();
@@ -53,7 +55,10 @@ export function getTimeInMins(timestamp: number) {
     return datetime.getHours() * 60 + datetime.getMinutes();
 }
 
-export function getAggregates(data: any[], type: string) {
+export function getAggregates(
+    data: any[],
+    type: Timeframe,
+): { x: number; y: number }[] {
     if (!data || data.length == 0) return [];
     const timeWindowMap = {
         D: MS_HOUR,
@@ -62,22 +67,22 @@ export function getAggregates(data: any[], type: string) {
         Y: MS_MONTH,
     };
 
-    let timeRange = 0;
+    // let timeRange = 0;
     let interval = MS_DAY;
     switch (type) {
         case "W":
-            timeRange = MS_WEEK;
+            // timeRange = MS_WEEK;
             break;
         case "D":
-            timeRange = MS_DAY;
+            // timeRange = MS_DAY;
             interval = MS_HOUR;
             break;
         case "Y":
-            timeRange = MS_YEAR;
+            // timeRange = MS_YEAR;
             interval = MS_MONTH;
             break;
         case "M":
-            timeRange = MS_MONTH;
+            // timeRange = MS_MONTH;
             break;
     }
     const roundedTimeNow =
@@ -85,7 +90,7 @@ export function getAggregates(data: any[], type: string) {
 
     const newTimeRange = data[data.length - 1].time - data[0].time;
 
-    const aggs: Map<number, {}> = new Map();
+    const aggs: Map<number, number> = new Map();
     const maxBars = 50;
     let numBars = 0;
     for (let i = 0; i < newTimeRange * 1000; i += interval) {
@@ -124,11 +129,7 @@ export interface FormattedData {
     y: number;
 }
 
-function avgOfNumberList(list: number[]) {
-    return list.reduce((curr, num) => curr + num, 0) / list.length;
-}
-
-export function getAmountDrankToday(data) {
+export function getAmountDrankToday(data: ITimeSeries[]) {
     const todayStartMS = Math.floor(Date.now() / MS_DAY) * MS_DAY;
     let amountDrankToday = 0;
     for (const row of data) {
@@ -138,7 +139,7 @@ export function getAmountDrankToday(data) {
     return amountDrankToday;
 }
 
-export function getAvgAmountDrankByNow(data) {
+export function getAvgAmountDrankByNow(data: ITimeSeries[]) {
     const timeNow = getTimeInMins(Date.now());
     const todayStartMS = Math.floor(Date.now() / MS_DAY) * MS_DAY;
     const dailyAggregatesBeforeTime = data.filter(
@@ -182,8 +183,11 @@ export function averageHydrationMonthComparison(data: FormattedData[]) {
     return [thisMonthAvg || 0, prevMonthAvg || 0];
 }
 
-export function getMostHydratedDayOfWeek(data: any[]) {
-    const dayConsumption = Array.from({ length: 7 }, () => []);
+export function getMostHydratedDayOfWeek(data: ITimeSeries[]) {
+    const dayConsumption = Array.from<unknown, number[]>(
+        { length: 7 },
+        () => [],
+    );
     if (!data || data.length === 0) {
         return { name: "No data", value: 0 };
     }

@@ -29,11 +29,11 @@ async def community_info(user_id: str = Depends(auth_user)):
 
         community = member.community
 
-        return {"name": community.name, "is_owner": member.is_owner}
+        return {"name": community.name, "isOwner": member.is_owner}
 
 
 @router.get("/name-from-link")
-async def community_info(code: str, user_id: str = Depends(auth_user)):
+async def name_from_link(code: str, user_id: str = Depends(auth_user)):
     with db_session:
         link = InviteLink.get(id=code)
 
@@ -61,8 +61,9 @@ async def patient_info(user_id: str = Depends(auth_user)):
                 "id": juguser.id,
                 "name": juguser.name,
                 "jugs": [{"name": jug.name, "id": jug.smart_hydration_id} for jug in juguser.jugs],
-                "target": juguser.target or 2200,
-                "drank_today": juguser.drank_today,
+                "lastDrank": juguser.last_drank,
+                "drankToday": juguser.drank_today,
+                "dailyTarget": juguser.target or 2200,
                 "tags": [{"id": tag.id, "name": tag.name} for tag in juguser.tags]
             })
 
@@ -325,4 +326,3 @@ async def add_community_drink_event(form: AddCommunityDrinkForm, user_id: str = 
         OtherDrink(juguser=juguser, timestamp=form.timestamp, name=form.name, capacity=form.capacity)
         juguser.drank_today += form.capacity
         commit()
-

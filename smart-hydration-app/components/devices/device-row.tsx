@@ -1,10 +1,7 @@
 import colors from "@/colors";
 import { DeviceInfo } from "@/interfaces/device";
 import { ReactNode } from "react";
-import { View, Text, Pressable } from "react-native";
-import { useSetAtom } from "jotai";
-import { useRouter } from "expo-router";
-import { selectedDeviceAtom, selectedJugIdAtom } from "@/atom/device";
+import { Pressable, Text, View } from "react-native";
 
 export default function DeviceRow({
     device,

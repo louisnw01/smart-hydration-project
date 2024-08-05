@@ -6,7 +6,7 @@ import StyledButton from "@/components/common/button";
 import { OptionBlock } from "@/components/common/option-block";
 import { ISettingsSection } from "@/interfaces/settings";
 import { Ionicons } from "@expo/vector-icons";
-import { router, useRouter } from "expo-router";
+import { router } from "expo-router";
 import { useAtomValue } from "jotai";
 import { useEffect } from "react";
 import { SectionList, Text, View } from "react-native";
@@ -17,8 +17,7 @@ const settingsList: ISettingsSection[] = [
         data: [
             {
                 name: "Change community Name",
-                component: (name, isFirst, isLast) => {
-                    const router = useRouter();
+                Component: (name, isFirst, isLast) => {
                     return (
                         <OptionBlock
                             text={name}
@@ -42,8 +41,7 @@ const settingsList: ISettingsSection[] = [
             },
             {
                 name: "Transfer Ownership",
-                component: (name, isFirst, isLast) => {
-                    const router = useRouter();
+                Component: (name, isFirst, isLast) => {
                     return (
                         <OptionBlock
                             isLast={isLast}
@@ -67,8 +65,7 @@ const settingsList: ISettingsSection[] = [
             },
             {
                 name: "Edit community tags",
-                component: (name, isFirst, isLast) => {
-                    const router = useRouter();
+                Component: (name, isFirst, isLast) => {
                     return (
                         <OptionBlock
                             isLast={isLast}
@@ -95,7 +92,7 @@ const settingsList: ISettingsSection[] = [
         data: [
             {
                 name: "Remove Member",
-                component: (name, isFirst, isLast) => {
+                Component: (name, isFirst, isLast) => {
                     return (
                         <OptionBlock
                             isLast={isLast}
@@ -118,8 +115,7 @@ const settingsList: ISettingsSection[] = [
             },
             {
                 name: "Invite Member",
-                component: (name, isFirst, isLast) => {
-                    const router = useRouter();
+                Component: (name, isFirst, isLast) => {
                     return (
                         <OptionBlock
                             isLast={isLast}
@@ -145,20 +141,17 @@ const settingsList: ISettingsSection[] = [
     {
         data: [
             {
-                component: () => {
+                Component: () => {
                     const { data } = useAtomValue(communityInfoQAtom);
-                    const {
-                        mutate: deleteCommunity,
-                        isPending,
-                        isSuccess,
-                    } = useAtomValue(deleteCommunityMAtom);
+                    const { mutate: deleteCommunity, isSuccess } =
+                        useAtomValue(deleteCommunityMAtom);
 
                     useEffect(() => {
                         if (!isSuccess) return;
                         router.back();
                     }, [isSuccess]);
 
-                    const isOwner = data?.is_owner;
+                    const isOwner = data?.isOwner;
                     return (
                         <View className="">
                             <View className="w-full h-[1px] bg-gray-300 dark:bg-neutral-800 mb-4 mt-16" />
@@ -190,8 +183,8 @@ export default function CommunityProfile() {
             <SectionList
                 sections={settingsList}
                 renderItem={({ item, index, section }) =>
-                    item.component(
-                        item.name,
+                    item.Component(
+                        item.name || "",
                         index == 0,
                         index == section.data.length - 1,
                     )

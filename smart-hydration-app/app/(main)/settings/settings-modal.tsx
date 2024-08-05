@@ -22,7 +22,7 @@ const settingsList: ISettingsSection[] = [
         data: [
             {
                 name: "Profile",
-                component: (name, isFirst, isLast) => {
+                Component: (name, isFirst, isLast) => {
                     return (
                         <OptionBlock
                             isLast={isLast}
@@ -37,7 +37,7 @@ const settingsList: ISettingsSection[] = [
             },
             {
                 name: "User Mode",
-                component: (name, isFirst, isLast) => {
+                Component: (name, isFirst, isLast) => {
                     return (
                         <OptionBlock
                             isLast={isLast}
@@ -61,7 +61,7 @@ const settingsList: ISettingsSection[] = [
         data: [
             {
                 name: "Other Drinks",
-                component: (name, isFirst, isLast) => {
+                Component: (name, isFirst, isLast) => {
                     return (
                         <OptionBlock
                             isLast={isLast}
@@ -80,7 +80,7 @@ const settingsList: ISettingsSection[] = [
             },
             {
                 name: "Daily Target",
-                component: (name, isFirst, isLast) => {
+                Component: (name, isFirst, isLast) => {
                     return (
                         <OptionBlock
                             isLast={isLast}
@@ -106,7 +106,7 @@ const settingsList: ISettingsSection[] = [
         data: [
             {
                 name: "Theme",
-                component: (name, isFirst, isLast) => {
+                Component: (name, isFirst, isLast) => {
                     return (
                         <OptionBlock
                             isLast={isLast}
@@ -130,7 +130,7 @@ const settingsList: ISettingsSection[] = [
         data: [
             {
                 name: "Community Settings",
-                component: (name, isFirst, isLast) => {
+                Component: (name, isFirst, isLast) => {
                     return (
                         <OptionBlock
                             isLast={isLast}
@@ -158,7 +158,7 @@ const settingsList: ISettingsSection[] = [
         data: [
             {
                 name: "Notification settings",
-                component: (name, isFirst, isLast) => {
+                Component: (name, isFirst, isLast) => {
                     return (
                         <OptionBlock
                             isLast={isLast}
@@ -182,7 +182,7 @@ const settingsList: ISettingsSection[] = [
     {
         data: [
             {
-                component: () => {
+                Component: () => {
                     const { mutate, isSuccess } =
                         useAtomValue(removePushTokenMAtom);
                     const pushToken = useAtomValue(pushTokenAtom);
@@ -239,8 +239,8 @@ export default function SettingsModal() {
             <SectionList
                 sections={settingsList}
                 renderItem={({ item, index, section }) =>
-                    item.component(
-                        item.name,
+                    item.Component(
+                        item.name || "",
                         index == 0,
                         index == section.data.length - 1,
                     )

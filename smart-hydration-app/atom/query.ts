@@ -1,13 +1,12 @@
-import { DeviceInfo, ITimeSeries } from "@/interfaces/device";
 import { MemberInfo } from "@/interfaces/community";
+import { DeviceInfo, ITimeSeries } from "@/interfaces/device";
 import { ENDPOINTS, request } from "@/util/fetch";
-import { atom, useAtomValue } from "jotai";
+import { atom } from "jotai";
 import {
     atomWithMutation,
     atomWithQuery,
     queryClientAtom,
 } from "jotai-tanstack-query";
-import { communityInfoQAtom } from "./query/community";
 
 import { selectedMemberAtom } from "./community";
 import { jugUserInfoAtom } from "./jug-user";
@@ -21,11 +20,13 @@ import {
     registerInfoAtom,
 } from "./user";
 
-
-export const linkJugsToMemberMAtom = atomWithMutation((get) => ({
+export const linkJugsToMemberMAtom = atomWithMutation<
+    void,
+    { jugIds: string[]; communityMember: string }
+>((get) => ({
     mutationKey: ["/community/link-jug-to-member", get(authTokenAtom)],
     enabled: !!get(authTokenAtom),
-    mutationFn: async (jugIds: string[], communityMember: string) => {
+    mutationFn: async ({ jugIds, communityMember }) => {
         const token = get(authTokenAtom);
         const response = await request(ENDPOINTS.LINK_JUG_TO_COMMUNITY_MEMBER, {
             method: "post",
@@ -35,7 +36,6 @@ export const linkJugsToMemberMAtom = atomWithMutation((get) => ({
         if (!response.ok) {
             throw new Error("Jug could not be linked to community member");
         }
-        return;
     },
     onSuccess: () => {
         const queryClient = get(queryClientAtom);
@@ -72,10 +72,10 @@ export const linkJugToUserMAtom = atomWithMutation((get) => ({
     },
 }));
 
-export const unlinkJugFromUserMAtom = atomWithMutation((get) => ({
+export const unlinkJugFromUserMAtom = atomWithMutation<void, string>((get) => ({
     mutationKey: ["/user/unlink-jug", get(authTokenAtom)],
     enabled: !!get(authTokenAtom),
-    mutationFn: async (jugId: string) => {
+    mutationFn: async (jugId) => {
         const token = get(authTokenAtom);
         const response = await request(ENDPOINTS.UNLINK_JUG_FROM_USER, {
             method: "post",
@@ -142,46 +142,28 @@ export const deleteUser = atomWithMutation((get) => ({
     },
 }));
 
-export const updateUserTarget = atomWithMutation((get) => ({
+export const updateUserTarget = atomWithMutation<void, number>((get) => ({
     mutationKey: ["/user/update-user-target", get(authTokenAtom)],
     enabled: !!get(authTokenAtom),
-    mutationFn: async (formData: { newValue: number }) => {
+    mutationFn: async (newValue) => {
         const token = get(authTokenAtom);
         const response = await request(ENDPOINTS.UPDATE_USER_TARGET, {
             method: "post",
-            body: formData,
+            body: { newValue },
             auth: token as string,
         });
 
         if (!response.ok) {
             alert("Could not update user target");
         }
-
-        return;
     },
 
-    onSuccess: (data, formData) => {
+    onSuccess: (data, newValue) => {
         const queryClient = get(queryClientAtom);
         void queryClient.setQueryData(["get-user-target", get(authTokenAtom)], {
-            target: formData.newValue,
+            target: newValue,
         });
     },
-}));
-
-export const getUserTargetQAtom = atomWithQuery((get) => ({
-    queryKey: ["get-user-target", get(authTokenAtom)],
-    queryFn: async ({ queryKey: [, token] }): Promise<DeviceInfo[]> => {
-        const response = await request(ENDPOINTS.GET_USER_TARGET, {
-            auth: token as string,
-        });
-
-        if (!response.ok) {
-            throw new Error("User Target Could Not Be Found");
-        }
-
-        return await response.json();
-    },
-    enabled: !!get(authTokenAtom),
 }));
 
 export const sendVerificationEmailMAtom = atomWithMutation((get) => ({
@@ -236,19 +218,24 @@ export const getJugDataQAtom = atomWithQuery((get) => ({
         const { data } = get(userInfoQAtom);
         const jugUserId = data?.juguser;
 
-        return await fetchJugData(jugUserId, token);
+        return await fetchJugData(jugUserId, token as string);
     },
     enabled: !!get(authTokenAtom) && get(userInfoQAtom).isSuccess,
 }));
 
-export const getPatientJugDataQAtom = atomWithQuery((get) => ({
+export const getPatientJugDataQAtom = atomWithQuery<
+    DeviceInfo[],
+    Error,
+    DeviceInfo[],
+    [string, string, MemberInfo]
+>((get) => ({
     queryKey: [
         "get-patient-jug-data",
         get(authTokenAtom),
-        get(selectedMemberAtom),
+        get(selectedMemberAtom) as MemberInfo,
     ],
     queryFn: async ({ queryKey: [, token, member] }): Promise<DeviceInfo[]> => {
-        return await fetchJugData(member.id, token);
+        return await fetchJugData(member.id, token as string);
     },
     enabled: !!get(authTokenAtom) && !!get(selectedMemberAtom),
 }));
@@ -297,16 +284,21 @@ export const getHydrationQAtom = atomWithQuery((get) => ({
     queryFn: async ({ queryKey: [, token] }): Promise<ITimeSeries[]> => {
         const { data } = get(userInfoQAtom);
 
-        return await fetchHistoricalJugData(data.juguser, token);
+        return await fetchHistoricalJugData(data.juguser, token as string);
     },
     enabled: !!get(authTokenAtom) && !get(userInfoQAtom).isLoading,
 }));
 
-export const historicalPatientJugDataQAtom = atomWithQuery((get) => ({
+export const historicalPatientJugDataQAtom = atomWithQuery<
+    ITimeSeries[],
+    Error,
+    ITimeSeries[],
+    [string, string, MemberInfo]
+>((get) => ({
     queryKey: [
         "historical-patient",
         get(authTokenAtom),
-        get(selectedMemberAtom),
+        get(selectedMemberAtom) as MemberInfo,
     ],
     queryFn: async ({
         queryKey: [, token, member],
@@ -496,7 +488,10 @@ export const createJugUserMAtom = atomWithMutation((get) => ({
 }));
 
 // TODO temporary, for linking during MVP
-export const getAllJugsQAtom = atomWithQuery((get) => ({
+export const getAllJugsQAtom = atomWithQuery<{
+    real: string[];
+    fake: string[];
+}>((get) => ({
     queryKey: ["temp-get-jugs", get(authTokenAtom)],
     queryFn: async ({ queryKey: [, token] }) => {
         const response = await request(ENDPOINTS.GET_ALL_JUGS, {
@@ -527,14 +522,13 @@ export const getUserExistsQAtom = atomWithQuery((get) => ({
     },
 }));
 
-export const addDrinkMAtom = atomWithMutation((get) => ({
+export const addDrinkMAtom = atomWithMutation<
+    void,
+    { timestamp: number; name: string; capacity: number }
+>((get) => ({
     mutationKey: ["/jug-user/add-drink-event", get(authTokenAtom)],
     enabled: !!get(authTokenAtom),
-    mutationFn: async (formData: {
-        timestamp: number;
-        name: string;
-        capacity: number;
-    }) => {
+    mutationFn: async (formData) => {
         const token = get(authTokenAtom);
         const response = await request(ENDPOINTS.ADD_DRINK, {
             method: "post",
@@ -543,7 +537,7 @@ export const addDrinkMAtom = atomWithMutation((get) => ({
         });
 
         if (!response.ok) {
-            return "failure";
+            throw new Error();
         }
     },
     onSuccess: (data, formData) => {
@@ -557,8 +551,6 @@ export const addDrinkMAtom = atomWithMutation((get) => ({
         );
     },
 }));
-
-
 
 export const dailyTargetAtom = atom((get) => {
     const { data, isLoading } = get(userInfoQAtom);
@@ -567,16 +559,13 @@ export const dailyTargetAtom = atom((get) => {
 
 export const addTagsPatientMAtom = atomWithMutation((get) => ({
     mutationKey: ["/jug-user/add-tags-patient", get(authTokenAtom)],
-    enabled: !!get(authTokenAtom),
+    enabled: !!get(authTokenAtom) && !!get(selectedMemberAtom),
     mutationFn: async () => {
-        const member = get(selectedMemberAtom);
-        const formData: {memberID: number, memberTags: string[]} = 
-            {
-                memberID: member.id as number,
-                memberTags: member.tags as string[],
-            };
-            console.log("member id:", member.id);
-            console.log("member tags:", member.tags);
+        const member = get(selectedMemberAtom) as MemberInfo;
+        const formData = {
+            memberID: member.id as number,
+            memberTags: member.tags.map((tag) => tag.id),
+        };
         const token = get(authTokenAtom);
         const response = await request(ENDPOINTS.ADD_TAGS_PATIENT, {
             method: "post",
@@ -585,53 +574,61 @@ export const addTagsPatientMAtom = atomWithMutation((get) => ({
         });
 
         if (!response.ok) {
-            return "failure";
-        }
-      }, 
-    onSuccess: (data, formData) => {
-        const queryClient = get(queryClientAtom);
-        void queryClient.setQueryData(
-            ["/community/get-patient-info", get(authTokenAtom)],
-            (prev: MemberInfo[]) => [
-                ...prev,
-                { tags: formData.memberTags },
-            ],
-        );
-    },
-}));
-
-
-export const addCommunityDrinkMAtom = atomWithMutation((get) => ({
-    mutationKey: ["/community/add-community-drink-event", get(authTokenAtom)],
-    enabled: !!get(authTokenAtom),
-    mutationFn: async (formData: {
-        juser_id: number;
-        timestamp: number;
-        name: string;
-        capacity: number;
-    }) => {
-        const token = get(authTokenAtom);
-        const response = await request(ENDPOINTS.ADD_COMMUNITY_DRINK, {
-            method: "post",
-            body: formData,
-            auth: token as string,
-        });
-
-        if (!response.ok) {
-            return "failure";
+            throw new Error();
         }
     },
-    onSuccess: (data, formData) => {
-        const queryClient = get(queryClientAtom);
-        void queryClient.setQueryData(
-            ["/data/historical", get(authTokenAtom)],
-            (prev: DeviceInfo[]) => [
-                ...prev,
-                { time: formData.timestamp * 1000, value: formData.capacity },
-            ],
-        );
-    },
+
+    // TODO: This wont work because formData is nothing
+
+    // onSuccess: (data, formData) => {
+    //     const queryClient = get(queryClientAtom);
+    //     void queryClient.setQueryData(
+    //         ["/community/get-patient-info", get(authTokenAtom)],
+    //         (prev: MemberInfo[]) => [...prev, { tags: formData.memberTags }],
+    //     );
+    // },
 }));
+
+interface CommunityDrink {
+    juser_id: number;
+    timestamp: number;
+    name: string;
+    capacity: number;
+}
+export const addCommunityDrinkMAtom = atomWithMutation<void, CommunityDrink>(
+    (get) => ({
+        mutationKey: [
+            "/community/add-community-drink-event",
+            get(authTokenAtom),
+        ],
+        enabled: !!get(authTokenAtom),
+        mutationFn: async (formData) => {
+            const token = get(authTokenAtom);
+            const response = await request(ENDPOINTS.ADD_COMMUNITY_DRINK, {
+                method: "post",
+                body: formData,
+                auth: token as string,
+            });
+
+            if (!response.ok) {
+                throw new Error();
+            }
+        },
+        onSuccess: (data, formData) => {
+            const queryClient = get(queryClientAtom);
+            void queryClient.setQueryData(
+                ["/data/historical", get(authTokenAtom)],
+                (prev: DeviceInfo[]) => [
+                    ...prev,
+                    {
+                        time: formData.timestamp * 1000,
+                        value: formData.capacity,
+                    },
+                ],
+            );
+        },
+    }),
+);
 
 export const linkJugToMemberMAtom = atomWithMutation((get) => ({
     mutationKey: ["/user/link-jug", get(authTokenAtom)],
@@ -677,7 +674,7 @@ export const getCommunityJugDataQAtom = atomWithQuery((get) => ({
         const { data } = get(userInfoQAtom);
         const jugUserId = data?.juguser;
 
-        return await fetchCommunityJugData(jugUserId, token);
+        return await fetchCommunityJugData(jugUserId, token as string);
     },
     enabled: !!get(authTokenAtom) && !get(userInfoQAtom).isLoading,
 }));

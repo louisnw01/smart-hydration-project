@@ -1,27 +1,28 @@
-import {
-    selectedJugsForMemberAtom,
-    selectedMemberAtom,
-} from "@/atom/community";
+import { selectedMemberAtom } from "@/atom/community";
 import { getJugDataQAtom } from "@/atom/query";
 import { linkJugsToCommunityMemberMAtom } from "@/atom/query/community";
 import StyledButton from "@/components/common/button";
 import Loading from "@/components/common/loading";
+import { DeviceInfo } from "@/interfaces/device";
 import { useNavigation } from "expo-router";
-import { useAtom, useAtomValue } from "jotai";
+import { useAtomValue } from "jotai";
 import { useState } from "react";
 import { Pressable, SectionList, Text, View } from "react-native";
 
 export default function AddDeviceMemberModal() {
-    const { data, isLoading, refetch } = useAtomValue(getJugDataQAtom);
-    const [refreshing, setRefreshing] = useState(false);
+    const { data, isLoading } = useAtomValue(getJugDataQAtom);
     const navigation = useNavigation();
-    const [selectedJugs, setSelectedJugs] = useAtom(selectedJugsForMemberAtom);
+    const [selectedJugs, setSelectedJugs] = useState<Set<DeviceInfo>>(
+        new Set(),
+    );
     const selectedMember = useAtomValue(selectedMemberAtom);
     const { mutate: linkJugsToCommunityMember } = useAtomValue(
         linkJugsToCommunityMemberMAtom,
     );
 
-    const handleSelect = (jug) => {
+    if (!selectedMember) return null;
+
+    const handleSelect = (jug: DeviceInfo) => {
         const newSelectedJugs = new Set(selectedJugs);
         if (newSelectedJugs.has(jug)) {
             newSelectedJugs.delete(jug);

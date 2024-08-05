@@ -1,20 +1,17 @@
 import { dailyTargetAtom, updateUserTarget } from "@/atom/query";
 
 import Slider from "@react-native-community/slider";
-import { useAtom } from "jotai";
 import { useAtomValue } from "jotai/index";
 import React from "react";
 import { Button, Text, View } from "react-native";
 
 export default function AdjustDailyTarget() {
-    const [currentDailyTarget, setCurrentDailyTarget] =
-        useAtom(dailyTargetAtom);
+    const currentDailyTarget = useAtomValue(dailyTargetAtom);
     const [textToDisplay, setText] = React.useState(currentDailyTarget);
     const { mutate: updateUserTargetAtom } = useAtomValue(updateUserTarget);
 
     function updateText(value: number) {
         setText(value.toPrecision(4));
-        return;
     }
 
     return (
@@ -33,7 +30,7 @@ export default function AdjustDailyTarget() {
             />
             <Button
                 onPress={() => {
-                    updateUserTargetAtom({ newValue: textToDisplay });
+                    updateUserTargetAtom(textToDisplay);
                 }}
                 title="Submit"
             />

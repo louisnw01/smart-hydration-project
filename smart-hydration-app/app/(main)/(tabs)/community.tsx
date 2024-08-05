@@ -1,7 +1,7 @@
 import StyledButton from "@/components/common/button";
 import PageWrapper from "@/components/common/page-wrapper";
-import { useAtomValue, useAtom } from "jotai";
-import React, { ReactNode, useEffect, useState } from "react";
+import { useAtom, useAtomValue } from "jotai";
+import React, { ReactElement, useEffect, useState } from "react";
 import {
     FlatList,
     Pressable,
@@ -11,6 +11,7 @@ import {
     View,
 } from "react-native";
 
+import { selectedSortMethodAtom } from "@/atom/community";
 import {
     communityInfoQAtom,
     patientInfoQAtom,
@@ -19,9 +20,8 @@ import {
 import Loading from "@/components/common/loading";
 import StyledTextInput from "@/components/common/text-input";
 import MemberRow from "@/components/community/member-row";
-import { FilterObject, MemberInfo } from "@/interfaces/community";
+import { FilterObject } from "@/interfaces/community";
 import { SelectList } from "react-native-dropdown-select-list";
-import { selectedSortMethodAtom } from "@/atom/community";
 
 //for now (basic user flow), Community tab is shown as 4th tab
 //TODO: for care home mode, replace home screen with Community tab
@@ -37,7 +37,7 @@ export default function CommunityPage() {
     const hasCommunity = useAtomValue(userHasCommunityAtom);
     const [refreshing, setRefreshing] = useState(false);
 
-    const [filteredData, setFilteredData] = useState<ReactNode[]>([]);
+    const [filteredData, setFilteredData] = useState<ReactElement[]>([]);
     const [textInput, setTextInput] = useState("");
     const [filters, setFilters] = useState<FilterObject>({
         searchTerm: "",
@@ -171,7 +171,7 @@ export default function CommunityPage() {
                         Sort by:{" "}
                     </Text>
                     <SelectList
-                        setSelected={(val) => {
+                        setSelected={(val: string) => {
                             handleSortChange(val);
                         }}
                         data={sortMethod}
@@ -219,8 +219,7 @@ export default function CommunityPage() {
 
                         <FlatList
                             data={filteredData || []}
-                            contentContainerClassName="flex gap-6"
-                            keyExtractor={(patient, idx) => idx}
+                            keyExtractor={(patient, idx) => idx.toString()}
                             renderItem={({ item }) => item}
                         />
 

@@ -1,7 +1,7 @@
 import useColorPalette from "@/util/palette";
-import { Stack, useRouter } from "expo-router";
-import { Platform, Pressable } from "react-native";
 import { Entypo } from "@expo/vector-icons";
+import { router, Stack } from "expo-router";
+import { Platform, Pressable } from "react-native";
 
 export default function CustomDrinkLayout() {
     const palette = useColorPalette();
@@ -29,7 +29,6 @@ export default function CustomDrinkLayout() {
                 name="add-custom-cup"
                 options={{
                     headerLeft: () => {
-                        const router = useRouter();
                         return (
                             <Pressable onPress={() => router.back()}>
                                 <Entypo
@@ -50,7 +49,6 @@ export default function CustomDrinkLayout() {
                 name="select-measure-jug"
                 options={{
                     headerLeft: () => {
-                        const router = useRouter();
                         return (
                             <Pressable onPress={() => router.back()}>
                                 <Entypo
@@ -67,7 +65,6 @@ export default function CustomDrinkLayout() {
                 name="fill-cup"
                 options={{
                     headerLeft: () => {
-                        const router = useRouter();
                         return (
                             <Pressable onPress={() => router.back()}>
                                 <Entypo
@@ -84,7 +81,6 @@ export default function CustomDrinkLayout() {
                 name="finished-wait"
                 options={{
                     headerLeft: () => {
-                        const router = useRouter();
                         return (
                             <Pressable onPress={() => router.back()}>
                                 <Entypo

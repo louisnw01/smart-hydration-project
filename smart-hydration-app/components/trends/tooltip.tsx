@@ -1,9 +1,12 @@
 import SFPro from "@/assets/fonts/SF-Pro-Display-Regular.otf";
+import { Timeframe } from "@/interfaces/data";
 import useColorPalette from "@/util/palette";
 import { Line, RoundedRect, Text, useFont } from "@shopify/react-native-skia";
 import { useEffect, useState } from "react";
 import { useColorScheme } from "react-native";
+import { SharedValue } from "react-native-gesture-handler/lib/typescript/handlers/gestures/reanimatedWrapper";
 import { useDerivedValue } from "react-native-reanimated";
+import { ChartBounds } from "victory-native";
 
 interface ValPosSkia {
     value: any;
@@ -25,6 +28,11 @@ export default function ToolTip({
     isActive: boolean;
     x: ValPosSkia;
     y: ValPosSkia;
+    points: any[];
+    timeframe: Timeframe;
+    scrollPosition: SharedValue<number>;
+    chartBounds: ChartBounds;
+    data: { x: number; y: number }[];
 }) {
     const scheme = useColorScheme();
     const palette = useColorPalette();
@@ -34,7 +42,9 @@ export default function ToolTip({
     // const data = useAtomValue(formattedDataAtom);
 
     const memoedData = data.toReversed();
-    const [clickedDataIndex, setClickedDataIndex] = useState(null);
+    const [clickedDataIndex, setClickedDataIndex] = useState<number | null>(
+        null,
+    );
 
     const [shown, setShown] = useState(false);
     useEffect(() => {
@@ -83,7 +93,8 @@ export default function ToolTip({
     }, [scrollPosition, x.position.value]);
 
     const textXPos = useDerivedValue(() => xPos.value + 20, [xPos]);
-    if (!shown || !memoedData || !y.value.value) return null;
+    if (!shown || !memoedData || !y.value.value || clickedDataIndex === null)
+        return null;
 
     if (
         memoedData[clickedDataIndex] == null ||

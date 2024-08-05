@@ -10,7 +10,7 @@ export default function HydrationStatus() {
     const hydration = useAtomValue(amountDrankTodayAtom);
     const target = useAtomValue(dailyTargetAtom);
     const hydrated = hydration >= getRelativeTarget(target);
-    const { refetch, isLoading, data } = useAtomValue(userInfoQAtom);
+    const { isLoading, data } = useAtomValue(userInfoQAtom);
 
     if (isLoading || !data) {
         return null;

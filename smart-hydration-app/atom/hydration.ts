@@ -7,11 +7,14 @@ export const amountDrankTodayAtom = atom((get) => {
     if (!data || isLoading) return 0;
     return getAmountDrankToday(data) || 0;
 });
-export const avgAmountDrankByTimeNowAtom = atom<number | null>(null);
+export const avgAmountDrankByTimeNowAtom = atom<number>(NaN);
 
-export const avgAmountDrankThisMonthAtom = atom<number | null>(null);
-export const avgAmountDrankLastMonthAtom = atom<number | null>(null);
-export const mostHydratedDayOfWeekAtom = atom<{} | null>({});
+export const avgAmountDrankThisMonthAtom = atom<number>(NaN);
+export const avgAmountDrankLastMonthAtom = atom<number>(NaN);
+export const mostHydratedDayOfWeekAtom = atom<{
+    name: string;
+    value: number;
+}>({ name: "", value: 0 });
 
 export const userHasJugsAtom = atom((get) => {
     const { data, isLoading } = get(getJugDataQAtom);
