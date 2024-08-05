@@ -9,7 +9,7 @@ import { Button, Text, View } from "react-native";
 export default function AdjustDailyTarget() {
     const [currentDailyTarget, setCurrentDailyTarget] =
         useAtom(dailyTargetAtom);
-    const [textToDisplay, setText] = React.useState(currentDailyTarget);
+    const [textToDisplay, setText] = React.useState(2200);
     const { mutate: updateUserTargetAtom } = useAtomValue(updateUserTarget);
 
     function updateText(value: number) {

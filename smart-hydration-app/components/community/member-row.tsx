@@ -1,18 +1,33 @@
-import { selectedMemberAtom } from "@/atom/community";
+import { formattedMemberDataAtom, selectedMemberAtom } from "@/atom/community";
 import { MemberInfo } from "@/interfaces/community";
 import useColorPalette from "@/util/palette";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
-import { useSetAtom } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import { Pressable, Text, View } from "react-native";
 import StyledButton from "../common/button";
 import Tag from "./tag";
-import { processMemberData } from "@/util/community";
+import { processMemberData, useFormattedMemberData } from "@/util/community";
+
+function getOrdinalSuffix(day) {
+    if (day > 3 && day < 21) return "th";
+    switch (day % 10) {
+        case 1:
+            return "st";
+        case 2:
+            return "nd";
+        case 3:
+            return "rd";
+        default:
+            return "th";
+    }
+}
 
 export default function MemberRow({ member }: { member: MemberInfo }) {
     const palette = useColorPalette();
     const setMember = useSetAtom(selectedMemberAtom);
-    const memberData = processMemberData(member);
+    const memberData = useFormattedMemberData(member);
+
     return (
         <View>
             <Pressable
