@@ -19,17 +19,10 @@ import {
 import Loading from "@/components/common/loading";
 import StyledTextInput from "@/components/common/text-input";
 import MemberRow from "@/components/community/member-row";
-import { FilterObject, MemberInfo } from "@/interfaces/community";
+import { FilterObject } from "@/interfaces/community";
 import { SelectList } from "react-native-dropdown-select-list";
 import { selectedSortMethodAtom } from "@/atom/community";
 import { useFocusEffect } from "expo-router";
-
-//for now (basic user flow), Community tab is shown as 4th tab
-//TODO: for care home mode, replace home screen with Community tab
-
-//TODO: add link handling logic to front end for invite link flow
-
-//TODO: add settings cog at top right
 
 export default function CommunityPage() {
     const { isLoading, refetch: refetchCommunityInfo } = useAtomValue(communityInfoQAtom);
@@ -176,7 +169,7 @@ export default function CommunityPage() {
     } else {
         return (
             <PageWrapper>
-                <View className="flex-row px-4 pt-4 pr mb-4 ">
+                <View className="flex-row px-4 pt-4 pr mb-4">
                     <Text className="py-3 text-xl font-semibold">
                         Sort by:{" "}
                     </Text>

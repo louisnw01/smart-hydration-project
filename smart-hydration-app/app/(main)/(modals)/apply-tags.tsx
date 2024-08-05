@@ -8,6 +8,7 @@ import { communityTagsQAtom } from "@/atom/query/community";
 import { addTagsPatientMAtom } from "@/atom/query"
 import { useAtomValue, useSetAtom } from "jotai";
 import { selectedMemberAtom } from "@/atom/community";
+import StyledTextInput from "@/components/common/text-input";
 
 const filterAndSortData = (unappliedTags: TagInfo[], filterObj: FilterObject): TagInfo[] => {
     const filteredData = unappliedTags.filter((tag) => {
@@ -158,8 +159,8 @@ export default function ApplyTags() {
             </ScrollView>
             <View className="flex flex-row items-center p-2">
                 <View className="flex-1">
-                    <TextInput
-                        value={textInput}
+                <StyledTextInput
+                        requiredIcon
                         placeholder="Search unapplied tags..."
                         className="bg-gray-200 h-14 placeholder-black text-xl rounded-xl px-3 mb-7 m-1 border"
                         onChangeText={(val) => {
