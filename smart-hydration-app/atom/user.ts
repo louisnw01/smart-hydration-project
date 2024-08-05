@@ -46,3 +46,5 @@ export const drinkListAtom = atomWithStorage(
 export const emailIsVerifiedAtom = atom(false);
 
 export const inviteCodeAtom = atom("");
+
+export const communityTabVisible = atomWithStorage("community-tab-visible", true, storage);
