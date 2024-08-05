@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { View, Text, Pressable, TextInput, ScrollView } from "react-native";
-import { useNavigation } from "expo-router";
 import StyledButton from "@/components/common/button";
 import Tag from "@/components/community/tag";
 import { FilterObject, TagInfo } from "@/interfaces/community";
@@ -30,12 +29,10 @@ const filterAndSortData = (unappliedTags: TagInfo[], filterObj: FilterObject): T
 };
 
 export default function ApplyTags() {
-    const navigation = useNavigation();
     const member = useAtomValue(selectedMemberAtom);
     const setMember = useSetAtom(selectedMemberAtom);
     const { data } = useAtomValue(communityTagsQAtom);
     const addTagsMutate = useAtomValue(addTagsPatientMAtom).mutate;
-    const [inviteLink, setInviteLink] = useState('');
     const [textInput, setTextInput] = useState("");
     const [filteredUnappliedTags, setFilteredUnappliedTags] = useState<TagInfo[]>([]);
     const [communityTags, setCommunityTags] = useState<TagInfo[]>([]);
@@ -46,26 +43,20 @@ export default function ApplyTags() {
     const handleAppliedPress = (tag: TagInfo) => {
         moveFromApplied(tag.name);
     };
-
     const handleUnappliedPress = (tag: TagInfo) => {
         moveToApplied(tag.name);
     };
-
     const getMemberTags = () => {
         const initialAppliedTags: TagInfo[] = member.tags || [];
         return initialAppliedTags;
     };
     const initialApplied = getMemberTags();
-
     const [appliedTags, setAppliedTags] = useState<TagInfo[]>(initialApplied);
     const [unappliedTags, setUnappliedTags] = useState<TagInfo[]>([]);
-    console.log("Applied tags in Apply Tags page: ", appliedTags);
-
     const filterUnappliedTags = () => {
         const filteredUnappliedTags = communityTags.filter(item => !appliedTags.some(appliedTag => appliedTag.id === item.id));
         setUnappliedTags(filteredUnappliedTags);
     };
-
 
     useEffect(() => {
         if (data) {
@@ -124,7 +115,7 @@ export default function ApplyTags() {
             <ScrollView>
                 <View className="mt-8 flex gap-6">
                     <Text className="dark:text-white text-2xl mx-6">
-                        Press a tag to move it to the other section
+                        Apply tags to {member.name}. Press a tag to move it to the other section
                     </Text>
                     <Text className="dark:text-white font-bold text-2xl mx-6">
                         Applied tags
