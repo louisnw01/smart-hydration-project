@@ -558,13 +558,6 @@ export const addDrinkMAtom = atomWithMutation((get) => ({
     },
 }));
 
-
-
-export const dailyTargetAtom = atom((get) => {
-    const { data, isLoading } = get(userInfoQAtom);
-    return isLoading ? null : data?.target;
-});
-
 export const addTagsPatientMAtom = atomWithMutation((get) => ({
     mutationKey: ["/jug-user/add-tags-patient", get(authTokenAtom)],
     enabled: !!get(authTokenAtom),
