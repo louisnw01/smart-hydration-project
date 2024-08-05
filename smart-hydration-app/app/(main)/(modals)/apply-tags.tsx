@@ -123,7 +123,7 @@ export default function ApplyTags() {
                         Applied tags
                     </Text>
                     {appliedTags.length === 0 && (
-                        <Text className="dark:text-white text-xl">
+                        <Text className="dark:text-white text-xl mx-6">
                             No tags applied to user
                         </Text>
                     )}
@@ -159,12 +159,10 @@ export default function ApplyTags() {
                     </View>
                 </View>
             </ScrollView>
-            <View className="flex flex-row items-center p-2">
+            <View className="flex flex-row items-center p-2 mb-6">
                 <View className="flex-1">
                 <StyledTextInput
-                        requiredIcon
                         placeholder="Search unapplied tags..."
-                        className="bg-gray-200 h-14 placeholder-black text-xl rounded-xl px-3 mb-7 m-1 border"
                         onChangeText={(val) => {
                             setTextInput(val);
                             setFilters((prev) => ({
@@ -179,7 +177,7 @@ export default function ApplyTags() {
                 <View className="justify-center ml-2">
                     <Pressable
                         onPress={handleClearPress}
-                        className="bg-blue px-4 py-2 rounded-xl mb-6"
+                        className="bg-blue px-4 py-2 rounded-xl"
                     >
                         <Text className="text-xl font-semibold text-white">
                             Clear search
