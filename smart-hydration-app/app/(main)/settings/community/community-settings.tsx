@@ -1,6 +1,7 @@
 import {
     communityInfoQAtom,
     deleteCommunityMAtom,
+    leaveCommunityMAtom,
 } from "@/atom/query/community";
 import StyledButton from "@/components/common/button";
 import { OptionBlock } from "@/components/common/option-block";
@@ -100,7 +101,10 @@ const settingsList: ISettingsSection[] = [
             {
                 name: "Remove Member",
                 component: (name, isFirst, isLast) => {
+                    const { data } = useAtomValue(communityInfoQAtom);
                     return (
+                        <>
+                        {data?.isOwner && (
                         <OptionBlock
                             isLast={isLast}
                             text={name}
@@ -116,7 +120,8 @@ const settingsList: ISettingsSection[] = [
                                     color="gray"
                                 />
                             }
-                        />
+                        />)}
+                        </>
                     );
                 },
             },
@@ -153,14 +158,23 @@ const settingsList: ISettingsSection[] = [
                     const { data } = useAtomValue(communityInfoQAtom);
                     const {
                         mutate: deleteCommunity,
-                        isPending,
-                        isSuccess,
+                        isSuccess: deleteSuccess,
                     } = useAtomValue(deleteCommunityMAtom);
 
+                    const {
+                        mutate: leaveCommunity,
+                        isSuccess: leaveSuccess,
+                    } = useAtomValue(leaveCommunityMAtom);
+
                     useEffect(() => {
-                        if (!isSuccess) return;
+                        if (!deleteSuccess) return;
                         router.back();
-                    }, [isSuccess]);
+                    }, [deleteSuccess]);
+
+                    useEffect(() => {
+                        if (!leaveSuccess) return;
+                        router.back();
+                    }, [leaveSuccess]);
 
                     const isOwner = data?.is_owner;
                     return (
@@ -177,6 +191,8 @@ const settingsList: ISettingsSection[] = [
                                 onPress={() => {
                                     if (isOwner) {
                                         deleteCommunity();
+                                    } else {
+                                        leaveCommunity();
                                     }
                                 }}
                             />
