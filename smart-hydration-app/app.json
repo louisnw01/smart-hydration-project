@@ -8,12 +8,17 @@
         "icon": "./assets/images/icon.png",
         "scheme": "smarthydration",
         "userInterfaceStyle": "automatic",
-        "splash": {
-            "image": "./assets/images/splash.png",
-            "resizeMode": "contain",
-            "backgroundColor": "#ffffff"
-        },
         "ios": {
+            "splash": {
+                "image": "./assets/images/splash.png",
+                "resizeMode": "contain",
+                "backgroundColor": "#ffffff",
+                "dark": {
+                    "image": "./assets/images/splash.png",
+                    "resizeMode": "contain",
+                    "backgroundColor": "#000000"
+                }
+            },
             "supportsTablet": true,
             "bundleIdentifier": "com.louisnw01.smarthydrationapp"
         },
@@ -21,6 +26,16 @@
             "adaptiveIcon": {
                 "foregroundImage": "./assets/images/adaptive-icon.png",
                 "backgroundColor": "#ffffff"
+            },
+            "splash": {
+                "image": "./assets/images/splash.png",
+                "resizeMode": "contain",
+                "backgroundColor": "#ffffff",
+                "dark": {
+                    "image": "./assets/images/splash.png",
+                    "resizeMode": "contain",
+                    "backgroundColor": "#000000"
+                }
             },
             "package": "com.louisnw01.smarthydrationapp",
             "googleServicesFile": "./google-services.json"
