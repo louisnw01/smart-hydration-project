@@ -5,13 +5,16 @@ import { Pressable, Switch, Text, View } from "react-native";
 
 interface OptionBlockProps {
     text?: string;
-    atom: WritableAtom<unknown, [unknown], void>;
     href?: string;
     isFirst?: boolean;
     isLast?: boolean;
     multiSelect?: boolean;
     icon?: React.ReactNode;
     onPress?: Function;
+}
+
+interface MultiSelectProps extends OptionBlockProps {
+    atom: WritableAtom<unknown, [unknown], void>;
 }
 
 export function MultiSelectOptionBlock({
@@ -21,7 +24,7 @@ export function MultiSelectOptionBlock({
     icon,
     isFirst,
     isLast,
-}: OptionBlockProps) {
+}: MultiSelectProps) {
     const setValue = useSetAtom(atom);
     return (
         <OptionBlock
@@ -39,6 +42,9 @@ export function MultiSelectOptionBlock({
     );
 }
 
+interface SingleOptionBlockProps extends OptionBlockProps {
+    atom?: WritableAtom<unknown, [unknown], void>;
+}
 export function OptionBlock({
     text,
     atom,
@@ -47,7 +53,7 @@ export function OptionBlock({
     multiSelect,
     isFirst,
     isLast,
-}: OptionBlockProps) {
+}: SingleOptionBlockProps) {
     let className = isLast
         ? "rounded-b-xl"
         : "border-b border-gray-200 dark:border-neutral-800";
