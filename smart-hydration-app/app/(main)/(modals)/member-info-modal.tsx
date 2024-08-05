@@ -6,6 +6,7 @@ import StyledButton from "@/components/common/button";
 import { ScrollPageWrapper } from "@/components/common/page-wrapper";
 import Tag from "@/components/community/tag";
 import DeviceSection from "@/components/devices/device-section";
+import { processMemberData } from "@/util/community";
 import useColorPalette from "@/util/palette";
 import { FontAwesome, MaterialCommunityIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
@@ -27,6 +28,7 @@ export default function MemberInfoModal() {
     const insets = useSafeAreaInsets();
     const member = useAtomValue(selectedMemberAtom);
     const setJugId = useSetAtom(selectedJugIdAtom);
+    const memberData = processMemberData(member);
     return (
         <ScrollPageWrapper
             className="mt-8 flex gap-6 mx-6 pb-20"
@@ -36,7 +38,7 @@ export default function MemberInfoModal() {
         >
             <View className="flex flex-row justify-between items-center">
                 <Text className="dark:text-white text-3xl font-semibold">
-                    {member.name}
+                    {memberData.name}
                 </Text>
                 <Text className="text-neutral-700 font-medium dark:text-gray-300">
                     ID #: {member.id}
@@ -45,10 +47,12 @@ export default function MemberInfoModal() {
 
             <MemberInfoBlock title="Profile Details">
                 <Text className="text-xl dark:text-white">
-                    Name: {member.name}
+                    Name: {memberData.name}
                 </Text>
                 <Text className="text-xl dark:text-white">Jugs</Text>
-                <Text className="text-xl dark:text-white">Last drank</Text>
+                <Text className="text-xl dark:text-white">
+                    Last drank: {memberData.lastDrank}
+                </Text>
                 {member.tags && member.tags.length > 0 && (
                     <View className="flex-row flex-wrap my-2">
                         {member.tags.map((tag) => (
@@ -60,13 +64,10 @@ export default function MemberInfoModal() {
             <MemberInfoBlock title="Progress to Target">
                 <View className="flex-row justify-between">
                     <Text className="text-xl dark:text-white">
-                        {member.drank_today | 0} / {member.target}ml
+                        {memberData.amountDrank} / {memberData.target}
                     </Text>
                     <Text className="text-xl font-semibold dark:text-white">
-                        {((member.drank_today / member.target) * 100).toFixed(
-                            0,
-                        )}
-                        %
+                        {memberData.targetProgress}
                     </Text>
                 </View>
             </MemberInfoBlock>
@@ -124,7 +125,9 @@ export default function MemberInfoModal() {
                     size={23}
                     color={palette.fg}
                 />
-                onPress={() => router.push("edit-device-name-modal")}
+                onPress={() => {
+                    router.push("add-drink-community-modal");
+                }}
             />
 
             <StyledButton

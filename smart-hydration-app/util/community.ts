@@ -70,6 +70,7 @@ export interface MemberData {
     lastDrank: string;
     amountDrank: string;
     targetProgress: string;
+    target: number;
 }
 
 export function processMemberData(member: MemberInfo) {
@@ -82,6 +83,7 @@ export function processMemberData(member: MemberInfo) {
         targetProgress:
             ((member.drank_today / member.target) * 100).toFixed(0).toString() +
             "%",
+        target: member.target,
     };
     return memberData;
 }
