@@ -1,37 +1,35 @@
-import OnboardingHeader from "@/components/onboarding/onboarding-header";
-import { Stack, useRouter } from "expo-router";
-import React from "react";
-import { Pressable, Platform } from "react-native";
-import { Entypo } from "@expo/vector-icons";
 import useColorPalette from "@/util/palette";
+import { Entypo } from "@expo/vector-icons";
+import { router, Stack } from "expo-router";
+import React from "react";
+import { Pressable } from "react-native";
 
 export default function AddJugUserLayout() {
     const palette = useColorPalette();
     return (
         <Stack
-        screenOptions={{
-            contentStyle: {
-                backgroundColor: palette.bg,
-            },
-            headerTitleStyle: {
-                fontWeight: "bold",
-                color: palette.fg,
-            },
-            headerStyle: {
-                backgroundColor: palette.bg,
-            },
-        }}
+            screenOptions={{
+                contentStyle: {
+                    backgroundColor: palette.bg,
+                },
+                headerTitleStyle: {
+                    fontWeight: "bold",
+                    color: palette.fg,
+                },
+                headerStyle: {
+                    backgroundColor: palette.bg,
+                },
+            }}
         >
             <Stack.Screen
                 name="add-jug-user-modal"
                 options={{
                     title: "Add a new jug user",
                     headerLeft: () => {
-                        const router = useRouter();
                         return (
                             <Pressable onPress={() => router.back()}>
                                 <Entypo
-                                    name= {Platform.OS == "android" ? "chevron-left" :"circle-with-cross"}
+                                    name="chevron-left"
                                     size={24}
                                     color="rgb(80, 80, 80)"
                                 />
@@ -44,18 +42,51 @@ export default function AddJugUserLayout() {
                 name="name"
                 options={{
                     title: "What is their name?",
+                    headerLeft: () => {
+                        return (
+                            <Pressable onPress={() => router.back()}>
+                                <Entypo
+                                    name="chevron-left"
+                                    size={24}
+                                    color="rgb(80, 80, 80)"
+                                />
+                            </Pressable>
+                        );
+                    },
                 }}
             />
             <Stack.Screen
                 name="dob"
                 options={{
                     title: "What is their date of birth?",
+                    headerLeft: () => {
+                        return (
+                            <Pressable onPress={() => router.back()}>
+                                <Entypo
+                                    name="chevron-left"
+                                    size={24}
+                                    color="rgb(80, 80, 80)"
+                                />
+                            </Pressable>
+                        );
+                    },
                 }}
             />
             <Stack.Screen
                 name="submit"
                 options={{
                     title: "You're almost there!",
+                    headerLeft: () => {
+                        return (
+                            <Pressable onPress={() => router.back()}>
+                                <Entypo
+                                    name="chevron-left"
+                                    size={24}
+                                    color="rgb(80, 80, 80)"
+                                />
+                            </Pressable>
+                        );
+                    },
                 }}
             />
         </Stack>

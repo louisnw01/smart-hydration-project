@@ -1,12 +1,14 @@
 import { selectedJugIdAtom } from "@/atom/device";
+import { getJugDataQAtom } from "@/atom/query";
+import {
+    getCommunityJugDataQAtom,
+    userHasCommunityAtom,
+} from "@/atom/query/community";
 import PageWrapper from "@/components/common/page-wrapper";
 import DeviceSection from "@/components/devices/device-section";
 import { router } from "expo-router";
 import { useAtomValue, useSetAtom } from "jotai";
-import { getJugDataQAtom } from "@/atom/query";
-import { getCommunityJugDataQAtom } from "@/atom/query/community";
-import { Text, View, ScrollView } from "react-native";
-import { userHasCommunityAtom } from "@/atom/query/community";
+import { ScrollView, Text, View } from "react-native";
 
 export default function DevicesPage() {
     const setJugId = useSetAtom(selectedJugIdAtom);
@@ -26,7 +28,7 @@ export default function DevicesPage() {
                     />
                     {isInCommunity && (
                         <View className="flex">
-                            <Text className="text-2xl font-semibold py-4">
+                            <Text className="text-2xl font-semibold py-4 dark:text-white">
                                 Community Jugs
                             </Text>
                             <DeviceSection

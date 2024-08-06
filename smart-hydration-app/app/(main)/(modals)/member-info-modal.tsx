@@ -1,12 +1,12 @@
 import Jug from "@/assets/svgs/jug.svg";
 import { selectedMemberAtom } from "@/atom/community";
-import { selectedDeviceAtom, selectedJugIdAtom } from "@/atom/device";
+import { selectedJugIdAtom } from "@/atom/device";
 import { getPatientJugDataQAtom } from "@/atom/query";
 import StyledButton from "@/components/common/button";
 import { ScrollPageWrapper } from "@/components/common/page-wrapper";
 import Tag from "@/components/community/tag";
 import DeviceSection from "@/components/devices/device-section";
-import { processMemberData, useFormattedMemberData } from "@/util/community";
+import { useFormattedMemberData } from "@/util/community";
 import useColorPalette from "@/util/palette";
 import { FontAwesome, MaterialCommunityIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
