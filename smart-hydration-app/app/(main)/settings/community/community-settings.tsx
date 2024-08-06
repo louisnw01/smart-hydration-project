@@ -8,7 +8,7 @@ import { communityTabVisible } from "@/atom/user";
 import StyledButton from "@/components/common/button";
 import { OptionBlock, SettingsSwitch } from "@/components/common/option-block";
 import { ISettingsSection } from "@/interfaces/settings";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { router, useRouter } from "expo-router";
 import { useAtomValue } from "jotai";
 import { useEffect } from "react";
@@ -33,8 +33,8 @@ const settingsList: ISettingsSection[] = [
                                 )
                             }
                             icon={
-                                <Ionicons
-                                    name="color-palette"
+                                <MaterialCommunityIcons
+                                    name="lead-pencil"
                                     size={19}
                                     color="gray"
                                 />
@@ -43,31 +43,31 @@ const settingsList: ISettingsSection[] = [
                     );
                 },
             },
-            {
-                name: "Transfer Ownership",
-                component: (name, isFirst, isLast) => {
-                    const router = useRouter();
-                    return (
-                        <OptionBlock
-                            isLast={isLast}
-                            isFirst={isFirst}
-                            text={name}
-                            onPress={() =>
-                                router.navigate(
-                                    "settings/community/change-owner",
-                                )
-                            }
-                            icon={
-                                <Ionicons
-                                    name="color-palette"
-                                    size={19}
-                                    color="gray"
-                                />
-                            }
-                        />
-                    );
-                },
-            },
+            // {
+            //     name: "Transfer Ownership",
+            //     component: (name, isFirst, isLast) => {
+            //         const router = useRouter();
+            //         return (
+            //             <OptionBlock
+            //                 isLast={isLast}
+            //                 isFirst={isFirst}
+            //                 text={name}
+            //                 onPress={() =>
+            //                     router.navigate(
+            //                         "settings/community/change-owner",
+            //                     )
+            //                 }
+            //                 icon={
+            //                 <MaterialCommunityIcons
+            //                     name="cog-transfer"
+            //                     size={19}
+            //                     color="gray"
+            //                 />
+            //                 }
+            //             />
+            //         );
+            //     },
+            // },
             {
                 name: "Edit community tags",
                 component: (name, isFirst, isLast) => {
@@ -85,7 +85,7 @@ const settingsList: ISettingsSection[] = [
                                     }
                                     icon={
                                         <Ionicons
-                                            name="color-palette"
+                                            name="pricetag-outline"
                                             size={19}
                                             color="gray"
                                         />
@@ -117,7 +117,7 @@ const settingsList: ISettingsSection[] = [
                             }
                             icon={
                                 <Ionicons
-                                    name="color-palette"
+                                    name="close-circle-outline"
                                     size={19}
                                     color="gray"
                                 />
@@ -142,7 +142,7 @@ const settingsList: ISettingsSection[] = [
                             }
                             icon={
                                 <Ionicons
-                                    name="color-palette"
+                                    name="add-circle-outline"
                                     size={19}
                                     color="gray"
                                 />
