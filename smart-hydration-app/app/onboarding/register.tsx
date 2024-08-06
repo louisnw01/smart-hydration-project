@@ -78,8 +78,8 @@ export default function RegisterPage() {
     return (
         <GenericOnboardContent nextHref="onboarding/name" proceed={proceed}>
             <KeyboardScrollView keyboardVerticalOffset={-60}>
-                <View className="self-center mb-40">
-                    <Logo width={350} height={125} />
+                <View className="self-center mb-8" style={{}}>
+                    <Logo width={330} height={105} />
                 </View>
                 <OnboardingHeader text="Sign Up" />
                 <View className="gap-5 mt-16">

@@ -13,6 +13,7 @@ import StyledTextInput from "@/components/common/text-input";
 import OnboardingHeader from "@/components/onboarding/onboarding-header";
 import { registerForPushNotificationsAsync } from "@/util/notifications";
 import { useRouter } from "expo-router";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import useSettings from "../hooks/user";
 
 export default function LoginPage() {
@@ -34,6 +35,7 @@ export default function LoginPage() {
     } = useAtomValue(loginMAtom);
 
     const { mutate: addPushToken } = useAtomValue(addPushTokenMAtom);
+    const insets = useSafeAreaInsets();
 
     const handleSubmit = () => {
         login({ email, password });
@@ -59,8 +61,8 @@ export default function LoginPage() {
     return (
         <PageWrapper>
             <KeyboardScrollView keyboardVerticalOffset={-170}>
-                <View className="self-center mb-40">
-                    <Logo width={350} height={125} />
+                <View className="self-center mb-8" style={{}}>
+                    <Logo width={330} height={105} />
                 </View>
                 <OnboardingHeader text="Login" />
                 <View className="mx-6 gap-5 mt-16">

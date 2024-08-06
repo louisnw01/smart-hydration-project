@@ -38,8 +38,8 @@ async def fire_last_drank(sys_id):
         jug = Jug.get(system_id=sys_id)
         for juguser in jug.owners:
             if not juguser.last_drank or latest['time'] > juguser.last_drank:
-                juguser.last_drank = latest['time']
-            await tunnel.fire('last_drank', juguser.id, latest['time'])
+                juguser.last_drank = int(latest['time'])
+            # await tunnel.fire('last_drank', juguser.id, latest['time'])
 
 
 async def fire_drank_today(sys_id):
