@@ -19,13 +19,14 @@ import {
 import Loading from "@/components/common/loading";
 import StyledTextInput from "@/components/common/text-input";
 import MemberRow from "@/components/community/member-row";
-import { FilterObject, MemberInfo } from "@/interfaces/community";
+import { FilterObject } from "@/interfaces/community";
 import { SelectList } from "react-native-dropdown-select-list";
 import { selectedSortMethodAtom } from "@/atom/community";
+import { useFocusEffect } from "expo-router";
 
 export default function CommunityPage() {
-    const { isLoading, refetch } = useAtomValue(communityInfoQAtom);
-    const { data, isLoading: patientInfoIsLoading } =
+    const { isLoading, refetch: refetchCommunityInfo } = useAtomValue(communityInfoQAtom);
+    const { data, isLoading: patientInfoIsLoading, refetch: refetchPatientInfo} =
         useAtomValue(patientInfoQAtom);
     const hasCommunity = useAtomValue(userHasCommunityAtom);
     const [refreshing, setRefreshing] = useState(false);
@@ -37,6 +38,15 @@ export default function CommunityPage() {
         sort: "asc",
     });
     const [selected, setSelected] = useAtom(selectedSortMethodAtom);
+
+    //refetch CommunityInfo and PatientInfo when the user navigates to this page
+    useFocusEffect(
+        React.useCallback(() => {
+            refetchCommunityInfo();
+            refetchPatientInfo();
+        }, [refetchCommunityInfo, refetchPatientInfo])
+    );
+
     useEffect(() => {
         if (data === undefined) return;
         //search each word in string from beginning, don't match substrings after beginning, case insensitive
@@ -96,7 +106,8 @@ export default function CommunityPage() {
     };
 
     const handleRefresh = () => {
-        refetch();
+        refetchCommunityInfo();
+        refetchPatientInfo();
         setRefreshing(true);
     };
 
@@ -156,7 +167,7 @@ export default function CommunityPage() {
     } else {
         return (
             <PageWrapper>
-                <View className="flex-row px-4 pt-4 pr ">
+                <View className="flex-row px-4 pt-4 pr mb-4">
                     <Text className="py-3 text-xl font-semibold">
                         Sort by:{" "}
                     </Text>

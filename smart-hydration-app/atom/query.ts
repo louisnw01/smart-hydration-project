@@ -1,5 +1,5 @@
 import { DeviceInfo, ITimeSeries } from "@/interfaces/device";
-import { MemberInfo } from "@/interfaces/community";
+import { MemberInfo, TagInfo } from "@/interfaces/community";
 import { ENDPOINTS, request } from "@/util/fetch";
 import { atom, useAtomValue } from "jotai";
 import {
@@ -563,12 +563,20 @@ export const addTagsPatientMAtom = atomWithMutation((get) => ({
     enabled: !!get(authTokenAtom),
     mutationFn: async () => {
         const member = get(selectedMemberAtom);
+
         const formData: { memberID: number; memberTags: string[] } = {
             memberID: member.id as number,
             memberTags: member.tags as string[],
         };
         console.log("member id:", member.id);
         console.log("member tags:", member.tags);
+        const formData: {memberID: number, memberTags: TagInfo[]} = 
+            {
+                memberID: member.id as number,
+                memberTags: member.tags as TagInfo[],
+            };
+            console.log("member id:", member.id);
+            console.log("member tags:", member.tags);
         const token = get(authTokenAtom);
         const response = await request(ENDPOINTS.ADD_TAGS_PATIENT, {
             method: "post",
