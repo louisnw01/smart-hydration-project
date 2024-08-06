@@ -20,21 +20,21 @@ const settingsList: ISettingsSection[] = [
     {
         title: "Account",
         data: [
-            {
-                name: "Profile",
-                component: (name, isFirst, isLast) => {
-                    return (
-                        <OptionBlock
-                            isLast={isLast}
-                            text={name}
-                            onPress={() => router.navigate("settings/profile")}
-                            icon={
-                                <Feather name="user" size={18} color="gray" />
-                            }
-                        />
-                    );
-                },
-            },
+            // {
+            //     name: "Profile",
+            //     component: (name, isFirst, isLast) => {
+            //         return (
+            //             <OptionBlock
+            //                 isLast={isLast}
+            //                 text={name}
+            //                 onPress={() => router.navigate("settings/profile")}
+            //                 icon={
+            //                     <Feather name="user" size={18} color="gray" />
+            //                 }
+            //             />
+            //         );
+            //     },
+            // },
             {
                 name: "User Mode",
                 component: (name, isFirst, isLast) => {
@@ -59,25 +59,25 @@ const settingsList: ISettingsSection[] = [
     {
         title: "Data",
         data: [
-            {
-                name: "Other Drinks",
-                component: (name, isFirst, isLast) => {
-                    return (
-                        <OptionBlock
-                            isLast={isLast}
-                            text={name}
-                            onPress={() => router.navigate("settings/theme")}
-                            icon={
-                                <MaterialCommunityIcons
-                                    name="cup-water"
-                                    size={19}
-                                    color="gray"
-                                />
-                            }
-                        />
-                    );
-                },
-            },
+            // {
+            //     name: "Other Drinks",
+            //     component: (name, isFirst, isLast) => {
+            //         return (
+            //             <OptionBlock
+            //                 isLast={isLast}
+            //                 text={name}
+            //                 onPress={() => router.navigate("settings/theme")}
+            //                 icon={
+            //                     <MaterialCommunityIcons
+            //                         name="cup-water"
+            //                         size={19}
+            //                         color="gray"
+            //                     />
+            //                 }
+            //             />
+            //         );
+            //     },
+            // },
             {
                 name: "Daily Target",
                 component: (name, isFirst, isLast) => {
