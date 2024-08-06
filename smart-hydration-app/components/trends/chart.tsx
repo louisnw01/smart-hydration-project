@@ -60,7 +60,7 @@ const tickFormatMap: { [key: string]: (t: Date) => string } = {
         ][t.getMonth()],
 };
 
-function formatDateToDayMonth(date) {
+function formatDateToDayMonth(date: Date) {
     const daysSuffixes = ["th", "st", "nd", "rd"];
     const day = date.getUTCDate();
     const suffix =
@@ -106,7 +106,7 @@ export default function TrendsChart() {
             data.length / chartWidthDivisorMap[timeframe]
         ).toFixed(2);
 
-        const newValue = screenWidth * percentageOffset;
+        const newValue = screenWidth * parseFloat(percentageOffset);
 
         scrollViewWidth.value = newValue;
 

@@ -1,10 +1,11 @@
-import { deleteItemAsync, getItem, setItem } from "expo-secure-store";
-import { atom, useAtomValue, WritableAtom } from "jotai";
 import { UserMode } from "@/constants/user";
+import { deleteItemAsync, getItem, setItem } from "expo-secure-store";
+import { atom } from "jotai";
 
+import { ITimeSeries } from "@/interfaces/device";
+import { RegistrationInfo } from "@/interfaces/user";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { atomWithStorage, createJSONStorage } from "jotai/vanilla/utils";
-import { RegistrationInfo } from "@/interfaces/user";
 
 export const registerInfoAtom = atom<Partial<RegistrationInfo>>({});
 
@@ -29,15 +30,19 @@ export const notificationFrequencyAtom = atomWithStorage(
     storage,
 );
 
-export const authTokenAtom = atomWithStorage("auth-token", "", storage);
+export const authTokenAtom = atomWithStorage<string>("auth-token", "", storage);
 
-export const pushTokenAtom = atomWithStorage("push-token", "", storage);
+export const pushTokenAtom = atomWithStorage<string>("push-token", "", storage);
 
-export const userModeAtom = atomWithStorage("user-mode", UserMode.STANDARD , storage);
+export const userModeAtom = atomWithStorage(
+    "user-mode",
+    UserMode.STANDARD,
+    storage,
+);
 
 export const nonSecureStorage = createJSONStorage<any>(() => AsyncStorage);
 
-export const drinkListAtom = atomWithStorage(
+export const drinkListAtom = atomWithStorage<ITimeSeries[]>(
     "drink-list",
     [],
     nonSecureStorage,
@@ -47,32 +52,38 @@ export const emailIsVerifiedAtom = atom(false);
 
 export const inviteCodeAtom = atom("");
 
-export const communityTabVisible = atomWithStorage<boolean>("community-tab-visible", true, nonSecureStorage);
+export const communityTabVisible = atomWithStorage<boolean>(
+    "community-tab-visible",
+    true,
+    nonSecureStorage,
+);
 
 export const unitsAtom = atomWithStorage<string>("units", "ml", storage);
 
-export const dailyTargetAtom = atomWithStorage<number>("daily-target", 2200, nonSecureStorage);
+export const dailyTargetAtom = atomWithStorage<number>(
+    "daily-target",
+    2200,
+    nonSecureStorage,
+);
 
-export const unitConverter = (val:number, unit:string) => {
-    switch(unit){
-        case("ml"):
+export const unitConverter = (val: number, unit: string) => {
+    switch (unit) {
+        case "ml":
             return val;
-        case("oz"):
+        case "oz":
             return val * 0.033814;
         default:
             return val;
     }
-}
+};
 
-export const reverseUnitConverter = (val:number, unit:string) => {
-    switch(unit){
-        case("ml"):
+export const reverseUnitConverter = (val: number, unit: string) => {
+    switch (unit) {
+        case "ml":
             return val;
-        case("oz"):
+        case "oz":
             return val * 29.5735;
         default:
             return val;
     }
-}
-
-
+};

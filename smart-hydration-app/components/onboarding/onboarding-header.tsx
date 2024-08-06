@@ -1,6 +1,6 @@
 import { Text } from "react-native";
 
-export default function OnboardingHeader({ text }) {
+export default function OnboardingHeader({ text }: { text: string }) {
     return (
         <Text className="font-bold text-4xl dark:text-white w-full text-center pb-20">
             {text}

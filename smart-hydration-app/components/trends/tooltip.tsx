@@ -1,11 +1,13 @@
 import SFPro from "@/assets/fonts/SF-Pro-Display-Regular.otf";
 import { unitsAtom } from "@/atom/user";
+import { Timeframe } from "@/interfaces/data";
 import useColorPalette from "@/util/palette";
 import { Line, RoundedRect, Text, useFont } from "@shopify/react-native-skia";
 import { useAtomValue } from "jotai";
 import { useEffect, useState } from "react";
 import { useColorScheme } from "react-native";
-import { useDerivedValue } from "react-native-reanimated";
+import { SharedValue, useDerivedValue } from "react-native-reanimated";
+import { ChartBounds } from "victory-native";
 
 interface ValPosSkia {
     value: any;
@@ -27,6 +29,11 @@ export default function ToolTip({
     isActive: boolean;
     x: ValPosSkia;
     y: ValPosSkia;
+    points: any[];
+    timeframe: Timeframe;
+    scrollPosition: SharedValue<number>;
+    chartBounds: ChartBounds;
+    data: { x: number; y: number }[];
 }) {
     const unit = useAtomValue(unitsAtom);
     const scheme = useColorScheme();
@@ -37,12 +44,13 @@ export default function ToolTip({
     // const data = useAtomValue(formattedDataAtom);
 
     const memoedData = data.toReversed();
-    const [clickedDataIndex, setClickedDataIndex] = useState(null);
+    const [clickedDataIndex, setClickedDataIndex] = useState<number | null>(
+        null,
+    );
 
     const [shown, setShown] = useState(false);
     useEffect(() => {
         if (isActive) setShown(!shown);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isActive]);
 
     useEffect(() => {
@@ -50,8 +58,6 @@ export default function ToolTip({
             points?.findIndex((row) => row.x == x.position.value),
         );
         setShown(true);
-
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [points, timeframe, data]);
 
     useEffect(() => {
@@ -62,7 +68,6 @@ export default function ToolTip({
         if (scrollPosition.value > x.position.value) {
             setShown(false);
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [scrollPosition.value]);
 
     const [width, height] = [200, 80];
@@ -86,7 +91,8 @@ export default function ToolTip({
     }, [scrollPosition, x.position.value]);
 
     const textXPos = useDerivedValue(() => xPos.value + 20, [xPos]);
-    if (!shown || !memoedData || !y.value.value) return null;
+    if (!shown || !memoedData || !y.value.value || clickedDataIndex === null)
+        return null;
 
     if (
         memoedData[clickedDataIndex] == null ||
@@ -95,7 +101,6 @@ export default function ToolTip({
         return null;
 
     const realTime = new Date(memoedData[clickedDataIndex].x);
-    
 
     return (
         <>

@@ -1,12 +1,8 @@
-import {
-    communityInfoQAtom,
-    communityUsersQAtom,
-    deleteCommunityMemberMAtom,
-} from "@/atom/query/community";
+import { communityUsersQAtom, deleteCommunityMemberMAtom } from "@/atom/query";
 import StyledButton from "@/components/common/button";
 import Loading from "@/components/common/loading";
 import { useAtomValue } from "jotai";
-import React, { useEffect, useState } from "react";
+import React, { ReactNode, useEffect, useState } from "react";
 import { FlatList, Modal, Text, TouchableOpacity, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -106,7 +102,13 @@ export default function MemberList() {
     );
 }
 
-function BottomSheet({ children, isVisible }) {
+function BottomSheet({
+    children,
+    isVisible,
+}: {
+    children: ReactNode;
+    isVisible: boolean;
+}) {
     const insets = useSafeAreaInsets();
 
     return (

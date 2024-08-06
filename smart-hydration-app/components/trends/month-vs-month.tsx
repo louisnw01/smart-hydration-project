@@ -1,13 +1,13 @@
 import { getMonthName } from "@/util/time";
 
-import { useAtomValue } from "jotai";
-import InsightsPane from "./insights-pane";
-import WaterAmount from "../common/water-amount";
-import { View, Text } from "react-native";
 import {
     avgAmountDrankLastMonthAtom,
     avgAmountDrankThisMonthAtom,
 } from "@/atom/hydration";
+import { useAtomValue } from "jotai";
+import { Text, View } from "react-native";
+import WaterAmount from "../common/water-amount";
+import InsightsPane from "./insights-pane";
 
 export default function MonthVsLastMonthInsight() {
     const avgAmountThisMonth = useAtomValue(avgAmountDrankThisMonthAtom);
@@ -34,7 +34,7 @@ export default function MonthVsLastMonthInsight() {
                         text={thisMonthName}
                         value={
                             moreThisMonth
-                                ? "100"
+                                ? 100
                                 : (avgAmountThisMonth / avgAmountLastMonth) *
                                   100
                         }
@@ -46,7 +46,7 @@ export default function MonthVsLastMonthInsight() {
                         text={lastMonthName}
                         value={
                             !moreThisMonth
-                                ? "100"
+                                ? 100
                                 : (avgAmountLastMonth / avgAmountThisMonth) *
                                   100
                         }
@@ -57,7 +57,7 @@ export default function MonthVsLastMonthInsight() {
     );
 }
 
-function ValueBar({ text, value }) {
+function ValueBar({ text, value }: { text: string; value: number }) {
     return (
         <View
             className="bg-blue rounded-md px-2 py-1"

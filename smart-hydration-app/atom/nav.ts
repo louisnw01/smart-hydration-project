@@ -1,4 +1,4 @@
+import { Timeframe } from "@/interfaces/data";
 import { atom } from "jotai";
 
-export const selectedPageAtom = atom<string>("home");
-export const chartTimeWindowAtom = atom<"D" | "W" | "M" | "Y">("W");
+export const chartTimeWindowAtom = atom<Timeframe>(Timeframe.W);

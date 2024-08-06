@@ -2,10 +2,10 @@ import { useAtomValue } from "jotai";
 
 import { colorSchemeEAtom } from "@/atom/effect/user";
 import Loading from "@/components/common/loading";
+import useSession from "@/util/auth";
 import { tunnelInitEAtom } from "@/util/tunnel";
 import { Redirect, Stack } from "expo-router";
 import { View } from "react-native";
-import useSession from "@/util/auth";
 
 export default function MainLayout() {
     useAtomValue(colorSchemeEAtom);
@@ -14,9 +14,11 @@ export default function MainLayout() {
     const { isLoading, isSuccess, isEmailVerified } = useSession();
 
     if (isLoading) {
-        <View className="flex flex-1 justify-center">
-            <Loading isLoading large message="" />
-        </View>;
+        return (
+            <View className="flex flex-1 justify-center">
+                <Loading isLoading large message="" />
+            </View>
+        );
     } else if (!isEmailVerified) {
         return <Redirect href="onboarding/email-verification" />;
     } else if (!isSuccess) {

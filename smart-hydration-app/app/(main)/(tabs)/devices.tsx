@@ -1,9 +1,10 @@
 import { selectedJugIdAtom } from "@/atom/device";
-import { getJugDataQAtom } from "@/atom/query";
 import {
     getCommunityJugDataQAtom,
+    getJugDataQAtom,
     userHasCommunityAtom,
-} from "@/atom/query/community";
+} from "@/atom/query";
+
 import PageWrapper from "@/components/common/page-wrapper";
 import DeviceSection from "@/components/devices/device-section";
 import { router } from "expo-router";

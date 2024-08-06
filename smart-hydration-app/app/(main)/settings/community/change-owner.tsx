@@ -1,7 +1,6 @@
-import { View, Pressable, Text} from "react-native";
-import { useRouter } from "expo-router";
 import { SelectInputBox } from "@/components/onboarding/select-input-box";
 import { useEffect, useState } from "react";
+import { Pressable, Text, View } from "react-native";
 
 export interface ChangeOwnerProps {
   community_id: string;
@@ -32,7 +31,6 @@ export default function ChangeOwner({ community_id }: ChangeOwnerProps) {
     const handleOnSubmit = () => {
       //TODO: call api to store the new owner
     }
-    const router = useRouter();
     return (
         <View className="flex flex-1 gap-8 mx-16 items-center mt-10">
             <View className="items-center gap-4 mt-20">

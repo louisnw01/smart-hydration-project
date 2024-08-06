@@ -1,13 +1,13 @@
-import { formattedMemberDataAtom, selectedMemberAtom } from "@/atom/community";
+import { selectedMemberAtom } from "@/atom/community";
 import { MemberInfo } from "@/interfaces/community";
+import { useFormattedMemberData } from "@/util/community";
 import useColorPalette from "@/util/palette";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
-import { useAtomValue, useSetAtom } from "jotai";
+import { useSetAtom } from "jotai";
 import { Pressable, Text, View } from "react-native";
 import StyledButton from "../common/button";
 import Tag from "./tag";
-import { processMemberData, useFormattedMemberData } from "@/util/community";
 
 function getOrdinalSuffix(day) {
     if (day > 3 && day < 21) return "th";
@@ -30,8 +30,9 @@ export default function MemberRow({ member }: { member: MemberInfo }) {
 
     return (
         <View>
+            <View className="w-full h-[1px] bg-gray-200" />
             <Pressable
-                className="mx-6 bg-gray-100 px-5 py-5 flex flex-row gap-4 rounded-xl dark:bg-neutral-900"
+                className="px-5 py-8 flex flex-row gap-4 rounded-xl dark:bg-neutral-900"
                 onPress={() => {
                     setMember(member);
                     router.push("member-info-modal");
@@ -46,12 +47,10 @@ export default function MemberRow({ member }: { member: MemberInfo }) {
                         <MemberDetail
                             title="Last Drank"
                             value={memberData.lastDrank}
-                            unit="hours ago"
                         />
                         <MemberDetail
                             title="Amount Drank"
-                            value={memberData.amountDrank}
-                            unit="ml"
+                            value={memberData.amountDrank || undefined}
                         />
                     </View>
                     <View className="flex-row flex-wrap">
@@ -84,7 +83,13 @@ export default function MemberRow({ member }: { member: MemberInfo }) {
     );
 }
 
-function MemberDetail({ title, value }) {
+function MemberDetail({
+    title,
+    value,
+}: {
+    title: string;
+    value?: number | string | undefined;
+}) {
     return (
         <View className="border border-gray-200 dark:border-neutral-700 rounded-lg px-2 py-2">
             <Text className="font-semibold dark:text-white">{title}</Text>

@@ -1,4 +1,4 @@
-import { communityNameAtom } from "@/atom/query/community";
+import { communityNameAtom } from "@/atom/query";
 import useColorPalette from "@/util/palette";
 import { useAtomValue } from "jotai";
 import { Text } from "react-native";

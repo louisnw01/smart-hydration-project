@@ -1,15 +1,10 @@
-import { View, Text } from "react-native";
-import AddDrinkPane, {DrinkButton} from "@/components/home/add-drink";
-
-
-function addNewDrink(drinkType: string) {
-    return
-}
+import AddDrinkPane from "@/components/home/add-drink";
+import { View } from "react-native";
 
 export default function AddDrinkModal() {
     return (
         <View className="top-10">
             <AddDrinkPane />
         </View>
-    )
+    );
 }

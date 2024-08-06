@@ -14,7 +14,9 @@ export default function SubmitPage() {
     const router = useRouter();
     const setAuthToken = useSetAtom(authTokenAtom);
     const clearRegisterInfo = useSetAtom(registerInfoAtom);
-    const {mutate: sendVerificationEmail} = useAtomValue(sendVerificationEmailMAtom)
+    const { mutate: sendVerificationEmail } = useAtomValue(
+        sendVerificationEmailMAtom,
+    );
     const setInfo = useSetAtom(registerInfoAtom);
     const userMode = useAtomValue(userModeAtom);
     const {
@@ -30,12 +32,12 @@ export default function SubmitPage() {
         setAuthToken(data);
         clearRegisterInfo({});
         sendVerificationEmail();
-        isCarer ? router.replace("(tabs)/community") : router.replace("(tabs)");
+        router.replace(isCarer ? "(tabs)/community" : "(tabs)");
     }, [isSuccess, data]);
 
     return (
         <GenericOnboardContent proceed={true}>
-            <View className="py-4"/>
+            <View className="py-4" />
             <OnboardingHeader text="You're almost there!" />
             <Text className="text-xl font-light text-center">
                 Tap the button to set up your Smart Hydration profile.

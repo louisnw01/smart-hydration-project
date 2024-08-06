@@ -1,10 +1,10 @@
 import { Text, TextInput, View } from "react-native";
 
-import { loginMAtom } from "@/atom/query";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { useEffect, useRef, useState } from "react";
 
-import { addPushTokenMAtom } from "@/atom/query";
+import Logo from "@/assets/svgs/SH_logo.svg";
+import { addPushTokenMAtom, loginMAtom } from "@/atom/query";
 import { authTokenAtom, pushTokenAtom } from "@/atom/user";
 import StyledButton from "@/components/common/button";
 import KeyboardScrollView from "@/components/common/keyboard-scrollview";
@@ -13,8 +13,8 @@ import StyledTextInput from "@/components/common/text-input";
 import OnboardingHeader from "@/components/onboarding/onboarding-header";
 import { registerForPushNotificationsAsync } from "@/util/notifications";
 import { useRouter } from "expo-router";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import useSettings from "../hooks/user";
-import Logo from "@/assets/svgs/SH_logo.svg";
 
 export default function LoginPage() {
     const router = useRouter();
@@ -35,6 +35,7 @@ export default function LoginPage() {
     } = useAtomValue(loginMAtom);
 
     const { mutate: addPushToken } = useAtomValue(addPushTokenMAtom);
+    const insets = useSafeAreaInsets();
 
     const handleSubmit = () => {
         login({ email, password });
@@ -44,24 +45,24 @@ export default function LoginPage() {
         if (!isSuccess && !data) return;
         setAuthToken(data);
         if (storedPushToken) {
-            addPushToken({ pushToken: storedPushToken as string });
+            addPushToken({ pushToken: storedPushToken });
         } else {
             registerForPushNotificationsAsync()
-            .then(pushToken => {
-                addPushToken({pushToken});
-                setStoredPushToken(pushToken ?? "");
-            }
-            )   
-            .catch((error: any) => console.error(error));
-            }
-            isCarer ? router.replace("(tabs)/community") : router.replace("(tabs)");
-        },[isSuccess, data])
+                .then((pushToken) => {
+                    if (!pushToken) return;
+                    addPushToken({ pushToken });
+                    setStoredPushToken(pushToken);
+                })
+                .catch((error: any) => console.error(error));
+        }
+        router.replace(isCarer ? "(tabs)/community" : "(tabs)");
+    }, [isSuccess, data]);
 
     return (
         <PageWrapper>
             <KeyboardScrollView keyboardVerticalOffset={-170}>
-                <View className="self-center mb-40">
-                    <Logo width={350} height={125}/>
+                <View className="self-center mb-8" style={{}}>
+                    <Logo width={330} height={105} />
                 </View>
                 <OnboardingHeader text="Login" />
                 <View className="mx-6 gap-5 mt-16">

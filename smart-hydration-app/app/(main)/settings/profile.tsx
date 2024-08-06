@@ -1,13 +1,12 @@
-import { authTokenAtom, colorSchemeAtom } from "@/atom/user";
+import { deleteUserMAtom } from "@/atom/query";
 import { OptionBlock } from "@/components/common/option-block";
+import { ISettingsSection } from "@/interfaces/settings";
+import { Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import { useAtomValue, useSetAtom } from "jotai";
-import { ReactElement, ReactNode, useEffect } from "react";
+import { useAtomValue } from "jotai";
+import { useEffect } from "react";
 import { Pressable, SectionList, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { Feather, MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
-import { ISettingsSection } from "@/interfaces/settings";
-import { deleteUser } from "@/atom/query";
 
 const settingsList: ISettingsSection[] = [
     {
@@ -15,8 +14,7 @@ const settingsList: ISettingsSection[] = [
         data: [
             {
                 name: "Change email",
-                component: (name, isFirst, isLast) => {
-                    const router = useRouter();
+                Component: (name, isFirst, isLast) => {
                     return (
                         <OptionBlock
                             isLast={isLast}
@@ -32,8 +30,7 @@ const settingsList: ISettingsSection[] = [
             },
             {
                 name: "Change password",
-                component: (name, isFirst, isLast) => {
-                    const router = useRouter();
+                Component: (name, isFirst, isLast) => {
                     return (
                         <OptionBlock
                             isLast={isLast}
@@ -53,23 +50,26 @@ const settingsList: ISettingsSection[] = [
 
 export default function SettingsModal() {
     const insets = useSafeAreaInsets();
-    const setAuthAtom = useSetAtom(authTokenAtom);
     const router = useRouter();
-    const { mutate: submitDeleteUser, isPending, isSuccess, isError } = useAtomValue(deleteUser);
+    const {
+        mutate: submitDeleteUser,
+        isPending,
+        isSuccess,
+        isError,
+    } = useAtomValue(deleteUserMAtom);
 
     useEffect(() => {
-      if (isSuccess) {
-        router.replace("onboarding/login-register");
-      }
+        if (isSuccess) {
+            router.replace("onboarding/login-register");
+        }
     }, [isSuccess]);
 
     useEffect(() => {
-      if (isError) {
-        //router.navigate("settings/theme");
-       console.error('error')
-      }
+        if (isError) {
+            //router.navigate("settings/theme");
+            console.error("error");
+        }
     }, [isError]);
-
 
     return (
         <View
@@ -81,8 +81,8 @@ export default function SettingsModal() {
             <SectionList
                 sections={settingsList}
                 renderItem={({ item, index, section }) =>
-                    item.component(
-                        item.name,
+                    item.Component(
+                        item.name || "",
                         index == 0,
                         index == section.data.length - 1,
                     )
@@ -112,7 +112,9 @@ export default function SettingsModal() {
                         submitDeleteUser();
                     }}
                 >
-                    <Text className="text-xl mt-1 text-white">{isPending ? 'Deleting account...' : 'Delete Account'}</Text>
+                    <Text className="text-xl mt-1 text-white">
+                        {isPending ? "Deleting account..." : "Delete Account"}
+                    </Text>
                 </Pressable>
             </View>
         </View>

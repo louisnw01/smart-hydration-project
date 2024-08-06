@@ -1,22 +1,22 @@
-import {
-    View,
-    Text,
-    Pressable,
-    FlatList,
-    ActivityIndicator,
-} from "react-native";
-import { useAtom } from "jotai";
+import SodaCan from "@/assets/svgs/soda-can-svgrepo-com.svg";
+import { addDrinkMAtom } from "@/atom/query";
 import { drinkListAtom } from "@/atom/user";
-import { useAtomValue } from "jotai/index";
-import { addDrinkMAtom, updateJugNameMAtom } from "@/atom/query";
-import { selectedDeviceAtom } from "@/atom/device";
-import { ReactNode, useEffect, useState } from "react";
-import { useRouter } from "expo-router";
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import { ITimeSeries } from "@/interfaces/device";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
-import SodaCan from "@/assets/svgs/soda-can-svgrepo-com.svg";
+import { useRouter } from "expo-router";
+import { useAtom } from "jotai";
+import { useAtomValue } from "jotai/index";
+import { ReactNode, useEffect } from "react";
+import {
+    ActivityIndicator,
+    FlatList,
+    Pressable,
+    Text,
+    View,
+} from "react-native";
 
 interface DrinkType {
     name: string;
@@ -98,10 +98,11 @@ const drinkTypes: DrinkType[] = [
     },
 ];
 
-function constructDrinkEvent(drinkName) {
+function constructDrinkEvent(drinkName: string) {
     const drinkType = drinkTypes.find((drink) => drink.name === drinkName);
+    if (!drinkType) return;
     const returnValue = {
-        timestamp: (new Date().getTime() / 1000).toFixed(0),
+        time: Math.round(new Date().getTime() / 1000),
         value: drinkType.capacity,
     };
     return returnValue;
@@ -110,13 +111,13 @@ function constructDrinkEvent(drinkName) {
 // TODO define the object before pushing to prod
 function DrinkButton({ drinkType }: { drinkType: DrinkType }) {
     const [drinkList, setDrinkList] = useAtom(drinkListAtom);
-    const { mutate, isSuccess, isPending } = useAtomValue(addDrinkMAtom);
+    const { mutate } = useAtomValue(addDrinkMAtom);
     const router = useRouter();
 
-    function postDrinkToDB(drinkJSON, drinkName: string) {
+    function postDrinkToDB(drinkJSON: ITimeSeries, drinkName: string) {
         if (!drinkJSON) return;
         mutate({
-            timestamp: drinkJSON.timestamp,
+            timestamp: drinkJSON.time,
             name: drinkName,
             capacity: drinkJSON.value,
         });
@@ -128,6 +129,7 @@ function DrinkButton({ drinkType }: { drinkType: DrinkType }) {
             return;
         }
         const drinkJSON = constructDrinkEvent(drinkType.name);
+        if (!drinkJSON) return;
         drinkList.push(drinkJSON);
         postDrinkToDB(drinkJSON, drinkType.name);
         setDrinkList(drinkList);

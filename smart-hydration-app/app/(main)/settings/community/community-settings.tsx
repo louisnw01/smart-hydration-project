@@ -3,13 +3,13 @@ import {
     communityInfoQAtom,
     deleteCommunityMAtom,
     leaveCommunityMAtom,
-} from "@/atom/query/community";
+} from "@/atom/query";
 import { communityTabVisible } from "@/atom/user";
 import StyledButton from "@/components/common/button";
-import { OptionBlock, SettingsSwitch } from "@/components/common/option-block";
+import { OptionBlock } from "@/components/common/option-block";
 import { ISettingsSection } from "@/interfaces/settings";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
-import { router, useRouter } from "expo-router";
+import { router } from "expo-router";
 import { useAtomValue } from "jotai";
 import { useEffect } from "react";
 import { SectionList, Text, View } from "react-native";
@@ -20,8 +20,7 @@ const settingsList: ISettingsSection[] = [
         data: [
             {
                 name: "Change community Name",
-                component: (name, isFirst, isLast) => {
-                    const router = useRouter();
+                Component: (name, isFirst, isLast) => {
                     return (
                         <OptionBlock
                             text={name}
@@ -45,7 +44,7 @@ const settingsList: ISettingsSection[] = [
             },
             // {
             //     name: "Transfer Ownership",
-            //     component: (name, isFirst, isLast) => {
+            //     Component: (name, isFirst, isLast) => {
             //         const router = useRouter();
             //         return (
             //             <OptionBlock
@@ -70,18 +69,19 @@ const settingsList: ISettingsSection[] = [
             // },
             {
                 name: "Edit community tags",
-                component: (name, isFirst, isLast) => {
+                Component: (name, isFirst, isLast) => {
                     const { data } = useAtomValue(communityInfoQAtom);
-                    const router = useRouter();
                     return (
                         <>
-                            {data?.is_owner && (
+                            {data?.isOwner && (
                                 <OptionBlock
                                     isLast={isLast}
                                     isFirst={isFirst}
                                     text={name}
                                     onPress={() =>
-                                        router.navigate("settings/community/edit-tags")
+                                        router.navigate(
+                                            "settings/community/edit-tags",
+                                        )
                                     }
                                     icon={
                                         <Ionicons
@@ -90,7 +90,8 @@ const settingsList: ISettingsSection[] = [
                                             color="gray"
                                         />
                                     }
-                                />)}
+                                />
+                            )}
                         </>
                     );
                 },
@@ -102,35 +103,35 @@ const settingsList: ISettingsSection[] = [
         data: [
             {
                 name: "Remove Member",
-                component: (name, isFirst, isLast) => {
+                Component: (name, isFirst, isLast) => {
                     const { data } = useAtomValue(communityInfoQAtom);
                     return (
                         <>
-                        {data?.is_owner && (
-                        <OptionBlock
-                            isLast={isLast}
-                            text={name}
-                            onPress={() =>
-                                router.navigate(
-                                    "settings/community/remove-member",
-                                )
-                            }
-                            icon={
-                                <Ionicons
-                                    name="close-circle-outline"
-                                    size={19}
-                                    color="gray"
+                            {data?.isOwner && (
+                                <OptionBlock
+                                    isLast={isLast}
+                                    text={name}
+                                    onPress={() =>
+                                        router.navigate(
+                                            "settings/community/remove-member",
+                                        )
+                                    }
+                                    icon={
+                                        <Ionicons
+                                            name="close-circle-outline"
+                                            size={19}
+                                            color="gray"
+                                        />
+                                    }
                                 />
-                            }
-                        />)}
+                            )}
                         </>
                     );
                 },
             },
             {
                 name: "Invite Member",
-                component: (name, isFirst, isLast) => {
-                    const router = useRouter();
+                Component: (name, isFirst, isLast) => {
                     return (
                         <OptionBlock
                             isLast={isLast}
@@ -154,26 +155,27 @@ const settingsList: ISettingsSection[] = [
         ],
     },
     {
-        title:"",
+        title: "",
         data: [
             {
                 name: "Hide Community Tab",
-                component: (name, isFirst, isLast) => {
+                Component: (name, isFirst, isLast) => {
                     const { isCarer } = useSettings();
                     return (
                         <>
-                        {!isCarer && (
-                        <SettingsSwitch 
-                            atom={communityTabVisible}
-                            label="Show Community Tab"
-                            icon={
-                                <Ionicons
-                                    name="eye-outline"
-                                    size={19}
-                                    color="gray"
+                            {!isCarer && (
+                                <OptionBlock
+                                    atom={communityTabVisible}
+                                    text="Show Community Tab"
+                                    icon={
+                                        <Ionicons
+                                            name="eye-outline"
+                                            size={19}
+                                            color="gray"
+                                        />
+                                    }
                                 />
-                            }
-                        />)}
+                            )}
                         </>
                     );
                 },
@@ -183,17 +185,15 @@ const settingsList: ISettingsSection[] = [
     {
         data: [
             {
-                component: () => {
+                Component: () => {
                     const { data } = useAtomValue(communityInfoQAtom);
                     const {
                         mutate: deleteCommunity,
                         isSuccess: deleteSuccess,
                     } = useAtomValue(deleteCommunityMAtom);
 
-                    const {
-                        mutate: leaveCommunity,
-                        isSuccess: leaveSuccess,
-                    } = useAtomValue(leaveCommunityMAtom);
+                    const { mutate: leaveCommunity, isSuccess: leaveSuccess } =
+                        useAtomValue(leaveCommunityMAtom);
 
                     useEffect(() => {
                         if (!deleteSuccess) return;
@@ -205,7 +205,7 @@ const settingsList: ISettingsSection[] = [
                         router.back();
                     }, [leaveSuccess]);
 
-                    const isOwner = data?.is_owner;
+                    const isOwner = data?.isOwner;
                     return (
                         <View className="">
                             <View className="w-full h-[1px] bg-gray-300 dark:bg-neutral-800 mb-4 mt-16" />
@@ -239,8 +239,8 @@ export default function CommunityProfile() {
             <SectionList
                 sections={settingsList}
                 renderItem={({ item, index, section }) =>
-                    item.component(
-                        item.name,
+                    item.Component(
+                        item.name || "",
                         index == 0,
                         index == section.data.length - 1,
                     )

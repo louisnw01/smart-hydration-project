@@ -1,11 +1,6 @@
-import colors from "@/colors";
-
-import { ReactNode } from "react";
-import { View, Text, Pressable } from "react-native";
-import { useAtomValue, useSetAtom } from "jotai";
-import { useRouter } from "expo-router";
-import Tag from "./tag";
 import { TagInfo } from "@/interfaces/community";
+import { View } from "react-native";
+import Tag from "./tag";
 
 //To do: pass props to checkbox to manage state of checkbox, and associate this state in this component with appropriate tag
 
@@ -16,6 +11,3 @@ export default function ApplyTagSection({ tag }: { tag: TagInfo }) {
         </View>
     );
 }
-
-
-

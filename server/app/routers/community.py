@@ -29,11 +29,11 @@ async def community_info(user_id: str = Depends(auth_user)):
 
         community = member.community
 
-        return {"name": community.name, "is_owner": member.is_owner}
+        return {"name": community.name, "isOwner": member.is_owner}
 
 
 @router.get("/name-from-link")
-async def community_info(code: str, user_id: str = Depends(auth_user)):
+async def name_from_link(code: str, user_id: str = Depends(auth_user)):
     with db_session:
         link = InviteLink.get(id=code)
 
@@ -58,16 +58,16 @@ async def patient_info(user_id: str = Depends(auth_user)):
         # get targets for users
         patient_info = []
         for juguser in community.jug_users:
-            patient_info.append({
-                "id": juguser.id,
-                "name": juguser.name,
-                "jugs": [{"name": jug.name, "id": jug.smart_hydration_id} for jug in juguser.jugs],
-                "target": juguser.target or 2200,
-                "drank_today": juguser.drank_today,
-                "last_drank": juguser.last_drank,
-                "tags": [{"id": tag.id, "name": tag.name} for tag in juguser.tags]
+            if juguser.user is not user:
+                patient_info.append({
+                    "id": juguser.id,
+                    "name": juguser.name,
+                    "jugs": [{"name": jug.name, "id": jug.smart_hydration_id} for jug in juguser.jugs],
+                    "lastDrank": juguser.last_drank,
+                    "drankToday": juguser.drank_today,
+                    "dailyTarget": juguser.target or 2200,
+                    "tags": [{"id": tag.id, "name": tag.name} for tag in juguser.tags]
             })
-
         return patient_info
 
 
@@ -79,7 +79,7 @@ async def community_users(user_id: str = Depends(auth_user)):
         for member in community.followers:
             data.append({
                 "name": member.user.name,
-                "owner": member.is_owner,
+                "isOwner": member.is_owner,
                 "id": member.id,
             })
 
@@ -147,7 +147,7 @@ async def delete_community_member(form: DeleteCommunityMemberForm, user_id: str 
 
 
 @router.post("/leave")
-async def delete_community_member(user_id: str = Depends(auth_user)):
+async def leave_community(user_id: str = Depends(auth_user)):
     with db_session:
         user = User.get(id=user_id)
 

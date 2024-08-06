@@ -2,7 +2,7 @@ import useColorPalette from "@/util/palette";
 import { Entypo } from "@expo/vector-icons";
 import { router, Stack } from "expo-router";
 import React from "react";
-import { Pressable } from "react-native";
+import { Platform, Pressable } from "react-native";
 
 export default function AddJugUserLayout() {
     const palette = useColorPalette();
@@ -29,7 +29,11 @@ export default function AddJugUserLayout() {
                         return (
                             <Pressable onPress={() => router.back()}>
                                 <Entypo
-                                    name="chevron-left"
+                                    name={
+                                        Platform.OS == "android"
+                                            ? "chevron-left"
+                                            : "circle-with-cross"
+                                    }
                                     size={24}
                                     color="rgb(80, 80, 80)"
                                 />
