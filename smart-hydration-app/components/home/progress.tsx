@@ -15,6 +15,7 @@ import Svg, { Circle, G } from "react-native-svg";
 import WaterAmount from "../common/water-amount";
 
 import { userHasCommunityAtom } from "@/atom/query/community";
+import { unitsAtom, unitConverter, dailyTargetAtom } from "@/atom/user";
 
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
@@ -94,7 +95,6 @@ export function ProgressWheel({
 export default function HydrationProgress() {
     const palette = useColorPalette();
     const amountDrankToday = useAtomValue(amountDrankTodayAtom);
-    const { data } = useAtomValue(userInfoQAtom);
 
     const animatedProgress = useSharedValue(0);
 
@@ -103,10 +103,9 @@ export default function HydrationProgress() {
         text: text.value,
     }));
 
-    const target = data?.target || 2200;
+    const unit = useAtomValue(unitsAtom);
+    const target = unitConverter(useAtomValue(dailyTargetAtom), unit);
   
-    if (!data) return null;
-
     return (
         <ProgressWheel
             radius={130}
@@ -128,7 +127,7 @@ export default function HydrationProgress() {
                     />
 
                     <Text className="dark:text-white text-4xl font-semibold self-end pb-2">
-                        ml
+                        {unit}
                     </Text>
                 </View>
                 <View className="flex-row justify-center gap-1 ml-1">

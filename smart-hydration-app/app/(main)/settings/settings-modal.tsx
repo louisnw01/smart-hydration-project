@@ -90,7 +90,28 @@ const settingsList: ISettingsSection[] = [
                             }
                             icon={
                                 <MaterialCommunityIcons
-                                    name="cup-water"
+                                    name="target"
+                                    size={19}
+                                    color="gray"
+                                />
+                            }
+                        />
+                    );
+                },
+            },
+            {
+                name: "Units",
+                component: (name, isFirst, isLast) => {
+                    return (
+                        <OptionBlock
+                            isLast={isLast}
+                            text={name}
+                            onPress={() =>
+                                router.navigate("settings/adjust-units")
+                            }
+                            icon={
+                                <MaterialCommunityIcons
+                                    name="scale"
                                     size={19}
                                     color="gray"
                                 />
@@ -141,8 +162,8 @@ const settingsList: ISettingsSection[] = [
                                 )
                             }
                             icon={
-                                <Ionicons
-                                    name="color-palette"
+                                <MaterialCommunityIcons
+                                    name="account-group-outline"
                                     size={19}
                                     color="gray"
                                 />

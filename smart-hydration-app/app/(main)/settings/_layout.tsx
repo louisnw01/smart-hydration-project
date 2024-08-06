@@ -103,6 +103,40 @@ export default function SettingsLayout() {
                 }}
             />
             <Stack.Screen
+                name="adjust-target"
+                options={{
+                    title: "Adjust Daily Target",
+                    headerLeft: () => {
+                        return (
+                            <Pressable onPress={() => router.back()}>
+                                <Entypo
+                                    name="chevron-left"
+                                    size={24}
+                                    color="rgb(80, 80, 80)"
+                                />
+                            </Pressable>
+                        );
+                    },
+                }}
+            />
+            <Stack.Screen
+                name="adjust-units"
+                options={{
+                    title: "Adjust Units",
+                    headerLeft: () => {
+                        return (
+                            <Pressable onPress={() => router.back()}>
+                                <Entypo
+                                    name="chevron-left"
+                                    size={24}
+                                    color="rgb(80, 80, 80)"
+                                />
+                            </Pressable>
+                        );
+                    },
+                }}
+            />
+            <Stack.Screen
                 name="community/invite-member"
                 options={{
                     title: "Invite a Member",
