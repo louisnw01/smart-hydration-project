@@ -1,9 +1,8 @@
+import { unitsAtom } from "@/atom/user";
 import { MultiSelectOptionBlock } from "@/components/common/option-block";
 import { ISettingsSection } from "@/interfaces/settings";
-import { SectionList, View, Text } from "react-native";
+import { SectionList, Text, View } from "react-native";
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useAtomValue } from "jotai";
-import { unitsAtom } from "@/atom/user";
 
 
 const settingsList: ISettingsSection[] = [
@@ -12,26 +11,26 @@ const settingsList: ISettingsSection[] = [
         data: [
             {
                 name: "ml",
-                component: (name) => {
+                Component: (name) => {
                     return (
                         <MultiSelectOptionBlock
                             text={name}
                             atom={unitsAtom}
-                            multiSelect={false}                      
+                            multiSelect={false}
                         />
                     );
                 },
             },
             {
                 name: "oz",
-                component: (name, isFirst, isLast) => {
+                Component: (name, isFirst, isLast) => {
                     return (
                         <MultiSelectOptionBlock
                             text={name}
                             atom={unitsAtom}
                             isFirst={isFirst}
-                            isLast={isLast} 
-                            multiSelect={false}                        
+                            isLast={isLast}
+                            multiSelect={false}
                         />
                     );
                 },
@@ -52,13 +51,13 @@ export default function Units() {
             <SectionList
                 sections={settingsList}
                 renderItem={({ item, index, section }) =>
-                    item.component(
+                    item.Component(
                         item.name ?? "",
                         index == 0,
                         index == section.data.length - 1,
                     )
                 }
-                renderSectionHeader={({ section }) => 
+                renderSectionHeader={({ section }) =>
                     <View className="bg-gray-100 dark:bg-neutral-900 py-4 px-4 rounded-t-xl mt-6">
                         <Text className="font-bold dark:text-white">
                             {section.title}

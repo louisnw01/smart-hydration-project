@@ -37,7 +37,7 @@ def test_notification_endpoints():
         assert notification
         assert notification.active
         assert notification.send_time is not None
-        assert notification.frequency == 60 * 60 * 24
+        assert notification.frequency == 60 * 60
 
     with db_session:
         response = client.post('user/toggle-notifications', json={'notificationSelection': 'Off', 'pushToken': ''})
@@ -55,12 +55,10 @@ def test_notification_endpoints():
         response = client.post('user/toggle-notifications-frequency', json={'notificationSelection': '3 hours', 'pushToken': token})
         notification = Notifications.get(expo_token=token, user=USER_ID)
         assert response.status_code == 200
-        assert notification.frequency == 60 * 60 * 24 * 3
+        assert notification.frequency == 60 * 60 * 3
 
     response = client.post('user/remove-push-token', json={'pushToken': token})
     assert response.status_code == 200
 
     with db_session:
         assert Notifications.get(expo_token=token, user=USER_ID) is None
-
-

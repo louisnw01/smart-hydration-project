@@ -1,6 +1,6 @@
 import useSettings from "@/app/hooks/user";
 import SHDrop from "@/assets/svgs/SH_Drop.svg";
-import { userHasCommunityAtom } from "@/atom/query/community";
+import { userHasCommunityAtom } from "@/atom/query";
 import { communityTabVisible } from "@/atom/user";
 import PageHeader from "@/components/common/header";
 import useColorPalette from "@/util/palette";
