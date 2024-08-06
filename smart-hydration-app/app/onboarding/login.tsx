@@ -88,7 +88,7 @@ export default function LoginPage() {
                     />
                     {isPending && <Text>Logging in..</Text>}
                     {isError && (
-                        <Text>
+                        <Text className="text-red">
                             Incorrect username or password. Please try again
                         </Text>
                     )}
