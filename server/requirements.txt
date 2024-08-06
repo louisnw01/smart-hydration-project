@@ -1,9 +1,8 @@
 requests
 python-dotenv
-fastapi
+fastapi[standard]
 psycopg2-binary
 pony
 pyjwt
 pytest
 asyncpusher
-httpx
