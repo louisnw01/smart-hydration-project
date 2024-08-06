@@ -34,30 +34,30 @@ const settingsList: ISettingsSection[] = [
                     );
                 },
             },
-            {
-                name: "Accessible",
-                Component: (name, isFirst, isLast) => {
-                    const { mutate } = useAtomValue(changeUserModeMAtom);
-                    return (
-                        <MultiSelectOptionBlock
-                            text={name}
-                            atom={userModeAtom}
-                            icon={
-                                <FontAwesome6
-                                    name="universal-access"
-                                    size={18}
-                                    color="gray"
-                                />
-                            }
-                            isFirst={isFirst}
-                            isLast={isLast}
-                            onPress={() => {
-                                !!authTokenAtom && mutate();
-                            }}
-                        />
-                    );
-                },
-            },
+            // {
+            //     name: "Accessible",
+            //     Component: (name, isFirst, isLast) => {
+            //         const { mutate } = useAtomValue(changeUserModeMAtom);
+            //         return (
+            //             <MultiSelectOptionBlock
+            //                 text={name}
+            //                 atom={userModeAtom}
+            //                 icon={
+            //                     <FontAwesome6
+            //                         name="universal-access"
+            //                         size={18}
+            //                         color="gray"
+            //                     />
+            //                 }
+            //                 isFirst={isFirst}
+            //                 isLast={isLast}
+            //                 onPress={() => {
+            //                     !!authTokenAtom && mutate();
+            //                 }}
+            //             />
+            //         );
+            //     },
+            // },
             {
                 name: "Carer",
                 Component: (name, isFirst, isLast) => {
