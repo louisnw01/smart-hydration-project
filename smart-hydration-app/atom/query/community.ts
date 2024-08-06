@@ -19,6 +19,7 @@ import {
 export const communityInfoQAtom = atomWithQueryInfo<CommunityInfo>({
     queryKey: "get-community-info",
     endpoint: ENDPOINTS.COMMUNITY_INFO,
+    enabled: (get) => !!get(authTokenAtom),
 });
 
 export const userHasCommunityAtom = atomWithQueryDerivation(
@@ -39,6 +40,7 @@ export const userIsCommunityOwnerAtom = atomWithQueryDerivation(
 export const patientInfoQAtom = atomWithQueryInfo<MemberInfo[]>({
     queryKey: "get-patient-info",
     endpoint: ENDPOINTS.PATIENT_INFO,
+    enabled: (get) => !!get(authTokenAtom) && !!get(userHasCommunityAtom),
 });
 
 export const createCommunityMAtom = atomWithMutationCustom<{ name: string }>({
