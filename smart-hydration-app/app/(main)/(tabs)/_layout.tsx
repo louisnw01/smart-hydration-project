@@ -1,5 +1,6 @@
 import useSettings from "@/app/hooks/user";
 import SHDrop from "@/assets/svgs/SH_Drop.svg";
+import { communityTabVisible } from "@/atom/user";
 import PageHeader from "@/components/common/header";
 import useColorPalette from "@/util/palette";
 import {
@@ -10,11 +11,13 @@ import {
 } from "@expo/vector-icons";
 
 import { Link, router, Tabs } from "expo-router";
+import { useAtomValue } from "jotai";
 import { Pressable } from "react-native";
 
 export default function TabLayout() {
     const palette = useColorPalette();
     const { isCarer } = useSettings();
+    const isCommunityTabVisible = useAtomValue(communityTabVisible);
     return (
         <Tabs
             screenOptions={{
@@ -65,6 +68,7 @@ export default function TabLayout() {
                 name="community"
                 options={{
                     title: "Community",
+                    href: !isCarer && !isCommunityTabVisible ? null : undefined,
                     tabBarIcon: ({ color }) => (
                         <FontAwesome6
                             name="people-group"

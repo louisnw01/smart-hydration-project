@@ -12,7 +12,7 @@
     },
     "production": {
       "env" : {
-        "ANDROID_SDK_ROOT": "/home/mish125/Android/Sdk"
+        "ANDROID_SDK_ROOT": "$ANDROID_HOME"
       },
 	"android": {
 		"buildType": "apk"

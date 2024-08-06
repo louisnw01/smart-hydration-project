@@ -1,10 +1,12 @@
+import useSettings from "@/app/hooks/user";
 import {
     communityInfoQAtom,
     deleteCommunityMAtom,
     leaveCommunityMAtom,
 } from "@/atom/query/community";
+import { communityTabVisible } from "@/atom/user";
 import StyledButton from "@/components/common/button";
-import { OptionBlock } from "@/components/common/option-block";
+import { OptionBlock, SettingsSwitch } from "@/components/common/option-block";
 import { ISettingsSection } from "@/interfaces/settings";
 import { Ionicons } from "@expo/vector-icons";
 import { router, useRouter } from "expo-router";
@@ -104,7 +106,7 @@ const settingsList: ISettingsSection[] = [
                     const { data } = useAtomValue(communityInfoQAtom);
                     return (
                         <>
-                        {data?.isOwner && (
+                        {data?.is_owner && (
                         <OptionBlock
                             isLast={isLast}
                             text={name}
@@ -146,6 +148,33 @@ const settingsList: ISettingsSection[] = [
                                 />
                             }
                         />
+                    );
+                },
+            },
+        ],
+    },
+    {
+        title:"",
+        data: [
+            {
+                name: "Hide Community Tab",
+                component: (name, isFirst, isLast) => {
+                    const { isCarer } = useSettings();
+                    return (
+                        <>
+                        {!isCarer && (
+                        <SettingsSwitch 
+                            atom={communityTabVisible}
+                            label="Show Community Tab"
+                            icon={
+                                <Ionicons
+                                    name="eye-outline"
+                                    size={19}
+                                    color="gray"
+                                />
+                            }
+                        />)}
+                        </>
                     );
                 },
             },
