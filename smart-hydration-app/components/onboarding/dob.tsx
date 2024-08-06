@@ -3,7 +3,7 @@ import { registerInfoAtom } from "@/atom/user";
 import { router } from "expo-router";
 import { useSetAtom } from "jotai";
 import { useState } from "react";
-import { Text, View } from "react-native";
+import { Text, View, ScrollView } from "react-native";
 import StyledTextInput from "../common/text-input";
 import GenericOnboardContent from "./generic-onboard-content";
 import OnboardingHeader from "./onboarding-header";
@@ -64,25 +64,27 @@ export default function Dob({ isOnboarding, nextHref, pronoun }: DobProps) {
     };
 
     return (
-        <GenericOnboardContent nextHref={nextHref} proceed={proceed}>
-            <View className="py-4" />
-            <OnboardingHeader text={`What is ${pronoun} date of birth?`} />
-            <StyledTextInput
-                requiredIcon
-                title="Date of Birth"
-                placeholder="dd-mm-yyyy"
-                value={dob}
-                onChangeText={formatDob}
-                textContentType="birthdate"
-                returnKeyType="done"
-                keyboardType="decimal-pad"
-                onSubmitEditing={() => {
-                    if (validateDob()) router.push(nextHref);
-                }}
-                onEndEditing={validateDob}
-            />
+        <ScrollView contentContainerClassName="flex-1 gap-8">
+            <GenericOnboardContent nextHref={nextHref} proceed={proceed}>
+                <View className="py-4" />
+                <OnboardingHeader text={`What is ${pronoun} date of birth?`} />
+                <StyledTextInput
+                    requiredIcon
+                    title="Date of Birth"
+                    placeholder="dd-mm-yyyy"
+                    value={dob}
+                    onChangeText={formatDob}
+                    textContentType="birthdate"
+                    returnKeyType="done"
+                    keyboardType="decimal-pad"
+                    onSubmitEditing={() => {
+                        if (validateDob()) router.push(nextHref);
+                    }}
+                    onEndEditing={validateDob}
+                />
 
-            <Text style={{ color: "red", fontSize: 18 }}>{errorMessage}</Text>
-        </GenericOnboardContent>
+                <Text style={{ color: "red", fontSize: 18 }}>{errorMessage}</Text>
+            </GenericOnboardContent>
+        </ScrollView>
     );
 }

@@ -82,6 +82,7 @@ export default function LoginPage() {
                         secureTextEntry={true}
                         title="Password"
                         returnKeyType="done"
+                        autoCapitalize="none"
                         onSubmitEditing={() => handleSubmit()}
                     />
                     {isPending && <Text>Logging in..</Text>}
