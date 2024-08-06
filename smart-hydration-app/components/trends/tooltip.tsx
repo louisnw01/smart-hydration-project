@@ -1,11 +1,12 @@
 import SFPro from "@/assets/fonts/SF-Pro-Display-Regular.otf";
+import { unitsAtom } from "@/atom/user";
 import { Timeframe } from "@/interfaces/data";
 import useColorPalette from "@/util/palette";
 import { Line, RoundedRect, Text, useFont } from "@shopify/react-native-skia";
+import { useAtomValue } from "jotai";
 import { useEffect, useState } from "react";
 import { useColorScheme } from "react-native";
-import { SharedValue } from "react-native-gesture-handler/lib/typescript/handlers/gestures/reanimatedWrapper";
-import { useDerivedValue } from "react-native-reanimated";
+import { SharedValue, useDerivedValue } from "react-native-reanimated";
 import { ChartBounds } from "victory-native";
 
 interface ValPosSkia {
@@ -34,6 +35,7 @@ export default function ToolTip({
     chartBounds: ChartBounds;
     data: { x: number; y: number }[];
 }) {
+    const unit = useAtomValue(unitsAtom);
     const scheme = useColorScheme();
     const palette = useColorPalette();
     const fontLarge = useFont(SFPro, 30);
@@ -49,7 +51,6 @@ export default function ToolTip({
     const [shown, setShown] = useState(false);
     useEffect(() => {
         if (isActive) setShown(!shown);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isActive]);
 
     useEffect(() => {
@@ -57,8 +58,6 @@ export default function ToolTip({
             points?.findIndex((row) => row.x == x.position.value),
         );
         setShown(true);
-
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [points, timeframe, data]);
 
     useEffect(() => {
@@ -69,7 +68,6 @@ export default function ToolTip({
         if (scrollPosition.value > x.position.value) {
             setShown(false);
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [scrollPosition.value]);
 
     const [width, height] = [200, 80];
@@ -128,7 +126,7 @@ export default function ToolTip({
             <Text
                 x={textXPos}
                 y={BOX_Y + 50}
-                text={`${y.value.value.toFixed(0)}ml`}
+                text={`${y.value.value.toFixed(0)}${unit}`}
                 font={fontLarge}
                 color={palette.fg}
             />

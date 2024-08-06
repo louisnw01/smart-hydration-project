@@ -147,7 +147,7 @@ export default function DeviceInfoModal() {
                     </Text>
                 </Container>
                 <Container right>
-                    <Text className="dark:text-white">Last Seen</Text>
+                    <Text className="dark:text-white">Last Connected</Text>
                     <Text className="text-1xl dark:text-white">
                         {new Date(device.last_seen * 1000).toLocaleString(
                             "en-gb",

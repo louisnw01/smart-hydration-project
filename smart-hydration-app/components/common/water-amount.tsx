@@ -1,3 +1,5 @@
+import { unitsAtom } from "@/atom/user";
+import { useAtomValue } from "jotai";
 import { Text, View } from "react-native";
 
 function getSize(size: "md" | undefined) {
@@ -11,16 +13,13 @@ function getSize(size: "md" | undefined) {
 
 export default function WaterAmount({
     value,
-    unit,
     size,
 }: {
     value: number;
-    unit?: string;
     size?: "md";
 }) {
     if (value == null || value == undefined) return null;
-    unit = unit || "ml";
-
+    const unit = useAtomValue(unitsAtom);
     const [waterSize, unitSize] = getSize(size);
 
     return (

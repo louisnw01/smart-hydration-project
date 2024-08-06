@@ -17,6 +17,7 @@ import { ScrollView, Text, View } from "react-native";
 
 export default function EditTags() {
     const [showNewTagBox, setShowNewTagBox] = useState(false);
+    const [nameMatchesExisting, setNameMatchesExisting] = useState(false);
     const [showEditTagBox, setShowEditTagBox] = useState(false);
     const [newTextInput, setNewTextInput] = useState("");
     const [editTextInput, setEditTextInput] = useState("");
@@ -115,7 +116,6 @@ export default function EditTags() {
         if (newTagName === "") {
             return;
         }
-
         if (
             tags.some(
                 (tag) => tag.name.toLowerCase() === newTagName.toLowerCase(),
@@ -147,15 +147,25 @@ export default function EditTags() {
         }));
     };
 
+    const checkNameMatchesExisting = (editedName: string) => {
+        if (currentTagName === editedName) {
+            setNameMatchesExisting(true);
+        } else {
+            setNameMatchesExisting(false);
+        }
+    };
+
     return (
         <PageWrapper>
             <ScrollView>
                 <View className="flex flex-1 gap-8 mx-16 items-center mt-10">
-                    <StyledButton
-                        text={`Sort tags by name ${filters.sort === "asc" ? "A-Z" : "Z-A"}`}
-                        textClass="text-lg"
-                        onPress={toggleSortDirection}
-                    />
+                    {tags.length > 1 && (
+                        <StyledButton
+                            text={`Sort tags by name ${filters.sort === "asc" ? "A-Z" : "Z-A"}`}
+                            textClass="text-lg"
+                            onPress={toggleSortDirection}
+                        />
+                    )}
                     {tags.length === 0 && (
                         <Text className="dark:text-white text-xl">
                             There are no tags in this community. Please add some
@@ -194,8 +204,9 @@ export default function EditTags() {
                             <View className="flex-row items-center">
                                 <View className="mr-4">
                                     <StyledTextInput
-                                        value={newTextInput}
-                                        placeholder="Enter tag name"
+                                        requiredIcon
+                                        placeholder="Tag name"
+                                        title="New tag name"
                                         onChangeText={(val) => {
                                             setNewTextInput(val);
                                             isTagInArray(val);
@@ -217,11 +228,9 @@ export default function EditTags() {
                                 {!tagExists && (
                                     <View className="mr-2">
                                         <StyledButton
-                                            text="Create"
+                                            text={`Sort tags by name ${filters.sort === "asc" ? "A-Z" : "Z-A"}`}
                                             textClass="text-lg"
-                                            onPress={() =>
-                                                handleAddTag(newTextInput)
-                                            }
+                                            onPress={toggleSortDirection}
                                         />
                                     </View>
                                 )}
@@ -238,14 +247,21 @@ export default function EditTags() {
                                     Current name: {currentTagName}
                                 </Text>
                             </View>
+                            {nameMatchesExisting && (
+                                <Text className="dark:text-white text-xl mb-2">
+                                    Tag already has this name
+                                </Text>
+                            )}
                             <View className="flex-row items-center">
                                 <View className="mr-4">
                                     <StyledTextInput
-                                        value={editTextInput}
-                                        placeholder="Enter new tag name"
-                                        onChangeText={(val) =>
-                                            setEditTextInput(val)
-                                        }
+                                        requiredIcon
+                                        placeholder="Tag name"
+                                        title="Edit tag name"
+                                        onChangeText={(val) => {
+                                            setEditTextInput(val);
+                                            checkNameMatchesExisting(val);
+                                        }}
                                         textContentType="name"
                                         returnKeyType="done"
                                     />
@@ -260,13 +276,15 @@ export default function EditTags() {
                                         }}
                                     />
                                 </View>
-                                <View className="mr-2">
-                                    <StyledButton
-                                        text="Save"
-                                        textClass="text-lg"
-                                        onPress={handleEditTag}
-                                    />
-                                </View>
+                                {!nameMatchesExisting && (
+                                    <View className="mr-2">
+                                        <StyledButton
+                                            text="Save"
+                                            textClass="text-lg"
+                                            onPress={handleEditTag}
+                                        />
+                                    </View>
+                                )}
                             </View>
                         </View>
                     )}

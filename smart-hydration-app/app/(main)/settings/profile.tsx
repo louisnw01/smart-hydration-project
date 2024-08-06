@@ -22,7 +22,7 @@ const settingsList: ISettingsSection[] = [
                             text={name}
                             // onPress={() => router.navigate("add-device-modal")}
                             icon={
-                                <Feather name="user" size={18} color="gray" />
+                                <Feather name="inbox" size={18} color="gray" />
                             }
                         />
                     );
@@ -38,7 +38,7 @@ const settingsList: ISettingsSection[] = [
                             text={name}
                             // onPress={() => router.navigate("add-device-modal")}
                             icon={
-                                <Feather name="user" size={18} color="gray" />
+                                <Feather name="key" size={18} color="gray" />
                             }
                         />
                     );

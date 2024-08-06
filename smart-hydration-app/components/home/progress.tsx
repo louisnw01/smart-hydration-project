@@ -1,13 +1,12 @@
 import { amountDrankTodayAtom } from "@/atom/hydration";
-import { userInfoQAtom } from "@/atom/query";
 import colors from "@/colors";
 import useColorPalette from "@/util/palette";
 import { useAtomValue } from "jotai";
 import { ReactNode } from "react";
 import { Text, TextInput, View } from "react-native";
-import { SharedValue } from "react-native-gesture-handler/lib/typescript/handlers/gestures/reanimatedWrapper";
 import Animated, {
     Easing,
+    SharedValue,
     useAnimatedProps,
     useDerivedValue,
     useSharedValue,
@@ -15,6 +14,8 @@ import Animated, {
 } from "react-native-reanimated";
 import Svg, { Circle, G } from "react-native-svg";
 import WaterAmount from "../common/water-amount";
+
+import { dailyTargetAtom, unitConverter, unitsAtom } from "@/atom/user";
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 const AnimatedTextInput = Animated.createAnimatedComponent(TextInput);
@@ -102,7 +103,6 @@ export function ProgressWheel({
 export default function HydrationProgress() {
     const palette = useColorPalette();
     const amountDrankToday = useAtomValue(amountDrankTodayAtom);
-    const { data } = useAtomValue(userInfoQAtom);
 
     const animatedProgress = useSharedValue(0);
 
@@ -111,9 +111,8 @@ export default function HydrationProgress() {
         text: text.value,
     }));
 
-    const target = data?.target || 2200;
-
-    if (!data) return null;
+    const unit = useAtomValue(unitsAtom);
+    const target = unitConverter(useAtomValue(dailyTargetAtom), unit);
 
     return (
         <ProgressWheel
@@ -136,7 +135,7 @@ export default function HydrationProgress() {
                     />
 
                     <Text className="dark:text-white text-4xl font-semibold self-end pb-2">
-                        ml
+                        {unit}
                     </Text>
                 </View>
                 <View className="flex-row justify-center gap-1 ml-1">

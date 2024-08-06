@@ -1,5 +1,7 @@
 import useSettings from "@/app/hooks/user";
 import SHDrop from "@/assets/svgs/SH_Drop.svg";
+import { userHasCommunityAtom } from "@/atom/query/community";
+import { communityTabVisible } from "@/atom/user";
 import PageHeader from "@/components/common/header";
 import useColorPalette from "@/util/palette";
 import {
@@ -10,11 +12,14 @@ import {
 } from "@expo/vector-icons";
 
 import { Link, router, Tabs } from "expo-router";
+import { useAtomValue } from "jotai";
 import { Pressable } from "react-native";
 
 export default function TabLayout() {
     const palette = useColorPalette();
     const { isCarer } = useSettings();
+    const isCommunityTabVisible = useAtomValue(communityTabVisible);
+    const hasCommunity = useAtomValue(userHasCommunityAtom);
     return (
         <Tabs
             screenOptions={{
@@ -65,6 +70,7 @@ export default function TabLayout() {
                 name="community"
                 options={{
                     title: "Community",
+                    href: !isCarer && !isCommunityTabVisible ? null : undefined,
                     tabBarIcon: ({ color }) => (
                         <FontAwesome6
                             name="people-group"
@@ -74,7 +80,7 @@ export default function TabLayout() {
                     ),
                     headerRight: () => (
                         <>
-                            {!isCarer && (
+                            {!isCarer && hasCommunity && (
                                 <Link className="px-5" href="add-jug-user">
                                     <Entypo
                                         name="circle-with-plus"

@@ -14,6 +14,7 @@ export default function AddCupSizeInMls() {
             </Text>
 
             <DeviceSection
+                queryAtom={getJugDataQAtom}
                 onPress={(device) => {
                     setJugId(device.id);
                     router.push("custom/fill-cup");

@@ -55,7 +55,7 @@ class JugUser(db.Entity):
     community = Optional('Community')
     user = Optional(User)
     otherdrinks = Set('OtherDrink')
-    target = Optional(int)
+    target = Required(int, default=2200)
     drank_today = Optional(int)
     last_drank = Optional(int)
     tags = Set('Tag')

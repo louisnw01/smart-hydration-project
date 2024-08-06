@@ -51,3 +51,39 @@ export const drinkListAtom = atomWithStorage<ITimeSeries[]>(
 export const emailIsVerifiedAtom = atom(false);
 
 export const inviteCodeAtom = atom("");
+
+export const communityTabVisible = atomWithStorage<boolean>(
+    "community-tab-visible",
+    true,
+    nonSecureStorage,
+);
+
+export const unitsAtom = atomWithStorage<string>("units", "ml", storage);
+
+export const dailyTargetAtom = atomWithStorage<number>(
+    "daily-target",
+    2200,
+    nonSecureStorage,
+);
+
+export const unitConverter = (val: number, unit: string) => {
+    switch (unit) {
+        case "ml":
+            return val;
+        case "oz":
+            return val * 0.033814;
+        default:
+            return val;
+    }
+};
+
+export const reverseUnitConverter = (val: number, unit: string) => {
+    switch (unit) {
+        case "ml":
+            return val;
+        case "oz":
+            return val * 29.5735;
+        default:
+            return val;
+    }
+};

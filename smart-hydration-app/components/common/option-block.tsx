@@ -3,6 +3,12 @@ import { Entypo } from "@expo/vector-icons";
 import { WritableAtom, useAtom, useAtomValue, useSetAtom } from "jotai";
 import { Pressable, Switch, Text, View } from "react-native";
 
+interface SettingsSwitchProps {
+    atom: WritableAtom<unknown, [unknown], void>;
+    label: string;
+    icon?: React.ReactNode;
+}
+
 interface OptionBlockProps {
     text?: string;
     href?: string;

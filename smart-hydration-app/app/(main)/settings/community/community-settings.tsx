@@ -1,12 +1,14 @@
+import useSettings from "@/app/hooks/user";
 import {
     communityInfoQAtom,
     deleteCommunityMAtom,
     leaveCommunityMAtom,
 } from "@/atom/query";
+import { communityTabVisible } from "@/atom/user";
 import StyledButton from "@/components/common/button";
 import { OptionBlock } from "@/components/common/option-block";
 import { ISettingsSection } from "@/interfaces/settings";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useAtomValue } from "jotai";
 import { useEffect } from "react";
@@ -30,8 +32,8 @@ const settingsList: ISettingsSection[] = [
                                 )
                             }
                             icon={
-                                <Ionicons
-                                    name="color-palette"
+                                <MaterialCommunityIcons
+                                    name="lead-pencil"
                                     size={19}
                                     color="gray"
                                 />
@@ -40,49 +42,57 @@ const settingsList: ISettingsSection[] = [
                     );
                 },
             },
-            {
-                name: "Transfer Ownership",
-                Component: (name, isFirst, isLast) => {
-                    return (
-                        <OptionBlock
-                            isLast={isLast}
-                            isFirst={isFirst}
-                            text={name}
-                            onPress={() =>
-                                router.navigate(
-                                    "settings/community/change-owner",
-                                )
-                            }
-                            icon={
-                                <Ionicons
-                                    name="color-palette"
-                                    size={19}
-                                    color="gray"
-                                />
-                            }
-                        />
-                    );
-                },
-            },
+            // {
+            //     name: "Transfer Ownership",
+            //     Component: (name, isFirst, isLast) => {
+            //         const router = useRouter();
+            //         return (
+            //             <OptionBlock
+            //                 isLast={isLast}
+            //                 isFirst={isFirst}
+            //                 text={name}
+            //                 onPress={() =>
+            //                     router.navigate(
+            //                         "settings/community/change-owner",
+            //                     )
+            //                 }
+            //                 icon={
+            //                 <MaterialCommunityIcons
+            //                     name="cog-transfer"
+            //                     size={19}
+            //                     color="gray"
+            //                 />
+            //                 }
+            //             />
+            //         );
+            //     },
+            // },
             {
                 name: "Edit community tags",
                 Component: (name, isFirst, isLast) => {
+                    const { data } = useAtomValue(communityInfoQAtom);
                     return (
-                        <OptionBlock
-                            isLast={isLast}
-                            isFirst={isFirst}
-                            text={name}
-                            onPress={() =>
-                                router.navigate("settings/community/edit-tags")
-                            }
-                            icon={
-                                <Ionicons
-                                    name="color-palette"
-                                    size={19}
-                                    color="gray"
+                        <>
+                            {data?.isOwner && (
+                                <OptionBlock
+                                    isLast={isLast}
+                                    isFirst={isFirst}
+                                    text={name}
+                                    onPress={() =>
+                                        router.navigate(
+                                            "settings/community/edit-tags",
+                                        )
+                                    }
+                                    icon={
+                                        <Ionicons
+                                            name="pricetag-outline"
+                                            size={19}
+                                            color="gray"
+                                        />
+                                    }
                                 />
-                            }
-                        />
+                            )}
+                        </>
                     );
                 },
             },
@@ -108,7 +118,7 @@ const settingsList: ISettingsSection[] = [
                                     }
                                     icon={
                                         <Ionicons
-                                            name="color-palette"
+                                            name="close-circle-outline"
                                             size={19}
                                             color="gray"
                                         />
@@ -133,12 +143,40 @@ const settingsList: ISettingsSection[] = [
                             }
                             icon={
                                 <Ionicons
-                                    name="color-palette"
+                                    name="add-circle-outline"
                                     size={19}
                                     color="gray"
                                 />
                             }
                         />
+                    );
+                },
+            },
+        ],
+    },
+    {
+        title: "",
+        data: [
+            {
+                name: "Hide Community Tab",
+                Component: (name, isFirst, isLast) => {
+                    const { isCarer } = useSettings();
+                    return (
+                        <>
+                            {!isCarer && (
+                                <OptionBlock
+                                    atom={communityTabVisible}
+                                    text="Show Community Tab"
+                                    icon={
+                                        <Ionicons
+                                            name="eye-outline"
+                                            size={19}
+                                            color="gray"
+                                        />
+                                    }
+                                />
+                            )}
+                        </>
                     );
                 },
             },

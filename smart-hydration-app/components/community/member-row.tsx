@@ -1,5 +1,6 @@
 import { selectedMemberAtom } from "@/atom/community";
 import { MemberInfo } from "@/interfaces/community";
+import { useFormattedMemberData } from "@/util/community";
 import useColorPalette from "@/util/palette";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
@@ -8,9 +9,24 @@ import { Pressable, Text, View } from "react-native";
 import StyledButton from "../common/button";
 import Tag from "./tag";
 
+function getOrdinalSuffix(day) {
+    if (day > 3 && day < 21) return "th";
+    switch (day % 10) {
+        case 1:
+            return "st";
+        case 2:
+            return "nd";
+        case 3:
+            return "rd";
+        default:
+            return "th";
+    }
+}
+
 export default function MemberRow({ member }: { member: MemberInfo }) {
     const palette = useColorPalette();
     const setMember = useSetAtom(selectedMemberAtom);
+    const memberData = useFormattedMemberData(member);
 
     return (
         <View>
@@ -24,19 +40,17 @@ export default function MemberRow({ member }: { member: MemberInfo }) {
             >
                 <View className="flex gap-4">
                     <Text className="text-xl font-bold dark:text-white">
-                        {member.name}
+                        {memberData.name}
                     </Text>
 
                     <View className="flex-row gap-4">
                         <MemberDetail
                             title="Last Drank"
-                            value={member.lastDrank}
-                            unit="hours ago"
+                            value={memberData.lastDrank}
                         />
                         <MemberDetail
                             title="Amount Drank"
-                            value={member.drankToday}
-                            unit="ml"
+                            value={memberData.amountDrank || undefined}
                         />
                     </View>
                     <View className="flex-row flex-wrap">
@@ -45,7 +59,10 @@ export default function MemberRow({ member }: { member: MemberInfo }) {
                                 <Tag key={tag.id} name={tag.name} />
                             ))}
                     </View>
-                    <MemberDetail title="Target Progress" />
+                    <MemberDetail
+                        title="Target Progress"
+                        value={memberData.targetProgress}
+                    />
                     <StyledButton
                         text="add a drink"
                         textClass="text-lg mt-[1px]"
@@ -69,11 +86,9 @@ export default function MemberRow({ member }: { member: MemberInfo }) {
 function MemberDetail({
     title,
     value,
-    unit,
 }: {
     title: string;
-    value?: number;
-    unit?: string;
+    value?: number | string | undefined;
 }) {
     return (
         <View className="border border-gray-200 dark:border-neutral-700 rounded-lg px-2 py-2">
