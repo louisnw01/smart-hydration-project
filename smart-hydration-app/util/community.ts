@@ -1,6 +1,4 @@
-import { selectedMemberAtom } from "@/atom/community";
 import { MemberInfo } from "@/interfaces/community";
-import { useAtomValue } from "jotai";
 
 function getOrdinalSuffix(day) {
     if (day > 3 && day < 21) return "th";
@@ -76,18 +74,17 @@ export interface MemberData {
 }
 
 export function useFormattedMemberData(member: MemberInfo) {
-    const selectedMember = useAtomValue(selectedMemberAtom);
-
     const memberData = {
         name: member.name,
-        lastDrank: generateDateString(member.last_drank * 1000) || "No data",
-        amountDrank: member.drank_today
-            ? member.drank_today.toString() + "ml"
+        lastDrank: generateDateString(member.lastDrank * 1000) || "No data",
+        amountDrank: member.drankToday
+            ? member.drankToday.toString() + "ml"
             : null,
         targetProgress:
-            ((member.drank_today / member.target) * 100).toFixed(0).toString() +
-            "%",
-        target: member.target,
+            ((member.drankToday / member.dailyTarget) * 100)
+                .toFixed(0)
+                .toString() + "%",
+        target: member.dailyTarget,
     };
     return memberData;
 }

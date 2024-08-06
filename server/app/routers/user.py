@@ -167,7 +167,7 @@ async def add_push_token(form: PushTokenForm, user_id: str = Depends(auth_user))
         if Notifications.get(expo_token=form.pushToken, user=user) is None:
             Notifications(expo_token=form.pushToken,
                           active=True,
-                          frequency=60 * 60 * 24,
+                          frequency=60 * 60,
                           send_time=int(send_time),
                           user=user
                           )
@@ -207,6 +207,9 @@ async def toggle_notifications_frequency(form: ToggleNotificationsForm, user_id:
 
     hours = extract_number_from_string(form.notificationSelection)
 
+    if hours is None:
+        raise
+
     time_to_send = dt.timedelta(hours=hours)
 
     send_time = (dt.datetime.now() + time_to_send).timestamp()
@@ -214,7 +217,7 @@ async def toggle_notifications_frequency(form: ToggleNotificationsForm, user_id:
     with db_session:
         token = Notifications.get(expo_token=form.pushToken, user=user_id)
         token.send_time = int(send_time)
-        token.frequency = 60 * 60 * 24 * hours
+        token.frequency = 60 * 60 * hours
         commit()
 
 
