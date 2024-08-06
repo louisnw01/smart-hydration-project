@@ -11,12 +11,12 @@ import OnboardingHeader from "./onboarding-header";
 interface DobProps {
     isOnboarding: boolean;
     nextHref: string;
+    pronoun: string;
 }
 
 export default function Dob({ isOnboarding, nextHref, pronoun }: DobProps) {
-    const setInfo = isOnboarding
-        ? useSetAtom(registerInfoAtom)
-        : useSetAtom(jugUserInfoAtom);
+    const setRegiserInfo = useSetAtom(registerInfoAtom);
+    const setJugUserInfo = useSetAtom(jugUserInfoAtom);
     const [dob, setDob] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
     const [proceed, setProceed] = useState(false);
@@ -31,7 +31,9 @@ export default function Dob({ isOnboarding, nextHref, pronoun }: DobProps) {
         } else {
             setErrorMessage("");
             setProceed(true);
-            setInfo((prev) => ({ ...prev, dob: dob }));
+
+            if (isOnboarding) setRegiserInfo((prev) => ({ ...prev, dob: dob }));
+            else setJugUserInfo((prev) => ({ ...prev, dob: dob }));
             return true;
         }
     };

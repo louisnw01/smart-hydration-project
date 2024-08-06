@@ -20,7 +20,7 @@ export default function MVPAddDeviceModal() {
     };
 
     const handlePress = () => {
-        linkJugsToUser(Array.from(selectedJugs));
+        linkJugsToUser({ jugIds: Array.from(selectedJugs) });
         navigation.goBack();
     };
 

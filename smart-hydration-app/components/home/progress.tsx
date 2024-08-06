@@ -1,11 +1,12 @@
 import { amountDrankTodayAtom } from "@/atom/hydration";
-import { userInfoQAtom } from "@/atom/query";
 import colors from "@/colors";
 import useColorPalette from "@/util/palette";
 import { useAtomValue } from "jotai";
+import { ReactNode } from "react";
 import { Text, TextInput, View } from "react-native";
 import Animated, {
     Easing,
+    SharedValue,
     useAnimatedProps,
     useDerivedValue,
     useSharedValue,
@@ -14,9 +15,7 @@ import Animated, {
 import Svg, { Circle, G } from "react-native-svg";
 import WaterAmount from "../common/water-amount";
 
-import { userHasCommunityAtom } from "@/atom/query/community";
-import { unitsAtom, unitConverter, dailyTargetAtom } from "@/atom/user";
-
+import { dailyTargetAtom, unitConverter, unitsAtom } from "@/atom/user";
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 const AnimatedTextInput = Animated.createAnimatedComponent(TextInput);
@@ -30,6 +29,15 @@ export function ProgressWheel({
     color,
     backgroundColor,
     animatedProgress,
+}: {
+    children: ReactNode;
+    radius: number;
+    progress: number;
+    max: number;
+    width: number;
+    color: string;
+    backgroundColor: string;
+    animatedProgress: SharedValue<number>;
 }) {
     const circumference = 2 * Math.PI * radius;
 
@@ -105,7 +113,7 @@ export default function HydrationProgress() {
 
     const unit = useAtomValue(unitsAtom);
     const target = unitConverter(useAtomValue(dailyTargetAtom), unit);
-  
+
     return (
         <ProgressWheel
             radius={130}

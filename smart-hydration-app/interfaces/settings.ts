@@ -4,11 +4,11 @@ type ActionComponentFunction = (
     name: string,
     isFirst?: boolean,
     isLast?: boolean,
-) => ReactElement;
+) => ReactElement | null;
 
 export interface ISettingsActions {
     name?: string;
-    component: ActionComponentFunction;
+    Component: ActionComponentFunction;
 }
 
 export interface ISettingsSection {

@@ -1,15 +1,19 @@
 import { isMeasuringNewCupSizeAtom, selectedDeviceAtom } from "@/atom/device";
-import { userHasJugsAtom } from "@/atom/hydration";
 import StyledButton from "@/components/common/button";
 import DeviceRow from "@/components/devices/device-row";
-import DeviceSection from "@/components/devices/device-section";
+import { AntDesign } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useAtomValue, useSetAtom } from "jotai";
-import { View, Text } from "react-native";
-import { AntDesign } from "@expo/vector-icons";
+import { Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-function ExtraInformation({ text, className }) {
+function ExtraInformation({
+    text,
+    className,
+}: {
+    text: string;
+    className: string;
+}) {
     return (
         <View
             className={`items-center flex-row bg-yellow-400 gap-3 px-4 py-3 rounded-lg ${className}`}
@@ -24,6 +28,7 @@ export default function AskIfJugIsEmptyOrNot() {
     const insets = useSafeAreaInsets();
     const device = useAtomValue(selectedDeviceAtom);
     const setIsMeasuring = useSetAtom(isMeasuringNewCupSizeAtom);
+    if (!device) return null;
 
     return (
         <View className="mx-6 gap-16 mt-20 h-full">

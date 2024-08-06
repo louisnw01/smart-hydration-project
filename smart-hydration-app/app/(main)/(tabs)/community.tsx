@@ -1,7 +1,7 @@
 import StyledButton from "@/components/common/button";
 import PageWrapper from "@/components/common/page-wrapper";
 import { useAtom, useAtomValue } from "jotai";
-import React, { ReactNode, useEffect, useState } from "react";
+import React, { ReactElement, useEffect, useState } from "react";
 import { FlatList, RefreshControl, ScrollView, Text, View } from "react-native";
 
 import { selectedSortMethodAtom } from "@/atom/community";
@@ -9,11 +9,11 @@ import {
     communityInfoQAtom,
     patientInfoQAtom,
     userHasCommunityAtom,
-} from "@/atom/query/community";
+} from "@/atom/query";
 import Loading from "@/components/common/loading";
 import StyledTextInput from "@/components/common/text-input";
 import MemberRow from "@/components/community/member-row";
-import { FilterObject } from "@/interfaces/community";
+import { FilterObject, MemberInfo } from "@/interfaces/community";
 import useColorPalette from "@/util/palette";
 import { Entypo } from "@expo/vector-icons";
 import { useFocusEffect } from "expo-router";
@@ -31,7 +31,7 @@ export default function CommunityPage() {
     const [refreshing, setRefreshing] = useState(false);
     const palette = useColorPalette();
 
-    const [filteredData, setFilteredData] = useState<ReactNode[]>([]);
+    const [filteredData, setFilteredData] = useState<ReactElement[]>([]);
     const [textInput, setTextInput] = useState("");
     const [filters, setFilters] = useState<FilterObject>({
         searchTerm: "",
@@ -125,11 +125,10 @@ export default function CommunityPage() {
         return <Loading isLoading />;
     }
 
-    const sortMethod = [
+    const sortMethod: { key: keyof MemberInfo; value: string }[] = [
         { key: "name", value: "Name" },
-        { key: "target_percentage", value: "Progress To Target" },
-        { key: "drank_today", value: "Amount Drank Today" },
-        { key: "last_drank", value: "Last Drank" },
+        { key: "drankToday", value: "Amount Drank Today" },
+        { key: "lastDrank", value: "Last Drank" },
     ];
 
     if (!hasCommunity) {
@@ -221,8 +220,7 @@ export default function CommunityPage() {
                         <View className="py-2"></View>
                         <FlatList
                             data={filteredData || []}
-                            contentContainerClassName="flex gap-6"
-                            keyExtractor={(patient, idx) => idx}
+                            keyExtractor={(patient, idx) => idx.toString()}
                             renderItem={({ item }) => item}
                         />
 

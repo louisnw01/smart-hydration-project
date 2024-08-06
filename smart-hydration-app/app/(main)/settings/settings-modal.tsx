@@ -9,7 +9,7 @@ import {
 import StyledButton from "@/components/common/button";
 import { OptionBlock } from "@/components/common/option-block";
 import { ISettingsSection } from "@/interfaces/settings";
-import { Feather, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useAtomValue, useSetAtom } from "jotai";
 import { useEffect } from "react";
@@ -22,7 +22,7 @@ const settingsList: ISettingsSection[] = [
         data: [
             // {
             //     name: "Profile",
-            //     component: (name, isFirst, isLast) => {
+            //     Component: (name, isFirst, isLast) => {
             //         return (
             //             <OptionBlock
             //                 isLast={isLast}
@@ -37,7 +37,7 @@ const settingsList: ISettingsSection[] = [
             // },
             {
                 name: "User Mode",
-                component: (name, isFirst, isLast) => {
+                Component: (name, isFirst, isLast) => {
                     return (
                         <OptionBlock
                             isLast={isLast}
@@ -61,7 +61,7 @@ const settingsList: ISettingsSection[] = [
         data: [
             // {
             //     name: "Other Drinks",
-            //     component: (name, isFirst, isLast) => {
+            //     Component: (name, isFirst, isLast) => {
             //         return (
             //             <OptionBlock
             //                 isLast={isLast}
@@ -80,7 +80,7 @@ const settingsList: ISettingsSection[] = [
             // },
             {
                 name: "Daily Target",
-                component: (name, isFirst, isLast) => {
+                Component: (name, isFirst, isLast) => {
                     return (
                         <OptionBlock
                             isLast={isLast}
@@ -101,7 +101,7 @@ const settingsList: ISettingsSection[] = [
             },
             {
                 name: "Units",
-                component: (name, isFirst, isLast) => {
+                Component: (name, isFirst, isLast) => {
                     return (
                         <OptionBlock
                             isLast={isLast}
@@ -127,7 +127,7 @@ const settingsList: ISettingsSection[] = [
         data: [
             {
                 name: "Theme",
-                component: (name, isFirst, isLast) => {
+                Component: (name, isFirst, isLast) => {
                     return (
                         <OptionBlock
                             isLast={isLast}
@@ -151,7 +151,7 @@ const settingsList: ISettingsSection[] = [
         data: [
             {
                 name: "Community Settings",
-                component: (name, isFirst, isLast) => {
+                Component: (name, isFirst, isLast) => {
                     return (
                         <OptionBlock
                             isLast={isLast}
@@ -179,7 +179,7 @@ const settingsList: ISettingsSection[] = [
         data: [
             {
                 name: "Notification settings",
-                component: (name, isFirst, isLast) => {
+                Component: (name, isFirst, isLast) => {
                     return (
                         <OptionBlock
                             isLast={isLast}
@@ -203,7 +203,7 @@ const settingsList: ISettingsSection[] = [
     {
         data: [
             {
-                component: () => {
+                Component: () => {
                     const { mutate, isSuccess } =
                         useAtomValue(removePushTokenMAtom);
                     const pushToken = useAtomValue(pushTokenAtom);
@@ -260,8 +260,8 @@ export default function SettingsModal() {
             <SectionList
                 sections={settingsList}
                 renderItem={({ item, index, section }) =>
-                    item.component(
-                        item.name,
+                    item.Component(
+                        item.name || "",
                         index == 0,
                         index == section.data.length - 1,
                     )

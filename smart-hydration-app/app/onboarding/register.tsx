@@ -1,15 +1,14 @@
-import { View, Pressable, Text, TextInput } from "react-native";
-
-import { useAtomValue, useSetAtom } from "jotai";
-import { registerInfoAtom } from "@/atom/user";
-import GenericOnboardContent from "@/components/onboarding/generic-onboard-content";
-import { useRouter } from "expo-router";
-import { useEffect, useRef, useState } from "react";
-import { getUserExistsQAtom } from "@/atom/query";
-import StyledTextInput from "@/components/common/text-input";
-import KeyboardScrollView from "@/components/common/keyboard-scrollview";
-import OnboardingHeader from "@/components/onboarding/onboarding-header";
 import Logo from "@/assets/svgs/SH_logo.svg";
+import { getUserExistsQAtom } from "@/atom/query";
+import { registerInfoAtom } from "@/atom/user";
+import KeyboardScrollView from "@/components/common/keyboard-scrollview";
+import StyledTextInput from "@/components/common/text-input";
+import GenericOnboardContent from "@/components/onboarding/generic-onboard-content";
+import OnboardingHeader from "@/components/onboarding/onboarding-header";
+import { useRouter } from "expo-router";
+import { useAtomValue, useSetAtom } from "jotai";
+import { useEffect, useRef, useState } from "react";
+import { Pressable, Text, TextInput, View } from "react-native";
 
 const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
@@ -78,83 +77,83 @@ export default function RegisterPage() {
 
     return (
         <GenericOnboardContent nextHref="onboarding/name" proceed={proceed}>
-        <KeyboardScrollView keyboardVerticalOffset={-60}>
-            <View className="self-center mb-40">
-                <Logo width={350} height={125}/>
-            </View>
-            <OnboardingHeader text="Sign Up" />
-            <View className="gap-5 mt-16">
-                <StyledTextInput
-                    requiredIcon
-                    title="Email Address"
-                    placeholder="example@gmail.com"
-                    onChangeText={(val) => setEmail(val.toLowerCase())}
-                    keyboardType="email-address"
-                    autoCapitalize="none"
-                    textContentType="emailAddress"
-                    onSubmitEditing={() => {
-                        validateEmail();
-                        setInfo((prev) => ({ ...prev, email: email }));
-                        refetch();
-                        passwordRef.current?.focus();
-                    }}
-                    onEndEditing={() => {
-                        validateEmail();
-                        setInfo((prev) => ({ ...prev, email: email }));
-                        refetch();
-                    }}
-                />
+            <KeyboardScrollView keyboardVerticalOffset={-60}>
+                <View className="self-center mb-8" style={{}}>
+                    <Logo width={330} height={105} />
+                </View>
+                <OnboardingHeader text="Sign Up" />
+                <View className="gap-5 mt-16">
+                    <StyledTextInput
+                        requiredIcon
+                        title="Email Address"
+                        placeholder="example@gmail.com"
+                        onChangeText={(val) => setEmail(val.toLowerCase())}
+                        keyboardType="email-address"
+                        autoCapitalize="none"
+                        textContentType="emailAddress"
+                        onSubmitEditing={() => {
+                            validateEmail();
+                            setInfo((prev) => ({ ...prev, email: email }));
+                            refetch();
+                            passwordRef.current?.focus();
+                        }}
+                        onEndEditing={() => {
+                            validateEmail();
+                            setInfo((prev) => ({ ...prev, email: email }));
+                            refetch();
+                        }}
+                    />
 
-                <StyledTextInput
-                    inputRef={passwordRef}
-                    requiredIcon
-                    title="Password"
-                    autoCapitalize="none"
-                    onChangeText={(val) => setPassword(val)}
-                    textContentType="newPassword"
-                    secureTextEntry={true}
-                    onSubmitEditing={() => {
-                        validatePassword();
-                        confirmPasswordRef.current?.focus();
-                    }}
-                />
+                    <StyledTextInput
+                        inputRef={passwordRef}
+                        requiredIcon
+                        title="Password"
+                        autoCapitalize="none"
+                        onChangeText={(val) => setPassword(val)}
+                        textContentType="newPassword"
+                        secureTextEntry={true}
+                        onSubmitEditing={() => {
+                            validatePassword();
+                            confirmPasswordRef.current?.focus();
+                        }}
+                    />
 
-                <StyledTextInput
-                    inputRef={confirmPasswordRef}
-                    requiredIcon
-                    title="Confirm Password"
-                    autoCapitalize="none"
-                    onChangeText={(val) => setConfirmPassword(val)}
-                    secureTextEntry={true}
-                    onSubmitEditing={() => {
-                        if (proceed) router.push("onboarding/name");
-                    }}
-                />
+                    <StyledTextInput
+                        inputRef={confirmPasswordRef}
+                        requiredIcon
+                        title="Confirm Password"
+                        autoCapitalize="none"
+                        onChangeText={(val) => setConfirmPassword(val)}
+                        secureTextEntry={true}
+                        onSubmitEditing={() => {
+                            if (proceed) router.push("onboarding/name");
+                        }}
+                    />
 
-                <Text style={{ color: "red", fontSize: 18 }}>
-                    {passwordError}
-                    {emailError}
-                </Text>
+                    <Text style={{ color: "red", fontSize: 18 }}>
+                        {passwordError}
+                        {emailError}
+                    </Text>
 
-                <Pressable
-                    onPress={() => router.push("onboarding/login")}
-                    style={{ marginTop: 24 }}
-                    //accessibilityRole="link"
-                    //accessibilityLabel="Navigate to login"
-                >
-                    {({ pressed }) => (
-                        <Text
-                            style={{
-                                fontWeight: "600",
-                                color: pressed ? "darkblue" : "blue",
-                                textDecorationLine: "underline",
-                            }}
-                        >
-                            Already have an account? Login
-                        </Text>
-                    )}
-                </Pressable>
-            </View>
+                    <Pressable
+                        onPress={() => router.push("onboarding/login")}
+                        style={{ marginTop: 24 }}
+                        //accessibilityRole="link"
+                        //accessibilityLabel="Navigate to login"
+                    >
+                        {({ pressed }) => (
+                            <Text
+                                style={{
+                                    fontWeight: "600",
+                                    color: pressed ? "darkblue" : "blue",
+                                    textDecorationLine: "underline",
+                                }}
+                            >
+                                Already have an account? Login
+                            </Text>
+                        )}
+                    </Pressable>
+                </View>
             </KeyboardScrollView>
         </GenericOnboardContent>
     );

@@ -1,7 +1,7 @@
 import colors from "@/colors";
-import { WritableAtom, useAtom, useAtomValue, useSetAtom } from "jotai";
-import { Switch, View, Text, Pressable, GestureResponderEvent } from "react-native";
 import { Entypo } from "@expo/vector-icons";
+import { WritableAtom, useAtom, useAtomValue, useSetAtom } from "jotai";
+import { Pressable, Switch, Text, View } from "react-native";
 
 interface SettingsSwitchProps {
     atom: WritableAtom<unknown, [unknown], void>;
@@ -11,16 +11,26 @@ interface SettingsSwitchProps {
 
 interface OptionBlockProps {
     text?: string;
-    atom?: WritableAtom<unknown, [unknown], void>;
     href?: string;
     isFirst?: boolean;
     isLast?: boolean;
     multiSelect?: boolean;
     icon?: React.ReactNode;
-    onPress?: (event: GestureResponderEvent) => void;
+    onPress?: Function;
 }
 
-export function MultiSelectOptionBlock({ text, atom, onPress, icon, isFirst, isLast }:OptionBlockProps) {
+interface MultiSelectProps extends OptionBlockProps {
+    atom: WritableAtom<unknown, [unknown], void>;
+}
+
+export function MultiSelectOptionBlock({
+    text,
+    atom,
+    onPress,
+    icon,
+    isFirst,
+    isLast,
+}: MultiSelectProps) {
     const setValue = useSetAtom(atom);
     return (
         <OptionBlock
@@ -30,7 +40,7 @@ export function MultiSelectOptionBlock({ text, atom, onPress, icon, isFirst, isL
             atom={atom}
             onPress={() => {
                 setValue(text);
-                if(onPress) onPress();
+                if (onPress) onPress();
             }}
             isFirst={isFirst}
             isLast={isLast}
@@ -38,6 +48,9 @@ export function MultiSelectOptionBlock({ text, atom, onPress, icon, isFirst, isL
     );
 }
 
+interface SingleOptionBlockProps extends OptionBlockProps {
+    atom?: WritableAtom<unknown, [unknown], void>;
+}
 export function OptionBlock({
     text,
     atom,
@@ -46,7 +59,7 @@ export function OptionBlock({
     multiSelect,
     isFirst,
     isLast,
-}: OptionBlockProps) {
+}: SingleOptionBlockProps) {
     let className = isLast
         ? "rounded-b-xl"
         : "border-b border-gray-200 dark:border-neutral-800";
@@ -54,7 +67,9 @@ export function OptionBlock({
     return (
         <Pressable
             className={`flex-row items-center justify-between h-14 bg-gray-100 px-4 dark:bg-neutral-900 ${className}`}
-            onPress={()=>{if(onPress) onPress();}}
+            onPress={() => {
+                if (onPress) onPress();
+            }}
         >
             <View className="flex flex-row items-center gap-3">
                 {icon}
@@ -73,24 +88,28 @@ export function OptionBlock({
     );
 }
 
-export function SettingsSwitch({ atom, label, icon }:SettingsSwitchProps) {
+function SettingsSwitch({
+    atom,
+}: {
+    atom: WritableAtom<unknown, [unknown], void>;
+}) {
     const [toggled, setToggled] = useAtom(atom);
     return (
-        <View className="mt-4 flex-row items-center justify-between h-14 bg-gray-100 px-4 dark:bg-neutral-900 rounded-b-xl rounded-t-xl">
-            <View className="flex flex-row items-center gap-3">
-                {icon}
-                <Text className="text-xl dark:text-white">{label}</Text>
-            </View>
-            <Switch
-                trackColor={{ false: "gray", true: colors.blue }}
-                onValueChange={() => setToggled(!toggled)}
-                value={toggled as boolean}
-            />
-        </View>
+        <Switch
+            trackColor={{ false: "gray", true: colors.blue }}
+            onValueChange={() => setToggled(!toggled)}
+            value={toggled as boolean}
+        />
     );
 }
 
-function MultiSelectSwitch({ atom, name }) {
+function MultiSelectSwitch({
+    atom,
+    name,
+}: {
+    atom: WritableAtom<unknown, [unknown], void>;
+    name: string | undefined;
+}) {
     const selectedValue = useAtomValue(atom);
     const isSelected = selectedValue == name;
     return (

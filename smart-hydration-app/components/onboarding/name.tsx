@@ -18,9 +18,8 @@ export default function Name({ isOnboarding, pronoun, nextHref }: NameProps) {
     const [errorMessage, setErrorMessage] = useState("");
     const [proceed, setProceed] = useState(false);
     const [name, setName] = useState("");
-    const setInfo = isOnboarding
-        ? useSetAtom(registerInfoAtom)
-        : useSetAtom(jugUserInfoAtom);
+    const setRegisterInfo = useSetAtom(registerInfoAtom);
+    const setJugUserInfo = useSetAtom(jugUserInfoAtom);
 
     const validateName = () => {
         if (name.length == 0) {
@@ -29,7 +28,9 @@ export default function Name({ isOnboarding, pronoun, nextHref }: NameProps) {
         } else {
             setErrorMessage("");
             setProceed(true);
-            setInfo((prev) => ({ ...prev, name: name }));
+            if (isOnboarding)
+                setRegisterInfo((prev) => ({ ...prev, name: name }));
+            else setJugUserInfo((prev) => ({ ...prev, name: name }));
         }
     };
 

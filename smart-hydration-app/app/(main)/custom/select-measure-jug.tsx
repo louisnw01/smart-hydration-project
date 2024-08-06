@@ -7,7 +7,6 @@ import { Text, View } from "react-native";
 
 export default function AddCupSizeInMls() {
     const setJugId = useSetAtom(selectedJugIdAtom);
-
     return (
         <View className="mx-6 mt-20 h-full">
             <Text className="text-xl font-bold dark:text-white mb-10">
@@ -20,6 +19,7 @@ export default function AddCupSizeInMls() {
                     setJugId(device.id);
                     router.push("custom/fill-cup");
                 }}
+                queryAtom={getJugDataQAtom}
             />
         </View>
     );

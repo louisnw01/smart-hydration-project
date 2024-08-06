@@ -1,4 +1,4 @@
-interface JugUserInfo {
+export interface JugUserInfo {
     name: string;
     dob: string;
     height: string;

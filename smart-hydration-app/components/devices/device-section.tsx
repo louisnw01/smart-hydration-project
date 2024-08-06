@@ -6,7 +6,8 @@ import { FontAwesome } from "@expo/vector-icons";
 import { Atom, useAtomValue } from "jotai";
 import { AtomWithQueryResult } from "jotai-tanstack-query";
 
-import { userHasCommunityAtom } from "@/atom/query/community";
+import { userHasCommunityAtom } from "@/atom/query";
+import { DeviceInfo } from "@/interfaces/device";
 import { FlatList, RefreshControl, View } from "react-native";
 import StyledButton from "../common/button";
 import Loading from "../common/loading";
@@ -19,8 +20,8 @@ export default function DeviceSection({
     showChangeJugUser,
 }: {
     addJugButton?: boolean;
-    onPress: Function;
-    queryAtom: Atom<AtomWithQueryResult>;
+    onPress: (device: DeviceInfo) => void;
+    queryAtom: Atom<AtomWithQueryResult<DeviceInfo[]>>;
     showChangeJugUser?: boolean;
 }) {
     const palette = useColorPalette();
@@ -37,12 +38,7 @@ export default function DeviceSection({
 
     const listItems =
         data?.map((device) => (
-            <DeviceRow
-                device={device}
-                onPress={(device) => {
-                    onPress(device);
-                }}
-            />
+            <DeviceRow device={device} onPress={onPress} />
         )) || [];
 
     if (addJugButton) {
@@ -74,7 +70,7 @@ export default function DeviceSection({
             contentContainerClassName="gap-6"
             data={listItems}
             renderItem={({ item }) => item}
-            keyExtractor={(item, idx) => idx}
+            keyExtractor={(item, idx) => idx.toString()}
             refreshControl={
                 <RefreshControl
                     refreshing={isRefreshing}

@@ -1,7 +1,7 @@
 import useColorPalette from "@/util/palette";
-import { Ref, useState } from "react";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useState } from "react";
 import { Text, TextInput, TextInputProps, View } from "react-native";
-import { MaterialCommunityIcons } from "@expo/vector-icons"
 
 interface StyledTextInputProps extends TextInputProps {
     requiredIcon?: boolean;
@@ -38,7 +38,7 @@ export default function StyledTextInput(props: StyledTextInputProps) {
                 className="flex-1 h-8 text-xl dark:bg-neutral-800 dark:text-white"
                 {...props}
                 secureTextEntry={props.secureTextEntry == undefined ? undefined : !showPassword}
-                
+
             />
             { props.secureTextEntry != undefined && (
             <MaterialCommunityIcons

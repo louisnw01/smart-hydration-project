@@ -3,7 +3,7 @@ import { atom } from "jotai";
 import { getJugDataQAtom, getPatientJugDataQAtom } from "./query";
 
 export const selectedJugIdAtom = atom<string | null>(null);
-export const selectedDeviceAtom = atom<DeviceInfo | null>((get) => {
+export const selectedDeviceAtom = atom<DeviceInfo | undefined>((get) => {
     const jugId = get(selectedJugIdAtom);
     const { data, isLoading } = get(getJugDataQAtom);
 

@@ -1,9 +1,13 @@
+import { ReactNode } from "react";
 import { KeyboardAvoidingView, ScrollView } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function KeyboardScrollView({
     children,
     keyboardVerticalOffset,
+}: {
+    children: ReactNode;
+    keyboardVerticalOffset: number;
 }) {
     const insets = useSafeAreaInsets();
     return (

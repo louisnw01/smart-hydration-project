@@ -1,20 +1,11 @@
 import { selectedJugIdAtom } from "@/atom/device";
 import {
-    fetchJugData,
-    getAllJugsQAtom,
-    getCommunityJugDataQAtom,
-    getJugDataQAtom,
-    linkJugToUserMAtom,
-    unlinkJugFromUserMAtom,
-} from "@/atom/query";
-import {
-    communityInfoQAtom,
-    isCommunityOwnerAtom,
     linkJugsToCommunityMemberMAtom,
     patientInfoQAtom,
-} from "@/atom/query/community";
-import { authTokenAtom } from "@/atom/user";
+    unlinkJugFromUserMAtom,
+} from "@/atom/query";
 import Loading from "@/components/common/loading";
+import { MemberInfo } from "@/interfaces/community";
 import { useNavigation } from "expo-router";
 import { useAtomValue } from "jotai";
 import { useState } from "react";
@@ -26,14 +17,17 @@ export default function MVPAddDeviceModal() {
     const navigation = useNavigation();
     const selectedJugId = useAtomValue(selectedJugIdAtom);
     const { mutate: unlinkJugFromUser } = useAtomValue(unlinkJugFromUserMAtom);
-    const [selectedUser, setSelectedUser] = useState("0");
+    const [selectedUser, setSelectedUser] = useState<number | null>();
     //const communityJugData = getCommunityJugDataQAtom();
     const { mutate: linkJugToCommunityMember } = useAtomValue(
         linkJugsToCommunityMemberMAtom,
     );
-    const handleSelect = (juser_id: string) => {
+
+    if (!selectedJugId) return;
+
+    const handleSelect = (juser_id: MemberInfo) => {
         if (selectedUser == juser_id.id) {
-            setSelectedUser("0");
+            setSelectedUser(null);
         } else {
             setSelectedUser(juser_id.id);
         }
@@ -45,7 +39,7 @@ export default function MVPAddDeviceModal() {
             jugIds: [selectedJugId],
             communityMember: Number(selectedUser),
         });
-        unlinkJugFromUser(selectedJugId);
+        unlinkJugFromUser({ jugId: selectedJugId });
 
         navigation.goBack();
         navigation.goBack();
@@ -87,16 +81,16 @@ export default function MVPAddDeviceModal() {
                             </View>
                         </Pressable>
                     )}
-                    renderSectionHeader={({ section }) => (
-                        <Text className="text-xl font-bold ml-4 pt-4 dark:text-white">
-                            {section.title}
-                        </Text>
-                    )}
+                    // renderSectionHeader={({ section }) => (
+                    //     <Text className="text-xl font-bold ml-4 pt-4 dark:text-white">
+                    //         {section.title}
+                    //     </Text>
+                    // )}
                     keyExtractor={(item) => `jug-list-${item}`}
-                    stickySectionHeadersEnabled={false}
+                    // stickySectionHeadersEnabled={false}
                 />
             )}
-            {selectedUser != "0" && (
+            {selectedUser !== null && (
                 <Pressable
                     className="bg-blue items-center mx-16 justify-center px-3 py-3 rounded-3xl"
                     onPress={handlePress}

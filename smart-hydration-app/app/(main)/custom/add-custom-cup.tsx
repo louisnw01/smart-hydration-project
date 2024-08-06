@@ -1,12 +1,8 @@
-import { userHasJugsAtom } from "@/atom/hydration";
 import StyledButton from "@/components/common/button";
 import { router } from "expo-router";
-import { useAtomValue } from "jotai";
 import { Text, View } from "react-native";
 
 export default function AddCustomCup() {
-    const hasJugs = useAtomValue(userHasJugsAtom);
-
     return (
         <View className="mx-6 mt-20">
             <Text className="text-xl font-bold dark:text-white">

@@ -34,7 +34,7 @@ export function ScrollPageWrapper({
     isLoading?: boolean;
     message?: string;
     className?: string;
-    queryRefreshAtom: Atom<AtomWithQueryResult>;
+    queryRefreshAtom?: Atom<AtomWithQueryResult>;
 }) {
     const { isRefreshing, handleRefresh } = queryRefreshAtom
         ? useQueryRefetch(queryRefreshAtom)
