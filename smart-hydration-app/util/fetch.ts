@@ -24,6 +24,7 @@ export const ENDPOINTS = {
     USER_EXISTS: "/user/exists",
     ADD_DRINK: "/jug-user/add-drink-event",
     UPDATE_USER_TARGET: "/user/update-user-target",
+    GET_USER_TARGET: "/user/get-user-target",
     ADD_TAGS_PATIENT: "/jug-user/add-tags-patient",
     FETCH_COMMUNITY_JUG_LIST: "/community/get-community-jug-list",
 
@@ -54,7 +55,7 @@ export const ENDPOINTS = {
     TOGGLE_NOTIFICATIONS: "/user/toggle-notifications",
     TOGGLE_NOTIFICATIONS_FREQUENCY: "/user/toggle-notifications-frequency",
 
-    CHANGE_MODE :"/user/change-mode",
+    CHANGE_MODE: "/user/change-mode",
 };
 
 interface RequestOptions {
