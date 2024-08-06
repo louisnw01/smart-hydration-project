@@ -1,5 +1,5 @@
 import JugIcon from "@/assets/svgs/jug.svg";
-import { selectedDeviceAtom } from "@/atom/device";
+import { selectedDeviceAtom, selectedJugIdAtom } from "@/atom/device";
 import { unlinkJugFromUserMAtom } from "@/atom/query";
 import { userHasCommunityAtom } from "@/atom/query/community";
 import colors from "@/colors";

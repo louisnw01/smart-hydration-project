@@ -191,7 +191,7 @@ export default function CommunityPage() {
 
                     <View className="absolute w-20 h-[3.3rem] right-4 top-4 bg-blue px-4 py-2 rounded-xl ml-2">
                         <Pressable onPress={handleSortPress}>
-                            <Text className="pt-2 text-center text-2l font-semibold text-white">
+                            <Text className="pt-2 text-center font-semibold text-white">
                                 {`${filters.sort === "asc" ? "Asc" : "Desc"}`}
                             </Text>
                         </Pressable>
@@ -207,6 +207,7 @@ export default function CommunityPage() {
                                 />
                             }
                         > */}
+                        <View className="py-2"></View>
                         <FlatList
                             data={filteredData || []}
                             contentContainerClassName="flex gap-6"

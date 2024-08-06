@@ -21,7 +21,6 @@ import {
     registerInfoAtom,
 } from "./user";
 
-
 export const linkJugsToMemberMAtom = atomWithMutation((get) => ({
     mutationKey: ["/community/link-jug-to-member", get(authTokenAtom)],
     enabled: !!get(authTokenAtom),
@@ -156,15 +155,11 @@ export const updateUserTarget = atomWithMutation((get) => ({
         if (!response.ok) {
             alert("Could not update user target");
         }
-
         return;
     },
-
-    onSuccess: (data, formData) => {
-        const queryClient = get(queryClientAtom);
-        void queryClient.setQueryData(["get-user-target", get(authTokenAtom)], {
-            target: formData.newValue,
-        });
+    onSuccess: () => {
+        const qc = get(queryClientAtom);
+        qc.invalidateQueries({ queryKey: ["user-info"] });
     },
 }));
 
@@ -558,8 +553,6 @@ export const addDrinkMAtom = atomWithMutation((get) => ({
     },
 }));
 
-
-
 export const dailyTargetAtom = atom((get) => {
     const { data, isLoading } = get(userInfoQAtom);
     return isLoading ? null : data?.target;
@@ -570,6 +563,13 @@ export const addTagsPatientMAtom = atomWithMutation((get) => ({
     enabled: !!get(authTokenAtom),
     mutationFn: async () => {
         const member = get(selectedMemberAtom);
+
+        const formData: { memberID: number; memberTags: string[] } = {
+            memberID: member.id as number,
+            memberTags: member.tags as string[],
+        };
+        console.log("member id:", member.id);
+        console.log("member tags:", member.tags);
         const formData: {memberID: number, memberTags: TagInfo[]} = 
             {
                 memberID: member.id as number,
@@ -587,19 +587,15 @@ export const addTagsPatientMAtom = atomWithMutation((get) => ({
         if (!response.ok) {
             return "failure";
         }
-      }, 
+    },
     onSuccess: (data, formData) => {
         const queryClient = get(queryClientAtom);
         void queryClient.setQueryData(
             ["/community/get-patient-info", get(authTokenAtom)],
-            (prev: MemberInfo[]) => [
-                ...prev,
-                { tags: formData.memberTags },
-            ],
+            (prev: MemberInfo[]) => [...prev, { tags: formData.memberTags }],
         );
     },
 }));
-
 
 export const addCommunityDrinkMAtom = atomWithMutation((get) => ({
     mutationKey: ["/community/add-community-drink-event", get(authTokenAtom)],
