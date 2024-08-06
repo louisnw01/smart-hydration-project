@@ -1,5 +1,6 @@
 import { amountDrankTodayAtom } from "@/atom/hydration";
-import { dailyTargetAtom, userInfoQAtom } from "@/atom/query";
+import { userInfoQAtom } from "@/atom/query";
+import { dailyTargetAtom, unitConverter, unitsAtom } from "@/atom/user";
 import colors from "@/colors";
 import { HYDRATION_MESSAGE } from "@/constants/hydration-status";
 import { getRelativeTarget } from "@/util/trends";
@@ -8,7 +9,8 @@ import { Text, View } from "react-native";
 
 export default function HydrationStatus() {
     const hydration = useAtomValue(amountDrankTodayAtom);
-    const target = useAtomValue(dailyTargetAtom);
+    const unit = useAtomValue(unitsAtom);
+    const target = unitConverter(useAtomValue(dailyTargetAtom), unit);
     const hydrated = hydration >= getRelativeTarget(target);
     const { isLoading, data } = useAtomValue(userInfoQAtom);
 

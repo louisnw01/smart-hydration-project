@@ -2,14 +2,7 @@ import StyledButton from "@/components/common/button";
 import PageWrapper from "@/components/common/page-wrapper";
 import { useAtom, useAtomValue } from "jotai";
 import React, { ReactElement, useEffect, useState } from "react";
-import {
-    FlatList,
-    Pressable,
-    RefreshControl,
-    ScrollView,
-    Text,
-    View,
-} from "react-native";
+import { FlatList, RefreshControl, ScrollView, Text, View } from "react-native";
 
 import { selectedSortMethodAtom } from "@/atom/community";
 import {
@@ -20,15 +13,23 @@ import {
 import Loading from "@/components/common/loading";
 import StyledTextInput from "@/components/common/text-input";
 import MemberRow from "@/components/community/member-row";
-import { FilterObject } from "@/interfaces/community";
+import { FilterObject, MemberInfo } from "@/interfaces/community";
+import useColorPalette from "@/util/palette";
+import { Entypo } from "@expo/vector-icons";
+import { useFocusEffect } from "expo-router";
 import { SelectList } from "react-native-dropdown-select-list";
 
 export default function CommunityPage() {
-    const { isLoading, refetch } = useAtomValue(communityInfoQAtom);
-    const { data, isLoading: patientInfoIsLoading } =
-        useAtomValue(patientInfoQAtom);
+    const { isLoading, refetch: refetchCommunityInfo } =
+        useAtomValue(communityInfoQAtom);
+    const {
+        data,
+        isLoading: patientInfoIsLoading,
+        refetch: refetchPatientInfo,
+    } = useAtomValue(patientInfoQAtom);
     const hasCommunity = useAtomValue(userHasCommunityAtom);
     const [refreshing, setRefreshing] = useState(false);
+    const palette = useColorPalette();
 
     const [filteredData, setFilteredData] = useState<ReactElement[]>([]);
     const [textInput, setTextInput] = useState("");
@@ -37,6 +38,14 @@ export default function CommunityPage() {
         sort: "asc",
     });
     const [selected, setSelected] = useAtom(selectedSortMethodAtom);
+
+    //refetch CommunityInfo and PatientInfo when the user navigates to this page
+    useFocusEffect(
+        React.useCallback(() => {
+            refetchCommunityInfo();
+            refetchPatientInfo();
+        }, [refetchCommunityInfo, refetchPatientInfo]),
+    );
 
     useEffect(() => {
         if (data === undefined) return;
@@ -97,7 +106,8 @@ export default function CommunityPage() {
     };
 
     const handleRefresh = () => {
-        refetch();
+        refetchCommunityInfo();
+        refetchPatientInfo();
         setRefreshing(true);
     };
 
@@ -115,11 +125,10 @@ export default function CommunityPage() {
         return <Loading isLoading />;
     }
 
-    const sortMethod = [
+    const sortMethod: { key: keyof MemberInfo; value: string }[] = [
         { key: "name", value: "Name" },
-        { key: "target_percentage", value: "Progress To Target" },
-        { key: "drank_today", value: "Amount Drank Today" },
-        { key: "last_drank", value: "Last Drank" },
+        { key: "drankToday", value: "Amount Drank Today" },
+        { key: "lastDrank", value: "Last Drank" },
     ];
 
     if (!hasCommunity) {
@@ -157,35 +166,46 @@ export default function CommunityPage() {
     } else {
         return (
             <PageWrapper>
-                <View className="flex-row px-4 pt-4 pr ">
-                    <Text className="py-3 text-xl font-semibold">
-                        Sort by:{" "}
+                <View className="flex-row px-4 pt-4 pr mb-4 gap-4 justify-evenly">
+                    <Text className="py-3 text-xl font-semibold dark:text-white">
+                        Sort by:
                     </Text>
-                    <SelectList
-                        setSelected={(val: string) => {
-                            handleSortChange(val);
-                        }}
-                        data={sortMethod}
-                        save="key"
-                        search={false}
-                        boxStyles={{
-                            borderColor: "#f0f0f0",
-                            width: "80%",
-                        }}
-                        dropdownStyles={{
-                            width: "125%",
-                            transform: [{ translateX: -68 }],
-                            borderColor: "#f0f0f0",
-                        }}
-                    />
-
-                    <View className="absolute w-20 h-[3.3rem] right-4 top-4 bg-blue px-4 py-2 rounded-xl ml-2">
-                        <Pressable onPress={handleSortPress}>
-                            <Text className="pt-2 text-center text-2l font-semibold text-white">
-                                {`${filters.sort === "asc" ? "Asc" : "Desc"}`}
-                            </Text>
-                        </Pressable>
+                    <View className="w-68">
+                        <SelectList
+                            arrowicon=<Entypo
+                                name="chevron-down"
+                                size={24}
+                                color={palette.fglight}
+                            />
+                            setSelected={(val) => {
+                                handleSortChange(val);
+                            }}
+                            data={sortMethod}
+                            save="key"
+                            search={false}
+                            boxStyles={{
+                                borderColor: "rgb(80, 80, 80)",
+                            }}
+                            dropdownStyles={{
+                                // transform: [{ translateX: -68 }],
+                                borderColor: "rgb(80, 80, 80)",
+                            }}
+                            dropdownTextStyles={{
+                                color: palette.fg,
+                            }}
+                            inputStyles={{
+                                color: palette.fg,
+                                alignSelf: "center",
+                            }}
+                        />
                     </View>
+
+                    <StyledButton
+                        text={`${filters.sort === "asc" ? "Asc" : "Desc"}`}
+                        onPress={handleSortPress}
+                        buttonClass="bg-blue items-center rounded-xl w-20 h-12"
+                        textClass="font-semibold text-white text-center w-full"
+                    />
                 </View>
                 <View className="flex-1">
                     <View className="flex-1">
@@ -197,17 +217,7 @@ export default function CommunityPage() {
                                 />
                             }
                         > */}
-                        <View className="flex flex-row mx-2 items-center my-2">
-                            <Pressable
-                                onPress={handleSortPress}
-                                className="bg-blue px-4 py-2 rounded-xl ml-2"
-                            >
-                                <Text className="text-2l font-semibold text-white">
-                                    {`Sort by name ${filters.sort === "asc" ? "A-Z" : "Z-A"}`}
-                                </Text>
-                            </Pressable>
-                        </View>
-
+                        <View className="py-2"></View>
                         <FlatList
                             data={filteredData || []}
                             keyExtractor={(patient, idx) => idx.toString()}

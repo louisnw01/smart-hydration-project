@@ -2,11 +2,12 @@ import { selectedMemberAtom } from "@/atom/community";
 import { addTagsPatientMAtom, communityTagsQAtom } from "@/atom/query";
 import StyledButton from "@/components/common/button";
 import PageWrapper from "@/components/common/page-wrapper";
+import StyledTextInput from "@/components/common/text-input";
 import Tag from "@/components/community/tag";
 import { FilterObject, TagInfo } from "@/interfaces/community";
 import { useAtom, useAtomValue } from "jotai";
 import { useEffect, useState } from "react";
-import { Pressable, ScrollView, Text, TextInput, View } from "react-native";
+import { Pressable, ScrollView, Text, View } from "react-native";
 
 const filterAndSortData = (
     unappliedTags: TagInfo[],
@@ -45,7 +46,6 @@ export default function ApplyTags() {
     const handleAppliedPress = (tag: TagInfo) => {
         moveFromApplied(tag.name);
     };
-
     const handleUnappliedPress = (tag: TagInfo) => {
         moveToApplied(tag.name);
     };
@@ -53,8 +53,8 @@ export default function ApplyTags() {
     const [appliedTags, setAppliedTags] = useState<TagInfo[] | null>(
         member?.tags || null,
     );
-    const [unappliedTags, setUnappliedTags] = useState<TagInfo[]>([]);
 
+    const [unappliedTags, setUnappliedTags] = useState<TagInfo[]>([]);
     const filterUnappliedTags = () => {
         if (appliedTags == null) return;
         const filteredUnappliedTags = communityTags.filter(
@@ -139,22 +139,19 @@ export default function ApplyTags() {
             <ScrollView>
                 <View className="mt-8 flex gap-6">
                     <Text className="dark:text-white text-2xl mx-6">
-                        Press a tag to move it to the other section
+                        Apply tags to {member?.name}. Press a tag to move it to the other section
                     </Text>
                     <Text className="dark:text-white font-bold text-2xl mx-6">
                         Applied tags
                     </Text>
                     {appliedTags.length === 0 && (
-                        <Text className="dark:text-white text-xl">
+                        <Text className="dark:text-white text-xl mx-6">
                             No tags applied to user
                         </Text>
                     )}
                     <View className="flex-row flex-wrap my-2 mx-3">
-                        {appliedTags.map((tag, index) => (
-                            <Pressable
-                                key={index}
-                                onPress={() => handleAppliedPress(tag)}
-                            >
+                        {appliedTags.map((tag) => (
+                            <Pressable key={tag.id} onPress={() => handleAppliedPress(tag)}>
                                 <Tag name={tag.name} />
                             </Pressable>
                         ))}
@@ -169,11 +166,8 @@ export default function ApplyTags() {
                         </Text>
                     )}
                     <View className="flex-row flex-wrap my-2 mx-3">
-                        {filteredUnappliedTags.map((tag, index) => (
-                            <Pressable
-                                key={index}
-                                onPress={() => handleUnappliedPress(tag)}
-                            >
+                        {filteredUnappliedTags.map((tag) => (
+                            <Pressable key={tag.id} onPress={() => handleUnappliedPress(tag)}>
                                 <Tag name={tag.name} />
                             </Pressable>
                         ))}
@@ -188,12 +182,10 @@ export default function ApplyTags() {
                     </View>
                 </View>
             </ScrollView>
-            <View className="flex flex-row items-center p-2">
+            <View className="flex flex-row items-center p-2 mb-6">
                 <View className="flex-1">
-                    <TextInput
-                        value={textInput}
+                <StyledTextInput
                         placeholder="Search unapplied tags..."
-                        className="bg-gray-200 h-14 placeholder-black text-xl rounded-xl px-3 mb-7 m-1 border"
                         onChangeText={(val) => {
                             setTextInput(val);
                             setFilters((prev) => ({
@@ -208,7 +200,7 @@ export default function ApplyTags() {
                 <View className="justify-center ml-2">
                     <Pressable
                         onPress={handleClearPress}
-                        className="bg-blue px-4 py-2 rounded-xl mb-6"
+                        className="bg-blue px-4 py-2 rounded-xl"
                     >
                         <Text className="text-xl font-semibold text-white">
                             Clear search

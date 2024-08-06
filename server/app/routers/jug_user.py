@@ -47,6 +47,6 @@ async def add_tags_patient(form: AddTagsPatientForm, user_id: str = Depends(auth
         if not user:
             raise HTTPException(status_code=400, detail='user not found')
         juguser = JugUser.get(id=form.memberID)
-        tags = [Tag[id] for id in form.memberTags]
-        juguser.tags = tags
+
+        juguser.tags = [Tag[id] for id in form.memberTags]
         commit()

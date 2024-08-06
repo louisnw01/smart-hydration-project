@@ -9,7 +9,7 @@ import {
 import StyledButton from "@/components/common/button";
 import { OptionBlock } from "@/components/common/option-block";
 import { ISettingsSection } from "@/interfaces/settings";
-import { Feather, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useAtomValue, useSetAtom } from "jotai";
 import { useEffect } from "react";
@@ -20,21 +20,21 @@ const settingsList: ISettingsSection[] = [
     {
         title: "Account",
         data: [
-            {
-                name: "Profile",
-                Component: (name, isFirst, isLast) => {
-                    return (
-                        <OptionBlock
-                            isLast={isLast}
-                            text={name}
-                            onPress={() => router.navigate("settings/profile")}
-                            icon={
-                                <Feather name="user" size={18} color="gray" />
-                            }
-                        />
-                    );
-                },
-            },
+            // {
+            //     name: "Profile",
+            //     Component: (name, isFirst, isLast) => {
+            //         return (
+            //             <OptionBlock
+            //                 isLast={isLast}
+            //                 text={name}
+            //                 onPress={() => router.navigate("settings/profile")}
+            //                 icon={
+            //                     <Feather name="user" size={18} color="gray" />
+            //                 }
+            //             />
+            //         );
+            //     },
+            // },
             {
                 name: "User Mode",
                 Component: (name, isFirst, isLast) => {
@@ -59,25 +59,25 @@ const settingsList: ISettingsSection[] = [
     {
         title: "Data",
         data: [
-            {
-                name: "Other Drinks",
-                Component: (name, isFirst, isLast) => {
-                    return (
-                        <OptionBlock
-                            isLast={isLast}
-                            text={name}
-                            onPress={() => router.navigate("settings/theme")}
-                            icon={
-                                <MaterialCommunityIcons
-                                    name="cup-water"
-                                    size={19}
-                                    color="gray"
-                                />
-                            }
-                        />
-                    );
-                },
-            },
+            // {
+            //     name: "Other Drinks",
+            //     Component: (name, isFirst, isLast) => {
+            //         return (
+            //             <OptionBlock
+            //                 isLast={isLast}
+            //                 text={name}
+            //                 onPress={() => router.navigate("settings/theme")}
+            //                 icon={
+            //                     <MaterialCommunityIcons
+            //                         name="cup-water"
+            //                         size={19}
+            //                         color="gray"
+            //                     />
+            //                 }
+            //             />
+            //         );
+            //     },
+            // },
             {
                 name: "Daily Target",
                 Component: (name, isFirst, isLast) => {
@@ -90,7 +90,28 @@ const settingsList: ISettingsSection[] = [
                             }
                             icon={
                                 <MaterialCommunityIcons
-                                    name="cup-water"
+                                    name="target"
+                                    size={19}
+                                    color="gray"
+                                />
+                            }
+                        />
+                    );
+                },
+            },
+            {
+                name: "Units",
+                Component: (name, isFirst, isLast) => {
+                    return (
+                        <OptionBlock
+                            isLast={isLast}
+                            text={name}
+                            onPress={() =>
+                                router.navigate("settings/adjust-units")
+                            }
+                            icon={
+                                <MaterialCommunityIcons
+                                    name="scale"
                                     size={19}
                                     color="gray"
                                 />
@@ -141,8 +162,8 @@ const settingsList: ISettingsSection[] = [
                                 )
                             }
                             icon={
-                                <Ionicons
-                                    name="color-palette"
+                                <MaterialCommunityIcons
+                                    name="account-group-outline"
                                     size={19}
                                     color="gray"
                                 />

@@ -46,18 +46,51 @@ export default function AddJugUserLayout() {
                 name="name"
                 options={{
                     title: "What is their name?",
+                    headerLeft: () => {
+                        return (
+                            <Pressable onPress={() => router.back()}>
+                                <Entypo
+                                    name="chevron-left"
+                                    size={24}
+                                    color="rgb(80, 80, 80)"
+                                />
+                            </Pressable>
+                        );
+                    },
                 }}
             />
             <Stack.Screen
                 name="dob"
                 options={{
                     title: "What is their date of birth?",
+                    headerLeft: () => {
+                        return (
+                            <Pressable onPress={() => router.back()}>
+                                <Entypo
+                                    name="chevron-left"
+                                    size={24}
+                                    color="rgb(80, 80, 80)"
+                                />
+                            </Pressable>
+                        );
+                    },
                 }}
             />
             <Stack.Screen
                 name="submit"
                 options={{
                     title: "You're almost there!",
+                    headerLeft: () => {
+                        return (
+                            <Pressable onPress={() => router.back()}>
+                                <Entypo
+                                    name="chevron-left"
+                                    size={24}
+                                    color="rgb(80, 80, 80)"
+                                />
+                            </Pressable>
+                        );
+                    },
                 }}
             />
         </Stack>

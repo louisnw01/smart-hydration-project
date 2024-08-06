@@ -1,5 +1,6 @@
 import { chartTimeWindowAtom } from "@/atom/nav";
 import { getHydrationQAtom } from "@/atom/query";
+import { unitConverter, unitsAtom } from "@/atom/user";
 import { MS_DAY, MS_HOUR, MS_MONTH, MS_WEEK } from "@/constants/data";
 import { Timeframe } from "@/interfaces/data";
 import { ITimeSeries } from "@/interfaces/device";
@@ -121,7 +122,11 @@ export const formattedDataAtom = atom((get) => {
     if (isLoading || !data) {
         return [];
     }
-    return getAggregates(data, type);
+
+    const unit = get(unitsAtom);
+    const convertedData = data.map((row) => ({time:row.time, value:unitConverter(row.value, unit)}))
+
+    return getAggregates(convertedData, type);
 });
 
 export interface FormattedData {

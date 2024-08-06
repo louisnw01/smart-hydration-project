@@ -147,7 +147,7 @@ async def delete_community_member(form: DeleteCommunityMemberForm, user_id: str 
 
 
 @router.post("/leave")
-async def delete_community_member(user_id: str = Depends(auth_user)):
+async def leave_community(user_id: str = Depends(auth_user)):
     with db_session:
         user = User.get(id=user_id)
 
@@ -340,5 +340,8 @@ async def add_community_drink_event(form: AddCommunityDrinkForm, user_id: str = 
             raise HTTPException(400, 'user does not have permissions to add drinks for this community')
         juguser = JugUser.get(id=form.juser_id)
         OtherDrink(juguser=juguser, timestamp=form.timestamp, name=form.name, capacity=form.capacity)
+        if juguser.drank_today == None:
+            juguser.drank_today = 0
         juguser.drank_today += form.capacity
+        juguser.last_drank = form.timestamp
         commit()

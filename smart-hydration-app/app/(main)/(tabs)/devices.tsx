@@ -4,6 +4,7 @@ import {
     getJugDataQAtom,
     userHasCommunityAtom,
 } from "@/atom/query";
+
 import PageWrapper from "@/components/common/page-wrapper";
 import DeviceSection from "@/components/devices/device-section";
 import { router } from "expo-router";
@@ -28,7 +29,7 @@ export default function DevicesPage() {
                     />
                     {isInCommunity && (
                         <View className="flex">
-                            <Text className="text-2xl font-semibold py-4">
+                            <Text className="text-2xl font-semibold py-4 dark:text-white">
                                 Community Jugs
                             </Text>
                             <DeviceSection

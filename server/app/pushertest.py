@@ -9,7 +9,7 @@ from pony.orm.core import db_session, select
 
 from .api import SmartHydrationSession, get_hydration_events, get_jug_latest
 from .routers.websocket_tunnel import tunnel
-from .models import Jug, OtherDrink, User
+from .models import Jug, JugUser, OtherDrink, User
 
 
 async def fire_jug_info(sys_id):
@@ -47,25 +47,31 @@ async def fire_drank_today(sys_id):
         jug = Jug.get(system_id=sys_id)
         if jug is None:
             return
+        owners = jug.owners.load()
 
-        async with SmartHydrationSession() as session:
+        for juguser in owners:
+            juguser.jugs.load()
 
-            for juguser in jug.owners:
-                tasks = []
-                for jug in juguser.jugs:
-                    tasks.append(get_hydration_events(session, jug.smart_hydration_id, jug.name, 0, True))
 
-                individual_jug_events = await asyncio.gather(*tasks)
+    async with SmartHydrationSession() as session:
+        for juguser in owners:
+            tasks = []
+            for jug in juguser.jugs:
+                tasks.append(get_hydration_events(session, jug.smart_hydration_id, jug.name, 0, True))
 
-                events = []
-                for jug_events in individual_jug_events:
-                    events.extend(jug_events)
+            individual_jug_events = await asyncio.gather(*tasks)
 
-                today_timestamp = dt.datetime.combine(dt.date.today(), dt.time()).timestamp()
-                drinks_today = OtherDrink.select(lambda drink: drink.juguser == juguser and drink.timestamp > today_timestamp)
+            events = []
+            for jug_events in individual_jug_events:
+                events.extend(jug_events)
 
-                events.extend([{"time": d.timestamp, "value": d.capacity, "name": "OTHERDRINK"} for d in drinks_today])
-                juguser.drank_today = sum(map(lambda e: e['value'], events), 0)
+            today_timestamp = dt.datetime.combine(dt.date.today(), dt.time()).timestamp()
+            drinks_today = OtherDrink.select(lambda drink: drink.juguser == juguser and drink.timestamp > today_timestamp)
+
+            events.extend([{"time": d.timestamp, "value": d.capacity, "name": "OTHERDRINK"} for d in drinks_today])
+
+            with db_session:
+                JugUser[juguser.id].drank_today = sum(map(lambda e: e['value'], events), 0)
 
 
 async def on_telemetry_change(data):
