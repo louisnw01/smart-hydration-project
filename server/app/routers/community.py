@@ -25,7 +25,7 @@ async def community_info(user_id: str = Depends(auth_user)):
         member = user.community_member
 
         if not member:
-            raise HTTPException(400, 'user is not part of a community')
+            return {"name": None, "isOwner": None}
 
         community = member.community
 
@@ -52,8 +52,11 @@ async def name_from_link(code: str, user_id: str = Depends(auth_user)):
 @router.get("/patient-info")
 async def patient_info(user_id: str = Depends(auth_user)):
     with db_session:
-        community = try_get_users_community(user_id)
-        user = User.get(id = user_id)
+        user = User.get(id=user_id)
+        member = user.community_member
+        if not member:
+            return []
+        community = member.community
 
         # get targets for users
         patient_info = []
