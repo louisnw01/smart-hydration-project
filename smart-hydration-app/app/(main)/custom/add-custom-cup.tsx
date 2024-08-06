@@ -2,7 +2,7 @@ import { userHasJugsAtom } from "@/atom/hydration";
 import StyledButton from "@/components/common/button";
 import { router } from "expo-router";
 import { useAtomValue } from "jotai";
-import { View, Text } from "react-native";
+import { Text, View } from "react-native";
 
 export default function AddCustomCup() {
     const hasJugs = useAtomValue(userHasJugsAtom);
@@ -16,12 +16,12 @@ export default function AddCustomCup() {
             <View className="gap-6 mt-20">
                 <StyledButton
                     text="I know the size of this cup"
-                    textClass="text-lg text-white font-medium"
+                    textClass="text-lg font-medium dark:text-white"
                     buttonClass="justify-center rounded-lg"
                 />
                 <StyledButton
                     text="I don't know the size of this cup"
-                    textClass="text-lg text-white font-medium"
+                    textClass="text-lg font-medium dark:text-white"
                     buttonClass="justify-center rounded-lg"
                     onPress={() => router.push("custom/select-measure-jug")}
                 />

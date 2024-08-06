@@ -1,10 +1,9 @@
-import { selectedDeviceAtom, selectedJugIdAtom } from "@/atom/device";
-import { userHasJugsAtom } from "@/atom/hydration";
-import StyledButton from "@/components/common/button";
+import { selectedJugIdAtom } from "@/atom/device";
+import { getJugDataQAtom } from "@/atom/query";
 import DeviceSection from "@/components/devices/device-section";
 import { router } from "expo-router";
-import { useAtomValue, useSetAtom } from "jotai";
-import { View, Text } from "react-native";
+import { useSetAtom } from "jotai";
+import { Text, View } from "react-native";
 
 export default function AddCupSizeInMls() {
     const setJugId = useSetAtom(selectedJugIdAtom);
@@ -16,6 +15,7 @@ export default function AddCupSizeInMls() {
             </Text>
 
             <DeviceSection
+                queryAtom={getJugDataQAtom}
                 onPress={(device) => {
                     setJugId(device.id);
                     router.push("custom/fill-cup");

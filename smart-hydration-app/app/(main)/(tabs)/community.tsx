@@ -1,16 +1,10 @@
 import StyledButton from "@/components/common/button";
 import PageWrapper from "@/components/common/page-wrapper";
-import { useAtomValue, useAtom } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 import React, { ReactNode, useEffect, useState } from "react";
-import {
-    FlatList,
-    Pressable,
-    RefreshControl,
-    ScrollView,
-    Text,
-    View,
-} from "react-native";
+import { FlatList, RefreshControl, ScrollView, Text, View } from "react-native";
 
+import { selectedSortMethodAtom } from "@/atom/community";
 import {
     communityInfoQAtom,
     patientInfoQAtom,
@@ -20,16 +14,22 @@ import Loading from "@/components/common/loading";
 import StyledTextInput from "@/components/common/text-input";
 import MemberRow from "@/components/community/member-row";
 import { FilterObject } from "@/interfaces/community";
-import { SelectList } from "react-native-dropdown-select-list";
-import { selectedSortMethodAtom } from "@/atom/community";
+import useColorPalette from "@/util/palette";
+import { Entypo } from "@expo/vector-icons";
 import { useFocusEffect } from "expo-router";
+import { SelectList } from "react-native-dropdown-select-list";
 
 export default function CommunityPage() {
-    const { isLoading, refetch: refetchCommunityInfo } = useAtomValue(communityInfoQAtom);
-    const { data, isLoading: patientInfoIsLoading, refetch: refetchPatientInfo} =
-        useAtomValue(patientInfoQAtom);
+    const { isLoading, refetch: refetchCommunityInfo } =
+        useAtomValue(communityInfoQAtom);
+    const {
+        data,
+        isLoading: patientInfoIsLoading,
+        refetch: refetchPatientInfo,
+    } = useAtomValue(patientInfoQAtom);
     const hasCommunity = useAtomValue(userHasCommunityAtom);
     const [refreshing, setRefreshing] = useState(false);
+    const palette = useColorPalette();
 
     const [filteredData, setFilteredData] = useState<ReactNode[]>([]);
     const [textInput, setTextInput] = useState("");
@@ -44,15 +44,15 @@ export default function CommunityPage() {
         React.useCallback(() => {
             refetchCommunityInfo();
             refetchPatientInfo();
-        }, [refetchCommunityInfo, refetchPatientInfo])
+        }, [refetchCommunityInfo, refetchPatientInfo]),
     );
 
     useEffect(() => {
         if (data === undefined) return;
         //search each word in string from beginning, don't match substrings after beginning, case insensitive
-        const searchPattern = new RegExp(`\\b${filters.searchTerm}`, 'i');
+        const searchPattern = new RegExp(`\\b${filters.searchTerm}`, "i");
         const filteredData = data.filter((member) =>
-            searchPattern.test(member.name)
+            searchPattern.test(member.name),
         );
         const sortedData = filteredData.sort((a, b) => {
             let comparison = 0;
@@ -167,35 +167,46 @@ export default function CommunityPage() {
     } else {
         return (
             <PageWrapper>
-                <View className="flex-row px-4 pt-4 pr mb-4">
-                    <Text className="py-3 text-xl font-semibold">
-                        Sort by:{" "}
+                <View className="flex-row px-4 pt-4 pr mb-4 gap-4 justify-evenly">
+                    <Text className="py-3 text-xl font-semibold dark:text-white">
+                        Sort by:
                     </Text>
-                    <SelectList
-                        setSelected={(val) => {
-                            handleSortChange(val);
-                        }}
-                        data={sortMethod}
-                        save="key"
-                        search={false}
-                        boxStyles={{
-                            borderColor: "#f0f0f0",
-                            width: "80%",
-                        }}
-                        dropdownStyles={{
-                            width: "125%",
-                            transform: [{ translateX: -68 }],
-                            borderColor: "#f0f0f0",
-                        }}
-                    />
-
-                    <View className="absolute w-20 h-[3.3rem] right-4 top-4 bg-blue px-4 py-2 rounded-xl ml-2">
-                        <Pressable onPress={handleSortPress}>
-                            <Text className="pt-2 text-center font-semibold text-white">
-                                {`${filters.sort === "asc" ? "Asc" : "Desc"}`}
-                            </Text>
-                        </Pressable>
+                    <View className="w-68">
+                        <SelectList
+                            arrowicon=<Entypo
+                                name="chevron-down"
+                                size={24}
+                                color={palette.fglight}
+                            />
+                            setSelected={(val) => {
+                                handleSortChange(val);
+                            }}
+                            data={sortMethod}
+                            save="key"
+                            search={false}
+                            boxStyles={{
+                                borderColor: "rgb(80, 80, 80)",
+                            }}
+                            dropdownStyles={{
+                                // transform: [{ translateX: -68 }],
+                                borderColor: "rgb(80, 80, 80)",
+                            }}
+                            dropdownTextStyles={{
+                                color: palette.fg,
+                            }}
+                            inputStyles={{
+                                color: palette.fg,
+                                alignSelf: "center",
+                            }}
+                        />
                     </View>
+
+                    <StyledButton
+                        text={`${filters.sort === "asc" ? "Asc" : "Desc"}`}
+                        onPress={handleSortPress}
+                        buttonClass="bg-blue items-center rounded-xl w-20 h-12"
+                        textClass="font-semibold text-white text-center w-full"
+                    />
                 </View>
                 <View className="flex-1">
                     <View className="flex-1">
