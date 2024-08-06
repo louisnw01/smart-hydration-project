@@ -1,3 +1,4 @@
+import useSettings from "@/app/hooks/user";
 import Jug from "@/assets/svgs/jug.svg";
 import { hydrationInsightsEAtom } from "@/atom/effect/hydration";
 import { userHasJugsAtom } from "@/atom/hydration";
@@ -11,6 +12,7 @@ import { useQueryRefetch } from "@/util/query-refetch";
 import { FontAwesome, MaterialCommunityIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useAtomValue } from "jotai";
+import { useEffect } from "react";
 import { RefreshControl, ScrollView, View } from "react-native";
 
 export default function HomePage() {
@@ -19,6 +21,11 @@ export default function HomePage() {
     const { hasJugs, isLoading } = useAtomValue(userHasJugsAtom);
 
     const { isRefreshing, handleRefresh } = useQueryRefetch(getHydrationQAtom);
+    const { isCarer } = useSettings();
+
+    useEffect(() => {
+        isCarer && router.replace("(tabs)/community");
+    }, [])
 
     return (
         <PageWrapper
