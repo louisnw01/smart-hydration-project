@@ -87,6 +87,8 @@ async def get_user(user_id: str = Depends(auth_user)):
 
 @router.get("/exists")
 async def email_exists(email: str):
+    if email is None:
+        raise HTTPException(status_code=400, detail="You must enter your email")
     return user_exists(email)
 
 
