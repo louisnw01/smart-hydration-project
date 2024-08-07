@@ -1,7 +1,7 @@
 // TODO server_url should be in .env
 
-// export const SERVER_ADDRESS = "localhost:8085";
-export const SERVER_ADDRESS = "hydrationapi.louisnw.com";
+ export const SERVER_ADDRESS = "localhost:8085";
+//export const SERVER_ADDRESS = "hydrationapi.louisnw.com";
 
 export const SERVER_URL = `http${
     SERVER_ADDRESS.includes(".com") ? "s" : ""

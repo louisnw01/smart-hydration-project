@@ -160,7 +160,7 @@ export default function ApplyTags() {
                         Unapplied tags
                     </Text>
                     {communityTags.length === 0 && (
-                        <Text className="dark:text-white text-xl">
+                        <Text className="dark:text-white text-xl mx-6">
                             No tags in this community. Ask community owner to
                             add some
                         </Text>
