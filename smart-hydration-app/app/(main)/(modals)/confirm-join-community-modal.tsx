@@ -23,11 +23,19 @@ export default function ConfirmJoinCommunityModal() {
     } = useAtomValue(joinCommunityMAtom);
 
     useEffect(() => {
+        console.log("here");
         if (!inviteCode) {
             setInviteCode(verificationUrl?.slice(-10) ?? "");
         }
-        refetch();
+        
     }, [verificationUrl]);
+
+    useEffect(() => {
+        if (inviteCode) {
+            refetch();
+        }
+        
+    }, [inviteCode]);
 
     useEffect(() => {
         if (error) {
@@ -64,12 +72,12 @@ export default function ConfirmJoinCommunityModal() {
                     Are you sure you want to join the {name} community?
                 </Text>
             )}
-            {error && (
+            {errorMessage && (
                 <Text className="text-xl font-light text-center text-red">
                     {errorMessage}
                 </Text>
             )}
-            {!error && (
+            {!errorMessage && (
                 <StyledButton
                     text="Join"
                     buttonClass="bg-green self-center rounded-xl"
