@@ -60,7 +60,7 @@ export default function ConfirmJoinCommunityModal() {
         <View className="mt-8 flex gap-6 mx-6">
             <Loading isLoading={isLoading} message="Verifying link.." />
             {data && (
-                <Text className="text-xl font-light text-center">
+                <Text className="text-xl font-light text-center dark:text-white">
                     Are you sure you want to join the {name} community?
                 </Text>
             )}

@@ -107,7 +107,7 @@ export const communityInviteLinkQAtom = atomWithQueryInfo({
 
 export const joinCommunityMAtom = atomWithMutationCustom({
     mutationKey: "join-community",
-    endpoint: ENDPOINTS.COMMUNITY_GENERATE_INVITE,
+    endpoint: ENDPOINTS.JOIN_COMMUNITY,
     body: (get) => ({ code: get(inviteCodeAtom) }),
     onSuccess: (get, qc, form) => {
         qc.invalidateQueries({ queryKey: ["get-community-info"] });
@@ -157,6 +157,7 @@ export const linkJugToMemberMAtom = atomWithMutationCustom<{
 export const communityNameQAtom = atomWithQueryInfo<string>({
     queryKey: "name-from-link",
     endpoint: ENDPOINTS.NAME_FROM_LINK,
+    query: (get) => ({ code: get(inviteCodeAtom) }),
     enabled: (get) => !!get(authTokenAtom) && !!get(inviteCodeAtom),
 });
 
