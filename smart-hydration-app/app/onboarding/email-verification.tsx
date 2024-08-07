@@ -1,5 +1,5 @@
-import { sendVerificationEmailMAtom, verifyEmailMAtom } from "@/atom/query";
-import { authTokenAtom } from "@/atom/user";
+import { addPushTokenMAtom, sendVerificationEmailMAtom, verifyEmailMAtom } from "@/atom/query";
+import { authTokenAtom, pushTokenAtom } from "@/atom/user";
 import StyledButton from "@/components/common/button";
 import CountdownButton from "@/components/common/countdown-button";
 import GenericOnboardContent from "@/components/onboarding/generic-onboard-content";
@@ -8,10 +8,11 @@ import useColorPalette from "@/util/palette";
 import { FontAwesome } from "@expo/vector-icons";
 import * as Linking from "expo-linking";
 import { router } from "expo-router";
-import { useAtomValue, useSetAtom } from "jotai";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { useEffect, useState } from "react";
 import { Text, View } from "react-native";
 import useSettings from "../hooks/user";
+import { registerForPushNotificationsAsync } from "@/util/notifications";
 
 export default function EmailVerificationPage() {
     const setAuthAtom = useSetAtom(authTokenAtom);
@@ -19,6 +20,9 @@ export default function EmailVerificationPage() {
     const [code, setCode] = useState("");
     const palette = useColorPalette();
     const { isCarer } = useSettings();
+    const [ errorMessage, setErrorMessage ] = useState("");
+    const { mutate: addPushToken } = useAtomValue(addPushTokenMAtom);
+    const [storedPushToken, setStoredPushToken] = useAtom(pushTokenAtom);
 
     //function to extract verification code from link
     //format = smarthydration://verify_email/auth=xxxxxxxx
@@ -30,13 +34,27 @@ export default function EmailVerificationPage() {
         }
     }
 
-    const { mutate, isSuccess, isPending, data } =
+    const { mutate, isSuccess, isPending, error } =
         useAtomValue(verifyEmailMAtom);
 
     useEffect(() => {
-        if (!isSuccess || data) return;
-        router.replace(isCarer ? "(tabs)/community" : "(tabs)");
-    }, [isSuccess, data]);
+        if (!isSuccess || error){
+            setErrorMessage(error?.message ?? "")
+        } else {
+            if (storedPushToken) {
+                addPushToken({ pushToken: storedPushToken });
+            } else {
+                registerForPushNotificationsAsync()
+                    .then((pushToken) => {
+                        if (!pushToken) return;
+                        addPushToken({ pushToken });
+                        setStoredPushToken(pushToken);
+                    })
+                    .catch((error: any) => console.error(error));
+            }
+            router.replace(isCarer ? "(tabs)/community" : "(tabs)");
+        }    
+    }, [isSuccess, error]);
 
     useEffect(() => {
         if (!verificationUrl) return;
@@ -61,7 +79,7 @@ export default function EmailVerificationPage() {
             </Text>
             <View className="items-center">
                 {isPending && <Text>Verifying..</Text>}
-                {data && <Text className="text-red">{data}</Text>}
+                {error && <Text className="text-red">{errorMessage}</Text>}
             </View>
             <View className="flex flex-row items-center justify-center">
                 <CountdownButton

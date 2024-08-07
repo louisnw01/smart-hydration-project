@@ -201,8 +201,8 @@ async def create_invitation(user_id: str = Depends(auth_user)):
         member = user.community_member
         if member is None:
             raise HTTPException(400, 'user is not a part of a community')
-        if not member.is_owner:
-            raise HTTPException(400, 'user does not have permission')
+        # if not member.is_owner:
+        #     raise HTTPException(400, 'user does not have permission')
 
         for link in member.community.invite_links:
             link.delete()
@@ -237,7 +237,6 @@ async def link_jugs_to_community_member(form: AddJugsToMemberForm, user_id: str 
             juguser.jugs.add(jug_to_add)
         commit()
         return {"message": "Jugs successfully linked to community member"}
-
 
 
 @router.post("/create-tag")

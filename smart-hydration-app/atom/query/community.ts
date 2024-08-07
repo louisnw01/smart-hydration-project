@@ -100,7 +100,7 @@ export const addCommunityDrinkMAtom = atomWithMutationCustom<{
 export const communityInviteLinkQAtom = atomWithQueryInfo({
     queryKey: "community-invite-link",
     endpoint: ENDPOINTS.COMMUNITY_GENERATE_INVITE,
-    enabled: (get) => !!get(authTokenAtom) && !!get(userIsCommunityOwnerAtom),
+    enabled: (get) => !!get(authTokenAtom),// && !!get(userIsCommunityOwnerAtom),
     staleTime: 0,
     initialData: undefined,
 });
