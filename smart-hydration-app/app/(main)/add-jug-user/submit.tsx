@@ -22,7 +22,7 @@ export default function SubmitPage() {
 
     return (
         <GenericOnboardContent proceed={true}>
-            <Text className="text-xl font-light">
+            <Text className="text-xl font-light dark:text-white">
                 Tap the button to finish setting up your new jug user.
             </Text>
             <Loading isLoading={isPending} message="Setting up.." />
