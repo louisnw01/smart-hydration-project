@@ -23,7 +23,7 @@ export default function RegisterPage() {
     const [proceed, setProceed] = useState(false);
     const [passwordValid, setPasswordValid] = useState(false);
     const [emailValid, setEmailValid] = useState(false);
-    const { isLoading, data, error, refetch } = useAtomValue(getUserExistsQAtom);
+    const { isLoading, data, refetch } = useAtomValue(getUserExistsQAtom);
     const passwordRef = useRef<TextInput>();
     const confirmPasswordRef = useRef<TextInput>();
 
