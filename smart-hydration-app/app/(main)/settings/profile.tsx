@@ -78,7 +78,7 @@ export default function SettingsModal() {
                 paddingBottom: insets.bottom + 20,
             }}
         >
-            <SectionList
+            {/* <SectionList
                 sections={settingsList}
                 renderItem={({ item, index, section }) =>
                     item.Component(
@@ -89,7 +89,7 @@ export default function SettingsModal() {
                 }
                 keyExtractor={(item) => `settings-${item.name}`}
                 stickySectionHeadersEnabled={false}
-            />
+            /> */}
 
             {/* <View className="gap-5">
                 <OptionBlock text="Dark Mode" atom={colorSchemeAtom} />
