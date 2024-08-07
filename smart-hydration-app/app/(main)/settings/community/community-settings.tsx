@@ -132,23 +132,26 @@ const settingsList: ISettingsSection[] = [
             {
                 name: "Invite Member",
                 Component: (name, isFirst, isLast) => {
+                    const { data } = useAtomValue(communityInfoQAtom);
                     return (
-                        <OptionBlock
-                            isLast={isLast}
-                            text={name}
-                            onPress={() =>
-                                router.navigate(
-                                    "settings/community/invite-member",
-                                )
-                            }
-                            icon={
-                                <Ionicons
-                                    name="add-circle-outline"
-                                    size={19}
-                                    color="gray"
-                                />
-                            }
-                        />
+                        <>
+                          <OptionBlock
+                                isLast={isLast}
+                                text={name}
+                                onPress={() =>
+                                    router.navigate(
+                                        "settings/community/invite-member",
+                                    )
+                                }
+                                icon={
+                                    <Ionicons
+                                        name="add-circle-outline"
+                                        size={19}
+                                        color="gray"
+                                    />
+                                }
+                            />
+                        </>
                     );
                 },
             },
@@ -167,6 +170,8 @@ const settingsList: ISettingsSection[] = [
                                 <OptionBlock
                                     atom={communityTabVisible}
                                     text="Show Community Tab"
+                                    isFirst={isFirst}
+                                    isLast={isLast}
                                     icon={
                                         <Ionicons
                                             name="eye-outline"

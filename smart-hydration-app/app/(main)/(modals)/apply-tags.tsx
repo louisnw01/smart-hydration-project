@@ -5,6 +5,7 @@ import PageWrapper from "@/components/common/page-wrapper";
 import StyledTextInput from "@/components/common/text-input";
 import Tag from "@/components/community/tag";
 import { FilterObject, TagInfo } from "@/interfaces/community";
+import { router } from "expo-router";
 import { useAtom, useAtomValue } from "jotai";
 import { useEffect, useState } from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
@@ -130,6 +131,7 @@ export default function ApplyTags() {
             memberID: member.id,
             memberTags: appliedTags.map((tag) => tag.id),
         });
+        router.back();
     };
 
     //to do: add messages for when no tags applied / all tags applied
