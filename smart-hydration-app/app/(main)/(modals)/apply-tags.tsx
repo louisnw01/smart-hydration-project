@@ -126,7 +126,10 @@ export default function ApplyTags() {
         if (appliedTags == null || member == null) return;
         //add tags in applied array to member
         setMember({ ...member, tags: appliedTags });
-        addTagsMutate();
+        addTagsMutate({
+            memberID: member.id,
+            memberTags: appliedTags.map((tag) => tag.id),
+        });
     };
 
     //to do: add messages for when no tags applied / all tags applied
@@ -139,7 +142,8 @@ export default function ApplyTags() {
             <ScrollView>
                 <View className="mt-8 flex gap-6">
                     <Text className="dark:text-white text-2xl mx-6">
-                        Apply tags to {member?.name}. Press a tag to move it to the other section
+                        Apply tags to {member?.name}. Press a tag to move it to
+                        the other section
                     </Text>
                     <Text className="dark:text-white font-bold text-2xl mx-6">
                         Applied tags
@@ -151,7 +155,10 @@ export default function ApplyTags() {
                     )}
                     <View className="flex-row flex-wrap my-2 mx-3">
                         {appliedTags.map((tag) => (
-                            <Pressable key={tag.id} onPress={() => handleAppliedPress(tag)}>
+                            <Pressable
+                                key={tag.id}
+                                onPress={() => handleAppliedPress(tag)}
+                            >
                                 <Tag name={tag.name} />
                             </Pressable>
                         ))}
@@ -160,14 +167,17 @@ export default function ApplyTags() {
                         Unapplied tags
                     </Text>
                     {communityTags.length === 0 && (
-                        <Text className="dark:text-white text-xl">
+                        <Text className="dark:text-white text-xl mx-6">
                             No tags in this community. Ask community owner to
                             add some
                         </Text>
                     )}
                     <View className="flex-row flex-wrap my-2 mx-3">
                         {filteredUnappliedTags.map((tag) => (
-                            <Pressable key={tag.id} onPress={() => handleUnappliedPress(tag)}>
+                            <Pressable
+                                key={tag.id}
+                                onPress={() => handleUnappliedPress(tag)}
+                            >
                                 <Tag name={tag.name} />
                             </Pressable>
                         ))}
@@ -184,7 +194,7 @@ export default function ApplyTags() {
             </ScrollView>
             <View className="flex flex-row items-center p-2 mb-6">
                 <View className="flex-1">
-                <StyledTextInput
+                    <StyledTextInput
                         placeholder="Search unapplied tags..."
                         onChangeText={(val) => {
                             setTextInput(val);
