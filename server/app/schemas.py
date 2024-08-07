@@ -100,14 +100,9 @@ class DeleteTagForm(BaseModel):
     tagName: str
 
 
-class TagInfo(BaseModel):
-    id: int
-    name: str
-
-
 class AddTagsPatientForm(BaseModel):
     memberID: int
-    memberTags: List[TagInfo]
+    memberTags: List[int]
 
 
 class ChangeModeForm(BaseModel):

@@ -228,9 +228,11 @@ export default function EditTags() {
                                 {!tagExists && (
                                     <View className="mr-2">
                                         <StyledButton
-                                            text={`Sort tags by name ${filters.sort === "asc" ? "A-Z" : "Z-A"}`}
+                                            text={`Create`}
                                             textClass="text-lg"
-                                            onPress={toggleSortDirection}
+                                            onPress={() =>
+                                                handleAddTag(newTextInput)
+                                            }
                                         />
                                     </View>
                                 )}
