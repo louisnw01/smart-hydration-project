@@ -47,6 +47,10 @@ export default function RegisterPage() {
     }, [email]);
 
     useEffect(() => {
+        if(emailValid) refetch();
+    }, [emailValid]);
+
+    useEffect(() => {
         if (password !== confirmPassword) {
             setPasswordError("Passwords don't match\n");
             setPasswordValid(false);
@@ -94,13 +98,11 @@ export default function RegisterPage() {
                         onSubmitEditing={() => {
                             validateEmail();
                             setInfo((prev) => ({ ...prev, email: email }));
-                            refetch();
                             passwordRef.current?.focus();
                         }}
                         onEndEditing={() => {
                             validateEmail();
                             setInfo((prev) => ({ ...prev, email: email }));
-                            refetch();
                         }}
                     />
 
