@@ -1,6 +1,6 @@
 import JugIcon from "@/assets/svgs/jug.svg";
 import { selectedDeviceAtom } from "@/atom/device";
-import { unlinkJugFromUserMAtom, userHasCommunityAtom } from "@/atom/query";
+import { unlinkJugMAtom, userHasCommunityAtom } from "@/atom/query";
 import colors from "@/colors";
 import StyledButton from "@/components/common/button";
 import useColorPalette from "@/util/palette";
@@ -9,9 +9,9 @@ import {
     FontAwesome,
     MaterialCommunityIcons,
 } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
+import { router } from "expo-router";
 import { useAtomValue } from "jotai";
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 import { Text, View } from "react-native";
 
 function Container({
@@ -39,31 +39,6 @@ function Container({
     return (
         <View className={className}>
             {amount !== null && (
-                // <Svg>
-                //     <Defs>
-                //         <ClipPath id="clip">
-                //             <Rect x="0" y="0" width={`100%`} height="55%" />
-                //         </ClipPath>
-                //     </Defs>
-
-                //     <Rect
-                //         x="0"
-                //         y="0"
-                //         width={`100%`}
-                //         height="55%"
-                //         fill={colors.blue}
-                //     />
-                //     <SvgText fill="rgb(100, 100, 100)">
-                //         <TSpan fontSize="25" x="0" y="50">
-                //             355ml
-                //         </TSpan>
-                //     </SvgText>
-                //     <SvgText fill="white" clipPath="url(#clip)">
-                //         <TSpan fontSize="25" x="0" y="50">
-                //             355ml
-                //         </TSpan>
-                //     </SvgText>
-                // </Svg>
                 <View
                     className="absolute bottom-0 left-0"
                     style={{
@@ -89,11 +64,19 @@ function Container({
 }
 
 export default function DeviceInfoModal() {
-    const router = useRouter();
     const device = useAtomValue(selectedDeviceAtom);
     const palette = useColorPalette();
-    const { mutate: unlinkJugFromUser } = useAtomValue(unlinkJugFromUserMAtom);
+    const {
+        mutate: unlinkJug,
+        isPending,
+        isSuccess,
+    } = useAtomValue(unlinkJugMAtom);
     const userHasCommunity = useAtomValue(userHasCommunityAtom);
+
+    useEffect(() => {
+        if (isPending || !isSuccess) return;
+        router.back();
+    });
     if (!device) return;
     return (
         <View className="mt-8 mx-5">
@@ -203,9 +186,14 @@ export default function DeviceInfoModal() {
                         left={2}
                     />
                     onPress={() => {
-                        device.id && unlinkJugFromUser({ jugId: device.id });
-                        router.back();
+                        device.id &&
+                            unlinkJug({
+                                jugId: device.id,
+                                jugUserId: device.jugUserId,
+                            });
                     }}
+                    isLoading={isPending}
+                    keepTextWhileLoading
                 />
             </View>
         </View>

@@ -1,4 +1,5 @@
-import { selectedJugIdAtom } from "@/atom/device";
+import { selectedDeviceAtom } from "@/atom/device";
+import { patientInfoQAtom, userJugUserIdAtom } from "@/atom/query";
 import colors from "@/colors";
 import { DeviceInfo } from "@/interfaces/device";
 import { useAtomValue } from "jotai";
@@ -16,8 +17,19 @@ export default function DeviceRow({
 }) {
     const percentFull = (device.water_level / device.capacity) * 100;
     const isStale = false;
+    const isActive = useAtomValue(selectedDeviceAtom)?.id == device.id;
+    const { data } = useAtomValue(patientInfoQAtom);
+    const userJugUserId = useAtomValue(userJugUserIdAtom);
 
-    const isActive = useAtomValue(selectedJugIdAtom) == device.id;
+    let person;
+    console.log(userJugUserId, device.jugUserId);
+    if (userJugUserId == device.jugUserId) {
+        person = "You";
+    } else if (data) {
+        const member = data.find((member) => member.id == device.jugUserId);
+        if (member) person = member?.name;
+    }
+
     return (
         <Pressable
             className="bg-gray-200 px-7 py-4 flex flex-row justify-between rounded-xl dark:bg-neutral-800"
@@ -33,7 +45,7 @@ export default function DeviceRow({
                     {device.name}
                 </Text>
                 <View className="flex-row gap-3">
-                    <Text className="dark:text-white">connected</Text>
+                    <Text className="dark:text-white">{person}</Text>
                     <BatteryIndicator charge={device.battery} />
                 </View>
             </View>

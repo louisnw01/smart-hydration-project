@@ -8,13 +8,13 @@ import { DeviceInfo } from "@/interfaces/device";
 import { UserInfo } from "@/interfaces/user";
 import { ENDPOINTS } from "@/util/fetch";
 import { jugUserInfoAtom } from "../jug-user";
-import { userInfoQAtom } from "../query";
 import { authTokenAtom, inviteCodeAtom } from "../user";
 import {
     atomWithMutationCustom,
     atomWithQueryDerivation,
     atomWithQueryInfo,
 } from "./common";
+import { userInfoQAtom } from "./user";
 
 export const communityInfoQAtom = atomWithQueryInfo<CommunityInfo>({
     queryKey: "get-community-info",
@@ -100,7 +100,7 @@ export const addCommunityDrinkMAtom = atomWithMutationCustom<{
 export const communityInviteLinkQAtom = atomWithQueryInfo({
     queryKey: "community-invite-link",
     endpoint: ENDPOINTS.COMMUNITY_GENERATE_INVITE,
-    enabled: (get) => !!get(authTokenAtom),// && !!get(userIsCommunityOwnerAtom),
+    enabled: (get) => !!get(authTokenAtom), // && !!get(userIsCommunityOwnerAtom),
     staleTime: 0,
     initialData: undefined,
 });
@@ -143,17 +143,6 @@ export const leaveCommunityMAtom = atomWithMutationCustom({
     },
 });
 
-export const linkJugToMemberMAtom = atomWithMutationCustom<{
-    jugIds: string[];
-}>({
-    mutationKey: "/user/link-jug",
-    endpoint: ENDPOINTS.LINK_JUG_TO_USER,
-    onSuccess: (get, qc, form) => {
-        qc.invalidateQueries({ queryKey: ["get-jug-data"] });
-        qc.invalidateQueries({ queryKey: ["/data/historical"] });
-    },
-});
-
 export const communityNameQAtom = atomWithQueryInfo<string>({
     queryKey: "name-from-link",
     endpoint: ENDPOINTS.NAME_FROM_LINK,
@@ -161,13 +150,13 @@ export const communityNameQAtom = atomWithQueryInfo<string>({
     enabled: (get) => !!get(authTokenAtom) && !!get(inviteCodeAtom),
 });
 
-export const linkJugsToCommunityMemberMAtom = atomWithMutationCustom<{
-    jugIds: string[];
-    communityMember: number;
-}>({
-    mutationKey: "/community/link-jug-to-member",
-    endpoint: ENDPOINTS.LINK_JUG_TO_COMMUNITY_MEMBER,
-});
+// export const linkJugsToCommunityMemberMAtom = atomWithMutationCustom<{
+//     jugIds: string[];
+//     communityMember: number;
+// }>({
+//     mutationKey: "/community/link-jug-to-member",
+//     endpoint: ENDPOINTS.LINK_JUG_TO_COMMUNITY_MEMBER,
+// });
 
 export const createTagMAtom = atomWithMutationCustom<{
     tagName: string;

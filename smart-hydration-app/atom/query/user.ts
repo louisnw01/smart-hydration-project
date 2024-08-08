@@ -9,7 +9,11 @@ import {
     pushTokenAtom,
     userModeAtom,
 } from "../user";
-import { atomWithMutationCustom, atomWithQueryInfo } from "./common";
+import {
+    atomWithMutationCustom,
+    atomWithQueryDerivation,
+    atomWithQueryInfo,
+} from "./common";
 
 export const changeUserModeMAtom = atomWithMutation((get) => ({
     mutationKey: ["change-mode", get(authTokenAtom)],
@@ -47,16 +51,18 @@ export const userInfoQAtom = atomWithQueryInfo<UserInfo>({
     enabled: (get) => !!get(authTokenAtom) && !!get(emailIsVerifiedAtom),
 });
 
+export const userJugUserIdAtom = atomWithQueryDerivation(
+    userInfoQAtom,
+    (data) => data.juguser,
+);
+
 export const deleteUserMAtom = atomWithMutationCustom({
     mutationKey: "/user/delete",
     endpoint: ENDPOINTS.DELETE_USER,
 });
 
 // TODO temporary, for linking during MVP
-export const getAllJugsQAtom = atomWithQueryInfo<{
-    real: string[];
-    fake: string[];
-}>({
+export const getAllJugsQAtom = atomWithQueryInfo<string[]>({
     queryKey: "temp-get-jugs",
     endpoint: ENDPOINTS.GET_ALL_JUGS,
 });

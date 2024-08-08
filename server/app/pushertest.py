@@ -19,6 +19,15 @@ async def fire_jug_info(sys_id):
     if jug_data is None:
         return
 
+    with db_session:
+        jug = Jug.get(system_id=sys_id)
+        jug.last_connected = int(jug_data['last_seen'])
+        jug.battery = jug_data['battery']
+        jug.is_charging = jug_data['charging']
+        jug.temp = jug_data['temperature']
+        jug.water_level = jug_data['water_level']
+        jug.capacity = jug_data['capacity']
+
     await tunnel.fire(f'jug-latest', jug_data['id'], jug_data)
 
 
