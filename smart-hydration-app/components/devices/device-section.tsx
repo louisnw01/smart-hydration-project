@@ -6,7 +6,6 @@ import { FontAwesome } from "@expo/vector-icons";
 import { Atom, useAtomValue } from "jotai";
 import { AtomWithQueryResult } from "jotai-tanstack-query";
 
-import { userHasCommunityAtom } from "@/atom/query";
 import { DeviceInfo } from "@/interfaces/device";
 import { FlatList, RefreshControl, View } from "react-native";
 import StyledButton from "../common/button";
@@ -17,28 +16,28 @@ export default function DeviceSection({
     addJugButton,
     onPress,
     queryAtom,
-    showChangeJugUser,
+    activeColor,
 }: {
     addJugButton?: boolean;
     onPress: (device: DeviceInfo) => void;
     queryAtom: Atom<AtomWithQueryResult<DeviceInfo[]>>;
-    showChangeJugUser?: boolean;
+    activeColor?: string;
 }) {
     const palette = useColorPalette();
     const { data, isLoading } = useAtomValue(queryAtom);
     const { isRefreshing, handleRefresh } = useQueryRefetch(queryAtom);
-    const hasCommunity = useAtomValue(userHasCommunityAtom);
+
     if (isLoading) {
         return <Loading message="Getting your jugs..." isLoading />;
     }
 
-    if (hasCommunity) {
-        // todo get list of all jugs if in community
-    }
-
     const listItems =
         data?.map((device) => (
-            <DeviceRow device={device} onPress={onPress} />
+            <DeviceRow
+                device={device}
+                onPress={onPress}
+                activeColor={activeColor}
+            />
         )) || [];
 
     if (addJugButton) {

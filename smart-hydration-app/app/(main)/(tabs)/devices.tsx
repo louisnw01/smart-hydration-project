@@ -8,8 +8,43 @@ import {
 import PageWrapper from "@/components/common/page-wrapper";
 import DeviceSection from "@/components/devices/device-section";
 import { router } from "expo-router";
-import { useAtomValue, useSetAtom } from "jotai";
-import { ScrollView, Text, View } from "react-native";
+import { atom, useAtomValue, useSetAtom } from "jotai";
+import { View } from "react-native";
+
+const communityAndUserJugDataQAtom = atom((get) => {
+    const { data, isLoading, isFetching, refetch } = get(getJugDataQAtom);
+    const {
+        data: communityData,
+        isLoading: communityIsLoading,
+        isFetching: communityIsFetching,
+        refetch: communityRefetch,
+    } = get(getCommunityJugDataQAtom);
+
+    const refetchBoth = () => {
+        refetch();
+        communityRefetch();
+    };
+
+    let combinedData = [];
+    if (data || communityData) {
+        combinedData = [];
+    }
+    if (data) {
+        combinedData.push(...data);
+    }
+    if (communityData) {
+        combinedData.push(...communityData);
+    }
+
+    console.log(!!data, !!communityData);
+
+    return {
+        data: combinedData,
+        isLoading: isLoading && communityIsLoading,
+        isFetching: isFetching && communityIsFetching,
+        refetch: refetchBoth,
+    };
+});
 
 export default function DevicesPage() {
     const setJugId = useSetAtom(selectedJugIdAtom);
@@ -17,17 +52,17 @@ export default function DevicesPage() {
 
     return (
         <PageWrapper className="mx-6 mt-6">
-            <ScrollView>
-                <View>
-                    <DeviceSection
-                        addJugButton
-                        queryAtom={getJugDataQAtom}
-                        onPress={(device) => {
-                            setJugId(device.id);
-                            router.push("device-info-modal");
-                        }}
-                    />
-                    {isInCommunity && (
+            {/* <ScrollView> */}
+            <View className="flex-1">
+                <DeviceSection
+                    addJugButton
+                    queryAtom={communityAndUserJugDataQAtom}
+                    onPress={(device) => {
+                        setJugId(device.id);
+                        router.push("device-info-modal");
+                    }}
+                />
+                {/* {isInCommunity && (
                         <View className="flex">
                             <Text className="text-2xl font-semibold py-4 dark:text-white">
                                 Community Jugs
@@ -40,9 +75,9 @@ export default function DevicesPage() {
                                 }}
                             />
                         </View>
-                    )}
-                </View>
-            </ScrollView>
+                    )} */}
+            </View>
+            {/* </ScrollView> */}
         </PageWrapper>
     );
 }
