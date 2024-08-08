@@ -13,7 +13,7 @@ import {
 
 import { Link, router, Tabs } from "expo-router";
 import { useAtomValue } from "jotai";
-import { Pressable } from "react-native";
+import { Pressable, Text } from "react-native";
 
 export default function TabLayout() {
     const palette = useColorPalette();
@@ -81,12 +81,10 @@ export default function TabLayout() {
                     headerRight: () => (
                         <>
                             {!isCarer && hasCommunity && (
-                                <Link className="px-5" href="add-jug-user">
-                                    <Entypo
-                                        name="circle-with-plus"
-                                        size={26}
-                                        color={palette.fg}
-                                    />
+                                <Link className="px-5" href="manage-community">
+                                    <Text className="text-xl font-semibold">
+                                        Manage
+                                    </Text>
                                 </Link>
                             )}
                             {isCarer && (
