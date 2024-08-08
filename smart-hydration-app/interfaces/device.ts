@@ -1,6 +1,7 @@
 export interface DeviceInfo {
     id: string;
     name: string;
+    jugUserId: number;
     capacity: number;
     charging: boolean;
     battery: number;

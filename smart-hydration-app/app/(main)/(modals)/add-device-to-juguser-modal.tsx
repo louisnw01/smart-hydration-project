@@ -1,4 +1,4 @@
-import { selectedJugIdAtom, selectedJugsAtom } from "@/atom/device";
+import { selectedDeviceAtom, selectedJugsAtom } from "@/atom/device";
 import {
     linkJugsToCommunityMemberMAtom,
     patientInfoQAtom,
@@ -8,7 +8,7 @@ import {
 import StyledButton from "@/components/common/button";
 import Loading from "@/components/common/loading";
 import { MemberInfo } from "@/interfaces/community";
-import { useNavigation } from "expo-router";
+import { router, useNavigation } from "expo-router";
 import { useAtomValue } from "jotai";
 import { useState } from "react";
 import { FlatList, Pressable, Text, View } from "react-native";
@@ -17,7 +17,7 @@ export default function MVPAddDeviceModal() {
     const { data, isLoading: patientInfoIsLoading } =
         useAtomValue(patientInfoQAtom);
     const navigation = useNavigation();
-    const selectedJugId = useAtomValue(selectedJugIdAtom);
+    const selectedDevice = useAtomValue(selectedDeviceAtom);
     const { mutate: unlinkJugFromUser } = useAtomValue(unlinkJugFromUserMAtom);
     const [selectedUser, setSelectedUser] = useState<number | null>();
     const selectedJugs = useAtomValue(selectedJugsAtom);
@@ -27,7 +27,7 @@ export default function MVPAddDeviceModal() {
     );
     const userInfo = useAtomValue(userInfoQAtom);
 
-    if (!selectedJugId && !selectedJugs) return;
+    if (!selectedDevice && !selectedJugs) return;
 
     function handleUnassigned() {
         // put the mutation for unassigned here
@@ -51,7 +51,7 @@ export default function MVPAddDeviceModal() {
         for (let jug of selectedJugs) {
             unlinkJugFromUser({ jugId: jug });
         }
-        navigation.navigate("/devices");
+        router.replace("/devices");
     };
 
     return (

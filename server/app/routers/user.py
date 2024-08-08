@@ -5,9 +5,9 @@ from starlette.responses import RedirectResponse
 from ..auth import auth_user, generate_auth_token, get_hash, generate_invite_link, auth_user_no_email_verified
 from ..mail import send_email_with_ses
 from ..models import User, VerifyEmail, Jug, JugUser, Notifications
-from ..schemas import LinkJugsForm, JugLink, UserRegister, UserLogin, VerifyEmailForm, TargetUpdate, PushTokenForm, \
+from ..schemas import UserRegister, UserLogin, VerifyEmailForm, TargetUpdate, PushTokenForm, \
     ToggleNotificationsForm, ChangeModeForm
-from ..services import link_jugs_to_user_s, unlink_jug_from_user_s, delete_user, user_exists, create_user, \
+from ..services import delete_user, user_exists, create_user, \
     create_jug_user, update_jug_user_data, get_user_hash, get_user_by_email
 import datetime as dt
 import re
@@ -18,15 +18,6 @@ router = APIRouter(
     responses={404: {"description": "Not found"}},
 )
 
-
-@router.post("/link-jug")
-async def link_jug_to_user(body: LinkJugsForm, user_id: str = Depends(auth_user)):
-    link_jugs_to_user_s(user_id, body.jugIds)
-
-
-@router.post('/unlink-jug')
-async def unlink_jug_from_user(body: JugLink, user_id: str = Depends(auth_user)):
-    unlink_jug_from_user_s(user_id, body.jugId)
 
 
 @router.post('/delete')

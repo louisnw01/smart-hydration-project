@@ -1,7 +1,7 @@
 import Jug from "@/assets/svgs/jug.svg";
 import { selectedMemberAtom } from "@/atom/community";
-import { selectedJugIdAtom } from "@/atom/device";
-import { getPatientJugDataQAtom } from "@/atom/query";
+import { selectedDeviceAtom } from "@/atom/device";
+import { patientJugDataAtom } from "@/atom/query";
 import StyledButton from "@/components/common/button";
 import { ScrollPageWrapper } from "@/components/common/page-wrapper";
 import Tag from "@/components/community/tag";
@@ -32,7 +32,7 @@ function MemberInfoBlock({
 export default function MemberInfoModal() {
     const palette = useColorPalette();
     const member = useAtomValue(selectedMemberAtom);
-    const setJugId = useSetAtom(selectedJugIdAtom);
+    const setJug = useSetAtom(selectedDeviceAtom);
     const memberData = useFormattedMemberData(member);
 
     if (!member) return null;
@@ -46,7 +46,6 @@ export default function MemberInfoModal() {
                     ID #: {member.id}
                 </Text>
             </View>
-
             <MemberInfoBlock title="Profile Details">
                 <Text className="text-xl dark:text-white">
                     Name: {memberData.name}
@@ -76,31 +75,26 @@ export default function MemberInfoModal() {
                     </Text>
                 </View>
             </MemberInfoBlock>
-
             <MemberInfoBlock title="Trends Page">
                 <Text className="text-xl dark:text-white">
                     Embed graph here
                 </Text>
             </MemberInfoBlock>
-
             <Text className="text-xl font-bold dark:text-white">Devices</Text>
             <DeviceSection
                 addJugButton={false}
-                queryAtom={getPatientJugDataQAtom}
+                queryAtom={patientJugDataAtom}
                 onPress={(device) => {
-                    setJugId(device.id);
+                    setJug(device);
                     router.push("device-info-modal");
                 }}
             />
-
             <MemberInfoBlock title="Favourite Drink">
                 <Text className="text-xl dark:text-white">Tea</Text>
             </MemberInfoBlock>
-
             <MemberInfoBlock title="Location">
                 <Text className="text-xl dark:text-white">Room 101</Text>
             </MemberInfoBlock>
-
             <StyledButton
                 text="Add a Device"
                 buttonClass="mt-16 flex flex-row items-center gap-3 rounded-xl px-4 py-3 bg-gray-100 dark:bg-neutral-900"
@@ -120,7 +114,6 @@ export default function MemberInfoModal() {
                 }
                 onPress={() => router.push("add-device-member-modal")}
             />
-
             <StyledButton
                 text="Add a Drink"
                 buttonClass="flex flex-row items-center gap-3 rounded-xl px-4 py-3 bg-gray-100 dark:bg-neutral-900"
@@ -134,7 +127,6 @@ export default function MemberInfoModal() {
                     router.push("add-drink-community-modal");
                 }}
             />
-
             <StyledButton
                 text="Modify Tags"
                 buttonClass="flex flex-row items-center gap-3 rounded-xl px-4 py-3 bg-gray-100 dark:bg-neutral-900"

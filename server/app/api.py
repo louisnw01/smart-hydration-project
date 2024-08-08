@@ -120,12 +120,18 @@ async def fetch_all_registered_jugs():
             query(session, f'/data/organisation/{fake_org_id}/device/list')
         )
 
-        full_jug_list = real_jugs+fake_jugs
+    full_jug_list = real_jugs+fake_jugs
 
-        final_jug_list = []
-        for jug in full_jug_list:
-            final_jug_list.append({
-                "sh_id": jug['identifier'],
-                "sys_id": jug['id'],
-            })
-        return final_jug_list
+    final_jug_list = []
+    for jug in full_jug_list:
+        final_jug_list.append({
+            "sh_id": jug['identifier'],
+            "sys_id": jug['id'],
+            'capacity': jug['device_model']['capacity_ml'],
+            'charging': jug['telemetry']['charging'],
+            'battery': jug['telemetry']['battery'],
+            'temperature': round(jug['telemetry']['temperature'], 3),
+            'water_level': jug['water_level']['d'],
+            'last_seen': convert_timestamp(jug['telemetry']['timestamp']),
+        })
+    return final_jug_list

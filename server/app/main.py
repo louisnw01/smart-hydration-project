@@ -2,9 +2,9 @@ import asyncio
 
 from dotenv import load_dotenv
 from fastapi import FastAPI, Depends
-from pony.orm.core import db_session, commit
+from pony.orm.core import db_session, commit, select
 
-from .api import SmartHydrationSession, fetch_all_registered_jugs, get_all_jug_ids
+from .api import SmartHydrationSession, fetch_all_registered_jugs, get_all_jug_ids, get_jug_latest
 from .auth import auth_user
 from .models import connect_to_database, Jug
 from .notifications import send_drink_reminders
@@ -29,7 +29,7 @@ app.include_router(websocket_tunnel.router)
 @app.on_event('startup')
 async def init():
     asyncio.create_task(pusher_init())
-    asyncio.create_task(send_drink_reminders())
+    # asyncio.create_task(send_drink_reminders())
 
     jugs = await fetch_all_registered_jugs()
 
@@ -38,7 +38,18 @@ async def init():
             # if it already exists in the table, do nothing
             if Jug.get(smart_hydration_id=jug['sh_id']) is not None:
                 continue
-            Jug(smart_hydration_id=jug['sh_id'], system_id=jug['sys_id'], name=f"Jug #{jug['sh_id'][-3:]}")
+
+            Jug(
+                smart_hydration_id=jug['sh_id'],
+                system_id=jug['sys_id'],
+                name=f"Jug #{jug['sh_id'][-3:]}",
+                capacity=jug['capacity'],
+                is_charging=jug['charging'],
+                battery=jug['battery'],
+                temp=jug['temperature'],
+                water_level=jug['water_level'],
+                last_connected=int(jug['last_seen']),
+            )
             print(f"added new jug {jug['sh_id']} to database")
         commit()
 
@@ -51,5 +62,6 @@ async def root():
 # Temporary for MVP
 @app.get("/get-all-jugs")
 async def get_all_jugs(user_id: str = Depends(auth_user)):
-    async with SmartHydrationSession() as session:
-        return await get_all_jug_ids(user_id, session)
+    with db_session:
+        jugs = select(j.smart_hydration_id for j in Jug if True)
+        return sorted([j for j in jugs], key=lambda x: int(x[3:]))

@@ -3,29 +3,38 @@ import { ENDPOINTS } from "@/util/fetch";
 import { authTokenAtom } from "../user";
 import { atomWithMutationCustom } from "./common";
 
-export const linkJugToUserMAtom = atomWithMutationCustom<{ jugIds: string[] }>({
-    mutationKey: "/user/link-jug",
-    endpoint: ENDPOINTS.LINK_JUG_TO_USER,
+export const linkJugMAtom = atomWithMutationCustom<{
+    jugIds: string[];
+    jugUserId: number | null;
+}>({
+    mutationKey: "link-jug",
+    endpoint: ENDPOINTS.LINK_JUG,
     onSuccess: (get, qc, form) => {
         qc.invalidateQueries({ queryKey: ["get-jug-data"] });
         qc.invalidateQueries({ queryKey: ["/data/historical"] });
     },
 });
 
-export const unlinkJugFromUserMAtom = atomWithMutationCustom<{ jugId: string }>(
-    {
-        mutationKey: "/user/unlink-jug",
-        endpoint: ENDPOINTS.UNLINK_JUG_FROM_USER,
-        onSuccess: (get, qc, form) => {
-            qc.setQueryData(
-                ["get-jug-data", get(authTokenAtom)],
-                (prev: DeviceInfo[]) =>
-                    prev.filter((device) => device.id != form.jugId),
-            );
-            qc.invalidateQueries({ queryKey: ["/data/historical"] });
-        },
+export const unlinkJugMAtom = atomWithMutationCustom<{
+    jugId: string;
+    jugUserId: number;
+}>({
+    mutationKey: "unlink-jug",
+    endpoint: ENDPOINTS.UNLINK_JUG,
+    onSuccess: (get, qc, form) => {
+        qc.setQueryData(
+            ["get-jug-data", get(authTokenAtom)],
+            (prev: DeviceInfo[]) => {
+                return prev.filter(
+                    (device) =>
+                        device.id !== form.jugId ||
+                        device.jugUserId !== form.jugUserId,
+                );
+            },
+        );
+        qc.invalidateQueries({ queryKey: ["/data/historical"] });
     },
-);
+});
 
 export const updateJugNameMAtom = atomWithMutationCustom<{
     jugId: string;
