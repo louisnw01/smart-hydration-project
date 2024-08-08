@@ -1,5 +1,5 @@
 import { selectedMemberAtom } from "@/atom/community";
-import { getJugDataQAtom, linkJugsToCommunityMemberMAtom } from "@/atom/query";
+import { getJugDataQAtom, linkJugMAtom } from "@/atom/query";
 import colors from "@/colors";
 import StyledButton from "@/components/common/button";
 import Loading from "@/components/common/loading";
@@ -18,9 +18,7 @@ export default function AddDeviceMemberModal() {
         new Set(),
     );
     const selectedMember = useAtomValue(selectedMemberAtom);
-    const { mutate: linkJugsToCommunityMember } = useAtomValue(
-        linkJugsToCommunityMemberMAtom,
-    );
+    const { mutate: linkJugsToCommunityMember } = useAtomValue(linkJugMAtom);
 
     if (!selectedMember) return null;
 
@@ -39,11 +37,10 @@ export default function AddDeviceMemberModal() {
         for (let j of selectedJugs) {
             jugIdArray.push(j.id);
         }
-        const queryData = {
+        linkJugsToCommunityMember({
             jugIds: jugIdArray,
-            communityMember: selectedMember.id,
-        };
-        linkJugsToCommunityMember(queryData);
+            jugUserId: selectedMember.id,
+        });
         navigation.goBack();
     };
 

@@ -60,12 +60,12 @@ export function atomWithQueryInfo<T>({
 //
 export function atomWithQueryDerivation<T, Result>(
     queryAtom: Atom<AtomWithQueryResult<Result, Error>>,
-    deriverFunction: (obj: Result) => T,
+    deriverFunction: (obj: Result, get: Getter) => T,
 ) {
     return atom((get) => {
         const { data, isLoading } = get(queryAtom);
         if (isLoading || !data) return;
-        return deriverFunction(data);
+        return deriverFunction(data, get);
     });
 }
 

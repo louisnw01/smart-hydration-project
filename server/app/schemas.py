@@ -11,11 +11,6 @@ class TargetUpdate(BaseModel):
     newValue: int
 
 
-class AddJugsToMemberForm(BaseModel):
-    jugIds: List[str]
-    communityMember: int
-
-
 class UserRegister(BaseModel):
     name: str
     email: str
@@ -25,15 +20,6 @@ class UserRegister(BaseModel):
 
     # class Config:
     #     arbitrary_types_allowed = False
-
-
-class JugLink(BaseModel):
-    jugId: str
-
-
-class LinkJugsForm(BaseModel):
-    jugIds: List[str]
-
 
 class JugUserUpdate(BaseModel):
     id: int

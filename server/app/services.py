@@ -115,36 +115,6 @@ def create_jug(sh_id, qr_hash, name):
 
 
 @db_session
-def link_jugs_to_user_s(user_id, jug_ids):
-    user = User.get(id=user_id)
-    if not user.jug_user:
-        create_jug_user(user)
-
-    jug_user = user.jug_user
-    link_jugs_to_jug_user(jug_user.id, jug_ids)
-
-
-@db_session
-def unlink_jug_from_user_s(user_id, jug_id):
-    jug_user = User.get(id=user_id).jug_user
-    unlink_jug_from_jug_user(jug_user.id, jug_id)
-
-
-@db_session
-def link_jugs_to_jug_user(jug_user_id, jug_ids):
-    jugs = select(j for j in Jug if j.smart_hydration_id in jug_ids)
-    JugUser.get(id=jug_user_id).jugs.add(jugs)
-    commit()
-
-
-@db_session
-def unlink_jug_from_jug_user(jug_user_id, jug_id):
-    jug = Jug.get(smart_hydration_id=jug_id)
-    JugUser.get(id=jug_user_id).jugs.remove(jug)
-    commit()
-
-
-@db_session
 def get_jug_id(sh_id):
     return Jug.get(smart_hydration_id=sh_id).id
 
@@ -233,6 +203,13 @@ def update_jug_name_s(jug_id, name):
     Jug.get(smart_hydration_id=jug_id).name = name
     commit()
 
+
+def get_users_community(user_id):
+    user = User.get(id=user_id)
+    member = user.community_member
+    if not member:
+        return None
+    return member.community
 
 def try_get_users_community(user_id):
     user = User.get(id=user_id)

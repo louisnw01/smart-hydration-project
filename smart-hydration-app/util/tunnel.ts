@@ -129,9 +129,7 @@ export const subscribeToJugDataEAtom = atomEffect((get, set) => {
             ["get-jug-data", get(authTokenAtom)],
             (prev: DeviceInfo[]) =>
                 prev.map((row) =>
-                    row.id == newJugData.id
-                        ? { ...newJugData, name: row.name }
-                        : row,
+                    row.id == newJugData.id ? { ...row, ...newJugData } : row,
                 ),
         );
     };

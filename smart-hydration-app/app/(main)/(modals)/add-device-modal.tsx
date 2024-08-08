@@ -1,21 +1,38 @@
 import {
     getAllJugsQAtom,
-    linkJugToUserMAtom,
+    getJugDataQAtom,
+    linkJugMAtom,
     userHasCommunityAtom,
+    userJugUserIdAtom,
 } from "@/atom/query";
+import StyledButton from "@/components/common/button";
 import Loading from "@/components/common/loading";
-import { useNavigation } from "expo-router";
-import { useAtomValue, useAtom } from "jotai";
-import { Pressable, SectionList, Text, View } from "react-native";
 import { router } from "expo-router";
-import { selectedJugsAtom } from "@/atom/device";
+import { useAtomValue } from "jotai";
+import { useEffect, useState } from "react";
+import { FlatList, Pressable, Text, View } from "react-native";
 
 export default function MVPAddDeviceModal() {
     const { data, isLoading } = useAtomValue(getAllJugsQAtom);
-    const navigation = useNavigation();
-    const [selectedJugs, setSelectedJugs] = useAtom(selectedJugsAtom);
-    const { mutate: linkJugsToUser } = useAtomValue(linkJugToUserMAtom);
+    const jugUserId = useAtomValue(userJugUserIdAtom);
+    const [selectedJugs, setSelectedJugs] = useState(new Set<string>());
+    const { mutate, isPending, isSuccess } = useAtomValue(linkJugMAtom);
+    const { isLoading: isLoadingNewJugs, isSuccess: isSuccessLoadingNewJugs } =
+        useAtomValue(getJugDataQAtom);
     const isInCommunity = useAtomValue(userHasCommunityAtom);
+
+    useEffect(() => {
+        if (
+            isPending ||
+            isLoadingNewJugs ||
+            !isSuccess ||
+            !isSuccessLoadingNewJugs
+        ) {
+            return;
+        }
+        router.back();
+    }, [isPending, isSuccess, isLoadingNewJugs, isSuccessLoadingNewJugs]);
+
     const handleSelect = (jug_id: string) => {
         if (!selectedJugs) {
             return;
@@ -32,8 +49,10 @@ export default function MVPAddDeviceModal() {
         if (isInCommunity) {
             router.push("(modals)/add-device-chooser");
         } else {
-            linkJugsToUser({ jugIds: Array.from(selectedJugs) });
-            router.back();
+            mutate({
+                jugIds: Array.from(selectedJugs),
+                jugUserId: jugUserId || null,
+            });
         }
     };
 
@@ -48,11 +67,8 @@ export default function MVPAddDeviceModal() {
             <Loading isLoading={isLoading} message="Getting all jug names.." />
 
             {data && (
-                <SectionList
-                    sections={Object.entries(data).map(([name, list]) => ({
-                        title: name === "real" ? "Real Jugs" : "Test Jugs",
-                        data: list,
-                    }))}
+                <FlatList
+                    data={data}
                     renderItem={({ item }) => (
                         <Pressable
                             className="mx-4 px-4 py-3 rounded-xl my-2 bg-gray-200 dark:bg-neutral-800"
@@ -73,24 +89,32 @@ export default function MVPAddDeviceModal() {
                             </Text>
                         </Pressable>
                     )}
-                    renderSectionHeader={({ section }) => (
-                        <Text className="text-xl font-bold ml-4 pt-4 dark:text-white">
-                            {section.title}
-                        </Text>
-                    )}
-                    keyExtractor={(item) => `jug-list-${item}`}
-                    stickySectionHeadersEnabled={false}
+                    keyExtractor={(item, idx) => idx.toString()}
                 />
+                // <SectionList
+                //     sections={Object.entries(data).map(([name, list]) => ({
+                //         title: name === "real" ? "Real Jugs" : "Test Jugs",
+                //         data: list,
+                //     }))}
+
+                //     )}
+                //     renderSectionHeader={({ section }) => (
+                //         <Text className="text-xl font-bold ml-4 pt-4 dark:text-white">
+                //             {section.title}
+                //         </Text>
+                //     )}
+
+                //     stickySectionHeadersEnabled={false}
+                // />
             )}
             {selectedJugs.size > 0 && (
-                <Pressable
-                    className="bg-blue items-center mx-16 justify-center px-3 py-3 rounded-3xl"
+                <StyledButton
+                    text={`Add ${selectedJugs.size} jug${selectedJugs.size > 1 ? "s" : ""} to account`}
+                    buttonClass="bg-blue self-center w-72 py-3 rounded-xl"
+                    textClass="text-white text-xl font-medium text-center w-full"
                     onPress={handlePress}
-                >
-                    <Text className="text-white text-2xl">
-                        {`Add ${selectedJugs.size} jug${selectedJugs.size > 1 ? "s" : ""} to account`}
-                    </Text>
-                </Pressable>
+                    isLoading={isPending || isLoadingNewJugs}
+                />
             )}
         </View>
     );
