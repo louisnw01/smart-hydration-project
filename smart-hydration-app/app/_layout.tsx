@@ -25,6 +25,7 @@ async function clearStorage() {
 }
 
 export default function Index() {
+    //clearStorage();
     const [expoPushToken, setExpoPushToken] = useState("");
     const [notification, setNotification] = useState<
         Notifications.Notification | undefined

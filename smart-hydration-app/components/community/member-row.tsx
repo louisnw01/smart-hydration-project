@@ -4,10 +4,11 @@ import { useFormattedMemberData } from "@/util/community";
 import useColorPalette from "@/util/palette";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
-import { useSetAtom } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import { Pressable, Text, View } from "react-native";
 import StyledButton from "../common/button";
 import Tag from "./tag";
+import { userInfoQAtom } from "@/atom/query";
 
 function getOrdinalSuffix(day) {
     if (day > 3 && day < 21) return "th";
@@ -27,7 +28,8 @@ export default function MemberRow({ member }: { member: MemberInfo }) {
     const palette = useColorPalette();
     const setMember = useSetAtom(selectedMemberAtom);
     const memberData = useFormattedMemberData(member);
-
+    const userInfo = useAtomValue(userInfoQAtom);
+    console.log(userInfo);
     return (
         <View>
             <View className="w-full h-[1px] bg-gray-200" />
@@ -39,10 +41,17 @@ export default function MemberRow({ member }: { member: MemberInfo }) {
                 }}
             >
                 <View className="flex gap-4">
-                    <Text className="text-xl font-bold dark:text-white">
-                        {memberData.name}
-                    </Text>
-
+                    <View className="flex-row">
+                        <Text className="text-xl font-bold dark:text-white">
+                            {memberData.name}
+                        </Text>
+                        {memberData.juguser == userInfo.data?.juguser && (
+                            <Text className="color-gray-400 text-xl font-semibold">
+                                {" "}
+                                (You)
+                            </Text>
+                        )}
+                    </View>
                     <View className="flex-row gap-4">
                         <MemberDetail
                             title="Last Drank"

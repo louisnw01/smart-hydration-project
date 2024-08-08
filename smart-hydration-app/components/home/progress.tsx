@@ -102,14 +102,14 @@ export function ProgressWheel({
 
 export default function HydrationProgress() {
     const palette = useColorPalette();
-    const amountDrankToday = useAtomValue(amountDrankTodayAtom);
+    const amountDrankToday = useAtomValue(amountDrankTodayAtom) ?? 0;
 
     const animatedProgress = useSharedValue(0);
 
     const text = useDerivedValue(() => animatedProgress.value.toFixed(0));
     const animatedProps = useAnimatedProps(() => ({
         text: text.value,
-    }));
+    })) as any;
 
     const unit = useAtomValue(unitsAtom);
     const target = unitConverter(useAtomValue(dailyTargetAtom), unit);
@@ -118,7 +118,7 @@ export default function HydrationProgress() {
         <ProgressWheel
             radius={130}
             max={target}
-            progress={amountDrankToday}
+            progress={amountDrankToday ?? 0}
             width={16}
             color={amountDrankToday >= target ? colors.green : colors.blue}
             backgroundColor={palette.bglight}
@@ -129,7 +129,7 @@ export default function HydrationProgress() {
                     <AnimatedTextInput
                         underlineColorAndroid="transparent"
                         editable={false}
-                        value={text}
+                        value={text.value}
                         className="dark:text-white text-7xl font-semibold -mb-3"
                         {...{ animatedProps }}
                     />

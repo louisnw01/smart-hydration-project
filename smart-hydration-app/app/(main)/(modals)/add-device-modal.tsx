@@ -2,11 +2,12 @@ import {
     getAllJugsQAtom,
     getJugDataQAtom,
     linkJugMAtom,
+    userHasCommunityAtom,
     userJugUserIdAtom,
 } from "@/atom/query";
 import StyledButton from "@/components/common/button";
 import Loading from "@/components/common/loading";
-import { useNavigation } from "expo-router";
+import { router } from "expo-router";
 import { useAtomValue } from "jotai";
 import { useEffect, useState } from "react";
 import { FlatList, Pressable, Text, View } from "react-native";
@@ -14,11 +15,11 @@ import { FlatList, Pressable, Text, View } from "react-native";
 export default function MVPAddDeviceModal() {
     const { data, isLoading } = useAtomValue(getAllJugsQAtom);
     const jugUserId = useAtomValue(userJugUserIdAtom);
-    const navigation = useNavigation();
     const [selectedJugs, setSelectedJugs] = useState(new Set<string>());
     const { mutate, isPending, isSuccess } = useAtomValue(linkJugMAtom);
     const { isLoading: isLoadingNewJugs, isSuccess: isSuccessLoadingNewJugs } =
         useAtomValue(getJugDataQAtom);
+    const isInCommunity = useAtomValue(userHasCommunityAtom);
 
     useEffect(() => {
         if (
@@ -29,10 +30,13 @@ export default function MVPAddDeviceModal() {
         ) {
             return;
         }
-        navigation.goBack();
+        router.back();
     }, [isPending, isSuccess, isLoadingNewJugs, isSuccessLoadingNewJugs]);
 
     const handleSelect = (jug_id: string) => {
+        if (!selectedJugs) {
+            return;
+        }
         if (selectedJugs.has(jug_id)) {
             selectedJugs.delete(jug_id);
         } else {
@@ -42,10 +46,14 @@ export default function MVPAddDeviceModal() {
     };
 
     const handlePress = () => {
-        mutate({
-            jugIds: Array.from(selectedJugs),
-            jugUserId: jugUserId || null,
-        });
+        if (isInCommunity) {
+            router.push("(modals)/add-device-chooser");
+        } else {
+            mutate({
+                jugIds: Array.from(selectedJugs),
+                jugUserId: jugUserId || null,
+            });
+        }
     };
 
     return (
