@@ -118,7 +118,7 @@ export default function HydrationProgress() {
         <ProgressWheel
             radius={130}
             max={target}
-            progress={amountDrankToday}
+            progress={amountDrankToday | 0}
             width={16}
             color={amountDrankToday >= target ? colors.green : colors.blue}
             backgroundColor={palette.bglight}
