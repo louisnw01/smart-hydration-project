@@ -1,16 +1,25 @@
-import { getAllJugsQAtom, linkJugToUserMAtom } from "@/atom/query";
+import {
+    getAllJugsQAtom,
+    linkJugToUserMAtom,
+    userHasCommunityAtom,
+} from "@/atom/query";
 import Loading from "@/components/common/loading";
 import { useNavigation } from "expo-router";
-import { useAtomValue } from "jotai";
-import { useState } from "react";
+import { useAtomValue, useAtom } from "jotai";
 import { Pressable, SectionList, Text, View } from "react-native";
+import { router } from "expo-router";
+import { selectedJugsAtom } from "@/atom/device";
 
 export default function MVPAddDeviceModal() {
     const { data, isLoading } = useAtomValue(getAllJugsQAtom);
     const navigation = useNavigation();
-    const [selectedJugs, setSelectedJugs] = useState(new Set<string>());
+    const [selectedJugs, setSelectedJugs] = useAtom(selectedJugsAtom);
     const { mutate: linkJugsToUser } = useAtomValue(linkJugToUserMAtom);
+    const isInCommunity = useAtomValue(userHasCommunityAtom);
     const handleSelect = (jug_id: string) => {
+        if (!selectedJugs) {
+            return;
+        }
         if (selectedJugs.has(jug_id)) {
             selectedJugs.delete(jug_id);
         } else {
@@ -20,8 +29,12 @@ export default function MVPAddDeviceModal() {
     };
 
     const handlePress = () => {
-        linkJugsToUser({ jugIds: Array.from(selectedJugs) });
-        navigation.goBack();
+        if (isInCommunity) {
+            router.push("(modals)/add-device-chooser");
+        } else {
+            linkJugsToUser({ jugIds: Array.from(selectedJugs) });
+            router.back();
+        }
     };
 
     return (
