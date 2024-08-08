@@ -61,7 +61,7 @@ async def patient_info(user_id: str = Depends(auth_user)):
         # get targets for users
         patient_info = []
         for juguser in community.jug_users:
-            if juguser.user is not user:
+            if user.mode == 'Standard':
                 patient_info.append({
                     "id": juguser.id,
                     "name": juguser.name,
@@ -97,6 +97,10 @@ async def create_community(form: CreateCommunityForm, user_id: str = Depends(aut
             raise HTTPException(400, 'user is already a member of a community')
         community = Community(name=form.name)
         member = CommunityMember(user=user, community=community, is_owner=True)
+        if user.mode == 'Standard':
+            print("Adding")
+            user.jug_user.community = community
+            community.jug_users.add(user.jug_user)
         commit()
 
 
