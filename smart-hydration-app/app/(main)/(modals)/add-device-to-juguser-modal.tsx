@@ -1,9 +1,10 @@
-import { selectedJugIdAtom } from "@/atom/device";
+import { selectedJugIdAtom, selectedJugsAtom } from "@/atom/device";
 import {
     linkJugsToCommunityMemberMAtom,
     patientInfoQAtom,
     unlinkJugFromUserMAtom,
 } from "@/atom/query";
+import StyledButton from "@/components/common/button";
 import Loading from "@/components/common/loading";
 import { MemberInfo } from "@/interfaces/community";
 import { useNavigation } from "expo-router";
@@ -18,12 +19,17 @@ export default function MVPAddDeviceModal() {
     const selectedJugId = useAtomValue(selectedJugIdAtom);
     const { mutate: unlinkJugFromUser } = useAtomValue(unlinkJugFromUserMAtom);
     const [selectedUser, setSelectedUser] = useState<number | null>();
+    const selectedJugs = useAtomValue(selectedJugsAtom);
     //const communityJugData = getCommunityJugDataQAtom();
     const { mutate: linkJugToCommunityMember } = useAtomValue(
         linkJugsToCommunityMemberMAtom,
     );
 
-    if (!selectedJugId) return;
+    if (!selectedJugId && !selectedJugs) return;
+
+    function handleUnassigned() {
+        // put the mutation for unassigned here
+    }
 
     const handleSelect = (juser_id: MemberInfo) => {
         if (selectedUser == juser_id.id) {
@@ -57,39 +63,43 @@ export default function MVPAddDeviceModal() {
             />
 
             {data && (
-                <FlatList
-                    data={data}
-                    renderItem={({ item }) => (
-                        <Pressable
-                            className="mx-4 px-4 py-3 rounded-xl my-2 bg-gray-200 dark:bg-neutral-800"
-                            onPress={() => handleSelect(item)}
-                            style={{
-                                ...(selectedUser == item.id
-                                    ? {
-                                          backgroundColor: "rgb(90, 240, 130)",
-                                      }
-                                    : undefined),
-                            }}
-                        >
-                            <View className="flex-row justify-between">
-                                <Text className="text-lg dark:text-white">
-                                    {item.name}
-                                </Text>
-                                <Text className="text-lg dark:text-white">
-                                    {item.id}
-                                </Text>
-                            </View>
-                        </Pressable>
-                    )}
-                    // renderSectionHeader={({ section }) => (
-                    //     <Text className="text-xl font-bold ml-4 pt-4 dark:text-white">
-                    //         {section.title}
-                    //     </Text>
-                    // )}
-                    keyExtractor={(item) => `jug-list-${item}`}
-                    // stickySectionHeadersEnabled={false}
-                />
+                <View>
+                    <FlatList
+                        data={data}
+                        renderItem={({ item }) => (
+                            <Pressable
+                                className="mx-4 px-4 py-3 rounded-xl my-2 bg-gray-200 dark:bg-neutral-800"
+                                onPress={() => handleSelect(item)}
+                                style={{
+                                    ...(selectedUser == item.id
+                                        ? {
+                                              backgroundColor:
+                                                  "rgb(90, 240, 130)",
+                                          }
+                                        : undefined),
+                                }}
+                            >
+                                <View className="flex-row justify-between">
+                                    <Text className="text-lg dark:text-white">
+                                        {item.name}
+                                    </Text>
+                                    <Text className="text-lg dark:text-white">
+                                        {item.id}
+                                    </Text>
+                                </View>
+                            </Pressable>
+                        )}
+                        // renderSectionHeader={({ section }) => (
+                        //     <Text className="text-xl font-bold ml-4 pt-4 dark:text-white">
+                        //         {section.title}
+                        //     </Text>
+                        // )}
+                        keyExtractor={(item) => `jug-list-${item}`}
+                        // stickySectionHeadersEnabled={false}
+                    />
+                </View>
             )}
+
             {selectedUser !== null && (
                 <Pressable
                     className="bg-blue items-center mx-16 justify-center px-3 py-3 rounded-3xl"
@@ -100,6 +110,17 @@ export default function MVPAddDeviceModal() {
                     </Text>
                 </Pressable>
             )}
+            <View className="px-16">
+                <StyledButton
+                    text="Nobody, for now"
+                    textClass="w-full text-center text-2xl py-4"
+                    onPress={handleUnassigned}
+                />
+                <Text className="flex-wrap text-center pt-4">
+                    After clicking this, you can assign the jug to a member of
+                    your community at a later time.
+                </Text>
+            </View>
         </View>
     );
 }
