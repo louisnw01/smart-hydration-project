@@ -48,7 +48,8 @@ async def fire_drank_today(sys_id):
         if jug is None:
             return
         owners = jug.owners.load()
-
+        if owners is None:
+            return
         for juguser in owners:
             juguser.jugs.load()
 

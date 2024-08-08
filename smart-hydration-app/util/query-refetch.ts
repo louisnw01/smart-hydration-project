@@ -5,7 +5,11 @@ import { useEffect, useState } from "react";
 
 export function useQueryRefetch(queryAtom: Atom<AtomWithQueryResult>) {
     const [isRefreshing, setIsRefreshing] = useState(false);
+
     const { refetch, isFetching } = useAtomValue(queryAtom);
+
+    console.log(refetch);
+
     const handleRefresh = () => {
         setIsRefreshing(true);
         refetch();

@@ -1,12 +1,15 @@
 import { selectedMemberAtom } from "@/atom/community";
 import { getJugDataQAtom, linkJugsToCommunityMemberMAtom } from "@/atom/query";
+import colors from "@/colors";
 import StyledButton from "@/components/common/button";
 import Loading from "@/components/common/loading";
+import MarginBox from "@/components/common/margin-box";
+import DeviceSection from "@/components/devices/device-section";
 import { DeviceInfo } from "@/interfaces/device";
 import { useNavigation } from "expo-router";
 import { useAtomValue } from "jotai";
 import { useState } from "react";
-import { Pressable, SectionList, Text, View } from "react-native";
+import { Text, View } from "react-native";
 
 export default function AddDeviceMemberModal() {
     const { data, isLoading } = useAtomValue(getJugDataQAtom);
@@ -55,41 +58,49 @@ export default function AddDeviceMemberModal() {
             <Loading isLoading={isLoading} message="Getting all jug names.." />
 
             {data && (
-                <SectionList
-                    // sections={Object.entries(data).map(([name]) => ({
-                    //     title: "Connected Jugs:",
-                    //     data: name,
-                    // }))}
-                    sections={[{ title: "Connected Jugs", data: data }]}
-                    renderItem={({ item }) => (
-                        <Pressable
-                            className="mx-4 px-4 py-3 rounded-xl my-2 bg-gray-200 dark:bg-neutral-800"
-                            onPress={() => handleSelect(item)}
-                            style={{
-                                ...(selectedJugs.has(item)
-                                    ? {
-                                          backgroundColor: "rgb(90, 240, 130)",
-                                      }
-                                    : undefined),
-                                // backgroundColor: selectedJugs.has(item)
-                                //     ? "rgb(90, 240, 130)"
-                                //     : undefined,
-                            }}
-                        >
-                            <Text className="text-xl font-semibold dark:text-white">
-                                {item.name}
-                            </Text>
-                            <Text>Smart Hydration ID: {item.id}</Text>
-                        </Pressable>
-                    )}
-                    renderSectionHeader={({ section }) => (
-                        <Text className="text-xl font-bold ml-4 pt-4 dark:text-white">
-                            {"Connected Jugs"}
-                        </Text>
-                    )}
-                    keyExtractor={(item) => `jug-list-${item}`}
-                    stickySectionHeadersEnabled={false}
-                />
+                <MarginBox>
+                    <DeviceSection
+                        queryAtom={getJugDataQAtom}
+                        onPress={handleSelect}
+                        activeColor={colors.green}
+                    />
+                </MarginBox>
+
+                // <SectionList
+                //     // sections={Object.entries(data).map(([name]) => ({
+                //     //     title: "Connected Jugs:",
+                //     //     data: name,
+                //     // }))}
+                //     sections={[{ title: "Connected Jugs", data: data }]}
+                //     renderItem={({ item }) => (
+                //         <Pressable
+                //             className="mx-4 px-4 py-3 rounded-xl my-2 bg-gray-200 dark:bg-neutral-800"
+                //             onPress={() => handleSelect(item)}
+                //             style={{
+                //                 ...(selectedJugs.has(item)
+                //                     ? {
+                //                           backgroundColor: "rgb(90, 240, 130)",
+                //                       }
+                //                     : undefined),
+                //                 // backgroundColor: selectedJugs.has(item)
+                //                 //     ? "rgb(90, 240, 130)"
+                //                 //     : undefined,
+                //             }}
+                //         >
+                //             <Text className="text-xl font-semibold dark:text-white">
+                //                 {item.name}
+                //             </Text>
+                //             <Text>Smart Hydration ID: {item.id}</Text>
+                //         </Pressable>
+                //     )}
+                //     renderSectionHeader={({ section }) => (
+                //         <Text className="text-xl font-bold ml-4 pt-4 dark:text-white">
+                //             {"Connected Jugs"}
+                //         </Text>
+                //     )}
+                //     keyExtractor={(item) => `jug-list-${item}`}
+                //     stickySectionHeadersEnabled={false}
+                // />
             )}
             {selectedJugs.size > 0 && (
                 <StyledButton

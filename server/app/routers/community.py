@@ -308,9 +308,13 @@ async def community_tags(user_id: str = Depends(auth_user)):
 async def get_community_jug_list(user_id: str = Depends(auth_user)):
     with db_session:
         user = User.get(id=user_id)
-        juser = JugUser.get(user=user)
-        community = juser.community
-        jugusers = list(JugUser.select(community=community))
+        member = user.community_member
+        if not member:
+            return []
+        community = member.community
+
+        jugusers = community.jug_users
+
         available_jugs = []
         for juguser in jugusers:
             available_jugs.extend(juguser.jugs)
