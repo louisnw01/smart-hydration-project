@@ -27,9 +27,7 @@ const settingsList: ISettingsSection[] = [
                             isFirst={isFirst}
                             isLast={isLast}
                             onPress={() =>
-                                router.navigate(
-                                    "settings/community/change-name",
-                                )
+                                router.navigate("manage-community/change-name")
                             }
                             icon={
                                 <MaterialCommunityIcons
@@ -80,7 +78,7 @@ const settingsList: ISettingsSection[] = [
                                     text={name}
                                     onPress={() =>
                                         router.navigate(
-                                            "settings/community/edit-tags",
+                                            "manage-community/edit-tags",
                                         )
                                     }
                                     icon={
@@ -113,7 +111,7 @@ const settingsList: ISettingsSection[] = [
                                     text={name}
                                     onPress={() =>
                                         router.navigate(
-                                            "settings/community/remove-member",
+                                            "manage-community/remove-member",
                                         )
                                     }
                                     icon={
@@ -135,12 +133,12 @@ const settingsList: ISettingsSection[] = [
                     const { data } = useAtomValue(communityInfoQAtom);
                     return (
                         <>
-                          <OptionBlock
+                            <OptionBlock
                                 isLast={isLast}
                                 text={name}
                                 onPress={() =>
                                     router.navigate(
-                                        "settings/community/invite-member",
+                                        "manage-community/invite-member",
                                     )
                                 }
                                 icon={
@@ -167,19 +165,21 @@ const settingsList: ISettingsSection[] = [
                     return (
                         <>
                             {!isCarer && (
-                                <OptionBlock
-                                    atom={communityTabVisible}
-                                    text="Show Community Tab"
-                                    isFirst={isFirst}
-                                    isLast={isLast}
-                                    icon={
-                                        <Ionicons
-                                            name="eye-outline"
-                                            size={19}
-                                            color="gray"
-                                        />
-                                    }
-                                />
+                                <View className="py-6">
+                                    <OptionBlock
+                                        atom={communityTabVisible}
+                                        text="Show Community Tab"
+                                        isFirst={isFirst}
+                                        isLast={isLast}
+                                        icon={
+                                            <Ionicons
+                                                name="eye-outline"
+                                                size={19}
+                                                color="gray"
+                                            />
+                                        }
+                                    />
+                                </View>
                             )}
                         </>
                     );
@@ -260,7 +260,7 @@ export default function CommunityProfile() {
                         </View>
                     );
                 }}
-                keyExtractor={(item) => `settings-community-${item.name}`}
+                keyExtractor={(item, idx) => idx.toString()}
                 stickySectionHeadersEnabled={false}
             />
         </View>
