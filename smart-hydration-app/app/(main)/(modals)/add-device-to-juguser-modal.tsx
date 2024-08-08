@@ -1,9 +1,5 @@
-import { selectedJugIdAtom } from "@/atom/device";
-import {
-    linkJugsToCommunityMemberMAtom,
-    patientInfoQAtom,
-    unlinkJugFromUserMAtom,
-} from "@/atom/query";
+import { selectedDeviceAtom } from "@/atom/device";
+import { patientInfoQAtom } from "@/atom/query";
 import Loading from "@/components/common/loading";
 import { MemberInfo } from "@/interfaces/community";
 import { useNavigation } from "expo-router";
@@ -15,7 +11,7 @@ export default function MVPAddDeviceModal() {
     const { data, isLoading: patientInfoIsLoading } =
         useAtomValue(patientInfoQAtom);
     const navigation = useNavigation();
-    const selectedJugId = useAtomValue(selectedJugIdAtom);
+    const selectedDevice = useAtomValue(selectedDeviceAtom);
     const { mutate: unlinkJugFromUser } = useAtomValue(unlinkJugFromUserMAtom);
     const [selectedUser, setSelectedUser] = useState<number | null>();
     //const communityJugData = getCommunityJugDataQAtom();
@@ -23,7 +19,7 @@ export default function MVPAddDeviceModal() {
         linkJugsToCommunityMemberMAtom,
     );
 
-    if (!selectedJugId) return;
+    if (!selectedDevice) return;
 
     const handleSelect = (juser_id: MemberInfo) => {
         if (selectedUser == juser_id.id) {
@@ -36,10 +32,10 @@ export default function MVPAddDeviceModal() {
 
     const handlePress = () => {
         linkJugToCommunityMember({
-            jugIds: [selectedJugId],
+            jugIds: [selectedDevice.id],
             communityMember: Number(selectedUser),
         });
-        unlinkJugFromUser({ jugId: selectedJugId });
+        unlinkJugFromUser({ jugId: selectedDevice.id });
 
         navigation.goBack();
         navigation.goBack();

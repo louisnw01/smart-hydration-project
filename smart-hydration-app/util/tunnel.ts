@@ -92,7 +92,7 @@ export const tunnelInitEAtom = atomEffect((get, set) => {
     if (!authToken) return;
 
     const tunnel = new TunnelClient(
-        `wss://${SERVER_ADDRESS}/tunnel/`,
+        `ws://${SERVER_ADDRESS}/tunnel/`,
         authToken,
     );
 
@@ -129,9 +129,7 @@ export const subscribeToJugDataEAtom = atomEffect((get, set) => {
             ["get-jug-data", get(authTokenAtom)],
             (prev: DeviceInfo[]) =>
                 prev.map((row) =>
-                    row.id == newJugData.id
-                        ? { ...newJugData, name: row.name }
-                        : row,
+                    row.id == newJugData.id ? { ...row, ...newJugData } : row,
                 ),
         );
     };

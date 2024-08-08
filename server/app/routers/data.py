@@ -1,6 +1,8 @@
 import asyncio
 from fastapi import APIRouter, Depends, HTTPException
 from pony.orm.core import db_session, select
+
+from ..services import get_users_community
 from ..api import SmartHydrationSession, get_jug_latest, get_hydration_events
 from ..auth import auth_user
 from ..models import JugUser, User, OtherDrink
@@ -13,27 +15,52 @@ router = APIRouter(
 
 
 @router.get("/latest")
-async def get_community_jug_status(jug_user_id: int, user_id: str = Depends(auth_user)):
-    # TODO perhaps this logic should be in auth_user, and it returns user rather than user_id
-
+async def device_info(user_id: str = Depends(auth_user)):
+    jugs = []
     with db_session:
-        # community = user.community
         user = User.get(id=user_id)
-        juguser = JugUser.get(id=jug_user_id)
-        if not user or not juguser:
-            raise HTTPException(status_code=400, detail='user not found')
-        jugs = [jug.to_dict() for jug in juguser.jugs]
-    devices_info = []
-    async with SmartHydrationSession() as session:
-        for jug in jugs:
-            jug_data = await get_jug_latest(session, jug['smart_hydration_id'])
-            if jug_data is None:
-                continue
-            jug_data['name'] = jug['name']
-            jug_data['id'] = jug['smart_hydration_id']
-            devices_info.append(jug_data)
-        print(devices_info)
-        return devices_info
+
+        # if standard we want the users jugs
+        if user.mode == 'Standard':
+            jugs.extend([{
+                'name': jug.name,
+                'id': jug.smart_hydration_id,
+                'jugUserId': user.jug_user.id,
+                'capacity': jug.capacity,
+                'charging': jug.is_charging,
+                'battery': jug.battery,
+                'temperature': jug.temp,
+                'water_level': jug.water_level,
+                'last_seen': jug.last_connected,
+            } for jug in user.jug_user.jugs])
+
+        # add all jugs that are within the users community
+        if community := get_users_community(user_id):
+            for juguser in community.jug_users:
+                jugs.extend([{
+                    'name': jug.name,
+                    'id': jug.smart_hydration_id,
+                    'jugUserId': juguser.id,
+                    'capacity': jug.capacity,
+                    'charging': jug.is_charging,
+                    'battery': jug.battery,
+                    'temperature': jug.temp,
+                    'water_level': jug.water_level,
+                    'last_seen': jug.last_connected,
+                } for jug in juguser.jugs])
+    return jugs
+    # fetch the data from smart hydration and return
+
+    # async with SmartHydrationSession() as session:
+    #     for jug in jugs:
+    #         jug_data = await get_jug_latest(session, jug['id'])
+    #         if jug_data is None:
+    #             continue
+    #         jug_data['name'] = jug['name']
+    #         jug_data['id'] = jug['id']
+    #         jug_data['jugUserId'] = jug['juguser_id']
+    #         devices_info.append(jug_data)
+    #     return devices_info
 
 
 @router.get("/historical")

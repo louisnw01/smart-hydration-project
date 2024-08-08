@@ -1,6 +1,12 @@
 import { useRouter } from "expo-router";
 import { ReactNode, useState } from "react";
-import { Pressable, PressableProps, Text, ViewStyle } from "react-native";
+import {
+    ActivityIndicator,
+    Pressable,
+    PressableProps,
+    Text,
+    ViewStyle,
+} from "react-native";
 
 interface ButtonProps extends PressableProps {
     text: string;
@@ -11,6 +17,8 @@ interface ButtonProps extends PressableProps {
     touchButtonColors?: string;
     icon?: ReactNode;
     style?: ViewStyle;
+    isLoading?: boolean;
+    keepTextWhileLoading?: boolean;
 }
 
 export default function StyledButton(props: ButtonProps) {
@@ -57,7 +65,10 @@ export default function StyledButton(props: ButtonProps) {
             {...props}
         >
             {props.icon && props.icon}
+
             <Text className={textClass}>{props.text}</Text>
+
+            {props.isLoading && <ActivityIndicator color="black" />}
         </Pressable>
     );
 }

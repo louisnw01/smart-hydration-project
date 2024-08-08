@@ -9,12 +9,10 @@ export const SERVER_URL = `http${
 
 export const ENDPOINTS = {
     HELLO_WORLD: "/",
-    FETCH_COMMUNITY: "/data/latest",
+    DEVICE_INFO: "/data/latest",
     LOGIN: "/user/login",
     REGISTER: "/user/register",
-    UNLINK_JUG_FROM_USER: "/user/unlink-jug",
-    LINK_JUG_TO_USER: "/user/link-jug",
-    LINK_JUG_TO_COMMUNITY_MEMBER: "/community/link-jug-to-member",
+
     FETCH_HISTORICAL_JUG_DATA: "/data/historical",
     GET_ALL_JUGS: "/get-all-jugs",
     UPDATE: "/jug-user/update",
@@ -28,24 +26,29 @@ export const ENDPOINTS = {
     ADD_TAGS_PATIENT: "/jug-user/add-tags-patient",
     FETCH_COMMUNITY_JUG_LIST: "/community/get-community-jug-list",
 
+    UNLINK_JUG: "/jug/unlink",
+    LINK_JUG: "/jug/link",
+
     SEND_VERIFICATION_EMAIL: "/user/send-verification-email",
 
     COMMUNITY_INFO: "/community/info",
     CREATE_COMMUNITY: "/community/create",
+    JOIN_COMMUNITY: "/community/join",
     UPDATE_COMMUNITY: "/community/update",
     DELETE_COMMUNITY: "/community/delete",
+    LEAVE_COMMUNITY: "/community/leave",
     COMMUNITY_GENERATE_INVITE: "/community/generate-invite",
     COMMUNITY_USERS: "/community/users",
     DELETE_COMMUNITY_MEMBER: "/community/delete-member",
     ADD_COMMUNITY_DRINK: "/community/add-community-drink-event",
     PATIENT_INFO: "/community/patient-info", // get the info through this endpoint
+
     CREATE_TAG: "/community/create-tag",
     UPDATE_TAG: "/community/update-tag",
     DELETE_TAG: "/community/delete-tag",
     COMMUNITY_TAGS: "/community/get-tags",
+
     NAME_FROM_LINK: "/community/name-from-link",
-    JOIN_COMMUNITY: "/community/join",
-    LEAVE_COMMUNITY: "/community/leave",
 
     CREATE_JUG_USER: "/jug-user/create",
     VERIFY_EMAIL: "/user/verify",

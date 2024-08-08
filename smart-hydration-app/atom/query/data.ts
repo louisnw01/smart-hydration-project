@@ -1,5 +1,6 @@
 import { DeviceInfo, ITimeSeries } from "@/interfaces/device";
 import { ENDPOINTS } from "@/util/fetch";
+import { atom } from "jotai";
 import { selectedMemberAtom } from "../community";
 import { authTokenAtom } from "../user";
 import {
@@ -11,28 +12,34 @@ import { userInfoQAtom } from "./user";
 
 export const getJugDataQAtom = atomWithQueryInfo<DeviceInfo[]>({
     queryKey: "get-jug-data",
-    endpoint: ENDPOINTS.FETCH_COMMUNITY,
-    query: (get) => {
-        const { data } = get(userInfoQAtom);
-        return {
-            jug_user_id: data?.juguser,
-        };
-    },
-    enabled: (get) => !!get(authTokenAtom) && get(userInfoQAtom).isSuccess,
+    endpoint: ENDPOINTS.DEVICE_INFO,
+    enabled: (get) => !!get(authTokenAtom),
 });
 
-export const getPatientJugDataQAtom = atomWithQueryInfo<DeviceInfo[]>({
-    queryKey: (get) => [
-        "get-patient-jug-data",
-        get(authTokenAtom),
-        get(selectedMemberAtom),
-    ],
-    endpoint: ENDPOINTS.FETCH_COMMUNITY,
-    query: (get) => ({
-        jug_user_id: get(selectedMemberAtom)?.id,
-    }),
-    enabled: (get) => !!get(authTokenAtom) && !!get(selectedMemberAtom),
+export const patientJugDataAtom = atom((get) => {
+    const jugDataAtom = get(getJugDataQAtom);
+    const member = get(selectedMemberAtom);
+    let data;
+    if (jugDataAtom.data) {
+        data = jugDataAtom.data.filter(
+            (device) => device.jugUserId == member?.id,
+        );
+    }
+    return { ...jugDataAtom, data };
 });
+
+// export const getPatientJugDataQAtom = atomWithQueryInfo<DeviceInfo[]>({
+//     queryKey: (get) => [
+//         "get-patient-jug-data",
+//         get(authTokenAtom),
+//         get(selectedMemberAtom),
+//     ],
+//     endpoint: ENDPOINTS.DEVICE_INFO,
+//     query: (get) => ({
+//         jug_user_id: get(selectedMemberAtom)?.id,
+//     }),
+//     enabled: (get) => !!get(authTokenAtom) && !!get(selectedMemberAtom),
+// });
 
 export const addDrinkMAtom = atomWithMutationCustom<{
     timestamp: number;

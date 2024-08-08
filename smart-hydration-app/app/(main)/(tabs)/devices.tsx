@@ -1,4 +1,4 @@
-import { selectedJugIdAtom } from "@/atom/device";
+import { selectedDeviceAtom } from "@/atom/device";
 import {
     getCommunityJugDataQAtom,
     getJugDataQAtom,
@@ -47,7 +47,7 @@ const communityAndUserJugDataQAtom = atom((get) => {
 });
 
 export default function DevicesPage() {
-    const setJugId = useSetAtom(selectedJugIdAtom);
+    const setJug = useSetAtom(selectedDeviceAtom);
     const isInCommunity = useAtomValue(userHasCommunityAtom);
 
     return (
@@ -56,9 +56,9 @@ export default function DevicesPage() {
             <View className="flex-1">
                 <DeviceSection
                     addJugButton
-                    queryAtom={communityAndUserJugDataQAtom}
+                    queryAtom={getJugDataQAtom}
                     onPress={(device) => {
-                        setJugId(device.id);
+                        setJug(device);
                         router.push("device-info-modal");
                     }}
                 />

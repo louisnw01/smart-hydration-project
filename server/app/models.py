@@ -68,7 +68,13 @@ class Jug(db.Entity):
     name = Optional(str)
     owners = Set('JugUser')
     system_id = Required(int)
-
+    communities = Set('Community')
+    last_connected = Optional(int)
+    battery = Optional(float)
+    temp = Optional(float)
+    water_level = Optional(int)
+    is_charging = Required(bool, default=False)
+    capacity = Optional(int)
 
 class Community(db.Entity):
     id = PrimaryKey(int, auto=True)
@@ -77,6 +83,7 @@ class Community(db.Entity):
     followers = Set('CommunityMember')
     invite_links = Set('InviteLink')
     tags = Set('Tag')
+    unassigned_jugs = Set('Jug')
 
 
 class CommunityMember(db.Entity):

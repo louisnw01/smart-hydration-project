@@ -7,7 +7,7 @@ from ..api import get_hydration_events, SmartHydrationSession, get_jug_latest
 from ..routers import jug_user
 from ..services import get_user_by_id, try_get_users_community, try_get_users_community
 from ..models import Community, CommunityMember, InviteLink, Jug, User, JugUser, Tag, OtherDrink
-from ..schemas import AddCommunityDrinkForm, CreateCommunityForm, CreateInvitationForm, AddJugsToMemberForm, DeleteCommunityMemberForm, VerifyEmailForm, CreateTagForm, UpdateTagForm, DeleteTagForm
+from ..schemas import AddCommunityDrinkForm, CreateCommunityForm, CreateInvitationForm, DeleteCommunityMemberForm, VerifyEmailForm, CreateTagForm, UpdateTagForm, DeleteTagForm
 from ..auth import auth_user, generate_invite_link
 from starlette.responses import RedirectResponse
 
@@ -218,26 +218,6 @@ async def create_invitation(user_id: str = Depends(auth_user)):
         )
 
         return link.id
-
-
-@router.post("/link-jug-to-member")
-async def link_jugs_to_community_member(form: AddJugsToMemberForm, user_id: str = Depends(auth_user)):
-    pprint.pprint(form)
-    with db_session:
-        user = User.get(id=user_id)
-        member = user.community_member
-        user_community = member.community
-        juguser = JugUser.get(id = form.communityMember)
-        juser_community = juguser.community
-        if user_community != juser_community or user_community is None or juser_community is None:
-            return HTTPException(400, 'user is not part of the same community')
-
-        for jug in form.jugIds:
-            jug_to_add = Jug.get(smart_hydration_id=jug)
-            juguser.jugs.add(jug_to_add)
-        commit()
-        return {"message": "Jugs successfully linked to community member"}
-
 
 @router.post("/create-tag")
 async def create_tag(form: CreateTagForm, user_id: str = Depends(auth_user)):
