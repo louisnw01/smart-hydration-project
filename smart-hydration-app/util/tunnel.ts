@@ -92,7 +92,7 @@ export const tunnelInitEAtom = atomEffect((get, set) => {
     if (!authToken) return;
 
     const tunnel = new TunnelClient(
-        `wss://${SERVER_ADDRESS}/tunnel/`,
+        `ws://${SERVER_ADDRESS}/tunnel/`,
         authToken,
     );
 
