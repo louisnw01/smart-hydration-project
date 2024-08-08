@@ -1,21 +1,32 @@
+import { selectedJugIdAtom } from "@/atom/device";
 import colors from "@/colors";
 import { DeviceInfo } from "@/interfaces/device";
+import { useAtomValue } from "jotai";
 import { ReactNode } from "react";
 import { Pressable, Text, View } from "react-native";
 
 export default function DeviceRow({
     device,
     onPress,
+    activeColor,
 }: {
     device: DeviceInfo;
     onPress: Function;
+    activeColor?: string;
 }) {
     const percentFull = (device.water_level / device.capacity) * 100;
     const isStale = false;
+
+    const isActive = useAtomValue(selectedJugIdAtom) == device.id;
     return (
         <Pressable
             className="bg-gray-200 px-7 py-4 flex flex-row justify-between rounded-xl dark:bg-neutral-800"
             onPress={() => onPress(device)}
+            style={
+                isActive && activeColor
+                    ? { backgroundColor: activeColor }
+                    : undefined
+            }
         >
             <View className="flex">
                 <Text className="text-xl font-bold dark:text-white">
