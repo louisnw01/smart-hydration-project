@@ -1,13 +1,11 @@
-/** eslint-disable no-unused-expressions */
-import useSettings from "@/app/hooks/user";
 import useColorPalette from "@/util/palette";
 import { Entypo } from "@expo/vector-icons";
 import { router, Stack } from "expo-router";
-import { Platform, Pressable } from "react-native";
+import React from "react";
+import { Pressable } from "react-native";
 
-export default function SettingsLayout() {
+export default function ManageCommunityLayout() {
     const palette = useColorPalette();
-    const { isCarer } = useSettings();
     return (
         <Stack
             screenOptions={{
@@ -24,37 +22,9 @@ export default function SettingsLayout() {
             }}
         >
             <Stack.Screen
-                name="settings-modal"
+                name="community-settings"
                 options={{
-                    title: "Settings",
-                    headerLeft: () => {
-                        return (
-                            <Pressable
-                                onPress={() => {
-                                    // eslint-disable-next-line no-unused-expressions
-                                    isCarer
-                                        ? router.replace("(tabs)/community")
-                                        : router.replace("(tabs)");
-                                }}
-                            >
-                                <Entypo
-                                    name={
-                                        Platform.OS == "android"
-                                            ? "chevron-left"
-                                            : "circle-with-cross"
-                                    }
-                                    size={24}
-                                    color="rgb(80, 80, 80)"
-                                />
-                            </Pressable>
-                        );
-                    },
-                }}
-            />
-            <Stack.Screen
-                name="theme"
-                options={{
-                    title: "Theme",
+                    title: "Manage Community",
                     headerLeft: () => {
                         return (
                             <Pressable onPress={() => router.back()}>
@@ -69,9 +39,9 @@ export default function SettingsLayout() {
                 }}
             />
             <Stack.Screen
-                name="mode"
+                name="invite-member"
                 options={{
-                    title: "User Mode",
+                    title: "Invite a Member",
                     headerLeft: () => {
                         return (
                             <Pressable onPress={() => router.back()}>
@@ -86,9 +56,9 @@ export default function SettingsLayout() {
                 }}
             />
             <Stack.Screen
-                name="profile"
+                name="change-name"
                 options={{
-                    title: "Profile",
+                    title: "Change Community Name",
                     headerLeft: () => {
                         return (
                             <Pressable onPress={() => router.back()}>
@@ -103,9 +73,27 @@ export default function SettingsLayout() {
                 }}
             />
             <Stack.Screen
-                name="adjust-target"
+                name="change-owner"
                 options={{
-                    title: "Adjust Daily Target",
+                    title: "Transfer Community Ownership",
+                    headerLeft: () => {
+                        return (
+                            <Pressable onPress={() => router.back()}>
+                                <Entypo
+                                    name="chevron-left"
+                                    size={24}
+                                    color="rgb(80, 80, 80)"
+                                />
+                            </Pressable>
+                        );
+                    },
+                }}
+            />
+
+            <Stack.Screen
+                name="remove-member"
+                options={{
+                    title: "Remove a Member",
                     headerLeft: () => {
                         return (
                             <Pressable onPress={() => router.back()}>
@@ -120,26 +108,9 @@ export default function SettingsLayout() {
                 }}
             />
             <Stack.Screen
-                name="adjust-units"
+                name="edit-tags"
                 options={{
-                    title: "Adjust Units",
-                    headerLeft: () => {
-                        return (
-                            <Pressable onPress={() => router.back()}>
-                                <Entypo
-                                    name="chevron-left"
-                                    size={24}
-                                    color="rgb(80, 80, 80)"
-                                />
-                            </Pressable>
-                        );
-                    },
-                }}
-            />
-            <Stack.Screen
-                name="notifications"
-                options={{
-                    title: "Notifications",
+                    title: "Edit community tags",
                     headerLeft: () => {
                         return (
                             <Pressable onPress={() => router.back()}>
