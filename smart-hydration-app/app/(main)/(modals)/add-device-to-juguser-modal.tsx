@@ -3,6 +3,7 @@ import {
     linkJugsToCommunityMemberMAtom,
     patientInfoQAtom,
     unlinkJugFromUserMAtom,
+    userInfoQAtom,
 } from "@/atom/query";
 import StyledButton from "@/components/common/button";
 import Loading from "@/components/common/loading";
@@ -24,6 +25,7 @@ export default function MVPAddDeviceModal() {
     const { mutate: linkJugToCommunityMember } = useAtomValue(
         linkJugsToCommunityMemberMAtom,
     );
+    const userInfo = useAtomValue(userInfoQAtom);
 
     if (!selectedJugId && !selectedJugs) return;
 
@@ -67,27 +69,33 @@ export default function MVPAddDeviceModal() {
                     <FlatList
                         data={data}
                         renderItem={({ item }) => (
-                            <Pressable
-                                className="mx-4 px-4 py-3 rounded-xl my-2 bg-gray-200 dark:bg-neutral-800"
-                                onPress={() => handleSelect(item)}
-                                style={{
-                                    ...(selectedUser == item.id
-                                        ? {
-                                              backgroundColor:
-                                                  "rgb(90, 240, 130)",
-                                          }
-                                        : undefined),
-                                }}
-                            >
-                                <View className="flex-row justify-between">
-                                    <Text className="text-lg dark:text-white">
-                                        {item.name}
-                                    </Text>
-                                    <Text className="text-lg dark:text-white">
-                                        {item.id}
-                                    </Text>
-                                </View>
-                            </Pressable>
+                            <View>
+                                {item.id != userInfo.data?.juguser && (
+                                    <View>
+                                        <Pressable
+                                            className="mx-4 px-4 py-3 rounded-xl my-2 bg-gray-200 dark:bg-neutral-800"
+                                            onPress={() => handleSelect(item)}
+                                            style={{
+                                                ...(selectedUser == item.id
+                                                    ? {
+                                                          backgroundColor:
+                                                              "rgb(90, 240, 130)",
+                                                      }
+                                                    : undefined),
+                                            }}
+                                        >
+                                            <View className="flex-row justify-between">
+                                                <Text className="text-lg dark:text-white">
+                                                    {item.name}
+                                                </Text>
+                                                <Text className="text-lg dark:text-white">
+                                                    {item.id}
+                                                </Text>
+                                            </View>
+                                        </Pressable>
+                                    </View>
+                                )}
+                            </View>
                         )}
                         // renderSectionHeader={({ section }) => (
                         //     <Text className="text-xl font-bold ml-4 pt-4 dark:text-white">
