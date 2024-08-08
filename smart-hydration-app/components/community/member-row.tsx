@@ -29,6 +29,7 @@ export default function MemberRow({ member }: { member: MemberInfo }) {
     const setMember = useSetAtom(selectedMemberAtom);
     const memberData = useFormattedMemberData(member);
     const userInfo = useAtomValue(userInfoQAtom);
+    console.log(userInfo);
     return (
         <View>
             <View className="w-full h-[1px] bg-gray-200" />
@@ -44,7 +45,7 @@ export default function MemberRow({ member }: { member: MemberInfo }) {
                         <Text className="text-xl font-bold dark:text-white">
                             {memberData.name}
                         </Text>
-                        {memberData.juguser == userInfo.juguser && (
+                        {memberData.juguser == userInfo.data?.juguser && (
                             <Text className="color-gray-400 text-xl font-semibold">
                                 {" "}
                                 (You)

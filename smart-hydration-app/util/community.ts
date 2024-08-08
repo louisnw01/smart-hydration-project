@@ -77,6 +77,7 @@ export function useFormattedMemberData(member: MemberInfo) {
     const memberData = {
         name: member.name,
         lastDrank: generateDateString(member.lastDrank * 1000) || "No data",
+        juguser: member.id,
         amountDrank: member.drankToday
             ? member.drankToday.toString() + "ml"
             : null,

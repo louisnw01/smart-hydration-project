@@ -61,7 +61,7 @@ async def patient_info(user_id: str = Depends(auth_user)):
         # get targets for users
         patient_info = []
         for juguser in community.jug_users:
-            if user.mode == 'Standard':
+            if juguser.user is not user or user.mode == 'Standard':
                 patient_info.append({
                     "id": juguser.id,
                     "name": juguser.name,
