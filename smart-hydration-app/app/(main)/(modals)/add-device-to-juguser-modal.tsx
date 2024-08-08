@@ -41,14 +41,15 @@ export default function MVPAddDeviceModal() {
     };
 
     const handlePress = () => {
+        let jugsToLink = Array.from(selectedJugs);
         linkJugToCommunityMember({
-            jugIds: [selectedJugId],
+            jugIds: jugsToLink,
             communityMember: Number(selectedUser),
         });
-        unlinkJugFromUser({ jugId: selectedJugId });
-
-        navigation.goBack();
-        navigation.goBack();
+        for (let jug of selectedJugs) {
+            unlinkJugFromUser({ jugId: jug });
+        }
+        navigation.navigate("/devices");
     };
 
     return (
