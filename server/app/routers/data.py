@@ -32,6 +32,7 @@ async def device_info(user_id: str = Depends(auth_user)):
                 'temperature': jug.temp,
                 'water_level': jug.water_level,
                 'last_seen': jug.last_connected,
+                'staleness': jug.staleness,
             } for jug in user.jug_user.jugs])
 
         # add all jugs that are within the users community
@@ -47,6 +48,7 @@ async def device_info(user_id: str = Depends(auth_user)):
                     'temperature': jug.temp,
                     'water_level': jug.water_level,
                     'last_seen': jug.last_connected,
+                    'staleness': jug.staleness,
                 } for jug in juguser.jugs])
     return jugs
     # fetch the data from smart hydration and return

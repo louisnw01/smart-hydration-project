@@ -8,6 +8,7 @@ export interface DeviceInfo {
     temperature: number;
     water_level: number;
     last_seen: number;
+    staleness: number;
 }
 
 export interface ITimeSeries {

@@ -5,7 +5,7 @@ import hashlib
 import datetime as dt
 from asyncpusher.channel import Channel
 from asyncpusher.pusher import Pusher
-from pony.orm.core import db_session, select
+from pony.orm.core import db_session, select, commit
 
 from .api import SmartHydrationSession, get_hydration_events, get_jug_latest
 from .routers.websocket_tunnel import tunnel
@@ -18,7 +18,7 @@ async def fire_jug_info(sys_id):
 
     if jug_data is None:
         return
-
+    jug_staleness = calculate_staleness(jug_data['last_refill'])
     with db_session:
         jug = Jug.get(system_id=sys_id)
         jug.last_connected = int(jug_data['last_seen'])
@@ -27,9 +27,21 @@ async def fire_jug_info(sys_id):
         jug.temp = jug_data['temperature']
         jug.water_level = jug_data['water_level']
         jug.capacity = jug_data['capacity']
+        jug.staleness = jug_staleness
 
     await tunnel.fire(f'jug-latest', jug_data['id'], jug_data)
 
+def calculate_staleness(last_refill):
+    time_now = int(dt.datetime.now().timestamp())
+    diff = time_now - last_refill
+    hour = 1 * 60 * 60;
+    print('Diff in hours: ', diff / hour)
+    if (diff >= 12.0 * hour):
+        return 2
+    if (diff >= 9.0 * hour):
+        return 1
+    else:
+        return 0
 
 async def fire_last_drank(sys_id):
     with db_session:
