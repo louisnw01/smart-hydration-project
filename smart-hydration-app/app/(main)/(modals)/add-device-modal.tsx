@@ -1,3 +1,4 @@
+import { selectedJugsAtom } from "@/atom/device";
 import {
     getAllJugsQAtom,
     getJugDataQAtom,
@@ -8,14 +9,14 @@ import {
 import StyledButton from "@/components/common/button";
 import Loading from "@/components/common/loading";
 import { router } from "expo-router";
-import { useAtomValue } from "jotai";
-import { useEffect, useState } from "react";
+import { useAtom, useAtomValue } from "jotai";
+import { useEffect } from "react";
 import { FlatList, Pressable, Text, View } from "react-native";
 
 export default function MVPAddDeviceModal() {
     const { data, isLoading } = useAtomValue(getAllJugsQAtom);
     const jugUserId = useAtomValue(userJugUserIdAtom);
-    const [selectedJugs, setSelectedJugs] = useState(new Set<string>());
+    const [selectedJugs, setSelectedJugs] = useAtom(selectedJugsAtom);
     const { mutate, isPending, isSuccess } = useAtomValue(linkJugMAtom);
     const { isLoading: isLoadingNewJugs, isSuccess: isSuccessLoadingNewJugs } =
         useAtomValue(getJugDataQAtom);
@@ -34,15 +35,18 @@ export default function MVPAddDeviceModal() {
     }, [isPending, isSuccess, isLoadingNewJugs, isSuccessLoadingNewJugs]);
 
     const handleSelect = (jug_id: string) => {
+        let newSelectedJugs = [...selectedJugs];
         if (!selectedJugs) {
             return;
         }
-        if (selectedJugs.has(jug_id)) {
-            selectedJugs.delete(jug_id);
+        if (selectedJugs.find((row) => row == jug_id)) {
+            newSelectedJugs = selectedJugs.filter((row) => row != jug_id);
+            // selectedJugs.delete(jug_id);
         } else {
-            selectedJugs.add(jug_id);
+            newSelectedJugs.push(jug_id);
+            // selectedJugs.add(jug_id);
         }
-        setSelectedJugs(new Set(selectedJugs));
+        setSelectedJugs(newSelectedJugs);
     };
 
     const handlePress = () => {
@@ -74,7 +78,7 @@ export default function MVPAddDeviceModal() {
                             className="mx-4 px-4 py-3 rounded-xl my-2 bg-gray-200 dark:bg-neutral-800"
                             onPress={() => handleSelect(item)}
                             style={{
-                                ...(selectedJugs.has(item)
+                                ...(selectedJugs.find((row) => item == row)
                                     ? {
                                           backgroundColor: "rgb(90, 240, 130)",
                                       }
@@ -107,9 +111,9 @@ export default function MVPAddDeviceModal() {
                 //     stickySectionHeadersEnabled={false}
                 // />
             )}
-            {selectedJugs.size > 0 && (
+            {selectedJugs.length > 0 && (
                 <StyledButton
-                    text={`Add ${selectedJugs.size} jug${selectedJugs.size > 1 ? "s" : ""} to account`}
+                    text={`Add ${selectedJugs.length} jug${selectedJugs.length > 1 ? "s" : ""} to account`}
                     buttonClass="bg-blue self-center w-72 py-3 rounded-xl"
                     textClass="text-white text-xl font-medium text-center w-full"
                     onPress={handlePress}
