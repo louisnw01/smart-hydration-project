@@ -1,14 +1,9 @@
 import { selectedDeviceAtom, selectedJugsAtom } from "@/atom/device";
-import {
-    linkJugsToCommunityMemberMAtom,
-    patientInfoQAtom,
-    unlinkJugFromUserMAtom,
-    userInfoQAtom,
-} from "@/atom/query";
+import { linkJugMAtom, patientInfoQAtom, userInfoQAtom } from "@/atom/query";
 import StyledButton from "@/components/common/button";
 import Loading from "@/components/common/loading";
 import { MemberInfo } from "@/interfaces/community";
-import { router, useNavigation } from "expo-router";
+import { router } from "expo-router";
 import { useAtomValue } from "jotai";
 import { useState } from "react";
 import { FlatList, Pressable, Text, View } from "react-native";
@@ -16,22 +11,14 @@ import { FlatList, Pressable, Text, View } from "react-native";
 export default function MVPAddDeviceModal() {
     const { data, isLoading: patientInfoIsLoading } =
         useAtomValue(patientInfoQAtom);
-    const navigation = useNavigation();
     const selectedDevice = useAtomValue(selectedDeviceAtom);
-    const { mutate: unlinkJugFromUser } = useAtomValue(unlinkJugFromUserMAtom);
-    const [selectedUser, setSelectedUser] = useState<number | null>();
+    const [selectedUser, setSelectedUser] = useState<number | null>(null);
     const selectedJugs = useAtomValue(selectedJugsAtom);
     //const communityJugData = getCommunityJugDataQAtom();
-    const { mutate: linkJugToCommunityMember } = useAtomValue(
-        linkJugsToCommunityMemberMAtom,
-    );
+    const { mutate: linkJugToCommunityMember } = useAtomValue(linkJugMAtom);
     const userInfo = useAtomValue(userInfoQAtom);
 
     if (!selectedDevice && !selectedJugs) return;
-
-    function handleUnassigned() {
-        // put the mutation for unassigned here
-    }
 
     const handleSelect = (juser_id: MemberInfo) => {
         if (selectedUser == juser_id.id) {
@@ -42,15 +29,12 @@ export default function MVPAddDeviceModal() {
         setSelectedUser(juser_id.id);
     };
 
-    const handlePress = () => {
-        let jugsToLink = Array.from(selectedJugs);
+    const handlePress = (unassigned: boolean) => {
+        if (selectedUser == null && !unassigned) return;
         linkJugToCommunityMember({
-            jugIds: jugsToLink,
-            communityMember: Number(selectedUser),
+            jugIds: selectedJugs,
+            jugUserId: unassigned ? null : selectedUser,
         });
-        for (let jug of selectedJugs) {
-            unlinkJugFromUser({ jugId: jug });
-        }
         router.replace("/devices");
     };
 
@@ -112,7 +96,7 @@ export default function MVPAddDeviceModal() {
             {selectedUser !== null && (
                 <Pressable
                     className="bg-blue items-center mx-16 justify-center px-3 py-3 rounded-3xl"
-                    onPress={handlePress}
+                    onPress={() => handlePress(false)}
                 >
                     <Text className="text-white text-2xl">
                         {`Add jug to account`}
@@ -123,7 +107,7 @@ export default function MVPAddDeviceModal() {
                 <StyledButton
                     text="Nobody, for now"
                     textClass="w-full text-center text-2xl py-4"
-                    onPress={handleUnassigned}
+                    onPress={() => handlePress(true)}
                 />
                 <Text className="flex-wrap text-center pt-4">
                     After clicking this, you can assign the jug to a member of

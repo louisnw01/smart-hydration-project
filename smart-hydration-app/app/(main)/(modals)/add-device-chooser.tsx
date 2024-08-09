@@ -1,18 +1,22 @@
 import { selectedJugsAtom } from "@/atom/device";
-import { linkJugToUserMAtom } from "@/atom/query";
+import { linkJugMAtom, userJugUserIdAtom } from "@/atom/query";
 import StyledButton from "@/components/common/button";
 import { router } from "expo-router";
 import { useAtomValue } from "jotai";
-import { View, Text } from "react-native";
+import { Text, View } from "react-native";
 
 export default function UserOrCommunity() {
-    const { mutate: linkJugsToUser } = useAtomValue(linkJugToUserMAtom);
+    const { mutate: linkJugsToUser } = useAtomValue(linkJugMAtom);
+    const usersJugUser = useAtomValue(userJugUserIdAtom);
     const selectedJugs = useAtomValue(selectedJugsAtom);
     function handleYourself() {
-        if (selectedJugs === null) {
+        if (selectedJugs === null || !usersJugUser) {
             return;
         }
-        linkJugsToUser({ jugIds: Array.from(selectedJugs) });
+        linkJugsToUser({
+            jugIds: selectedJugs,
+            jugUserId: usersJugUser,
+        });
         router.back();
         router.back();
     }

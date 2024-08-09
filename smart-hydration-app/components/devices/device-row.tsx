@@ -23,7 +23,9 @@ export default function DeviceRow({
 
     let person;
     console.log(userJugUserId, device.jugUserId);
-    if (userJugUserId == device.jugUserId) {
+    if (device.jugUserId == null) {
+        person = "Unassigned";
+    } else if (userJugUserId == device.jugUserId) {
         person = "You";
     } else if (data) {
         const member = data.find((member) => member.id == device.jugUserId);
