@@ -30,7 +30,7 @@ export default function CommunityPage() {
     const hasCommunity = useAtomValue(userHasCommunityAtom);
     const [refreshing, setRefreshing] = useState(false);
     const palette = useColorPalette();
-
+    console.log(data);
     const [filteredData, setFilteredData] = useState<ReactElement[]>([]);
     const [textInput, setTextInput] = useState("");
     const [filters, setFilters] = useState<FilterObject>({

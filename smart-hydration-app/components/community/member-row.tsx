@@ -8,7 +8,12 @@ import { useAtomValue, useSetAtom } from "jotai";
 import { Pressable, Text, View } from "react-native";
 import StyledButton from "../common/button";
 import Tag from "./tag";
-import { userInfoQAtom } from "@/atom/query";
+import { getJugDataQAtom, patientInfoQAtom, userInfoQAtom } from "@/atom/query";
+import Jug from "@/assets/svgs/jug.svg";
+import SH_Drop from "@/assets/svgs/SH_Drop.svg";
+import { useEffect, useState } from "react";
+import { StaleWarningType, Warnings } from "@/interfaces/device";
+import getStalenessMessage from "@/util/device";
 
 function getOrdinalSuffix(day) {
     if (day > 3 && day < 21) return "th";
@@ -24,14 +29,51 @@ function getOrdinalSuffix(day) {
     }
 }
 
+interface WarningsWithId extends Warnings {
+    id: string;
+}
+
 export default function MemberRow({ member }: { member: MemberInfo }) {
     const palette = useColorPalette();
     const setMember = useSetAtom(selectedMemberAtom);
     const memberData = useFormattedMemberData(member);
     const userInfo = useAtomValue(userInfoQAtom);
-    console.log(userInfo);
+
+    const [membersWarnings, setMembersWarnings] = useState<
+        WarningsWithId[] | null
+    >([
+        {
+            id: "jug001052",
+            name: "jug #52",
+            stale: 1,
+        },
+        {
+            id: "jug001053",
+            name: "jug #53",
+            stale: 1,
+        },
+        {
+            id: "jug001053",
+            name: "jug #69",
+            stale: 2,
+        },
+    ]);
+
+    // const { data } = useAtomValue(getJugDataQAtom);
+
+    // useEffect(() => {
+    //     // if (!data) return;
+    //     setMembersWarnings(
+    //         data
+    //             .filter((row) => row.jugUserId == member.id)
+    //             .map((row) => ({ ...row.warnings, id: row.id })),
+    //     );
+    // }, []);
+
+    // alert(JSON.stringify(data?.filter((row) => row.jugUserId == member.id)));
+
     return (
-        <View>
+        <View className="w-full">
             <View className="w-full h-[1px] bg-gray-200" />
             <Pressable
                 className="px-5 py-8 flex flex-row gap-4 rounded-xl dark:bg-neutral-900"
@@ -40,7 +82,7 @@ export default function MemberRow({ member }: { member: MemberInfo }) {
                     router.push("member-info-modal");
                 }}
             >
-                <View className="flex gap-4">
+                <View className="flex gap-4 w-full">
                     <View className="flex-row">
                         <Text className="text-xl font-bold dark:text-white">
                             {memberData.name}
@@ -52,16 +94,100 @@ export default function MemberRow({ member }: { member: MemberInfo }) {
                             </Text>
                         )}
                     </View>
+
                     <View className="flex-row gap-4">
                         <MemberDetail
                             title="Last Drank"
                             value={memberData.lastDrank}
                         />
-                        <MemberDetail
-                            title="Amount Drank"
-                            value={memberData.amountDrank || undefined}
-                        />
+                        <View className=" gap-2 flex-wrap">
+                            {member.jugs.map((row) => {
+                                if (row.waterLevel > 200) {
+                                    return null;
+                                }
+                                return (
+                                    <View
+                                        className="flex-row pt-2 flex-wrap rounded-lg py px-2"
+                                        style={{
+                                            backgroundColor:
+                                                row.waterLevel < 100
+                                                    ? "red"
+                                                    : "rgb(250, 180, 80)",
+                                            borderColor:
+                                                row.waterLevel < 100
+                                                    ? "red"
+                                                    : "rgb(250, 180, 80)",
+                                        }}
+                                    >
+                                        <View className="flex-row">
+                                            <View className="flex-row rounded-xl w-5 h-10">
+                                                <SH_Drop
+                                                    width={180}
+                                                    height={180}
+                                                    right={95}
+                                                    bottom={90}
+                                                    fill="white"
+                                                />
+                                            </View>
+                                            <View className="bg-white rounded-lg -top-1 -right-1 w-[6.5rem] h-11">
+                                                <Text className="px-2 text-sm">{`${row.name}`}</Text>
+                                                <Text className="px-2 text-sm">
+                                                    {row.waterLevel < 100
+                                                        ? "Jug empty"
+                                                        : "Nearly empty"}
+                                                </Text>
+                                            </View>
+                                        </View>
+                                    </View>
+                                );
+                            })}
+                        </View>
+
+                        {membersWarnings && (
+                            <View className=" gap-2 flex-wrap">
+                                {membersWarnings.map((row) => {
+                                    if (row.stale == StaleWarningType.NOT_STALE)
+                                        return null;
+                                    return (
+                                        <View
+                                            className="flex-row pt-2 flex-wrap rounded-lg py px-2"
+                                            style={{
+                                                backgroundColor:
+                                                    row.stale == 2
+                                                        ? "red"
+                                                        : "rgb(250, 180, 80)",
+                                                borderColor:
+                                                    row.stale == 2
+                                                        ? "red"
+                                                        : "rgb(250, 180, 80)",
+                                            }}
+                                        >
+                                            <View className="flex-row">
+                                                <View className="flex-row rounded-xl w-5">
+                                                    <Jug
+                                                        width={18}
+                                                        height={18}
+                                                        left={-2}
+                                                        top={-2}
+                                                        fill="white"
+                                                    />
+                                                </View>
+                                                <View className="bg-white rounded-lg -top-1 -right-1 w-24 h-11">
+                                                    <Text className="px-2 text-sm">{`${row.name}`}</Text>
+                                                    <Text className="px-2 text-sm">
+                                                        {getStalenessMessage(
+                                                            row.stale,
+                                                        )}
+                                                    </Text>
+                                                </View>
+                                            </View>
+                                        </View>
+                                    );
+                                })}
+                            </View>
+                        )}
                     </View>
+
                     <View className="flex-row flex-wrap">
                         {member.tags &&
                             member.tags.map((tag) => (
@@ -70,7 +196,7 @@ export default function MemberRow({ member }: { member: MemberInfo }) {
                     </View>
                     <MemberDetail
                         title="Target Progress"
-                        value={memberData.targetProgress}
+                        value={`${memberData.targetProgress} (${memberData.amountDrank} out of ${memberData.target}ml)`}
                     />
                     <StyledButton
                         text="add a drink"

@@ -19,6 +19,7 @@ async def fire_jug_info(sys_id):
     if jug_data is None:
         return
     jug_staleness = calculate_staleness(jug_data['last_refill'])
+
     with db_session:
         jug = Jug.get(system_id=sys_id)
         jug.last_connected = int(jug_data['last_seen'])
