@@ -152,7 +152,7 @@ export default function DeviceInfoModal() {
             <View className="flex flex-row items-center gap-3 rounded-xl top-2 px-4 py-3 bg-gray-100 dark:bg-neutral-900">
                 <View className="w-4/5">
                     <Text className="text-xl font-semibold">
-                        {getStalenessMessage(device.staleness)}
+                        {getStalenessMessage(device.warnings.stale)}
                     </Text>
                 </View>
                 {device.staleness == 2 && (

@@ -1,3 +1,14 @@
+export enum StaleWarningType {
+    NOT_STALE,
+    CLOSE_TO_STALE,
+    STALE,
+}
+
+export interface Warnings {
+    stale: StaleWarningType;
+    // battery: BatteryWarningType
+}
+
 export interface DeviceInfo {
     id: string;
     name: string;
@@ -8,7 +19,7 @@ export interface DeviceInfo {
     temperature: number;
     water_level: number;
     last_seen: number;
-    staleness: number;
+    warnings: Warnings;
 }
 
 export interface ITimeSeries {
