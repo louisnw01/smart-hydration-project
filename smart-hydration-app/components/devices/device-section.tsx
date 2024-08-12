@@ -43,7 +43,7 @@ export default function DeviceSection({
     if (addJugButton) {
         listItems.push(
             <StyledButton
-                text="add a new jug"
+                text="Add a New Jug"
                 href="add-device-modal"
                 buttonClass="self-center mt-2"
                 textClass="text-lg mt-[1px]"

@@ -98,9 +98,7 @@ async def create_community(form: CreateCommunityForm, user_id: str = Depends(aut
         community = Community(name=form.name)
         member = CommunityMember(user=user, community=community, is_owner=True)
         if user.mode == 'Standard':
-            print("Adding")
             user.jug_user.community = community
-            community.jug_users.add(user.jug_user)
         commit()
 
 

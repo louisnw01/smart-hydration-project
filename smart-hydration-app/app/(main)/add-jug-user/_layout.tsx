@@ -24,7 +24,7 @@ export default function AddJugUserLayout() {
             <Stack.Screen
                 name="add-jug-user-modal"
                 options={{
-                    title: "Add a new jug user",
+                    title: "Add a New Jug User",
                     headerLeft: () => {
                         return (
                             <Pressable onPress={() => router.back()}>

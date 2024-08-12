@@ -38,26 +38,15 @@ async def device_info(user_id: str = Depends(auth_user)):
         user = User.get(id=user_id)
 
         # add all jugs that are within the users community
+        # this will include the users juguser
         if community := get_users_community(user_id):
             for juguser in community.jug_users:
                 jugs.extend([get_device_info_dict(jug, juguser) for jug in juguser.jugs])
+            jugs.extend([get_device_info_dict(jug, None) for jug in community.unassigned_jugs])
        # if standard we want the users jugs
         elif user.mode == 'Standard':
             jugs.extend([get_device_info_dict(jug, user.jug_user.id) for jug in user.jug_user.jugs])
     return jugs
-    # fetch the data from smart hydration and return
-
-    # async with SmartHydrationSession() as session:
-    #     for jug in jugs:
-    #         jug_data = await get_jug_latest(session, jug['id'])
-    #         if jug_data is None:
-    #             continue
-    #         jug_data['name'] = jug['name']
-    #         jug_data['id'] = jug['id']
-    #         jug_data['jugUserId'] = jug['juguser_id']
-    #         devices_info.append(jug_data)
-    #     return devices_info
-
 
 @router.get("/historical")
 async def get_historical_jug_data(jug_user_id: int, timestamp: int, user_id: str = Depends(auth_user)):

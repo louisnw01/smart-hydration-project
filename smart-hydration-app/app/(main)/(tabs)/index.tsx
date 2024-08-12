@@ -25,7 +25,7 @@ export default function HomePage() {
 
     useEffect(() => {
         isCarer && router.replace("(tabs)/community");
-    }, [])
+    }, []);
 
     return (
         <PageWrapper
@@ -45,7 +45,7 @@ export default function HomePage() {
                 <HydrationStatus />
                 {!hasJugs && (
                     <StyledButton
-                        text="add a new jug"
+                        text="Add a New Jug"
                         href="devices"
                         buttonClass="self-center mt-8"
                         textClass="text-lg mt-[1px]"
@@ -65,7 +65,7 @@ export default function HomePage() {
                     />
                 )}
                 <StyledButton
-                    text="add a drink"
+                    text="Add a Drink"
                     textClass="text-lg mt-[1px]"
                     onPress={() => router.push("custom/add-drink-modal")}
                     icon=<MaterialCommunityIcons

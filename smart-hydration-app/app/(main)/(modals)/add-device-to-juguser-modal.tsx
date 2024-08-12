@@ -4,8 +4,8 @@ import StyledButton from "@/components/common/button";
 import Loading from "@/components/common/loading";
 import { MemberInfo } from "@/interfaces/community";
 import { router } from "expo-router";
-import { useAtomValue } from "jotai";
-import { useState } from "react";
+import { useAtom, useAtomValue } from "jotai";
+import { useEffect, useState } from "react";
 import { FlatList, Pressable, Text, View } from "react-native";
 
 export default function MVPAddDeviceModal() {
@@ -13,12 +13,22 @@ export default function MVPAddDeviceModal() {
         useAtomValue(patientInfoQAtom);
     const selectedDevice = useAtomValue(selectedDeviceAtom);
     const [selectedUser, setSelectedUser] = useState<number | null>(null);
-    const selectedJugs = useAtomValue(selectedJugsAtom);
+    const [selectedJugs, setSelectedJugs] = useAtom(selectedJugsAtom);
     //const communityJugData = getCommunityJugDataQAtom();
-    const { mutate: linkJugToCommunityMember } = useAtomValue(linkJugMAtom);
-    const userInfo = useAtomValue(userInfoQAtom);
+    const {
+        mutate: linkJugToCommunityMember,
+        isPending,
+        isSuccess,
+    } = useAtomValue(linkJugMAtom);
+    const { data: userInfo } = useAtomValue(userInfoQAtom);
 
     if (!selectedDevice && !selectedJugs) return;
+
+    useEffect(() => {
+        if (isPending || !isSuccess) return;
+        setSelectedJugs([]);
+        router.replace("/devices");
+    }, [isPending, isSuccess]);
 
     const handleSelect = (juser_id: MemberInfo) => {
         if (selectedUser == juser_id.id) {
@@ -35,7 +45,6 @@ export default function MVPAddDeviceModal() {
             jugIds: selectedJugs,
             jugUserId: unassigned ? null : selectedUser,
         });
-        router.replace("/devices");
     };
 
     return (
@@ -55,31 +64,27 @@ export default function MVPAddDeviceModal() {
                         data={data}
                         renderItem={({ item }) => (
                             <View>
-                                {item.id != userInfo.data?.juguser && (
-                                    <View>
-                                        <Pressable
-                                            className="mx-4 px-4 py-3 rounded-xl my-2 bg-gray-200 dark:bg-neutral-800"
-                                            onPress={() => handleSelect(item)}
-                                            style={{
-                                                ...(selectedUser == item.id
-                                                    ? {
-                                                          backgroundColor:
-                                                              "rgb(90, 240, 130)",
-                                                      }
-                                                    : undefined),
-                                            }}
-                                        >
-                                            <View className="flex-row justify-between">
-                                                <Text className="text-lg dark:text-white">
-                                                    {item.name}
-                                                </Text>
-                                                <Text className="text-lg dark:text-white">
-                                                    {item.id}
-                                                </Text>
-                                            </View>
-                                        </Pressable>
+                                <Pressable
+                                    className="mx-4 px-4 py-3 rounded-xl my-2 bg-gray-200 dark:bg-neutral-800"
+                                    onPress={() => handleSelect(item)}
+                                    style={{
+                                        ...(selectedUser == item.id
+                                            ? {
+                                                  backgroundColor:
+                                                      "rgb(90, 240, 130)",
+                                              }
+                                            : undefined),
+                                    }}
+                                >
+                                    <View className="flex-row justify-between">
+                                        <Text className="text-lg dark:text-white">
+                                            {`${item.name}${item.id == userInfo?.juguser ? " (You)" : ""}`}
+                                        </Text>
+                                        <Text className="text-lg dark:text-white">
+                                            {item.id}
+                                        </Text>
                                     </View>
-                                )}
+                                </Pressable>
                             </View>
                         )}
                         // renderSectionHeader={({ section }) => (
@@ -87,21 +92,20 @@ export default function MVPAddDeviceModal() {
                         //         {section.title}
                         //     </Text>
                         // )}
-                        keyExtractor={(item) => `jug-list-${item}`}
+                        keyExtractor={(item, idx) => idx.toString()}
                         // stickySectionHeadersEnabled={false}
                     />
                 </View>
             )}
 
             {selectedUser !== null && (
-                <Pressable
-                    className="bg-blue items-center mx-16 justify-center px-3 py-3 rounded-3xl"
+                <StyledButton
                     onPress={() => handlePress(false)}
-                >
-                    <Text className="text-white text-2xl">
-                        {`Add jug to account`}
-                    </Text>
-                </Pressable>
+                    text="Add jug to account"
+                    buttonClass="bg-blue items-center mx-16 justify-center px-3 py-3 rounded-3xl"
+                    textClass="text-white text-2xl"
+                    isLoading={isPending}
+                />
             )}
             <View className="px-16">
                 <StyledButton

@@ -1,19 +1,19 @@
+import Jug from "@/assets/svgs/jug.svg";
+import SH_Drop from "@/assets/svgs/SH_Drop.svg";
 import { selectedMemberAtom } from "@/atom/community";
+import { userInfoQAtom } from "@/atom/query";
 import { MemberInfo } from "@/interfaces/community";
+import { StaleWarningType, Warnings } from "@/interfaces/device";
 import { useFormattedMemberData } from "@/util/community";
+import getStalenessMessage from "@/util/device";
 import useColorPalette from "@/util/palette";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useAtomValue, useSetAtom } from "jotai";
+import { useState } from "react";
 import { Pressable, Text, View } from "react-native";
 import StyledButton from "../common/button";
 import Tag from "./tag";
-import { getJugDataQAtom, patientInfoQAtom, userInfoQAtom } from "@/atom/query";
-import Jug from "@/assets/svgs/jug.svg";
-import SH_Drop from "@/assets/svgs/SH_Drop.svg";
-import { useEffect, useState } from "react";
-import { StaleWarningType, Warnings } from "@/interfaces/device";
-import getStalenessMessage from "@/util/device";
 
 function getOrdinalSuffix(day) {
     if (day > 3 && day < 21) return "th";
@@ -199,7 +199,7 @@ export default function MemberRow({ member }: { member: MemberInfo }) {
                         value={`${memberData.targetProgress} (${memberData.amountDrank} out of ${memberData.target}ml)`}
                     />
                     <StyledButton
-                        text="add a drink"
+                        text="Add a Drink"
                         textClass="text-lg mt-[1px]"
                         onPress={() => {
                             setMember(member);

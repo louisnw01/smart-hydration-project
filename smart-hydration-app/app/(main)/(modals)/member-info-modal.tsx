@@ -101,18 +101,19 @@ export default function MemberInfoModal() {
                 textClass="text-xl dark:text-gray-200"
                 icon={
                     <View className="flex flex-row w-6">
-                        <Jug width={18} fill={palette.fg} />
+                        <Jug width={18} fill={palette.border} />
                         <View className="aboslute top-[13px] right-[9px] w-[8px] h-[8px] rounded-xl bg-gray-200 dark:bg-black" />
                         <FontAwesome
                             name="plus-circle"
                             size={14}
                             left={-16}
                             top={6}
-                            color={palette.fg}
+                            color={palette.border}
                         />
                     </View>
                 }
                 onPress={() => router.push("add-device-member-modal")}
+                chevron
             />
             <StyledButton
                 text="Add a Drink"
@@ -121,11 +122,12 @@ export default function MemberInfoModal() {
                 icon=<MaterialCommunityIcons
                     name="water-plus-outline"
                     size={23}
-                    color={palette.fg}
+                    color={palette.border}
                 />
                 onPress={() => {
                     router.push("add-drink-community-modal");
                 }}
+                chevron
             />
             <StyledButton
                 text="Modify Tags"
@@ -134,7 +136,7 @@ export default function MemberInfoModal() {
                 icon=<MaterialCommunityIcons
                     name="water-plus-outline"
                     size={23}
-                    color={palette.fg}
+                    color={palette.border}
                 />
                 onPress={() =>
                     router.push({
@@ -142,6 +144,7 @@ export default function MemberInfoModal() {
                         params: { member: JSON.stringify(member) },
                     })
                 }
+                chevron
             />
         </ScrollPageWrapper>
     );
