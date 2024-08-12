@@ -14,72 +14,39 @@ router = APIRouter(
 )
 
 
+def get_device_info_dict(jug, jug_user_id):
+    return {
+        'name': jug.name,
+    'id': jug.smart_hydration_id,
+    'jugUserId': jug_user_id,
+    'capacity': jug.capacity,
+    'charging': jug.is_charging,
+    'battery': jug.battery,
+    'temperature': jug.temp,
+    'water_level': jug.water_level,
+    'last_seen': jug.last_connected,
+    'warnings': {
+        'stale': jug.staleness,
+    }
+    }
+
+
 @router.get("/latest")
 async def device_info(user_id: str = Depends(auth_user)):
     jugs = []
     with db_session:
         user = User.get(id=user_id)
 
-
-
         # add all jugs that are within the users community
         # this will include the users juguser
         if community := get_users_community(user_id):
             for juguser in community.jug_users:
-                jugs.extend([{
-                    'name': jug.name,
-                    'id': jug.smart_hydration_id,
-                    'jugUserId': juguser.id,
-                    'capacity': jug.capacity,
-                    'charging': jug.is_charging,
-                    'battery': jug.battery,
-                    'temperature': jug.temp,
-                    'water_level': jug.water_level,
-                    'last_seen': jug.last_connected,
-                } for jug in juguser.jugs])
-
-            jugs.extend([{
-                'name': jug.name,
-                'id': jug.smart_hydration_id,
-                'jugUserId': None,
-                'capacity': jug.capacity,
-                'charging': jug.is_charging,
-                'battery': jug.battery,
-                'temperature': jug.temp,
-                'water_level': jug.water_level,
-                'last_seen': jug.last_connected,
-            } for jug in community.unassigned_jugs])
-
-        # if standard we want the users jugs
+                jugs.extend([get_device_info_dict(jug, juguser) for jug in juguser.jugs])
+            jugs.extend([get_device_info_dict(jug, None) for jug in community.unassigned_jugs])
+       # if standard we want the users jugs
         elif user.mode == 'Standard':
-            jugs.extend([{
-                'name': jug.name,
-                'id': jug.smart_hydration_id,
-                'jugUserId': user.jug_user.id,
-                'capacity': jug.capacity,
-                'charging': jug.is_charging,
-                'battery': jug.battery,
-                'temperature': jug.temp,
-                'water_level': jug.water_level,
-                'last_seen': jug.last_connected,
-            } for jug in user.jug_user.jugs])
-
-
-    print(jugs)
+            jugs.extend([get_device_info_dict(jug, user.jug_user.id) for jug in user.jug_user.jugs])
     return jugs
-    # fetch the data from smart hydration and return
-
-    # async with SmartHydrationSession() as session:
-    #     for jug in jugs:
-    #         jug_data = await get_jug_latest(session, jug['id'])
-    #         if jug_data is None:
-    #             continue
-    #         jug_data['name'] = jug['name']
-    #         jug_data['id'] = jug['id']
-    #         jug_data['jugUserId'] = jug['juguser_id']
-    #         devices_info.append(jug_data)
-    #     return devices_info
-
 
 @router.get("/historical")
 async def get_historical_jug_data(jug_user_id: int, timestamp: int, user_id: str = Depends(auth_user)):

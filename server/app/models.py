@@ -75,6 +75,7 @@ class Jug(db.Entity):
     water_level = Optional(int)
     is_charging = Required(bool, default=False)
     capacity = Optional(int)
+    staleness = Optional(int)
 
 class Community(db.Entity):
     id = PrimaryKey(int, auto=True)

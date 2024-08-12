@@ -61,6 +61,7 @@ async def get_jug_latest(session, jug_id):
         'temperature': round(result['telemetry']['temperature'], 3),
         'water_level': result['water_level']['d'],
         'last_seen': convert_timestamp(result['telemetry']['timestamp']),
+        'last_refill': convert_timestamp(result['device_latest']['lastRefill']),
     }
 
 

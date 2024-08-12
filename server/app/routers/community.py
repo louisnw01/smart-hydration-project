@@ -65,11 +65,11 @@ async def patient_info(user_id: str = Depends(auth_user)):
                 patient_info.append({
                     "id": juguser.id,
                     "name": juguser.name,
-                    "jugs": [{"name": jug.name, "id": jug.smart_hydration_id} for jug in juguser.jugs],
+                    "jugs": [{"name": jug.name, "id": jug.smart_hydration_id, "waterLevel": jug.water_level,} for jug in juguser.jugs],
                     "lastDrank": juguser.last_drank,
                     "drankToday": juguser.drank_today,
                     "dailyTarget": juguser.target or 2200,
-                    "tags": [{"id": tag.id, "name": tag.name} for tag in juguser.tags]
+                    "tags": [{"id": tag.id, "name": tag.name} for tag in juguser.tags],
             })
         return patient_info
 
