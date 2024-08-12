@@ -17,10 +17,15 @@ export default function CommunityLeaderboard() {
     if (!data) {
         return;
     }
+    const sortedData = data.slice().sort((a, b) => {
+        const progressA = parseInt(a.targetProgress?.replace("%", ""), 10);
+        const progressB = parseInt(b.targetProgress?.replace("%", ""), 10);
+        return progressB - progressA;
+    });
     return (
         <PageWrapper>
             <View className="flex-col gap-4 pt-4 w-full">
-                {data.map((row, index) => {
+                {sortedData.map((row, index) => {
                     const formattedData = useFormattedMemberData(row);
                     return (
                         <LeaderboardRow
