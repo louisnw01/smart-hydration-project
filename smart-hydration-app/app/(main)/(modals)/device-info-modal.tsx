@@ -3,11 +3,13 @@ import { selectedDeviceAtom } from "@/atom/device";
 import { unlinkJugMAtom, userHasCommunityAtom } from "@/atom/query";
 import colors from "@/colors";
 import StyledButton from "@/components/common/button";
+import getStalenessMessage from "@/util/device";
 import useColorPalette from "@/util/palette";
 import {
     Entypo,
     FontAwesome,
     MaterialCommunityIcons,
+    FontAwesome6,
 } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useAtomValue } from "jotai";
@@ -147,7 +149,26 @@ export default function DeviceInfoModal() {
                     </Text>
                 </Container>
             </View>
-
+            <View className="flex flex-row items-center gap-3 rounded-xl top-2 px-4 py-3 bg-gray-100 dark:bg-neutral-900">
+                <View className="w-4/5">
+                    <Text className="text-xl font-semibold">
+                        {getStalenessMessage(device.warnings.stale)}
+                    </Text>
+                </View>
+                {device.staleness == 2 && (
+                    <FontAwesome6 name="face-frown" size={42} color="red" />
+                )}
+                {device.staleness == 1 && (
+                    <FontAwesome6 name="face-smile" size={42} color="yellow" />
+                )}
+                {device.staleness == 0 && (
+                    <FontAwesome6
+                        name="face-grin-beam"
+                        size={42}
+                        color="green"
+                    />
+                )}
+            </View>
             <View className="flex mt-56 gap-3">
                 <StyledButton
                     text="Change Device Name"
