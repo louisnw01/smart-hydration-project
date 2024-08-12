@@ -9,7 +9,7 @@ from .auth import auth_user
 from .models import connect_to_database, Jug
 from .notifications import send_drink_reminders
 from .routers import community, jug_user, user, data, jug, websocket_tunnel
-from .pushertest import pusher_init
+from .pushertest import clear_drank_today, pusher_init
 
 
 load_dotenv()
@@ -29,6 +29,7 @@ app.include_router(websocket_tunnel.router)
 @app.on_event('startup')
 async def init():
     asyncio.create_task(pusher_init())
+    asyncio.create_task(clear_drank_today())
     # asyncio.create_task(send_drink_reminders())
 
     jugs = await fetch_all_registered_jugs()

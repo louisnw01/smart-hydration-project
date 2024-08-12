@@ -6,6 +6,7 @@ import datetime as dt
 from asyncpusher.channel import Channel
 from asyncpusher.pusher import Pusher
 from pony.orm.core import db_session, select, commit
+import time
 
 from .api import SmartHydrationSession, get_hydration_events, get_jug_latest
 from .routers.websocket_tunnel import tunnel
@@ -129,3 +130,19 @@ async def pusher_init():
         channel = await pusher.subscribe(f"private-organisation.{org}.devices")
         channel.bind('device-telemetry-updated', on_telemetry_change)
         channel.bind('device-waterlevel-updated', on_waterlevel_change)
+
+async def clear_drank_today():
+    now = dt.datetime.now()
+
+    next_time = dt.datetime.combine(now.date() + dt.timedelta(days=1), dt.time(0, 0))
+
+    seconds_until_next_time = (next_time - now).total_seconds()
+    print("Waiting for " , seconds_until_next_time)
+    await asyncio.sleep(seconds_until_next_time)
+    clear_drank_today_in_db()
+    print("Clearing")
+
+@db_session
+def clear_drank_today_in_db():
+    for user in JugUser.select():
+        user.drank_today = 0
