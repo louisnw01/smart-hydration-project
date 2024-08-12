@@ -7,7 +7,7 @@ from ..mail import send_email_with_ses
 from ..models import User, VerifyEmail, Jug, JugUser, Notifications
 from ..schemas import UserRegister, UserLogin, VerifyEmailForm, TargetUpdate, PushTokenForm, \
     ToggleNotificationsForm, ChangeModeForm
-from ..services import delete_user, user_exists, create_user, \
+from ..services import delete_user, get_users_community, user_exists, create_user, \
     create_jug_user, update_jug_user_data, get_user_hash, get_user_by_email
 import datetime as dt
 import re
@@ -219,10 +219,16 @@ async def change_mode(form: ChangeModeForm, user_id: str = Depends(auth_user)):
     with db_session:
         user = User.get(id=user_id)
         user.mode = form.mode
-        # add jug user if changing from carer to user
-        if user.jug_user is None and form.mode != 'Carer':
-            create_jug_user(user)
-        commit()
+
+        community = get_users_community(user_id)
+
+        if not community:
+            return
+
+        if form.mode == 'Carer':
+            community.jug_users.remove(user.jug_user)
+        elif form.mode == 'Standard':
+            community.jug_users.add(user.jug_user)
 
 
 def extract_number_from_string(s):

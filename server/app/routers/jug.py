@@ -50,11 +50,19 @@ class LinkJugs(BaseModel):
 async def link_jugs(form: LinkJugs, user_id: str = Depends(auth_user)):
     with db_session:
 
+        print("/link", form)
+
         # add this one as unassigned
         if form.jugUserId is None:
             community = try_get_users_community(user_id)
+
             for jug_id in form.jugIds:
-                community.unassigned_jugs.add(Jug.get(smart_hydration_id=jug_id))
+                jug = Jug.get(smart_hydration_id=jug_id)
+                community.unassigned_jugs.add(jug)
+
+                # unlink the jug from all others
+                for juguser in community.jug_users:
+                    juguser.jugs.remove(jug)
             return
 
         user = User.get(id=user_id)
@@ -63,14 +71,17 @@ async def link_jugs(form: LinkJugs, user_id: str = Depends(auth_user)):
 
         community = get_users_community(user_id)
 
-        for jug in form.jugIds:
-            jug_to_add = Jug.get(smart_hydration_id=jug)
-            juguser.jugs.add(jug_to_add)
-
-            print('linked', jug, 'to', juguser.id)
+        for jug_id in form.jugIds:
+            jug_to_add = Jug.get(smart_hydration_id=jug_id)
 
             if community:
+                # remove from unassigned, and remove from any other jug users
                 community.unassigned_jugs.remove(jug_to_add)
+                for juguser in community.jug_users:
+                    print('removed it from ', juguser.name)
+                    juguser.jugs.remove(jug_to_add)
+
+            juguser.jugs.add(jug_to_add)
 
 
 class UnlinkJug(BaseModel):

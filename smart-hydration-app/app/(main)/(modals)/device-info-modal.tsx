@@ -1,5 +1,5 @@
 import JugIcon from "@/assets/svgs/jug.svg";
-import { selectedDeviceAtom } from "@/atom/device";
+import { selectedDeviceAtom, selectedJugsAtom } from "@/atom/device";
 import { unlinkJugMAtom, userHasCommunityAtom } from "@/atom/query";
 import colors from "@/colors";
 import StyledButton from "@/components/common/button";
@@ -10,7 +10,7 @@ import {
     MaterialCommunityIcons,
 } from "@expo/vector-icons";
 import { router } from "expo-router";
-import { useAtomValue } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import { ReactNode, useEffect } from "react";
 import { Text, View } from "react-native";
 
@@ -65,6 +65,7 @@ function Container({
 
 export default function DeviceInfoModal() {
     const device = useAtomValue(selectedDeviceAtom);
+    const setSelectedJugs = useSetAtom(selectedJugsAtom);
     const palette = useColorPalette();
     const {
         mutate: unlinkJug,
@@ -171,6 +172,7 @@ export default function DeviceInfoModal() {
                             color={palette.border}
                         />
                         onPress={() => {
+                            setSelectedJugs([device.id]);
                             router.push("add-device-to-juguser-modal");
                         }}
                     />
