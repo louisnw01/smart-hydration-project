@@ -1,6 +1,7 @@
 interface JugInfo {
     name: string;
     id: string;
+    waterLevel: number;
 }
 
 export interface MemberInfo {
