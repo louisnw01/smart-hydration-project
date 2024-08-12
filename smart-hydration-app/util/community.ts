@@ -80,7 +80,7 @@ export function useFormattedMemberData(member: MemberInfo) {
         juguser: member.id,
         amountDrank: member.drankToday
             ? member.drankToday.toString() + "ml"
-            : null,
+            : 0,
         targetProgress:
             ((member.drankToday / member.dailyTarget) * 100)
                 .toFixed(0)

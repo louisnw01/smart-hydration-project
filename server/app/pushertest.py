@@ -132,13 +132,14 @@ async def pusher_init():
         channel.bind('device-waterlevel-updated', on_waterlevel_change)
 
 async def clear_drank_today():
-    now = dt.datetime.now()
+    while 1:
+        now = dt.datetime.now()
 
-    next_time = dt.datetime.combine(now.date() + dt.timedelta(days=1), dt.time(0, 0))
+        next_time = dt.datetime.combine(now.date() + dt.timedelta(days=1), dt.time(0, 0))
 
-    seconds_until_next_time = (next_time - now).total_seconds()
-    await asyncio.sleep(seconds_until_next_time)
-    clear_drank_today_in_db()
+        seconds_until_next_time = (next_time - now).total_seconds()
+        await asyncio.sleep(seconds_until_next_time)
+        clear_drank_today_in_db()
 
 @db_session
 def clear_drank_today_in_db():

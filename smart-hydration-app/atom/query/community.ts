@@ -14,7 +14,8 @@ import {
     atomWithQueryDerivation,
     atomWithQueryInfo,
 } from "./common";
-import { userInfoQAtom } from "./user";
+import { userInfoQAtom, userJugUserIdAtom } from "./user";
+import { userHasJugsAtom } from "../hydration";
 
 export const communityInfoQAtom = atomWithQueryInfo<CommunityInfo>({
     queryKey: "get-community-info",
@@ -87,6 +88,8 @@ export const addCommunityDrinkMAtom = atomWithMutationCustom<{
     mutationKey: "/community/add-community-drink-event",
     endpoint: ENDPOINTS.ADD_COMMUNITY_DRINK,
     onSuccess: (get, qc, form) => {
+        const usersJugUser = get(userJugUserIdAtom);
+        if (usersJugUser != form.juser_id) return;
         qc.setQueryData(
             ["/data/historical", get(authTokenAtom)],
             (prev: DeviceInfo[]) => [
