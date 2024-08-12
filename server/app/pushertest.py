@@ -137,10 +137,8 @@ async def clear_drank_today():
     next_time = dt.datetime.combine(now.date() + dt.timedelta(days=1), dt.time(0, 0))
 
     seconds_until_next_time = (next_time - now).total_seconds()
-    print("Waiting for " , seconds_until_next_time)
     await asyncio.sleep(seconds_until_next_time)
     clear_drank_today_in_db()
-    print("Clearing")
 
 @db_session
 def clear_drank_today_in_db():
