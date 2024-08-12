@@ -1,4 +1,5 @@
 import { selectedMemberAtom } from "@/atom/community";
+import { userInfoQAtom } from "@/atom/query";
 import { MemberInfo } from "@/interfaces/community";
 import { useFormattedMemberData } from "@/util/community";
 import useColorPalette from "@/util/palette";
@@ -8,7 +9,6 @@ import { useAtomValue, useSetAtom } from "jotai";
 import { Pressable, Text, View } from "react-native";
 import StyledButton from "../common/button";
 import Tag from "./tag";
-import { userInfoQAtom } from "@/atom/query";
 
 function getOrdinalSuffix(day) {
     if (day > 3 && day < 21) return "th";
@@ -73,7 +73,7 @@ export default function MemberRow({ member }: { member: MemberInfo }) {
                         value={memberData.targetProgress}
                     />
                     <StyledButton
-                        text="add a drink"
+                        text="Add a Drink"
                         textClass="text-lg mt-[1px]"
                         onPress={() => {
                             setMember(member);

@@ -1,3 +1,4 @@
+import { Entypo } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { ReactNode, useState } from "react";
 import {
@@ -5,6 +6,7 @@ import {
     Pressable,
     PressableProps,
     Text,
+    View,
     ViewStyle,
 } from "react-native";
 
@@ -18,7 +20,7 @@ interface ButtonProps extends PressableProps {
     icon?: ReactNode;
     style?: ViewStyle;
     isLoading?: boolean;
-    keepTextWhileLoading?: boolean;
+    chevron?: boolean;
 }
 
 export default function StyledButton(props: ButtonProps) {
@@ -69,6 +71,12 @@ export default function StyledButton(props: ButtonProps) {
             <Text className={textClass}>{props.text}</Text>
 
             {props.isLoading && <ActivityIndicator color="black" />}
+
+            {props.chevron && (
+                <View className="flex-grow items-center flex-row justify-end">
+                    <Entypo name="chevron-right" size={18} color="gray" />
+                </View>
+            )}
         </Pressable>
     );
 }

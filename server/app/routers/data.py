@@ -20,21 +20,10 @@ async def device_info(user_id: str = Depends(auth_user)):
     with db_session:
         user = User.get(id=user_id)
 
-        # if standard we want the users jugs
-        if user.mode == 'Standard':
-            jugs.extend([{
-                'name': jug.name,
-                'id': jug.smart_hydration_id,
-                'jugUserId': user.jug_user.id,
-                'capacity': jug.capacity,
-                'charging': jug.is_charging,
-                'battery': jug.battery,
-                'temperature': jug.temp,
-                'water_level': jug.water_level,
-                'last_seen': jug.last_connected,
-            } for jug in user.jug_user.jugs])
+
 
         # add all jugs that are within the users community
+        # this will include the users juguser
         if community := get_users_community(user_id):
             for juguser in community.jug_users:
                 jugs.extend([{
@@ -48,6 +37,35 @@ async def device_info(user_id: str = Depends(auth_user)):
                     'water_level': jug.water_level,
                     'last_seen': jug.last_connected,
                 } for jug in juguser.jugs])
+
+            jugs.extend([{
+                'name': jug.name,
+                'id': jug.smart_hydration_id,
+                'jugUserId': None,
+                'capacity': jug.capacity,
+                'charging': jug.is_charging,
+                'battery': jug.battery,
+                'temperature': jug.temp,
+                'water_level': jug.water_level,
+                'last_seen': jug.last_connected,
+            } for jug in community.unassigned_jugs])
+
+        # if standard we want the users jugs
+        elif user.mode == 'Standard':
+            jugs.extend([{
+                'name': jug.name,
+                'id': jug.smart_hydration_id,
+                'jugUserId': user.jug_user.id,
+                'capacity': jug.capacity,
+                'charging': jug.is_charging,
+                'battery': jug.battery,
+                'temperature': jug.temp,
+                'water_level': jug.water_level,
+                'last_seen': jug.last_connected,
+            } for jug in user.jug_user.jugs])
+
+
+    print(jugs)
     return jugs
     # fetch the data from smart hydration and return
 
