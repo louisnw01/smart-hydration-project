@@ -108,6 +108,23 @@ export default function ManageCommunityLayout() {
                 }}
             />
             <Stack.Screen
+                name="add-member-modal"
+                options={{
+                    title: "Add a member",
+                    headerLeft: () => {
+                        return (
+                            <Pressable onPress={() => router.back()}>
+                                <Entypo
+                                    name="chevron-left"
+                                    size={24}
+                                    color="rgb(80, 80, 80)"
+                                />
+                            </Pressable>
+                        );
+                    },
+                }}
+            />
+            <Stack.Screen
                 name="edit-tags"
                 options={{
                     title: "Edit community tags",

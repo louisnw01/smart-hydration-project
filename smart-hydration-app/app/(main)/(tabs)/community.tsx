@@ -18,6 +18,8 @@ import useColorPalette from "@/util/palette";
 import { Entypo } from "@expo/vector-icons";
 import { useFocusEffect } from "expo-router";
 import { SelectList } from "react-native-dropdown-select-list";
+import CommunityLeaderboard from "@/components/community/community-leaderboard";
+import { userModeAtom } from "@/atom/user";
 
 export default function CommunityPage() {
     const { isLoading, refetch: refetchCommunityInfo } =
@@ -33,6 +35,7 @@ export default function CommunityPage() {
     console.log(data);
     const [filteredData, setFilteredData] = useState<ReactElement[]>([]);
     const [textInput, setTextInput] = useState("");
+    const isCarer = useAtomValue(userModeAtom) == "Carer";
     const [filters, setFilters] = useState<FilterObject>({
         searchTerm: "",
         sort: "asc",
@@ -130,6 +133,9 @@ export default function CommunityPage() {
         { key: "drankToday", value: "Amount Drank Today" },
         { key: "lastDrank", value: "Last Drank" },
     ];
+    if (!isCarer) {
+        return <CommunityLeaderboard />;
+    }
 
     if (!hasCommunity) {
         return (
