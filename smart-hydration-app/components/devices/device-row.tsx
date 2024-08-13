@@ -2,6 +2,7 @@ import { selectedDeviceAtom } from "@/atom/device";
 import { patientInfoQAtom, userJugUserIdAtom } from "@/atom/query";
 import colors from "@/colors";
 import { DeviceInfo } from "@/interfaces/device";
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { useAtomValue } from "jotai";
 import { ReactNode } from "react";
 import { Pressable, Text, View } from "react-native";
@@ -48,7 +49,10 @@ export default function DeviceRow({
                 </Text>
                 <View className="flex-row gap-3">
                     <Text className="dark:text-white">{person}</Text>
-                    <BatteryIndicator charge={device.battery} />
+                    <BatteryIndicator
+                        charge={device.battery}
+                        charging={device.charging}
+                    />
                 </View>
             </View>
             <View className="flex justify-evenly">
@@ -75,22 +79,48 @@ function EndText({
     return <Text className={style}>{children}</Text>;
 }
 
-function BatteryIndicator({ charge }: { charge: number }) {
-    const scaledCharge = (charge / 5) * 100;
+function BatteryIndicator({
+    charge,
+    charging,
+}: {
+    charge: number;
+    charging: boolean;
+}) {
+    const scaledCharge = (charge / 5.714) * 100;
 
     return (
         <View className="flex-row h-full gap-2">
             <View
-                className="absolute h-3 my-1 rounded-md"
+                className="absolute h-3 my-1"
                 style={{
+                    borderRadius: 2,
+                    marginLeft: 1,
                     width: scaledCharge,
                     backgroundColor: charge >= 0.3 ? colors.green : colors.red,
                 }}
             />
-            <View className="w-6 h-3 my-1 border rounded-md dark:border-gray-200" />
+            <View className="-mb-3">
+                <Ionicons
+                    name="battery-dead"
+                    size={23}
+                    bottom={3}
+                    color="black"
+                />
+            </View>
+
             <Text className="dark:text-white">
                 {(charge * 100).toFixed(0)}%
             </Text>
+
+            {charging && (
+                <MaterialIcons
+                    name="electric-bolt"
+                    size={15}
+                    top={1}
+                    right={4}
+                    color="black"
+                />
+            )}
         </View>
     );
 }

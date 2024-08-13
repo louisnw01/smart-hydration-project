@@ -7,7 +7,7 @@ from ..api import get_hydration_events
 from ..auth import auth_user
 from ..models import JugUser, User, Jug
 from ..schemas import UpdateJugForm
-from ..services import get_users_community, try_get_users_community, user_exists, update_jug_name_s, get_users_jugs
+from ..services import get_users_community, try_get_users_community, user_exists
 
 router = APIRouter(
     prefix="/jug",
@@ -18,15 +18,24 @@ router = APIRouter(
 
 @router.post("/update-name")
 async def update_jug_name(form: UpdateJugForm, user_id: str = Depends(auth_user)):
+    valid_jugs = []
     with db_session:
-        jugs = get_users_jugs(user_id)
-
         jug = Jug.get(smart_hydration_id=form.jugId)
+        if jug is None:
+            raise HTTPException(400, 'jug does not exist')
 
-        if jug not in jugs:
+        user = User.get(id=user_id)
+        juguser = user.jug_user
+        valid_jugs.extend([j for j in juguser.jugs])
+
+        if community := get_users_community(user_id):
+            valid_jugs.extend([j for j in community.unassigned_jugs])
+            valid_jugs.extend([j for j in juguser.jugs for juguser in community.jug_users])
+
+        if jug not in valid_jugs:
             raise HTTPException(status_code=401, detail='Unauthorized')
 
-        update_jug_name_s(form.jugId, form.name)
+        jug.name = form.name
 
 
 def check_user_is_associated_with_juguser(user, juguser):

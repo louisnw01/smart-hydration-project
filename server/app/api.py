@@ -52,6 +52,8 @@ async def get_jug_latest(session, jug_id):
     if result is None:
         return None
 
+    if not result.get('identifier'):
+        return None
 
     return {
         'id': result['identifier'],
