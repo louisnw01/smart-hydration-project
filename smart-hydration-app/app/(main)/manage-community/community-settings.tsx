@@ -128,7 +128,35 @@ const settingsList: ISettingsSection[] = [
                 },
             },
             {
-                name: "Invite Member",
+                name: "Add Member",
+                Component: (name, isFirst, isLast) => {
+                    const { data } = useAtomValue(communityInfoQAtom);
+                    return (
+                        <>
+                            {data?.isOwner && (
+                                <OptionBlock
+                                    isLast={isLast}
+                                    text={name}
+                                    onPress={() =>
+                                        router.navigate(
+                                            "manage-community/add-member-modal",
+                                        )
+                                    }
+                                    icon={
+                                        <Ionicons
+                                            name="close-circle-outline"
+                                            size={19}
+                                            color="gray"
+                                        />
+                                    }
+                                />
+                            )}
+                        </>
+                    );
+                },
+            },
+            {
+                name: "Invite User",
                 Component: (name, isFirst, isLast) => {
                     const { data } = useAtomValue(communityInfoQAtom);
                     return (

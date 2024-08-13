@@ -1,15 +1,17 @@
+import { selectedMemberAtom } from "@/atom/community";
 import { communityInfoQAtom, patientInfoQAtom } from "@/atom/query";
 import PageWrapper from "@/components/common/page-wrapper";
 import { MemberInfo } from "@/interfaces/community";
 import { MemberData, useFormattedMemberData } from "@/util/community";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import { useAtomValue } from "jotai";
-import { View, Text } from "react-native";
+import { useAtomValue, useAtom } from "jotai";
+import { View, Text, Pressable } from "react-native";
 import { ScrollView } from "react-native-reanimated/lib/typescript/Animated";
-
+import router from "expo-router";
 export default function CommunityLeaderboard() {
     const { isLoading, refetch: refetchCommunityInfo } =
         useAtomValue(communityInfoQAtom);
+    const [selectedMember, setSelectedMember] = useAtom(selectedMemberAtom);
     const {
         data,
         isLoading: patientInfoIsLoading,
@@ -30,11 +32,13 @@ export default function CommunityLeaderboard() {
             <View className="flex-col gap-4 pt-4 w-full">
                 {sortedData.map((row, index) => {
                     return (
-                        <LeaderboardRow
-                            key={index}
-                            member={row}
-                            index={index}
-                        />
+                        <Pressable>
+                            <LeaderboardRow
+                                key={index}
+                                member={row}
+                                index={index}
+                            />
+                        </Pressable>
                     );
                 })}
             </View>
