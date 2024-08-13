@@ -17,20 +17,20 @@ export default function CommunityLeaderboard() {
     if (!data) {
         return;
     }
-    const sortedData = data.slice().sort((a, b) => {
-        const progressA = parseInt(a.targetProgress?.replace("%", ""), 10);
-        const progressB = parseInt(b.targetProgress?.replace("%", ""), 10);
+    const formattedData = data.map((row) => useFormattedMemberData(row));
+    const sortedData = formattedData.slice().sort((a, b) => {
+        const progressA = parseInt(a.targetProgress);
+        const progressB = parseInt(b.targetProgress);
         return progressB - progressA;
     });
     return (
         <PageWrapper>
             <View className="flex-col gap-4 pt-4 w-full">
                 {sortedData.map((row, index) => {
-                    const formattedData = useFormattedMemberData(row);
                     return (
                         <LeaderboardRow
                             key={index}
-                            member={formattedData}
+                            member={row}
                             index={index}
                         />
                     );
@@ -40,19 +40,18 @@ export default function CommunityLeaderboard() {
     );
 }
 
-// Properly typed for TypeScript, or just remove the types for plain JavaScript
 export function LeaderboardRow({
     member,
     index,
 }: {
-    member: MemberInfo;
+    member: MemberData;
     index: number;
 }) {
     const progressWidth = `${parseInt(member.targetProgress)}%`;
     return (
-        <View className="relative w-[93%] h-24 left-4 rounded-xl overflow-hidden mb-4 bg-gray-200">
+        <View className="relative w-[93%] h-24 left-4 rounded-xl overflow-hidden mb-1 bg-gray-200">
             <View
-                className="absolute left-0 top-0 bottom-0 h-12 bg-blue"
+                className="absolute left-0 top-0 bottom-0 h-12 bg-blue "
                 style={{ width: progressWidth, height: "4rem" }}
             />
 
@@ -61,13 +60,13 @@ export function LeaderboardRow({
                 <View className="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center">
                     <Text>PH</Text>
                 </View>
-                <Text className="pl-4 flex-1 text-2xl font-bold">
+                <Text className="pl-4 flex-1 text-2xl font-semibold">
                     {member.name}
                 </Text>
-                <Text className="text-2xl font-bold">
+                <Text className="text-2xl font-semibold">
                     {member.targetProgress}
                 </Text>
-                <Text className="pl-4 text-2xl font-bold">#{index + 1}</Text>
+                <Text className="pl-4 text-4xl font-bold">#{index + 1}</Text>
             </View>
         </View>
     );
