@@ -2,6 +2,7 @@ import { communityInfoQAtom, patientInfoQAtom } from "@/atom/query";
 import PageWrapper from "@/components/common/page-wrapper";
 import { MemberInfo } from "@/interfaces/community";
 import { MemberData, useFormattedMemberData } from "@/util/community";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useAtomValue } from "jotai";
 import { View, Text } from "react-native";
 import { ScrollView } from "react-native-reanimated/lib/typescript/Animated";
@@ -25,6 +26,7 @@ export default function CommunityLeaderboard() {
     });
     return (
         <PageWrapper>
+            <LeaderboardWinner member={sortedData[0]} />
             <View className="flex-col gap-4 pt-4 w-full">
                 {sortedData.map((row, index) => {
                     return (
@@ -68,6 +70,28 @@ export function LeaderboardRow({
                 </Text>
                 <Text className="pl-4 text-4xl font-bold">#{index + 1}</Text>
             </View>
+        </View>
+    );
+}
+
+export function LeaderboardWinner({ member }: { member: MemberData }) {
+    return (
+        <View className="items-center relative w-[93%] h-64 left-4 rounded-xl top-4 mb-6 overflow-hidden border-gray-100 border-2">
+            <MaterialCommunityIcons
+                name="crown"
+                size={39}
+                color="rgb(255, 215, 0)"
+            />
+            <View className="w-20 h-20 bg-gray-300 rounded-full flex items-center justify-center">
+                <Text>PH</Text>
+            </View>
+            <Text className=" text-3xl font-bold pt-1">{member.name}</Text>
+            <Text className="text-3xl">
+                {member.name} is closest to their target!
+            </Text>
+            <Text className="pt-2">
+                Drink water regularly to be the champion!
+            </Text>
         </View>
     );
 }
