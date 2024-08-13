@@ -18,8 +18,9 @@ async def fire_jug_info(sys_id):
 
     if jug_data is None:
         return
-    jug_staleness = calculate_staleness(jug_data['last_refill'])
+    await tunnel.fire(f'jug-latest', jug_data['id'], jug_data)
 
+    jug_staleness = calculate_staleness(jug_data['last_refill'])
     with db_session:
         jug = Jug.get(system_id=sys_id)
         jug.last_connected = int(jug_data['last_seen'])
@@ -30,7 +31,6 @@ async def fire_jug_info(sys_id):
         jug.capacity = jug_data['capacity']
         jug.staleness = jug_staleness
 
-    await tunnel.fire(f'jug-latest', jug_data['id'], jug_data)
 
 def calculate_staleness(last_refill):
     time_now = int(dt.datetime.now().timestamp())
