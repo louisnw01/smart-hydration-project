@@ -50,6 +50,14 @@ def determine_wait_time():
     return wait_time
 
 
+async def send_refresh_reminder(token, patient_name):
+    send_push_notification(token, message=patient_name + " needs their jug refreshing")
+
+
+async def send_refill_reminder(token, patient_name):
+    send_push_notification(token, message=patient_name + " needs their jug refilling")
+
+
 async def send_drink_reminders():
     while True:
         with db_session:
