@@ -51,11 +51,11 @@ def determine_wait_time():
 
 
 async def send_refresh_reminder(token, patient_name):
-    send_push_notification(token, message=patient_name + " needs their jug refreshing", path="community")
+    send_push_notification(token, message=patient_name + " needs their jug refreshing", path="(tabs)/community")
 
 
 async def send_refill_reminder(token, patient_name):
-    send_push_notification(token, message=patient_name + " needs their jug refilling", path="community")
+    send_push_notification(token, message=patient_name + " needs their jug refilling", path="(tabs)/community")
 
 
 async def send_drink_reminders():
