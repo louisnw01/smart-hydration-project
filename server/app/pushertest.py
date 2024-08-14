@@ -8,6 +8,7 @@ from asyncpusher.pusher import Pusher
 from pony.orm.core import db_session, select, commit
 
 from .api import SmartHydrationSession, get_hydration_events, get_jug_latest
+from .notifications import send_refresh_reminder, send_refill_reminder
 from .routers.websocket_tunnel import tunnel
 from .models import Jug, JugUser, OtherDrink, User
 
@@ -22,6 +23,19 @@ async def fire_jug_info(sys_id):
 
     with db_session:
         jug = Jug.get(system_id=sys_id)
+
+        for owner in jug.owners:
+            name = owner.name
+            community = owner.community
+            if community is not None:
+                for follower in community.followers:
+                    if follower.user.mode == 'Carer':
+                        for notification in follower.user.notifications:
+                            if jug_staleness != 0 and notification.active:
+                                await send_refresh_reminder(notification.expo_token, name)
+                            if jug_data['water_level'] < 50 and notification.active:
+                                await send_refill_reminder(notification.expo_token, name)
+
         jug.last_connected = int(jug_data['last_seen'])
         jug.battery = jug_data['battery']
         jug.is_charging = jug_data['charging']
