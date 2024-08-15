@@ -39,9 +39,10 @@ export const updateUserTargetMAtom = atomWithMutationCustom<{
     mutationKey: "/user/update-user-target",
     endpoint: ENDPOINTS.UPDATE_USER_TARGET,
     onSuccess: (get, qc, form) => {
-        qc.setQueryData(["get-user-target", get(authTokenAtom)], {
-            target: form.newValue,
-        });
+        qc.setQueryData(
+            ["user-info", get(authTokenAtom)],
+            (prev: UserInfo) => ({ ...prev, target: form.newValue }),
+        );
     },
 });
 
