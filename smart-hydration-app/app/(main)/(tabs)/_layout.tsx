@@ -82,7 +82,7 @@ export default function TabLayout() {
                         <>
                             {!isCarer && hasCommunity && (
                                 <Link className="px-5" href="manage-community">
-                                    <Text className="text-xl font-semibold">
+                                    <Text className="text-xl font-semibold dark:text-white">
                                         Manage
                                     </Text>
                                 </Link>
