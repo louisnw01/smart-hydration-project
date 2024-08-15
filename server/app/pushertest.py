@@ -28,14 +28,17 @@ async def fire_jug_info(sys_id):
         for owner in jug.owners:
             name = owner.name
             community = owner.community
-            if community is not None:
-                for follower in community.followers:
-                    if follower.user.mode == 'Carer':
-                        for notification in follower.user.notifications:
-                            if jug_staleness != 0 and notification.active:
-                                await send_refresh_reminder(notification.expo_token, name)
-                            if jug_data['water_level'] < 50 and notification.active:
-                                await send_refill_reminder(notification.expo_token, name)
+            if community is None:
+                continue
+            for follower in community.followers:
+                if follower.user.mode != 'Carer':
+                    continue
+                for notification in follower.user.notifications:
+                    # only send when staleness changes
+                    if jug_staleness != 0 and jug.staleness != jug_staleness and notification.active:
+                        await send_refresh_reminder(notification.expo_token, name)
+                    if jug_data['water_level'] < 50 <= jug.water_level and notification.active:
+                        await send_refill_reminder(notification.expo_token, name)
 
         jug.last_connected = int(jug_data['last_seen'])
         jug.battery = jug_data['battery']
