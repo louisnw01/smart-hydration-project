@@ -159,7 +159,7 @@ const settingsList: ISettingsSection[] = [
                             text={name}
                             onPress={() =>
                                 router.push(
-                                    "settings/community/community-settings",
+                                    "manage-community/community-settings",
                                 )
                             }
                             icon={
