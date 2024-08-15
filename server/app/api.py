@@ -137,4 +137,18 @@ async def fetch_all_registered_jugs():
             'water_level': jug['water_level']['d'],
             'last_seen': convert_timestamp(jug['telemetry']['timestamp']),
         })
+
+    # add the simulated jug
+    final_jug_list.append({
+        "sh_id": "jug999999",
+        "sys_id": 0,
+        'capacity': 1100,
+        'charging': False,
+        'battery': 0.55,
+        'temperature': 22.3,
+        'water_level': 0,
+        'last_seen': dt.datetime.now().timestamp(),
+    })
+
+
     return final_jug_list

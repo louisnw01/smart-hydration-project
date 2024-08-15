@@ -2,6 +2,7 @@ import { selectedDeviceAtom } from "@/atom/device";
 import { patientInfoQAtom, userJugUserIdAtom } from "@/atom/query";
 import colors from "@/colors";
 import { DeviceInfo } from "@/interfaces/device";
+import useColorPalette from "@/util/palette";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { useAtomValue } from "jotai";
 import { ReactNode } from "react";
@@ -87,6 +88,7 @@ function BatteryIndicator({
     charging: boolean;
 }) {
     const scaledCharge = (charge / 5.714) * 100;
+    const palette = useColorPalette();
 
     return (
         <View className="flex-row h-full gap-2">
@@ -104,7 +106,7 @@ function BatteryIndicator({
                     name="battery-dead"
                     size={23}
                     bottom={3}
-                    color="black"
+                    color={palette.fg}
                 />
             </View>
 

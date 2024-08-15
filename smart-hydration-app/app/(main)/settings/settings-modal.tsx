@@ -9,12 +9,13 @@ import {
 import StyledButton from "@/components/common/button";
 import { OptionBlock } from "@/components/common/option-block";
 import { ISettingsSection } from "@/interfaces/settings";
-import { Ionicons, MaterialCommunityIcons, Feather } from "@expo/vector-icons";
+import { Feather, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
-import { useAtomValue, useSetAtom } from "jotai";
-import { useEffect } from "react";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
+import { useEffect, useState } from "react";
 import { SectionList, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { ConfirmModal } from "../manage-community/remove-member";
 
 const settingsList: ISettingsSection[] = [
     {
@@ -207,25 +208,32 @@ const settingsList: ISettingsSection[] = [
                     const { mutate, isSuccess } =
                         useAtomValue(removePushTokenMAtom);
                     const pushToken = useAtomValue(pushTokenAtom);
-                    const setAuthAtom = useSetAtom(authTokenAtom);
+                    const [authToken, setAuthAtom] = useAtom(authTokenAtom);
                     const setNotifications = useSetAtom(notificationsAtom);
                     const setNotificationFrequency = useSetAtom(
                         notificationFrequencyAtom,
                     );
                     const setDrinksList = useSetAtom(drinkListAtom);
+                    const [modalVisible, setModalVisible] = useState(false);
 
                     function handleLogout() {
-                        setAuthAtom("");
                         setDrinksList([]);
                         setNotificationFrequency("1 hour");
                         setNotifications("On");
-                        router.replace("onboarding/login-register");
+                        setAuthAtom("");
+                        // router.replace("onboarding/login-register");
                     }
 
                     useEffect(() => {
                         if (!isSuccess) return;
                         handleLogout();
                     }, [isSuccess]);
+
+                    useEffect(() => {
+                        if (!authToken) {
+                            router.replace("onboarding/login-register");
+                        }
+                    }, [authToken]);
 
                     return (
                         <View className="">
@@ -235,6 +243,13 @@ const settingsList: ISettingsSection[] = [
                                 buttonClass="bg-red rounded-xl py-3 justify-center"
                                 textClass="text-xl text-white"
                                 onPress={() => {
+                                    setModalVisible(true);
+                                }}
+                            />
+                            <ConfirmModal
+                                message="Are you sure you want to log out?"
+                                confirmMessage="Log Out"
+                                onConfirm={() => {
                                     if (!!pushToken) {
                                         mutate({
                                             pushToken: pushToken as string,
@@ -243,6 +258,8 @@ const settingsList: ISettingsSection[] = [
                                         handleLogout();
                                     }
                                 }}
+                                modalVisible={modalVisible}
+                                setModalVisible={setModalVisible}
                             />
                         </View>
                     );

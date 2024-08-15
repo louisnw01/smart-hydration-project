@@ -37,7 +37,6 @@ export default function MemberList() {
     };
 
     const handleOnReject = () => {
-        setModalVisible(false);
         setMember(null);
     };
 
@@ -73,36 +72,74 @@ export default function MemberList() {
                 onReject={handleOnReject}
                 onRequestClose={handleOnReject}
             /> */}
-            <BottomSheet isVisible={modalVisible}>
-                <View className="mx-6 gap-4">
-                    <Text className="text-xl text-center first-letter:font-medium dark:text-white">
-                        {`Are you sure you want to remove the member ${member?.name}?`}
-                    </Text>
-                    <View className="flex-row justify-evenly">
-                        <StyledButton
-                            text="Cancel"
-                            buttonClass="w-40 py-3 rounded-xl justify-center"
-                            buttonColors="bg-gray-300"
-                            touchButtonColors="bg-neutral-400"
-                            textClass="text-xl text-red dark:text-red"
-                            onPress={handleOnReject}
-                        />
-                        <StyledButton
-                            text="Remove User"
-                            buttonClass="w-40 py-3 rounded-xl justify-center"
-                            buttonColors="bg-red"
-                            touchButtonColors="bg-darkred"
-                            textClass="text-xl text-white"
-                            onPress={handleRemoveMember}
-                        />
-                    </View>
-                </View>
-            </BottomSheet>
+
+            <ConfirmModal
+                message={`Are you sure you want to remove the member ${member?.name}?`}
+                confirmMessage="Remove"
+                onReject={handleOnReject}
+                onConfirm={handleRemoveMember}
+                modalVisible={modalVisible}
+                setModalVisible={setModalVisible}
+            />
         </View>
     );
 }
 
-function BottomSheet({
+export function ConfirmModal({
+    message,
+    onReject,
+    onConfirm,
+    modalVisible,
+    setModalVisible,
+    confirmMessage,
+}: {
+    message: string;
+    confirmMessage: string;
+    onReject?: Function;
+    onConfirm: Function;
+    modalVisible: boolean;
+    setModalVisible: Function;
+}) {
+    const handleOnReject = () => {
+        setModalVisible(false);
+        if (onReject) {
+            onReject();
+        }
+    };
+    const handleOnConfirm = () => {
+        setModalVisible(false);
+        onConfirm();
+    };
+    return (
+        <BottomSheet isVisible={modalVisible}>
+            <View className="mx-6 gap-4">
+                <Text className="text-xl text-center first-letter:font-medium dark:text-white">
+                    {message}
+                </Text>
+                <View className="flex-row justify-evenly">
+                    <StyledButton
+                        text="Cancel"
+                        buttonClass="w-40 py-3 rounded-xl justify-center"
+                        buttonColors="bg-gray-300"
+                        touchButtonColors="bg-neutral-400"
+                        textClass="text-xl text-red dark:text-red"
+                        onPress={handleOnReject}
+                    />
+                    <StyledButton
+                        text={confirmMessage}
+                        buttonClass="w-40 py-3 rounded-xl justify-center"
+                        buttonColors="bg-red"
+                        touchButtonColors="bg-darkred"
+                        textClass="text-xl text-white"
+                        onPress={handleOnConfirm}
+                    />
+                </View>
+            </View>
+        </BottomSheet>
+    );
+}
+
+export function BottomSheet({
     children,
     isVisible,
 }: {
