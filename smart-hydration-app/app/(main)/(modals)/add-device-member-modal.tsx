@@ -102,7 +102,6 @@ export default function AddDeviceMemberModal() {
             {selectedJugs.size > 0 && (
                 <StyledButton
                     text={`Add ${selectedJugs.size} jug${selectedJugs.size > 1 ? "s" : ""} to member`}
-                    href="add-member-modal"
                     textClass="text-lg"
                     onPress={handlePress}
                 />
