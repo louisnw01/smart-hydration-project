@@ -1,6 +1,7 @@
 import JugIcon from "@/assets/svgs/jug.svg";
 import { selectedDeviceAtom, selectedJugsAtom } from "@/atom/device";
 import { unlinkJugMAtom, userHasCommunityAtom } from "@/atom/query";
+import { unitConverter, unitsAtom } from "@/atom/user";
 import colors from "@/colors";
 import StyledButton from "@/components/common/button";
 import getStalenessMessage from "@/util/device";
@@ -75,6 +76,7 @@ export default function DeviceInfoModal() {
         isSuccess,
     } = useAtomValue(unlinkJugMAtom);
     const userHasCommunity = useAtomValue(userHasCommunityAtom);
+    const unit = useAtomValue(unitsAtom);
 
     useEffect(() => {
         if (isPending || !isSuccess) return;
@@ -117,7 +119,7 @@ export default function DeviceInfoModal() {
                 >
                     <Text className="dark:text-white">Water Level</Text>
                     <Text className="text-4xl dark:text-white">
-                        {device.water_level}ml
+                        {Math.floor(unitConverter(device.water_level, unit))}{unit}
                     </Text>
                 </Container>
             </View>

@@ -1,5 +1,6 @@
 import { selectedDeviceAtom } from "@/atom/device";
 import { patientInfoQAtom, userJugUserIdAtom } from "@/atom/query";
+import { unitConverter, unitsAtom } from "@/atom/user";
 import colors from "@/colors";
 import { DeviceInfo } from "@/interfaces/device";
 import useColorPalette from "@/util/palette";
@@ -22,9 +23,10 @@ export default function DeviceRow({
     const isActive = useAtomValue(selectedDeviceAtom)?.id == device.id;
     const { data } = useAtomValue(patientInfoQAtom);
     const userJugUserId = useAtomValue(userJugUserIdAtom);
+    const unit = useAtomValue(unitsAtom);
 
     let person;
-    console.log(userJugUserId, device.jugUserId);
+
     if (device.jugUserId == null) {
         person = "Unassigned";
     } else if (userJugUserId == device.jugUserId) {
@@ -58,7 +60,7 @@ export default function DeviceRow({
             </View>
             <View className="flex justify-evenly">
                 <EndText>
-                    {percentFull.toFixed(0)}% full ({device.water_level}ml)
+                    {percentFull.toFixed(0)}% full ({Math.floor(unitConverter(device.water_level, unit))}{unit})
                 </EndText>
                 <EndText className="text-red-500">
                     {isStale && "water is stale"}

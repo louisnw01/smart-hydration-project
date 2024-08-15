@@ -1,6 +1,6 @@
 import SodaCan from "@/assets/svgs/soda-can-svgrepo-com.svg";
 import { addDrinkMAtom } from "@/atom/query";
-import { drinkListAtom } from "@/atom/user";
+import { drinkListAtom, unitConverter, unitsAtom } from "@/atom/user";
 import { ITimeSeries } from "@/interfaces/device";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -113,6 +113,7 @@ function DrinkButton({ drinkType }: { drinkType: DrinkType }) {
     const [drinkList, setDrinkList] = useAtom(drinkListAtom);
     const { mutate } = useAtomValue(addDrinkMAtom);
     const router = useRouter();
+    const unit = useAtomValue(unitsAtom);
 
     function postDrinkToDB(drinkJSON: ITimeSeries, drinkName: string) {
         if (!drinkJSON) return;
@@ -152,7 +153,7 @@ function DrinkButton({ drinkType }: { drinkType: DrinkType }) {
 
                 {drinkType.capacity ? (
                     <Text className="text-xl bottom-2 font-semibold text-gray-500 dark:text-gray-400">
-                        {drinkType.capacity}ml
+                        {Math.floor(unitConverter(drinkType.capacity, unit))}{unit}
                     </Text>
                 ) : null}
             </View>
