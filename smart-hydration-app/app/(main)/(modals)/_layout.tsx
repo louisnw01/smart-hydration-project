@@ -76,10 +76,6 @@ export default function ModalLayout() {
                 options={{ title: "Are you sure you want to join?" }}
             />
             <Stack.Screen
-                name="add-member-modal"
-                options={{ title: "Add a community member" }}
-            />
-            <Stack.Screen
                 name="add-device-member-modal"
                 options={{ title: "Add jug(s) to member" }}
             />
