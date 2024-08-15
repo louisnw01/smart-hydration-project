@@ -4,9 +4,10 @@ import { ISettingsSection } from "@/interfaces/settings";
 import { Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useAtomValue } from "jotai";
-import { useEffect } from "react";
-import { Pressable, SectionList, Text, View } from "react-native";
+import { useEffect, useState } from "react";
+import { Pressable, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { ConfirmModal } from "../manage-community/remove-member";
 
 const settingsList: ISettingsSection[] = [
     {
@@ -37,9 +38,7 @@ const settingsList: ISettingsSection[] = [
                             isFirst={isFirst}
                             text={name}
                             // onPress={() => router.navigate("add-device-modal")}
-                            icon={
-                                <Feather name="key" size={18} color="gray" />
-                            }
+                            icon={<Feather name="key" size={18} color="gray" />}
                         />
                     );
                 },
@@ -51,6 +50,7 @@ const settingsList: ISettingsSection[] = [
 export default function SettingsModal() {
     const insets = useSafeAreaInsets();
     const router = useRouter();
+    const [modalVisible, setModalVisible] = useState(false);
     const {
         mutate: submitDeleteUser,
         isPending,
@@ -109,13 +109,21 @@ export default function SettingsModal() {
                     className="items-center bg-red rounded-xl px-7 py-3"
                     disabled={isPending}
                     onPress={() => {
-                        submitDeleteUser();
+                        setModalVisible(true);
                     }}
                 >
                     <Text className="text-xl mt-1 text-white">
                         {isPending ? "Deleting account..." : "Delete Account"}
                     </Text>
                 </Pressable>
+
+                <ConfirmModal
+                    message="Are you sure you want to delete your account?"
+                    confirmMessage="Delete"
+                    onConfirm={submitDeleteUser}
+                    modalVisible={modalVisible}
+                    setModalVisible={setModalVisible}
+                />
             </View>
         </View>
     );

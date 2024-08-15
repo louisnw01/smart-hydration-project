@@ -93,6 +93,7 @@ export function atomWithMutationCustom<
                 const error = await response.json();
                 throw new Error(error.detail);
             }
+            return response.json();
         },
         onSuccess: (data, form) => {
             if (!onSuccess) return;
