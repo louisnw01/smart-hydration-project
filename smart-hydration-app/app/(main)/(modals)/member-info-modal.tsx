@@ -1,7 +1,8 @@
+import useSettings from "@/app/hooks/user";
 import Jug from "@/assets/svgs/jug.svg";
 import { selectedMemberAtom } from "@/atom/community";
 import { selectedDeviceAtom } from "@/atom/device";
-import { patientJugDataAtom } from "@/atom/query";
+import { deleteCommunityMemberMAtom, patientJugDataAtom, removePatientMAtom } from "@/atom/query";
 import StyledButton from "@/components/common/button";
 import { ScrollPageWrapper } from "@/components/common/page-wrapper";
 import Tag from "@/components/community/tag";
@@ -11,8 +12,9 @@ import useColorPalette from "@/util/palette";
 import { FontAwesome, MaterialCommunityIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useAtomValue, useSetAtom } from "jotai";
-import { ReactNode } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { Text, View } from "react-native";
+import { ConfirmModal } from "../manage-community/remove-member";
 
 function MemberInfoBlock({
     children,
@@ -34,6 +36,31 @@ export default function MemberInfoModal() {
     const member = useAtomValue(selectedMemberAtom);
     const setJug = useSetAtom(selectedDeviceAtom);
     const memberData = useFormattedMemberData(member);
+    const { isCarer } = useSettings();
+
+    const { mutate, isPending, isSuccess } = useAtomValue(
+        removePatientMAtom,
+    );
+
+    const [modalVisible, setModalVisible] = useState<boolean>(false);
+
+    useEffect(() => {
+        if (isPending || !isSuccess) return;
+        setModalVisible(false);
+        router.back();
+    }, [isSuccess]);
+
+    const confirmRemoveMember = () => {
+        setModalVisible(true);
+    };
+
+    const handleOnReject = () => {
+        setModalVisible(false);
+    };
+
+    const handleRemoveMember = () => {
+        mutate({ id: member.id });
+    };
 
     if (!member) return null;
     return (
@@ -134,7 +161,7 @@ export default function MemberInfoModal() {
                 buttonClass="flex flex-row items-center gap-3 rounded-xl px-4 py-3 bg-gray-100 dark:bg-neutral-900"
                 textClass="text-xl dark:text-gray-200 -ml-[2px]"
                 icon=<MaterialCommunityIcons
-                    name="water-plus-outline"
+                    name="label-multiple-outline"
                     size={23}
                     color={palette.border}
                 />
@@ -145,6 +172,28 @@ export default function MemberInfoModal() {
                     })
                 }
                 chevron
+            />
+            <>
+            { isCarer && (
+            <StyledButton
+                text="Remove Patient"
+                buttonClass="flex flex-row items-center gap-3 rounded-xl px-4 py-3 bg-red"
+                textClass="text-xl text-white -ml-[2px]"
+                icon=<MaterialCommunityIcons
+                    name="delete"
+                    size={23}
+                    color={palette.border}
+                />
+                onPress={confirmRemoveMember}
+            />)}
+            </>
+            <ConfirmModal
+                message={`Are you sure you want to remove the patient ${member?.name}?`}
+                confirmMessage="Remove"
+                onReject={handleOnReject}
+                onConfirm={handleRemoveMember}
+                modalVisible={modalVisible}
+                setModalVisible={setModalVisible}
             />
         </ScrollPageWrapper>
     );

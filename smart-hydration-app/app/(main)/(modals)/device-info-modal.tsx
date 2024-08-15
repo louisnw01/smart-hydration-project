@@ -184,7 +184,7 @@ export default function DeviceInfoModal() {
                 />
                 {userHasCommunity && (
                     <StyledButton
-                        text="Change Device Jug User"
+                        text="Change Device User"
                         buttonClass="flex flex-row items-center gap-3 rounded-xl px-4 py-3 bg-gray-100 dark:bg-neutral-900"
                         textClass="text-xl dark:text-gray-200"
                         icon=<MaterialCommunityIcons
