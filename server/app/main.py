@@ -29,7 +29,7 @@ app.include_router(websocket_tunnel.router)
 @app.on_event('startup')
 async def init():
     asyncio.create_task(pusher_init())
-    # asyncio.create_task(send_drink_reminders())
+    asyncio.create_task(send_drink_reminders())
 
     jugs = await fetch_all_registered_jugs()
 

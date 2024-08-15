@@ -41,7 +41,7 @@ async def device_info(user_id: str = Depends(auth_user)):
         # this will include the users juguser
         if community := get_users_community(user_id):
             for juguser in community.jug_users:
-                jugs.extend([get_device_info_dict(jug, juguser) for jug in juguser.jugs])
+                jugs.extend([get_device_info_dict(jug, juguser.id) for jug in juguser.jugs])
             jugs.extend([get_device_info_dict(jug, None) for jug in community.unassigned_jugs])
        # if standard we want the users jugs
         elif user.mode == 'Standard':

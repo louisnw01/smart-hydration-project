@@ -14,7 +14,6 @@ import {
     atomWithQueryDerivation,
     atomWithQueryInfo,
 } from "./common";
-import { userInfoQAtom } from "./user";
 
 export const communityInfoQAtom = atomWithQueryInfo<CommunityInfo>({
     queryKey: "get-community-info",
@@ -184,18 +183,6 @@ export const communityTagsQAtom = atomWithQueryInfo<TagInfo[]>({
     queryKey: "get-community-tags",
     endpoint: ENDPOINTS.COMMUNITY_TAGS,
     enabled: (get) => !!get(authTokenAtom) && !!get(userHasCommunityAtom),
-});
-
-export const getCommunityJugDataQAtom = atomWithQueryInfo<DeviceInfo[]>({
-    queryKey: "get-community-jug-data",
-    endpoint: ENDPOINTS.FETCH_COMMUNITY_JUG_LIST,
-    query: (get) => {
-        const { data } = get(userInfoQAtom);
-        return {
-            jug_user_id: data?.juguser,
-        };
-    },
-    enabled: (get) => !!get(authTokenAtom) && !!get(userInfoQAtom).isLoading,
 });
 
 export const createJugUserMAtom = atomWithMutationCustom({

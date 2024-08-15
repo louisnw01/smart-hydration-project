@@ -7,8 +7,7 @@ from ..mail import send_email_with_ses
 from ..models import User, VerifyEmail, Jug, JugUser, Notifications
 from ..schemas import UserRegister, UserLogin, VerifyEmailForm, TargetUpdate, PushTokenForm, \
     ToggleNotificationsForm, ChangeModeForm
-from ..services import delete_user, get_users_community, user_exists, create_user, \
-    create_jug_user, update_jug_user_data, get_user_hash, get_user_by_email
+from ..services import delete_user, get_users_community, user_exists
 import datetime as dt
 import re
 
@@ -31,15 +30,15 @@ async def delete_user_s(user_id: str = Depends(auth_user)):
 async def register(form: UserRegister):
     if user_exists(form.email):
         raise HTTPException(status_code=400, detail="email already registered")
+
     hashed_password = get_hash(form.password)
     with db_session:
-        user = create_user(form.name, form.email, hashed_password, form.mode)
-        if not user.jug_user:
-            create_jug_user(user)
-            jug_user_id = user.jug_user.id
-            if form.dob:
-                update_jug_user_data(jug_user_id, "dob", form.dob)
-    token = generate_auth_token(user.id)
+        user = User(name=form.name, email=form.email, hash=hashed_password, email_verified=False, mode=form.mode)
+        juguser = JugUser(name=user.name, user=user)
+        if form.dob:
+            juguser.dob = form.dob
+        commit()
+        token = generate_auth_token(user.id)
     return {"access_token": token, "token_type": "bearer"}
 
 
@@ -48,14 +47,14 @@ async def login(form: UserLogin):
     if not user_exists(form.email):
         raise HTTPException(status_code=400, detail="incorrect email or password")
 
-    hashed_password = get_user_hash(form.email)
     given_hash = get_hash(form.password)
+    with db_session:
+        user = User.get(email=form.email)
 
-    if hashed_password != given_hash:
-        raise HTTPException(status_code=400, detail="incorrect email or password")
+        if user.hash != given_hash:
+            raise HTTPException(status_code=400, detail="incorrect email or password")
 
-    user = get_user_by_email(form.email)
-    token = generate_auth_token(user.id)
+        token = generate_auth_token(user.id)
     return {"access_token": token, "token_type": "bearer"}
 
 
@@ -81,7 +80,6 @@ async def email_exists(email: str):
     if email is None:
         raise HTTPException(status_code=400, detail="You must enter your email")
     return user_exists(email)
-
 
 
 @router.post("/update-user-target")
