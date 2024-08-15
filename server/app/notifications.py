@@ -50,6 +50,14 @@ def determine_wait_time():
     return wait_time
 
 
+async def send_refresh_reminder(token, patient_name):
+    send_push_notification(token, message=patient_name + " needs their jug refreshing", path="(tabs)/community")
+
+
+async def send_refill_reminder(token, patient_name):
+    send_push_notification(token, message=patient_name + " needs their jug refilling", path="(tabs)/community")
+
+
 async def send_drink_reminders():
     while True:
         with db_session:
@@ -57,7 +65,7 @@ async def send_drink_reminders():
                             t.active is True and (t.send_time < dt.datetime.now().timestamp()))
             for token in tokens:
                 token.send_time = int(dt.datetime.now().timestamp()) + token.frequency
-                send_push_notification(token=token.expo_token, message="It's time for a drink")
+                send_push_notification(token=token.expo_token, message="It's time for a drink", path="custom/add-drink-modal")
             commit()
         time_to_sleep = determine_wait_time()
         await asyncio.sleep(time_to_sleep)
@@ -65,7 +73,7 @@ async def send_drink_reminders():
 
 # TODO investigate expo_sdk to see if I should be doing anything more here
 @retry_on_failure(max_retries=5, delay=1, exceptions=(ConnectionError, HTTPError, MessageRateExceededError))
-def send_push_notification(token, message):
+def send_push_notification(token, message, path):
     headers = {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
@@ -74,6 +82,7 @@ def send_push_notification(token, message):
         'to': token,
         'sound': 'default',
         'body': message,
+        'data': { 'screen' : path},
     }
     try:
         response = requests.post("https://exp.host/--/api/v2/push/send", json=payload, headers=headers)
