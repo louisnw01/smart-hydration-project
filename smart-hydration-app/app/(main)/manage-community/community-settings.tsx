@@ -11,8 +11,9 @@ import { ISettingsSection } from "@/interfaces/settings";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useAtomValue } from "jotai";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { SectionList, Text, View } from "react-native";
+import { ConfirmModal } from "./remove-member";
 
 const settingsList: ISettingsSection[] = [
     {
@@ -200,6 +201,8 @@ const settingsList: ISettingsSection[] = [
                     const { mutate: leaveCommunity, isSuccess: leaveSuccess } =
                         useAtomValue(leaveCommunityMAtom);
 
+                    const [modalVisible, setModalVisible] = useState(false);
+
                     useEffect(() => {
                         if (!deleteSuccess) return;
                         router.back();
@@ -220,15 +223,24 @@ const settingsList: ISettingsSection[] = [
                                         ? "Delete Community"
                                         : "Leave Community"
                                 }
-                                buttonClass="bg-red rounded-xl py-3 justify-center"
-                                textClass="text-xl text-white"
+                                buttonClass="bg-red rounded-xl justify-center"
+                                textClass="text-xl text-white my-1"
                                 onPress={() => {
+                                    setModalVisible(true);
+                                }}
+                            />
+                            <ConfirmModal
+                                message="Are you sure you want to delete this community?"
+                                confirmMessage="Delete"
+                                onConfirm={() => {
                                     if (isOwner) {
                                         deleteCommunity();
                                     } else {
                                         leaveCommunity();
                                     }
                                 }}
+                                modalVisible={modalVisible}
+                                setModalVisible={setModalVisible}
                             />
                         </View>
                     );
