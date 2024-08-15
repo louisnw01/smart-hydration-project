@@ -15,6 +15,7 @@ import { useAtomValue, useSetAtom } from "jotai";
 import { ReactNode, useEffect, useState } from "react";
 import { Text, View } from "react-native";
 import { ConfirmModal } from "../manage-community/remove-member";
+import { unitConverter, unitsAtom } from "@/atom/user";
 
 function MemberInfoBlock({
     children,
@@ -37,6 +38,7 @@ export default function MemberInfoModal() {
     const setJug = useSetAtom(selectedDeviceAtom);
     const memberData = useFormattedMemberData(member);
     const { isCarer } = useSettings();
+    const unit = useAtomValue(unitsAtom)
 
     const { mutate, isPending, isSuccess } = useAtomValue(
         removePatientMAtom,
@@ -91,7 +93,7 @@ export default function MemberInfoModal() {
             <MemberInfoBlock title="Progress to Target">
                 <View className="flex-row justify-between">
                     <Text className="text-xl dark:text-white">
-                        {member.drankToday | 0} / {member.dailyTarget}ml
+                        {unitConverter(member.drankToday, unit) | 0} / {Math.floor(unitConverter(member.dailyTarget, unit))}{unit}
                     </Text>
                     <Text className="text-xl font-semibold dark:text-white">
                         {(
