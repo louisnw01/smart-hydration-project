@@ -92,7 +92,7 @@ export default function MemberInfoModal() {
                 }}
             />
             <MemberInfoBlock title="Location">
-                <Text className="text-xl dark:text-white">Room 101</Text>
+                <Text className="text-xl dark:text-white">{member.room}</Text>
             </MemberInfoBlock>
             <StyledButton
                 text="Add a Device"

@@ -77,6 +77,23 @@ export default function AddJugUserLayout() {
                 }}
             />
             <Stack.Screen
+                name="room"
+                options={{
+                    title: "What is their room?",
+                    headerLeft: () => {
+                        return (
+                            <Pressable onPress={() => router.back()}>
+                                <Entypo
+                                    name="chevron-left"
+                                    size={24}
+                                    color="rgb(80, 80, 80)"
+                                />
+                            </Pressable>
+                        );
+                    },
+                }}
+            />
+            <Stack.Screen
                 name="submit"
                 options={{
                     title: "You're almost there!",
