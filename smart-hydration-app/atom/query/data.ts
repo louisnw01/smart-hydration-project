@@ -60,11 +60,15 @@ export const addDrinkMAtom = atomWithMutationCustom<{
 });
 
 export const historicalPatientJugDataQAtom = atomWithQueryInfo<ITimeSeries[]>({
-    queryKey: "historical-patient",
+    queryKey: (get) => [
+        "historical-patient",
+        get(authTokenAtom),
+        get(selectedMemberAtom),
+    ],
     endpoint: ENDPOINTS.FETCH_HISTORICAL_JUG_DATA,
     query: (get) => ({
         jug_user_id: get(selectedMemberAtom)?.id,
-        timestamp: new Date(2024, 5, 26).getTime() / 1000,
+        timestamp: 0,
     }),
     enabled: (get) => !!get(authTokenAtom) && !!get(selectedMemberAtom),
 });

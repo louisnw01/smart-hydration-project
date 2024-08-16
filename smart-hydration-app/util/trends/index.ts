@@ -1,5 +1,5 @@
 import { chartTimeWindowAtom } from "@/atom/nav";
-import { getHydrationQAtom } from "@/atom/query";
+import { getHydrationQAtom, historicalPatientJugDataQAtom } from "@/atom/query";
 import { unitConverter, unitsAtom } from "@/atom/user";
 import { MS_DAY, MS_HOUR, MS_MONTH, MS_WEEK } from "@/constants/data";
 import { Timeframe } from "@/interfaces/data";
@@ -118,13 +118,17 @@ export function getAggregates(
 
 export const formattedDataAtom = atom((get) => {
     const type = get(chartTimeWindowAtom);
-    const { data, isLoading } = get(getHydrationQAtom);
+    const { data, isLoading } = get(historicalPatientJugDataQAtom);
+    // alert(JSON.stringify(data));
     if (isLoading || !data) {
         return [];
     }
 
     const unit = get(unitsAtom);
-    const convertedData = data.map((row) => ({time:row.time, value:unitConverter(row.value, unit)}))
+    const convertedData = data.map((row) => ({
+        time: row.time,
+        value: unitConverter(row.value, unit),
+    }));
 
     return getAggregates(convertedData, type);
 });
@@ -137,6 +141,7 @@ export interface FormattedData {
 export function getAmountDrankToday(data: ITimeSeries[]) {
     const todayStartMS = Math.floor(Date.now() / MS_DAY) * MS_DAY;
     let amountDrankToday = 0;
+    console.log("DATA BEING USED: ", data);
     for (const row of data) {
         if (row.time * 1000 < todayStartMS) continue;
         amountDrankToday += row.value;

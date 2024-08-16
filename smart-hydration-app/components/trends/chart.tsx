@@ -114,7 +114,7 @@ export default function TrendsChart() {
             console.log("running..");
             scrollPosition.value = newValue;
         }, 100);
-    }, [timeframe]);
+    }, [timeframe, data]);
 
     const animatedStyles = useAnimatedStyle(() => ({
         width: scrollViewWidth.value,
