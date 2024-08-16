@@ -187,7 +187,7 @@ export default function ApplyTags() {
                     <View className="flex flex-col justify-center items-center">
                         <StyledButton
                             text="Save member's tags"
-                            href="member-info-modal"
+                            onPress={() => router.push("member-info-modal")}
                             textClass="text-lg"
                             onPress={handleSaveTags}
                         />

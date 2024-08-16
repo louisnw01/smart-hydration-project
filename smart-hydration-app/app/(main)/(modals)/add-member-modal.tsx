@@ -2,7 +2,7 @@ import { membersAtom } from "@/atom/community";
 import StyledButton from "@/components/common/button";
 import StyledTextInput from "@/components/common/text-input";
 import { MemberInfo } from "@/interfaces/community";
-import { useNavigation } from "expo-router";
+import { router, useNavigation } from "expo-router";
 import { useSetAtom } from "jotai";
 import { useState } from "react";
 import { Text, View } from "react-native";
@@ -65,14 +65,14 @@ export default function AddMemberModal() {
             <View className="flex flex-row justify-center">
                 <StyledButton
                     text="+Add member's jug(s)"
-                    href="add-device-member-modal"
+                    onPress={() => router.push("add-device-member-modal")}
                     textClass="text-lg"
                 />
             </View>
             <View className="flex flex-row justify-center items-center">
                 <StyledButton
                     text="Submit"
-                    href="community"
+                    onPress={() => router.push("community")}
                     textClass="text-lg"
                     onPress={handlePress}
                 />

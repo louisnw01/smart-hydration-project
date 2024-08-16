@@ -17,8 +17,7 @@ export default function UserOrCommunity() {
             jugIds: selectedJugs,
             jugUserId: usersJugUser,
         });
-        router.back();
-        router.back();
+        router.dismiss();
     }
 
     function handleAPatient() {

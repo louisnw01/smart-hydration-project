@@ -46,3 +46,10 @@ export const updateJugNameMAtom = atomWithMutationCustom<{
         qc.invalidateQueries({ queryKey: ["get-jug-data"] });
     },
 });
+
+export const checkQRCodeMAtom = atomWithMutationCustom<{
+    qr: string;
+}>({
+    mutationKey: "/jug/qr",
+    endpoint: "/jug/qr",
+});

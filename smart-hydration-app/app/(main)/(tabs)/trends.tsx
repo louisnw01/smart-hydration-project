@@ -15,6 +15,7 @@ import StyledButton from "@/components/common/button";
 import TrendsChart from "@/components/trends/chart";
 import useColorPalette from "@/util/palette";
 import { FontAwesome6 } from "@expo/vector-icons";
+import { router } from "expo-router";
 
 function MostHydratedDayOfWeek() {
     const { name, value } = useAtomValue(mostHydratedDayOfWeekAtom);
@@ -86,7 +87,9 @@ export default function TrendsPage() {
                             <View className="flex flex-row items-center justify-center">
                                 <StyledButton
                                     text="Community"
-                                    href="(tabs)/community"
+                                    onPress={() =>
+                                        router.push("(tabs)/community")
+                                    }
                                     textClass="text-lg self-center"
                                     buttonClass="self-center mt-20 px-3"
                                     icon={
