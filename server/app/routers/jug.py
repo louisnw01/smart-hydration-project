@@ -66,8 +66,8 @@ async def link_jugs(form: LinkJugs, user_id: str = Depends(auth_user)):
             return
 
         user = User.get(id=user_id)
-        juguser = JugUser.get(id=form.jugUserId)
-        check_user_is_associated_with_juguser(user, juguser)
+        juguser_to_link = JugUser.get(id=form.jugUserId)
+        check_user_is_associated_with_juguser(user, juguser_to_link)
 
         community = get_users_community(user_id)
 
@@ -80,8 +80,8 @@ async def link_jugs(form: LinkJugs, user_id: str = Depends(auth_user)):
                 for juguser in community.jug_users:
                     print('removed it from ', juguser.name)
                     juguser.jugs.remove(jug_to_add)
-
-            juguser.jugs.add(jug_to_add)
+            print('adding jug ', jug_to_add.smart_hydration_id, 'to', juguser_to_link.name)
+            juguser_to_link.jugs.add(jug_to_add)
 
 
 class UnlinkJug(BaseModel):

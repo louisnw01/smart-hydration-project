@@ -14,7 +14,8 @@ import {
     atomWithQueryDerivation,
     atomWithQueryInfo,
 } from "./common";
-import { userInfoQAtom } from "./user";
+import { userInfoQAtom, userJugUserIdAtom } from "./user";
+import { atom } from "jotai";
 
 export const communityInfoQAtom = atomWithQueryInfo<CommunityInfo>({
     queryKey: "get-community-info",
@@ -206,3 +207,5 @@ export const createJugUserMAtom = atomWithMutationCustom({
         qc.invalidateQueries({ queryKey: ["get-patient-info"] });
     },
 });
+
+export const selectedJUserAtom = atom<MemberInfo>(null);

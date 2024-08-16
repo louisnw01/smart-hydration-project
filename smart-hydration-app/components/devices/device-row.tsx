@@ -22,7 +22,6 @@ export default function DeviceRow({
     const userJugUserId = useAtomValue(userJugUserIdAtom);
 
     let person;
-    console.log(userJugUserId, device.jugUserId);
     if (device.jugUserId == null) {
         person = "Unassigned";
     } else if (userJugUserId == device.jugUserId) {
