@@ -16,7 +16,7 @@ export const SelectInputBox: React.FC<SelectInputBoxProperties> = (props: Select
 
     return (
         <>
-            {!multiple && <SelectList  data={data} setSelected={onChange} save="value" />}
+            {!multiple && <SelectList  data={data} setSelected={onChange} />}
             {multiple && <MultipleSelectList data={data} setSelected={(val: any) => setSelectedMultiple(val)} save="value" />}
         </>
     );

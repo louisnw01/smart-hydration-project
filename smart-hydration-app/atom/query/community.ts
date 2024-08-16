@@ -58,6 +58,11 @@ export const updateCommunityMAtom = atomWithMutationCustom<{ name: string }>({
     endpoint: ENDPOINTS.UPDATE_COMMUNITY,
 });
 
+export const updateCommunityOwnerMAtom = atomWithMutationCustom<{ new_owner_id: string }>({
+    mutationKey: "update-community-owner",
+    endpoint: ENDPOINTS.UPDATE_COMMUNITY,
+});
+
 export const deleteCommunityMAtom = atomWithMutationCustom({
     mutationKey: "delete-community",
     endpoint: ENDPOINTS.DELETE_COMMUNITY,

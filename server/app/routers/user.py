@@ -75,6 +75,7 @@ async def get_user(user_id: str = Depends(auth_user)):
         }
 
 
+
 @router.get("/exists")
 async def email_exists(email: str):
     if email is None:

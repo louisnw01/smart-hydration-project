@@ -9,7 +9,7 @@ import StyledButton from "@/components/common/button";
 import { OptionBlock } from "@/components/common/option-block";
 import { ISettingsSection } from "@/interfaces/settings";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
-import { router } from "expo-router";
+import { router, useRouter } from "expo-router";
 import { useAtomValue } from "jotai";
 import { useEffect, useState } from "react";
 import { SectionList, Text, View } from "react-native";
@@ -41,31 +41,31 @@ const settingsList: ISettingsSection[] = [
                     );
                 },
             },
-            // {
-            //     name: "Transfer Ownership",
-            //     Component: (name, isFirst, isLast) => {
-            //         const router = useRouter();
-            //         return (
-            //             <OptionBlock
-            //                 isLast={isLast}
-            //                 isFirst={isFirst}
-            //                 text={name}
-            //                 onPress={() =>
-            //                     router.navigate(
-            //                         "settings/community/change-owner",
-            //                     )
-            //                 }
-            //                 icon={
-            //                 <MaterialCommunityIcons
-            //                     name="cog-transfer"
-            //                     size={19}
-            //                     color="gray"
-            //                 />
-            //                 }
-            //             />
-            //         );
-            //     },
-            // },
+             {
+                 name: "Transfer Ownership",
+                 Component: (name, isFirst, isLast) => {
+                     const router = useRouter();
+                     return (
+                         <OptionBlock
+                            isLast={isLast}
+                             isFirst={isFirst}
+                             text={name}
+                            onPress={() =>
+                                 router.navigate(
+                                     "manage-community/change-owner",
+                                 )
+                             }
+                             icon={
+                             <MaterialCommunityIcons
+                                 name="cog-transfer"
+                                  size={19}
+                                 color="gray"
+                             />
+                             }
+                         />
+                     );
+                 },
+             },
             {
                 name: "Edit community tags",
                 Component: (name, isFirst, isLast) => {

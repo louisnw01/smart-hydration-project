@@ -7,7 +7,7 @@ from ..api import get_hydration_events, SmartHydrationSession, get_jug_latest
 from ..routers import jug_user
 from ..services import try_get_users_community, try_get_users_community
 from ..models import Community, CommunityMember, InviteLink, Jug, User, JugUser, Tag, OtherDrink
-from ..schemas import AddCommunityDrinkForm, CreateCommunityForm, CreateInvitationForm, DeleteCommunityMemberForm, VerifyEmailForm, CreateTagForm, UpdateTagForm, DeleteTagForm
+from ..schemas import AddCommunityDrinkForm, CreateCommunityForm, UpdateCommunityForm, CreateInvitationForm, DeleteCommunityMemberForm, VerifyEmailForm, CreateTagForm, UpdateTagForm, DeleteTagForm
 from ..auth import auth_user, generate_invite_link
 from starlette.responses import RedirectResponse
 
@@ -84,6 +84,7 @@ async def community_users(user_id: str = Depends(auth_user)):
                 "name": member.user.name,
                 "isOwner": member.is_owner,
                 "id": member.id,
+                "user_id": member.user.id,
             })
 
         return data
@@ -103,14 +104,46 @@ async def create_community(form: CreateCommunityForm, user_id: str = Depends(aut
 
 
 @router.post("/update")
-async def update_community_info(form: CreateCommunityForm, user_id: str = Depends(auth_user)):
+async def update_community_info(form: UpdateCommunityForm, user_id: str = Depends(auth_user)):
     with db_session:
         user = User.get(id=user_id)
         member = user.community_member
         if member is None:
             raise HTTPException(400, 'user is not associated with a community')
-        member.community.name = form.name
+        ## member.community.name = form.name
+        #when you're not the owner -> it returns success but it doesn't persist in database so it should give different response
+        #if we comment line 117 and 118
+        #check what should be shown in screen -> should changing ownership and changing name you still see if you're not the owner 
+        if form.new_owner_id:
+            if member.is_owner is False: #check if false? //check if member is owner
+                raise HTTPException(400, 'user does not have permissions to change ownership of this community')
+            new_owner = User.get(id=form.new_owner_id)
+            new_owner_member = new_owner.community_member
+            if new_owner_member is None:
+                raise HTTPException(400, 'new owner is not associated with a community') #check user in comunity
+            if new_owner_member.community != member.community:
+                raise HTTPException(400, 'User associated with a different community')
+            new_owner_member.is_owner = True
+            member.is_owner = False #should this be = none as it's a boolean? #member is previous owner
+            commit()
+        elif form.name: #check if name on form , updating community name
+            member.community.name = form.name
+            commit()
 
+
+'''
+class Community(db.Entity):
+    id = PrimaryKey(int, auto=True)
+    name = Required(str)
+    jug_users = Set(JugUser)
+    followers = Set('CommunityMember')
+    invite_links = Set('InviteLink')
+class CommunityMember(db.Entity):
+    id = PrimaryKey(int, auto=True)
+    community = Required(Community)
+    user = Required(User)
+    is_owner = Required(bool)
+'''
 
 @router.post("/delete")
 async def delete_community(user_id: str = Depends(auth_user)):

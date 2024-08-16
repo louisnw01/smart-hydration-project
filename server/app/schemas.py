@@ -46,6 +46,9 @@ class AddCommunityDrinkForm(BaseModel):
 class CreateCommunityForm(BaseModel):
     name: str
 
+class UpdateCommunityForm(BaseModel):
+    name: Optional[str] = None
+    new_owner_id: Optional[str] = None
 
 class AddJugUserForm(BaseModel):
     name: str
