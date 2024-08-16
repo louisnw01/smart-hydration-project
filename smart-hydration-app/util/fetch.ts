@@ -15,16 +15,13 @@ export const ENDPOINTS = {
 
     FETCH_HISTORICAL_JUG_DATA: "/data/historical",
     GET_ALL_JUGS: "/get-all-jugs",
-    UPDATE: "/jug-user/update",
     USER_INFO: "/user/info",
     DELETE_USER: "/user/delete",
     UPDATE_JUG_NAME: "/jug/update-name",
     USER_EXISTS: "/user/exists",
     ADD_DRINK: "/jug-user/add-drink-event",
     UPDATE_USER_TARGET: "/user/update-user-target",
-    GET_USER_TARGET: "/user/get-user-target",
     ADD_TAGS_PATIENT: "/jug-user/add-tags-patient",
-    FETCH_COMMUNITY_JUG_LIST: "/community/get-community-jug-list",
 
     UNLINK_JUG: "/jug/unlink",
     LINK_JUG: "/jug/link",

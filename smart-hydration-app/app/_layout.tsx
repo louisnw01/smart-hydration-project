@@ -3,12 +3,13 @@ import "../global.css";
 import { registerForPushNotificationsAsync } from "@/util/notifications";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import * as Notifications from "expo-notifications";
-import { Slot } from "expo-router";
+import { router, Slot } from "expo-router";
 import { deleteItemAsync } from "expo-secure-store";
 import { Provider } from "jotai";
 import { queryClientAtom } from "jotai-tanstack-query";
 import { useHydrateAtoms } from "jotai/react/utils";
 import { useEffect, useRef, useState } from "react";
+import * as Linking from "expo-linking";
 
 const queryClient = new QueryClient();
 
@@ -46,9 +47,18 @@ export default function Index() {
         responseListener.current =
             Notifications.addNotificationResponseReceivedListener(
                 (response) => {
-                    console.log(response);
+                    // for linking from notifications when app is foregrounded or backgrounded
+                    const { screen } = response.notification.request.content.data;
+                    if ( screen ) {
+                        router.replace(screen)
+                    }
                 },
             );
+
+     // for linking from notifications when app is killed 
+        Linking.addEventListener('url', ({ url }) => {
+            router.push(url);
+        });
 
         return () => {
             notificationListener.current &&
