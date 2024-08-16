@@ -123,7 +123,7 @@ export const formattedDataAtom = atom((get) => {
     if (isLoading || !data) {
         return [];
     }
-
+    console.log("FORMATTED: " + data);
     const unit = get(unitsAtom);
     const convertedData = data.map((row) => ({
         time: row.time,
