@@ -1,8 +1,8 @@
 import {
     getHydrationQAtom,
+    getJugDataQAtom,
     historicalPatientJugDataQAtom,
     patientInfoQAtom,
-    selectedJUserAtom,
     userHasCommunityAtom,
     userInfoQAtom,
     userJugUserIdAtom,
@@ -40,7 +40,7 @@ function MostHydratedDayOfWeek() {
 
 function Insights() {
     const data = useAtomValue(formattedDataAtom);
-
+    useEffect(() => {}, [formattedDataAtom]);
     if (!data || data.length === 0) {
         return (
             <View className="h-3/4 justify-center text-center">
@@ -70,37 +70,25 @@ export default function TrendsPage() {
     const isInCommunity = useAtomValue(userHasCommunityAtom);
     const { isCarer } = useSettings();
     const palette = useColorPalette();
-    const [userBeingShown, setUserBeingShown] = useAtom(selectedJUserAtom);
     const userJugUserId = useAtomValue(userJugUserIdAtom);
     const communityMemberData = useAtomValue(patientInfoQAtom);
     const juserData = useAtomValue(historicalPatientJugDataQAtom);
     const [selectedUser, setSelectedJugUser] = useAtom(selectedMemberAtom);
+    const userMode = useAtomValue(userModeAtom);
 
     let communityMembers;
 
     // need a way to get the memberinfo of the current user
     //
-    const userMemberInfo = {
-        dailyTarget: 2200,
-        drankToday: 830,
-        id: userJugUserId,
-        jugs: [],
-        lastDrank: 1723477398,
-        name: "Bob",
-        tags: [Array],
-    };
 
     useEffect(() => {
-        setSelectedJugUser(userBeingShown);
-        console.log(userBeingShown);
-    }, [userBeingShown, setSelectedJugUser, juserData]);
-    if (userBeingShown == null) {
-        console.log(userMemberInfo);
-        setUserBeingShown(userMemberInfo);
-    }
-    useEffect(() => {
-        setSelectedJugUser(userMemberInfo);
-    }, [isCarer]);
+        if (isCarer) return;
+        setSelectedJugUser(
+            communityMemberData.data?.find((row) => row.id == userJugUserId),
+        );
+    }, [isCarer, communityMemberData.data]);
+
+    useEffect(() => {}, [communityMemberData.data]);
 
     if (isCarer) {
         if (communityMemberData.data != undefined) {
@@ -121,7 +109,7 @@ export default function TrendsPage() {
             <>
                 {isCarer && isInCommunity && (
                     <View className="flex-row justify-evenly bg-white dark:bg-black py-4">
-                        <Text className="pt-3.5 flex-wrap text-xl font-semibold">
+                        <Text className="pt-4 flex-wrap text-xl font-semibold">
                             Community Member:
                         </Text>
                         <SelectList
@@ -132,7 +120,7 @@ export default function TrendsPage() {
                             />
                             setSelected={(val) => {
                                 // gets the memberinfo of the user to be used in historical data atom
-                                setUserBeingShown(
+                                setSelectedJugUser(
                                     communityMembers.find(
                                         (member) =>
                                             member.key ===

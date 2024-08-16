@@ -8,7 +8,7 @@ import { DeviceInfo } from "@/interfaces/device";
 import { UserInfo } from "@/interfaces/user";
 import { ENDPOINTS } from "@/util/fetch";
 import { jugUserInfoAtom } from "../jug-user";
-import { authTokenAtom, inviteCodeAtom } from "../user";
+import { authTokenAtom, inviteCodeAtom, userModeAtom } from "../user";
 import {
     atomWithMutationCustom,
     atomWithQueryDerivation,
@@ -39,7 +39,11 @@ export const userIsCommunityOwnerAtom = atomWithQueryDerivation(
 );
 
 export const patientInfoQAtom = atomWithQueryInfo<MemberInfo[]>({
-    queryKey: "get-patient-info",
+    queryKey: (get) => [
+        "get-patient-info",
+        get(authTokenAtom),
+        get(userModeAtom),
+    ],
     endpoint: ENDPOINTS.PATIENT_INFO,
     enabled: (get) => !!get(authTokenAtom) && !!get(userHasCommunityAtom),
 });
@@ -207,5 +211,3 @@ export const createJugUserMAtom = atomWithMutationCustom({
         qc.invalidateQueries({ queryKey: ["get-patient-info"] });
     },
 });
-
-export const selectedJUserAtom = atom<MemberInfo>(null);
