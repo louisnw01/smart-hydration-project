@@ -1,7 +1,7 @@
 import { useColorScheme } from "react-native";
 
 const darkColorScheme = {
-    bg: "rgb(10, 10, 10)",
+    bg: "rgb(0, 0, 0)",
     fg: "white",
     fglight: "rgb(150, 150, 150)",
     bglight: "rgb(40, 40, 40)",

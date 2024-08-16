@@ -1,4 +1,5 @@
 import StyledButton from "@/components/common/button";
+import { router } from "expo-router";
 import { View } from "react-native";
 
 export default function AddJugUser() {
@@ -7,7 +8,7 @@ export default function AddJugUser() {
             <StyledButton
                 text="Click to continue"
                 textClass="text-lg"
-                href="add-jug-user/name"
+                onPress={() => router.push("add-jug-user/name")}
             />
         </View>
     );

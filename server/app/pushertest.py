@@ -99,14 +99,13 @@ async def fire_drank_today(sys_id):
 
 async def on_telemetry_change(data):
     print(f'[{dt.datetime.now()}] telemetry changed', data)
-    asyncio.gather(
+    await asyncio.gather(
         fire_jug_info(data['device']),
     )
 
 async def on_waterlevel_change(data):
     print(f'[{dt.datetime.now()}] waterlevel changed', data)
-    await fire_jug_info(data)
-    asyncio.gather(
+    await asyncio.gather(
         fire_jug_info(data['device']),
         fire_last_drank(data['device']),
         fire_drank_today(data['device'])

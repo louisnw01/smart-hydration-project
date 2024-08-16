@@ -16,7 +16,7 @@ import MemberRow from "@/components/community/member-row";
 import { FilterObject, MemberInfo } from "@/interfaces/community";
 import useColorPalette from "@/util/palette";
 import { Entypo } from "@expo/vector-icons";
-import { useFocusEffect } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 import { SelectList } from "react-native-dropdown-select-list";
 
 export default function CommunityPage() {
@@ -75,7 +75,7 @@ export default function CommunityPage() {
                 <View className="flex flex-row justify-center">
                     <StyledButton
                         text="+ Add a member"
-                        href="add-jug-user"
+                        onPress={() => router.push("add-jug-user")}
                         textClass="text-lg"
                     />
                 </View>
@@ -149,13 +149,15 @@ export default function CommunityPage() {
 
                         <StyledButton
                             text="+ Create a community"
-                            href="create-community-modal"
+                            onPress={() =>
+                                router.push("create-community-modal")
+                            }
                             buttonClass="w-56 self-center"
                             textClass="text-lg text-center w-full"
                         />
                         <StyledButton
                             text="+ Join a community"
-                            href="join-community-modal"
+                            onPress={() => router.push("join-community-modal")}
                             buttonClass="w-56 self-center"
                             textClass="text-lg text-center w-full"
                         />
