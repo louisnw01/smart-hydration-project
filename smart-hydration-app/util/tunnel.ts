@@ -17,18 +17,23 @@ enum MessageType {
 }
 
 class TunnelClient {
-    private subscribers: any = {};
+    private subscribers: { [key: string]: (data: any) => void } = {};
     private ws: WebSocket | null = null;
     private clientKey: string;
     public isConnected: boolean = false;
     private toSend: any[] = [];
 
     constructor(address: string, key: string) {
-        this.ws = new WebSocket(address);
         this.clientKey = key;
+        this.init(address);
+    }
 
+    private init(address: string) {
+        this.ws = new WebSocket(address);
         this.ws.onopen = (event: Event) => {
-            this.ws?.send(JSON.stringify([MessageType.CONNECT, key]));
+            this.ws?.send(
+                JSON.stringify([MessageType.CONNECT, this.clientKey]),
+            );
             this.isConnected = true;
             for (const obj of this.toSend) {
                 this.send(obj);
@@ -53,7 +58,11 @@ class TunnelClient {
 
         this.ws.onclose = (event: CloseEvent) => {
             this.isConnected = false;
-            console.log("WebSocket is closed now.", event.reason);
+            console.log(
+                "WebSocket is closed now, reconnecting..",
+                event.reason,
+            );
+            setTimeout(() => this.init(address), 1000);
         };
 
         this.ws.onerror = (event: Event) => {
@@ -86,8 +95,6 @@ class TunnelClient {
 export const tunnelAtom = atom<TunnelClient | null>(null);
 
 export const tunnelInitEAtom = atomEffect((get, set) => {
-    get(subscribeToJugDataEAtom);
-
     const authToken = get(authTokenAtom);
     if (!authToken) return;
 
@@ -101,11 +108,15 @@ export const tunnelInitEAtom = atomEffect((get, set) => {
 
 export const subscribeToJugDataEAtom = atomEffect((get, set) => {
     const tunnel = get(tunnelAtom);
-    if (!tunnel) return;
     const queryClient = get(queryClientAtom);
+
+    get(getJugDataQAtom); // need this so we resubscribe whenever jugs change
+
+    if (!tunnel) return;
 
     const handleJugData = (newJugData: DeviceInfo) => {
         const { data: jugsLatest } = get(getJugDataQAtom);
+
         if (!jugsLatest) {
             return;
         }
@@ -134,11 +145,10 @@ export const subscribeToJugDataEAtom = atomEffect((get, set) => {
         );
     };
 
-    tunnel?.subscribe("all-jugs-latest", get(authTokenAtom), handleJugData);
-
+    tunnel.subscribe("all-jugs-latest", get(authTokenAtom), handleJugData);
     return () => {
-        const tunnel = get(tunnelAtom);
-        tunnel?.unsubscribe("all-jugs-latest", get(authTokenAtom));
-        tunnel?.disconnect();
+        // const tunnel = get(tunnelAtom);
+        // tunnel?.unsubscribe("all-jugs-latest", get(authTokenAtom));
+        // tunnel?.disconnect();
     };
 });

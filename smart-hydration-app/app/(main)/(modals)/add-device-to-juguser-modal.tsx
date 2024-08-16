@@ -14,7 +14,6 @@ export default function MVPAddDeviceModal() {
     const selectedDevice = useAtomValue(selectedDeviceAtom);
     const [selectedUser, setSelectedUser] = useState<number | null>(null);
     const [selectedJugs, setSelectedJugs] = useAtom(selectedJugsAtom);
-    //const communityJugData = getCommunityJugDataQAtom();
     const {
         mutate: linkJugToCommunityMember,
         isPending,

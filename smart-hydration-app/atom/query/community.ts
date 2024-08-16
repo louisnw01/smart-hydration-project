@@ -191,18 +191,6 @@ export const communityTagsQAtom = atomWithQueryInfo<TagInfo[]>({
     enabled: (get) => !!get(authTokenAtom) && !!get(userHasCommunityAtom),
 });
 
-export const getCommunityJugDataQAtom = atomWithQueryInfo<DeviceInfo[]>({
-    queryKey: "get-community-jug-data",
-    endpoint: ENDPOINTS.FETCH_COMMUNITY_JUG_LIST,
-    query: (get) => {
-        const { data } = get(userInfoQAtom);
-        return {
-            jug_user_id: data?.juguser,
-        };
-    },
-    enabled: (get) => !!get(authTokenAtom) && !!get(userInfoQAtom).isLoading,
-});
-
 export const createJugUserMAtom = atomWithMutationCustom({
     mutationKey: "/jug-user/create",
     endpoint: ENDPOINTS.CREATE_JUG_USER,
