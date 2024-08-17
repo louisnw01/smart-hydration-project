@@ -126,7 +126,7 @@ async def update_community_info(form: UpdateCommunityForm, user_id: str = Depend
             new_owner_member.is_owner = True
             member.is_owner = False #should this be = none as it's a boolean? #member is previous owner
             commit()
-        elif form.name: #check if name on form , updating community name
+        if form.name: #check if name on form , updating community name
             member.community.name = form.name
             commit()
 
