@@ -113,9 +113,9 @@ async def update_community_info(form: UpdateCommunityForm, user_id: str = Depend
         ## member.community.name = form.name
         #when you're not the owner -> it returns success but it doesn't persist in database so it should give different response
         #if we comment line 117 and 118
-        #check what should be shown in screen -> should changing ownership and changing name you still see if you're not the owner 
+        #check what should be shown in screen -> should changing ownership and changing name you still see if you're not the owner
         if form.new_owner_id:
-            if member.is_owner is False: #check if false? //check if member is owner
+            if member.is_owner == False: #check if false? //check if member is owner
                 raise HTTPException(400, 'user does not have permissions to change ownership of this community')
             new_owner = User.get(id=form.new_owner_id)
             new_owner_member = new_owner.community_member
