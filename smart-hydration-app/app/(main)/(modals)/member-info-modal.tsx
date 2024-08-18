@@ -75,13 +75,6 @@ export default function MemberInfoModal() {
                     </Text>
                 </View>
             </MemberInfoBlock>
-            {/*}
-            <MemberInfoBlock title="Trends Page">
-                <Text className="text-xl dark:text-white">
-                    Embed graph here
-                </Text>
-            </MemberInfoBlock>
-            {*/}
             <Text className="text-xl font-bold dark:text-white">Devices</Text>
             <DeviceSection
                 addJugButton={false}
