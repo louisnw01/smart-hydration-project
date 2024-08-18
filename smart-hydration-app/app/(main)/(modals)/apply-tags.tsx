@@ -166,7 +166,7 @@ export default function ApplyTags() {
                     </Text>
                     {communityTags.length === 0 && (
                         <Text className="dark:text-white text-xl mx-6">
-                            No tags in this community. The community owner can create tags in Community settings
+                            No tags in this community. The community owner can create tags in Community settings.
                         </Text>
                     )}
                     <View className="flex-row flex-wrap my-2 mx-3">
