@@ -56,6 +56,9 @@ export const ENDPOINTS = {
     TOGGLE_NOTIFICATIONS_FREQUENCY: "/user/toggle-notifications-frequency",
 
     CHANGE_MODE: "/user/change-mode",
+
+    ADD_CUSTOM_CUP: "/user/add-custom-cup",
+    GET_CUSTOM_CUPS: "/user/get-custom-cups",
 };
 
 interface RequestOptions {

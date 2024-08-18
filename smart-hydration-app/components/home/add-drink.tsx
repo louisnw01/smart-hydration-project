@@ -1,15 +1,21 @@
 import SodaCan from "@/assets/svgs/soda-can-svgrepo-com.svg";
 import { addDrinkMAtom } from "@/atom/query";
+import { customCupsQAtom } from "@/atom/query/drinks";
 import { drinkListAtom } from "@/atom/user";
+import colors from "@/colors";
 import { ITimeSeries } from "@/interfaces/device";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
-import Ionicons from "@expo/vector-icons/Ionicons";
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
+import {
+    Entypo,
+    FontAwesome,
+    Ionicons,
+    MaterialCommunityIcons,
+    SimpleLineIcons,
+} from "@expo/vector-icons";
+
 import { useRouter } from "expo-router";
 import { useAtom } from "jotai";
 import { useAtomValue } from "jotai/index";
-import { ReactNode, useEffect } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import {
     ActivityIndicator,
     FlatList,
@@ -82,25 +88,11 @@ const drinkTypes: DrinkType[] = [
             />
         ),
     },
-    {
-        name: "Add a new cup",
-        capacity: 0,
-        icon: (
-            <View className="-ml-2">
-                <FontAwesome
-                    className=""
-                    color="rgb(180, 180, 180)"
-                    name="plus"
-                    size={35}
-                />
-            </View>
-        ),
-    },
 ];
 
-function constructDrinkEvent(drinkName: string) {
-    const drinkType = drinkTypes.find((drink) => drink.name === drinkName);
-    if (!drinkType) return;
+function constructDrinkEvent(drinkType: DrinkType) {
+    // const drinkType = drinkTypes.find((drink) => drink.name === drinkName);
+    // if (!drinkType) return;
     const returnValue = {
         time: Math.round(new Date().getTime() / 1000),
         value: drinkType.capacity,
@@ -128,7 +120,7 @@ function DrinkButton({ drinkType }: { drinkType: DrinkType }) {
             router.push("custom/add-custom-cup");
             return;
         }
-        const drinkJSON = constructDrinkEvent(drinkType.name);
+        const drinkJSON = constructDrinkEvent(drinkType);
         if (!drinkJSON) return;
         drinkList.push(drinkJSON);
         postDrinkToDB(drinkJSON, drinkType.name);
@@ -164,19 +156,53 @@ export default function AddDrinkPane() {
     const { isPending, isSuccess } = useAtomValue(addDrinkMAtom);
     const router = useRouter();
 
+    const [cups, setCups] = useState(drinkTypes);
+    const { data: customDrinkTypes, isLoading } = useAtomValue(customCupsQAtom);
+
+    useEffect(() => {
+        if (customDrinkTypes == undefined) return;
+        const newCups = [];
+        for (const customDrink of customDrinkTypes) {
+            newCups.push({
+                name: customDrink.name,
+                capacity: customDrink.size,
+                icon: (
+                    <View className="-ml-2">
+                        <Entypo name="cup" size={24} color={colors.green} />
+                    </View>
+                ),
+            });
+        }
+        newCups.push({
+            name: "Add a new cup",
+            capacity: 0,
+            icon: (
+                <View className="-ml-2">
+                    <FontAwesome
+                        className=""
+                        color="rgb(180, 180, 180)"
+                        name="plus"
+                        size={35}
+                    />
+                </View>
+            ),
+        });
+        setCups([...drinkTypes, ...newCups]);
+    }, [customDrinkTypes]);
+
     useEffect(() => {
         if (!isSuccess) return;
         router.back();
     }, [isSuccess]);
 
-    if (isPending) {
+    if (isPending || isLoading) {
         return <ActivityIndicator />;
     }
 
     return (
         <View className="items-center">
             <FlatList
-                data={drinkTypes}
+                data={cups}
                 renderItem={({ item }) => <DrinkButton drinkType={item} />}
                 keyExtractor={(item) => item.name}
                 contentContainerStyle={{}}

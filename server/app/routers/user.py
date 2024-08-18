@@ -1,10 +1,11 @@
 from fastapi import APIRouter, Depends, HTTPException
 from pony.orm.core import db_session, commit
+from pydantic.main import BaseModel
 from starlette.responses import RedirectResponse
 
 from ..auth import auth_user, generate_auth_token, get_hash, generate_invite_link, auth_user_no_email_verified
 from ..mail import send_email_with_ses
-from ..models import User, VerifyEmail, Jug, JugUser, Notifications
+from ..models import CustomCup, User, VerifyEmail, Jug, JugUser, Notifications
 from ..schemas import UserRegister, UserLogin, VerifyEmailForm, TargetUpdate, PushTokenForm, \
     ToggleNotificationsForm, ChangeModeForm
 from ..services import delete_user, get_users_community, user_exists
@@ -241,3 +242,21 @@ def extract_number_from_string(s):
         return int(match.group(1))
     else:
         return None
+
+
+class AddCustomCup(BaseModel):
+    size: int
+    name: str
+@router.post("/add-custom-cup")
+async def add_custom_cup(form: AddCustomCup, user_id: str = Depends(auth_user)):
+    with db_session:
+        user = User[user_id]
+        CustomCup(size=form.size, name=form.name, user=user)
+        commit()
+
+
+@router.get("/get-custom-cups")
+async def get_custom_cups(user_id: str = Depends(auth_user)):
+    with db_session:
+        user = User[user_id]
+        return [{"name": c.name, "size": c.size} for c in user.custom_cups]

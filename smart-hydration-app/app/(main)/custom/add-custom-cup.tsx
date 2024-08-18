@@ -14,6 +14,7 @@ export default function AddCustomCup() {
                     text="I know the size of this cup"
                     textClass="text-lg font-medium dark:text-white"
                     buttonClass="justify-center rounded-lg"
+                    onPress={() => router.push("custom/input-size")}
                 />
                 <StyledButton
                     text="I don't know the size of this cup"

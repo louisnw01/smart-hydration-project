@@ -41,6 +41,7 @@ class User(db.Entity):
     email_link = Optional('VerifyEmail')
     notifications = Set('Notifications')
     mode = Required(str, default='Standard')
+    custom_cups = Set('CustomCup')
 
 
 class JugUser(db.Entity):
@@ -132,4 +133,11 @@ class Notifications(db.Entity):
     active = Required(bool)
     frequency = Required(int)
     send_time = Required(int)
+    user = Required(User)
+
+
+class CustomCup(db.Entity):
+    id = PrimaryKey(int, auto=True)
+    name = Required(str)
+    size = Required(int)
     user = Required(User)
