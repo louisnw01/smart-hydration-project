@@ -106,7 +106,7 @@ export default function TrendsPage() {
     }
     return (
         <ScrollPageWrapper
-            queryRefreshAtom={getHydrationQAtom}
+            queryRefreshAtom={historicalPatientJugDataQAtom}
             isLoading={isLoading}
             message="Loading your information..."
             className="bg-gray-100 dark:bg-black"
