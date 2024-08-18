@@ -59,7 +59,7 @@ class JugUser(db.Entity):
     drank_today = Optional(int)
     last_drank = Optional(int)
     tags = Set('Tag')
-    # room = Optional(str)
+    room = Optional(str)
 
 
 class Jug(db.Entity):

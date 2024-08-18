@@ -70,7 +70,7 @@ async def patient_info(user_id: str = Depends(auth_user)):
                     "drankToday": juguser.drank_today,
                     "dailyTarget": juguser.target or 2200,
                     "tags": [{"id": tag.id, "name": tag.name} for tag in juguser.tags],
-                 #   "room": juguser.room,ß
+                    "room": juguser.room,
             })
         return patient_info
 
