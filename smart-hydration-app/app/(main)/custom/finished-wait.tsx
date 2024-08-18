@@ -14,7 +14,7 @@ export default function FinishedWait() {
             </Text>
             <StyledButton
                 text="Take me home"
-                textClass="text-lg font-semibold"
+                textClass="text-lg font-semibold text-white"
                 buttonClass="bg-blue self-center"
                 onPress={() => router.replace("(tabs)")}
             />
