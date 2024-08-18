@@ -91,7 +91,7 @@ export default function MemberInfoModal() {
                     router.push("device-info-modal");
                 }}
             />
-            <MemberInfoBlock title="Location">
+            <MemberInfoBlock title="Room">
                 <Text className="text-xl dark:text-white">{member.room}</Text>
             </MemberInfoBlock>
             <StyledButton
