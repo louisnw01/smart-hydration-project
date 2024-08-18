@@ -54,14 +54,7 @@ function Insights() {
     const data = useAtomValue(formattedDataAtom);
     useEffect(() => {}, [formattedDataAtom]);
     if (!data || data.length === 0) {
-        return (
-            <View className="h-3/4 justify-center text-center">
-                <ActivityIndicator />
-                <Text className="text-center dark:text-white">
-                    Loading Insights, Please Wait...
-                </Text>
-            </View>
-        );
+        return <View className="h-3/4 justify-center text-center"></View>;
     }
     return (
         <View className="flex gap-4 px-4 mt-3 mb-4">
