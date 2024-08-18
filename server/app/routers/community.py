@@ -131,19 +131,7 @@ async def update_community_info(form: UpdateCommunityForm, user_id: str = Depend
             commit()
 
 
-'''
-class Community(db.Entity):
-    id = PrimaryKey(int, auto=True)
-    name = Required(str)
-    jug_users = Set(JugUser)
-    followers = Set('CommunityMember')
-    invite_links = Set('InviteLink')
-class CommunityMember(db.Entity):
-    id = PrimaryKey(int, auto=True)
-    community = Required(Community)
-    user = Required(User)
-    is_owner = Required(bool)
-'''
+
 
 @router.post("/delete")
 async def delete_community(user_id: str = Depends(auth_user)):
