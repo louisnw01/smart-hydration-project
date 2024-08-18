@@ -89,7 +89,7 @@ export default function ModalLayout() {
             />
             <Stack.Screen
                 name="apply-tags"
-                options={{ title: "Apply tags to member" }}
+                options={{ title: "Modify member tags" }}
             />
             <Stack.Screen
                 name="add-device-to-juguser-modal"
