@@ -30,12 +30,24 @@ import { selectedMemberAtom } from "@/atom/community";
 
 function MostHydratedDayOfWeek() {
     const { name, value } = useAtomValue(mostHydratedDayOfWeekAtom);
+    const selectedMember = useAtomValue(selectedMemberAtom);
+    const userJUserId = useAtomValue(userJugUserIdAtom);
     if (!value) return null;
-    return (
-        <InsightsPane heading={`You tend to drink the most on ${name}.`}>
-            <WaterAmount value={value} />
-        </InsightsPane>
-    );
+    if (selectedMember.id == userJUserId) {
+        return (
+            <InsightsPane heading={`You tend to drink the most on ${name}.`}>
+                <WaterAmount value={value} />
+            </InsightsPane>
+        );
+    } else {
+        return (
+            <InsightsPane
+                heading={`${selectedMember.name} tends to drink the most on ${name}.`}
+            >
+                <WaterAmount value={value} />
+            </InsightsPane>
+        );
+    }
 }
 
 function Insights() {

@@ -15,6 +15,7 @@ export default function TodayVsAvgInsight(
     userId: number,
 ) {
     const amountDrankToday = useAtomValue(amountDrankTodayAtom);
+    const selectedMember = useAtomValue(selectedMemberAtom);
     const avgAmountDrankByNow = useAtomValue(avgAmountDrankByTimeNowAtom);
     const userJUserId = useAtomValue(userJugUserIdAtom);
     if (Number.isNaN(amountDrankToday) || Number.isNaN(avgAmountDrankByNow)) {
@@ -70,7 +71,7 @@ export default function TodayVsAvgInsight(
     } else {
         return (
             <InsightsPane
-                heading={`So far today, ${selectedMemberData.name} is drinking ${dailyAvgDiff > 0 ? "more" : "less"} than they normally would.`}
+                heading={`So far today, ${selectedMember.name} is drinking ${dailyAvgDiff > 0 ? "more" : "less"} than they normally would.`}
             >
                 <View className="flex-row w-full gap-32">
                     <View className="flex">
