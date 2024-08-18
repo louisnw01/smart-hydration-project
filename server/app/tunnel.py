@@ -5,7 +5,6 @@ from typing_extensions import Literal
 from pony.orm.core import db_session
 
 from .auth import auth_user, decode_auth_token
-from .services import get_user_by_id
 from .models import User, Jug
 
 # this class wraps websockets to simplify them
@@ -34,10 +33,11 @@ class TunnelServer:
         self.ws = {}
 
     # create an event that the user can subscribe to
-    def create_event(self, name, deriver_function=None, private=False):
+    def create_event(self, name, deriver_function=None, derived_event=None, private=False):
         self.events[name] = {
             "subscribers": set(),
             "deriver_function": deriver_function,
+            "derived_event": derived_event,
             "private": private,
         }
 
@@ -84,8 +84,8 @@ class TunnelServer:
         if from_client and event['private']:
             return self.error("couldn't subscribe")
         if event['deriver_function']:
-            for jug_id in event['deriver_function'](client_key):
-                self.handle_subscribe(client_key, 'jug-latest', jug_id, from_client=False, derived_key=event_name)
+            for var in event['deriver_function'](client_key):
+                self.handle_subscribe(client_key, event['derived_event'], var, from_client=False, derived_key=event_name)
 
         event['subscribers'].add((client_key, event_variable, derived_key))
         return self.ok('subscribed')

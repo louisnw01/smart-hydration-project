@@ -3,13 +3,14 @@ import { useAtomValue } from "jotai";
 import { colorSchemeEAtom } from "@/atom/effect/user";
 import Loading from "@/components/common/loading";
 import useSession from "@/util/auth";
-import { tunnelInitEAtom } from "@/util/tunnel";
+import { subscribeToJugDataEAtom, tunnelInitEAtom } from "@/util/tunnel";
 import { Redirect, Stack } from "expo-router";
 import { View } from "react-native";
 
 export default function MainLayout() {
     useAtomValue(colorSchemeEAtom);
     useAtomValue(tunnelInitEAtom);
+    useAtomValue(subscribeToJugDataEAtom);
 
     const { isLoading, isSuccess, isEmailVerified } = useSession();
 

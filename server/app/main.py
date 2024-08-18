@@ -8,15 +8,25 @@ from .api import SmartHydrationSession, fetch_all_registered_jugs, get_all_jug_i
 from .auth import auth_user
 from .models import connect_to_database, Jug
 from .notifications import send_drink_reminders
-from .routers import community, jug_user, user, data, jug, websocket_tunnel
+from .routers import community, jug_user, user, data, jug, websocket_tunnel, simulator
 from .pushertest import pusher_init
 
+from fastapi.middleware.cors import CORSMiddleware
 
 load_dotenv()
 
 connect_to_database()
 
 app = FastAPI()
+
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allows all origins
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows all methods
+    allow_headers=["*"],  # Allows all headers
+)
 
 app.include_router(jug_user.router)
 app.include_router(user.router)
@@ -25,11 +35,13 @@ app.include_router(jug.router)
 app.include_router(community.router)
 app.include_router(websocket_tunnel.router)
 
+app.include_router(simulator.router)
+
 
 @app.on_event('startup')
 async def init():
     asyncio.create_task(pusher_init())
-    # asyncio.create_task(send_drink_reminders())
+    asyncio.create_task(send_drink_reminders())
 
     jugs = await fetch_all_registered_jugs()
 
