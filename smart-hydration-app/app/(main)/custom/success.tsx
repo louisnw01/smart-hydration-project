@@ -27,7 +27,10 @@ export default function Success() {
 
     useEffect(() => {
         if (isPending || !isSuccess) return;
-        router.dismiss();
+
+        const param = jugUserId == usersJugUser ? "" : `?id=${jugUserId}`;
+        router.dismissAll();
+        router.replace(`custom/add-drink-modal${param}`);
     }, [isPending, isSuccess]);
 
     return (

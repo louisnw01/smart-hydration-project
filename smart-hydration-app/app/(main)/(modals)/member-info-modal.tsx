@@ -125,7 +125,7 @@ export default function MemberInfoModal() {
                     color={palette.border}
                 />
                 onPress={() => {
-                    router.push(`add-drink?id=${member.id}`);
+                    router.push(`custom/add-drink?id=${member.id}`);
                 }}
                 chevron
             />
