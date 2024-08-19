@@ -19,7 +19,7 @@ export const ENDPOINTS = {
     DELETE_USER: "/user/delete",
     UPDATE_JUG_NAME: "/jug/update-name",
     USER_EXISTS: "/user/exists",
-    ADD_DRINK: "/jug-user/add-drink-event",
+    ADD_DRINK: "/jug-user/add-drink",
     UPDATE_USER_TARGET: "/user/update-user-target",
     ADD_TAGS_PATIENT: "/jug-user/add-tags-patient",
 
@@ -37,7 +37,6 @@ export const ENDPOINTS = {
     COMMUNITY_GENERATE_INVITE: "/community/generate-invite",
     COMMUNITY_USERS: "/community/users",
     DELETE_COMMUNITY_MEMBER: "/community/delete-member",
-    ADD_COMMUNITY_DRINK: "/community/add-community-drink-event",
     PATIENT_INFO: "/community/patient-info", // get the info through this endpoint
 
     CREATE_TAG: "/community/create-tag",

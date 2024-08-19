@@ -1,6 +1,6 @@
 import SodaCan from "@/assets/svgs/soda-can-svgrepo-com.svg";
-import { addDrinkMAtom } from "@/atom/query";
-import { customCupsQAtom } from "@/atom/query/drinks";
+import { userJugUserIdAtom } from "@/atom/query";
+import { addDrinkMAtom, customCupsQAtom } from "@/atom/query/drinks";
 import { drinkListAtom } from "@/atom/user";
 import colors from "@/colors";
 import { ITimeSeries } from "@/interfaces/device";
@@ -12,7 +12,7 @@ import {
     SimpleLineIcons,
 } from "@expo/vector-icons";
 
-import { useRouter } from "expo-router";
+import { router, useLocalSearchParams, useRouter } from "expo-router";
 import { useAtom } from "jotai";
 import { useAtomValue } from "jotai/index";
 import { ReactNode, useEffect, useState } from "react";
@@ -104,20 +104,25 @@ function constructDrinkEvent(drinkType: DrinkType) {
 function DrinkButton({ drinkType }: { drinkType: DrinkType }) {
     const [drinkList, setDrinkList] = useAtom(drinkListAtom);
     const { mutate } = useAtomValue(addDrinkMAtom);
+    const usersJugUser = useAtomValue(userJugUserIdAtom);
+    const params = useLocalSearchParams();
+    const juguserIdToAdd = params.id || usersJugUser;
     const router = useRouter();
 
     function postDrinkToDB(drinkJSON: ITimeSeries, drinkName: string) {
         if (!drinkJSON) return;
+
         mutate({
             timestamp: drinkJSON.time,
             name: drinkName,
             capacity: drinkJSON.value,
+            juguser_id: juguserIdToAdd,
         });
     }
 
     function handleAddDrink() {
         if (drinkType.name == "Add a new cup") {
-            router.push("custom/add-custom-cup");
+            router.push(`custom/add-custom-cup?id=${juguserIdToAdd}`);
             return;
         }
         const drinkJSON = constructDrinkEvent(drinkType);
@@ -154,24 +159,27 @@ function DrinkButton({ drinkType }: { drinkType: DrinkType }) {
 
 export default function AddDrinkPane() {
     const { isPending, isSuccess } = useAtomValue(addDrinkMAtom);
-    const router = useRouter();
-
+    const params = useLocalSearchParams<{ id: string }>();
+    const usersJugUser = useAtomValue(userJugUserIdAtom);
+    const jugUserId = params.id || usersJugUser;
     const [cups, setCups] = useState(drinkTypes);
     const { data: customDrinkTypes, isLoading } = useAtomValue(customCupsQAtom);
 
     useEffect(() => {
-        if (customDrinkTypes == undefined) return;
         const newCups = [];
-        for (const customDrink of customDrinkTypes) {
-            newCups.push({
-                name: customDrink.name,
-                capacity: customDrink.size,
-                icon: (
-                    <View className="-ml-2">
-                        <Entypo name="cup" size={24} color={colors.green} />
-                    </View>
-                ),
-            });
+        if (customDrinkTypes && jugUserId) {
+            const drinkTypesForUser = customDrinkTypes[jugUserId];
+            for (const customDrink of drinkTypesForUser) {
+                newCups.push({
+                    name: customDrink.name,
+                    capacity: customDrink.size,
+                    icon: (
+                        <View className="-ml-2">
+                            <Entypo name="cup" size={24} color={colors.green} />
+                        </View>
+                    ),
+                });
+            }
         }
         newCups.push({
             name: "Add a new cup",

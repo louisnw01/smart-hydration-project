@@ -3,11 +3,12 @@ import datetime as dt
 from fastapi import APIRouter, Depends, HTTPException
 import pprint
 from pony.orm.core import commit, db_session, delete
+from pydantic.main import BaseModel
 from ..api import get_hydration_events, SmartHydrationSession, get_jug_latest
 from ..routers import jug_user
 from ..services import try_get_users_community, try_get_users_community
 from ..models import Community, CommunityMember, InviteLink, Jug, User, JugUser, Tag, OtherDrink
-from ..schemas import AddCommunityDrinkForm, CreateCommunityForm, CreateInvitationForm, DeleteCommunityMemberForm, VerifyEmailForm, CreateTagForm, UpdateTagForm, DeleteTagForm
+from ..schemas import CreateCommunityForm, CreateInvitationForm, DeleteCommunityMemberForm, VerifyEmailForm, CreateTagForm, UpdateTagForm, DeleteTagForm
 from ..auth import auth_user, generate_invite_link
 from starlette.responses import RedirectResponse
 
@@ -284,23 +285,3 @@ async def community_tags(user_id: str = Depends(auth_user)):
             })
 
         return data
-
-
-@router.post("/add-community-drink-event")
-async def add_community_drink_event(form: AddCommunityDrinkForm, user_id: str = Depends(auth_user)):
-    with db_session:
-        user = User.get(id=user_id)
-
-        member = user.community_member
-        if member is None:
-            raise HTTPException(400, 'user is not associated with a community')
-
-        if member.is_owner is None:
-            raise HTTPException(400, 'user does not have permissions to add drinks for this community')
-        juguser = JugUser.get(id=form.juser_id)
-        OtherDrink(juguser=juguser, timestamp=form.timestamp, name=form.name, capacity=form.capacity)
-        if juguser.drank_today == None:
-            juguser.drank_today = 0
-        juguser.drank_today += form.capacity
-        juguser.last_drank = form.timestamp
-        commit()

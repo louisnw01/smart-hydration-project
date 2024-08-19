@@ -189,7 +189,9 @@ export default function MemberRow({ member }: { member: MemberInfo }) {
                         textClass="text-lg mt-[1px]"
                         onPress={() => {
                             setMember(member);
-                            router.push("add-drink-community-modal");
+                            router.push(
+                                `custom/add-drink-modal?id=${member.id}`,
+                            );
                         }}
                         icon=<MaterialCommunityIcons
                             name="water-plus-outline"

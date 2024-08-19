@@ -4,14 +4,15 @@ import StyledButton from "@/components/common/button";
 import StyledTextInput from "@/components/common/text-input";
 
 import Slider from "@react-native-community/slider";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { useAtomValue } from "jotai/index";
 import { useEffect, useState } from "react";
 import { Text, View } from "react-native";
 
-export default function AdjustTarget() {
+export default function InputSize() {
     const unit = useAtomValue(unitsAtom);
-    const precisionVal: number = unit == "ml" ? 4 : 2;
+    const params = useLocalSearchParams<{ id: string }>();
+    const precisionVal: number = unit == "ml" ? 3 : 2;
 
     const { mutate, isPending, isSuccess } = useAtomValue(addCustomCupMAtom);
 
@@ -49,7 +50,9 @@ export default function AdjustTarget() {
                     text="Add cup to account"
                     textClass="text-lg font-semibold text-white"
                     buttonClass="bg-green self-center mt-10"
-                    onPress={() => mutate({ name: name, size: value })}
+                    onPress={() =>
+                        mutate({ name: name, size: value, juguser: params.id })
+                    }
                     isLoading={isPending}
                 />
             </View>
