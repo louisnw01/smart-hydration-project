@@ -80,6 +80,7 @@ async def community_users(user_id: str = Depends(auth_user)):
         community = try_get_users_community(user_id)
         data = []
         for member in community.followers:
+            ##if member.mode == "standard": //think about if member is just a carer 
             data.append({
                 "name": member.user.name,
                 "isOwner": member.is_owner,
