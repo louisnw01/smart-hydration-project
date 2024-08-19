@@ -21,6 +21,7 @@ import StyledButton from "../common/button";
 import Loading from "../common/loading";
 import Typography from "../common/typography";
 import DeviceRow from "./device-row";
+import { getWifiName } from "./test";
 
 export default function ScanWithCamera({ visible, setVisible }) {
     const { mutate, data, isPending, isSuccess, reset } =
@@ -41,7 +42,7 @@ export default function ScanWithCamera({ visible, setVisible }) {
     const userJugUserId = useAtomValue(userJugUserIdAtom);
 
     const checkWifiAndSetMessage = async (device) => {
-        const ssid = await WifiManager.getCurrentWifiSSID();
+        const ssid = await getWifiName();
         const sameSSID = ssid === device.ssid;
 
         setWifiPairInfo({
