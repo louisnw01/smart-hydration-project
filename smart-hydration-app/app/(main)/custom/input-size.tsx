@@ -1,3 +1,4 @@
+import { userJugUserIdAtom } from "@/atom/query";
 import { addCustomCupMAtom } from "@/atom/query/drinks";
 import { unitConverter, unitsAtom } from "@/atom/user";
 import StyledButton from "@/components/common/button";
@@ -13,6 +14,7 @@ export default function InputSize() {
     const unit = useAtomValue(unitsAtom);
     const params = useLocalSearchParams<{ id: string }>();
     const precisionVal: number = unit == "ml" ? 3 : 2;
+    const usersJugUser = useAtomValue(userJugUserIdAtom);
 
     const { mutate, isPending, isSuccess } = useAtomValue(addCustomCupMAtom);
 
@@ -21,7 +23,9 @@ export default function InputSize() {
 
     useEffect(() => {
         if (isPending || !isSuccess) return;
-        router.replace("(tabs)");
+        const param = params.id == usersJugUser ? "" : `?id=${params.id}`;
+        router.dismissAll();
+        router.replace(`custom/add-drink-modal${param}`);
     }, [isPending, isSuccess]);
 
     return (
