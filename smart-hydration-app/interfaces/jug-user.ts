@@ -3,4 +3,5 @@ export interface JugUserInfo {
     dob: string;
     height: string;
     weight: string;
+    room: string;
 }
