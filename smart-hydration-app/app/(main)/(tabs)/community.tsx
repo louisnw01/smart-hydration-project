@@ -236,7 +236,7 @@ export default function CommunityPage() {
                         <View className="flex-1">
                             <StyledTextInput
                                 value={textInput}
-                                placeholder="Search members..."
+                                placeholder="Search patients..."
                                 onChangeText={(val) => {
                                     setTextInput(val);
                                     setFilters((prev) => ({
