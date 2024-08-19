@@ -158,7 +158,7 @@ const settingsList: ISettingsSection[] = [
                             isLast={isLast}
                             text={name}
                             onPress={() =>
-                                router.push(
+                                router.navigate(
                                     "manage-community/community-settings",
                                 )
                             }
