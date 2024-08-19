@@ -8,7 +8,7 @@ from ..mail import send_email_with_ses
 from ..models import CustomCup, User, VerifyEmail, Jug, JugUser, Notifications
 from ..schemas import UserRegister, UserLogin, VerifyEmailForm, TargetUpdate, PushTokenForm, \
     ToggleNotificationsForm, ChangeModeForm
-from ..services import delete_user, get_users_community, user_exists
+from ..services import delete_user, get_users_community, try_get_users_community, user_exists
 import datetime as dt
 import re
 
@@ -247,11 +247,21 @@ def extract_number_from_string(s):
 class AddCustomCup(BaseModel):
     size: int
     name: str
+    juguser: int
 @router.post("/add-custom-cup")
 async def add_custom_cup(form: AddCustomCup, user_id: str = Depends(auth_user)):
     with db_session:
-        user = User[user_id]
-        CustomCup(size=form.size, name=form.name, user=user)
+        juguser = JugUser.get(id=form.juguser)
+        if juguser != User[user_id].jug_user:
+            community = try_get_users_community(user_id)
+
+            for juguser in community.jug_users:
+                if juguser == JugUser[form.juguser]:
+                    break
+
+            else:
+               raise HTTPException(status_code=403, detail="You do not have permission to add a custom cup for this user")
+        CustomCup(size=form.size, name=form.name, juguser=juguser)
         commit()
 
 
@@ -259,4 +269,12 @@ async def add_custom_cup(form: AddCustomCup, user_id: str = Depends(auth_user)):
 async def get_custom_cups(user_id: str = Depends(auth_user)):
     with db_session:
         user = User[user_id]
-        return [{"name": c.name, "size": c.size} for c in user.custom_cups]
+        result = {user.jug_user.id: [{"name": c.name, "size": c.size} for c in user.jug_user.custom_cups]}
+
+        community = get_users_community(user_id);
+
+        if community:
+            for juguser in community.jug_users:
+                result[juguser.id] = [{"name": c.name, "size": c.size} for c in juguser.custom_cups]
+
+        return result

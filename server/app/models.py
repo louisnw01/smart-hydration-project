@@ -41,7 +41,6 @@ class User(db.Entity):
     email_link = Optional('VerifyEmail')
     notifications = Set('Notifications')
     mode = Required(str, default='Standard')
-    custom_cups = Set('CustomCup')
 
 
 class JugUser(db.Entity):
@@ -60,6 +59,7 @@ class JugUser(db.Entity):
     drank_today = Optional(int)
     last_drank = Optional(int)
     tags = Set('Tag')
+    custom_cups = Set('CustomCup')
 
 
 class Jug(db.Entity):
@@ -140,4 +140,4 @@ class CustomCup(db.Entity):
     id = PrimaryKey(int, auto=True)
     name = Required(str)
     size = Required(int)
-    user = Required(User)
+    juguser = Required(JugUser)

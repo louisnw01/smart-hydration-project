@@ -1,3 +1,5 @@
+import { selectedMemberAtom } from "@/atom/community";
+import { userJugUserIdAtom } from "@/atom/query";
 import { addCustomCupMAtom } from "@/atom/query/drinks";
 import StyledButton from "@/components/common/button";
 import StyledTextInput from "@/components/common/text-input";
@@ -6,11 +8,22 @@ import { router, useLocalSearchParams } from "expo-router";
 import { useAtomValue } from "jotai";
 import { useEffect, useState } from "react";
 import { Text, View } from "react-native";
+import { jugIdForCustomCupAtom } from "./select-measure-jug";
 
 export default function Success() {
     const params = useLocalSearchParams();
     const [cupName, setCupName] = useState("");
     const { mutate, isPending, isSuccess } = useAtomValue(addCustomCupMAtom);
+    const jugUserId = useAtomValue(jugIdForCustomCupAtom);
+    const usersJugUser = useAtomValue(userJugUserIdAtom);
+    const member = useAtomValue(selectedMemberAtom);
+
+    let memberName;
+    if (jugUserId == usersJugUser) {
+        memberName = "yourself";
+    } else if (jugUserId == member.id) {
+        memberName = member.name;
+    }
 
     useEffect(() => {
         if (isPending || !isSuccess) return;
@@ -36,11 +49,15 @@ export default function Success() {
                 <StyledTextInput title="Cup name" onChangeText={setCupName} />
             </View>
             <StyledButton
-                text="Add cup to account"
+                text={`Add cup for ${memberName}`}
                 textClass="text-lg font-semibold text-white"
                 buttonClass="bg-green self-center mt-10"
                 onPress={() =>
-                    mutate({ size: parseInt(params.size), name: cupName })
+                    mutate({
+                        size: parseInt(params.size),
+                        name: cupName,
+                        juguser: jugUserId,
+                    })
                 }
                 isLoading={isPending}
             />
