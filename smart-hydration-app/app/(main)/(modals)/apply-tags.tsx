@@ -134,9 +134,6 @@ export default function ApplyTags() {
         router.back();
     };
 
-    //to do: add messages for when no tags applied / all tags applied
-    //to do: show message "There are no tags in your community. Ask your owner to add some" when no data
-
     if (appliedTags == null) return null;
 
     return (
@@ -144,15 +141,14 @@ export default function ApplyTags() {
             <ScrollView>
                 <View className="mt-8 flex gap-6">
                     <Text className="dark:text-white text-2xl mx-6">
-                        Apply tags to {member?.name}. Press a tag to move it to
-                        the other section
+                        Press a tag to add it to or remove it from {member?.name}. Press the Save button when done.
                     </Text>
                     <Text className="dark:text-white font-bold text-2xl mx-6">
-                        Applied tags
+                        {member?.name}'s tags
                     </Text>
                     {appliedTags.length === 0 && (
                         <Text className="dark:text-white text-xl mx-6">
-                            No tags applied to user
+                            No tags applied to {member?.name}
                         </Text>
                     )}
                     <View className="flex-row flex-wrap my-2 mx-3">
@@ -166,12 +162,11 @@ export default function ApplyTags() {
                         ))}
                     </View>
                     <Text className="dark:text-white font-bold text-2xl mx-6">
-                        Unapplied tags
+                        Community tags not added to {member?.name}
                     </Text>
                     {communityTags.length === 0 && (
                         <Text className="dark:text-white text-xl mx-6">
-                            No tags in this community. Ask community owner to
-                            add some
+                            No tags in this community. The community owner can create tags in Community settings.
                         </Text>
                     )}
                     <View className="flex-row flex-wrap my-2 mx-3">
@@ -186,7 +181,7 @@ export default function ApplyTags() {
                     </View>
                     <View className="flex flex-col justify-center items-center">
                         <StyledButton
-                            text="Save member's tags"
+                            text="Save patient's tags"
                             href="member-info-modal"
                             textClass="text-lg"
                             onPress={handleSaveTags}

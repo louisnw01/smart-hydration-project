@@ -81,15 +81,15 @@ export default function ModalLayout() {
             />
             <Stack.Screen
                 name="add-device-member-modal"
-                options={{ title: "Add jug(s) to member" }}
+                options={{ title: "Add jug(s) to patient" }}
             />
             <Stack.Screen
                 name="member-info-modal"
-                options={{ title: "Member details" }}
+                options={{ title: "Patient details" }}
             />
             <Stack.Screen
                 name="apply-tags"
-                options={{ title: "Apply tags to member" }}
+                options={{ title: "Modify patient's tags" }}
             />
             <Stack.Screen
                 name="add-device-to-juguser-modal"
@@ -112,7 +112,7 @@ export default function ModalLayout() {
             <Stack.Screen
                 name="add-drink-community-modal"
                 options={{
-                    title: "Add a drink for a member",
+                    title: "Add a drink for a patient",
                     headerBackVisible: false,
                     headerLeft: () => {
                         return (
