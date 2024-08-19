@@ -1,9 +1,13 @@
-import { UserMode } from "@/constants/user";
+import { UserMode, UserUnit } from "@/constants/user";
 
 export interface RegistrationInfo {
     email: string;
     password: string;
     name: string;
+    height: string;
+    weight: string;
+    unit: UserUnit;
+    medication: string;
     mode: UserMode;
     dob?: string;
 }

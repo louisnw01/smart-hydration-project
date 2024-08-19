@@ -33,7 +33,7 @@ async def register(form: UserRegister):
 
     hashed_password = get_hash(form.password)
     with db_session:
-        user = User(name=form.name, email=form.email, hash=hashed_password, email_verified=False, mode=form.mode)
+        user = User(name=form.name, email=form.email, hash=hashed_password, email_verified=False, mode=form.mode, height=form.height, weight=form.weight, unit=form.unit, medication=form.medication)
         juguser = JugUser(name=user.name, user=user)
         if form.dob:
             juguser.dob = form.dob

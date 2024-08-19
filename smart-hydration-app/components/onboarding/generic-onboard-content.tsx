@@ -26,12 +26,13 @@ export default function GenericOnboardContent({
             {nextHref && (
                 <StyledButton
                     text="Next"
-                    buttonClass="absolute bg-blue self-end rounded-xl right-0"
+                    buttonClass={`absolute ${proceed ? 'bg-blue' : ''} self-end rounded-xl right-0`}
                     style={{ bottom: insets.bottom + 10 }}
                     textClass="text-white font-semibold text-lg"
+                    disabled={!proceed}
                     onPress={() => {
                         proceed && router.push(nextHref);
-                    } }   
+                    } }
                 />
             )}
         </View>

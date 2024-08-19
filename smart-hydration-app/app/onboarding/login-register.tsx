@@ -6,7 +6,7 @@ import { View } from "react-native";
 export default function LoginRegister() {
     const router = useRouter();
     return (
-        <View className="flex flex-1 mx-6 justify-center">            
+        <View className="flex flex-1 mx-6 justify-center">
             <View className="self-center">
                 <Logo width={350} height={125}/>
             </View>

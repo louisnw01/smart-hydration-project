@@ -34,6 +34,12 @@ export default function OnboardingLayout() {
                     }}
                 />
                 <Stack.Screen
+                    name="size"
+                    options={{
+                        title: "What is your height and weight?",
+                    }}
+                />
+                <Stack.Screen
                     name="submit"
                     options={{
                         title: "You're almost there!",

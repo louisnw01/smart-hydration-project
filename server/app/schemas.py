@@ -16,6 +16,10 @@ class UserRegister(BaseModel):
     email: str
     password: str
     mode: str
+    height: str
+    weight: str
+    unit: str
+    medication: str
     dob: Optional[str] = None
 
     # class Config:

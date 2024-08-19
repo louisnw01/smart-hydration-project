@@ -25,6 +25,7 @@ export const registerMAtom = atomWithMutation((get) => ({
     mutationKey: ["/user/register"],
     mutationFn: async () => {
         const registrationInfo = get(registerInfoAtom);
+        console.log('registrationInfo', registrationInfo)
         if (!registrationInfo) return;
 
         const response = await request(ENDPOINTS.REGISTER, {

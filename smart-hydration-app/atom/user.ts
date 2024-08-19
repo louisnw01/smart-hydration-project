@@ -1,4 +1,4 @@
-import { UserMode } from "@/constants/user";
+import { UserMode, UserUnit } from "@/constants/user";
 import { deleteItemAsync, getItem, setItem } from "expo-secure-store";
 import { atom } from "jotai";
 
@@ -7,7 +7,9 @@ import { RegistrationInfo } from "@/interfaces/user";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { atomWithStorage, createJSONStorage } from "jotai/vanilla/utils";
 
-export const registerInfoAtom = atom<Partial<RegistrationInfo>>({});
+export const registerInfoAtom = atom<Partial<RegistrationInfo>>({
+  unit: UserUnit.POUNDS,
+});
 
 // Stored values that persist between open/closing the app
 const storage = createJSONStorage<any>(() => ({
