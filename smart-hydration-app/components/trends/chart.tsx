@@ -120,7 +120,6 @@ export default function TrendsChart() {
         width: scrollViewWidth.value,
         height: 300,
     }));
-    console.log("DATA: " + data);
     if (!data || data.length === 0) {
         return (
             <View className="h-full justify-center text-center">

@@ -10,9 +10,9 @@ import { useFormattedMemberData } from "@/util/community";
 import useColorPalette from "@/util/palette";
 import { FontAwesome, MaterialCommunityIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
-import { useAtomValue, useSetAtom } from "jotai";
+import { useAtomValue, useSetAtom, useAtom } from "jotai";
 import { ReactNode } from "react";
-import { Text, View } from "react-native";
+import { Text, View, Pressable } from "react-native";
 
 function MemberInfoBlock({
     children,
@@ -31,7 +31,7 @@ function MemberInfoBlock({
 
 export default function MemberInfoModal() {
     const palette = useColorPalette();
-    const member = useAtomValue(selectedMemberAtom);
+    const [member, setSelectedMember] = useAtom(selectedMemberAtom);
     const setJug = useSetAtom(selectedDeviceAtom);
     const memberData = useFormattedMemberData(member);
 
@@ -76,9 +76,16 @@ export default function MemberInfoModal() {
                 </View>
             </MemberInfoBlock>
             <MemberInfoBlock title="Trends Page">
-                <Text className="text-xl dark:text-white">
-                    Embed graph here
-                </Text>
+                <Pressable
+                    onPress={() => {
+                        setSelectedMember(member);
+                        router.replace("(tabs)/trends");
+                    }}
+                >
+                    <Text className="text-xl dark:text-white">
+                        View Trends for {member.name}
+                    </Text>
+                </Pressable>
             </MemberInfoBlock>
             <Text className="text-xl font-bold dark:text-white">Devices</Text>
             <DeviceSection

@@ -27,8 +27,6 @@ export default function DeviceSection({
     const { data, isLoading } = useAtomValue(queryAtom);
     const { isRefreshing, handleRefresh } = useQueryRefetch(queryAtom);
 
-    console.log(data);
-
     if (isLoading) {
         return <Loading message="Getting your jugs..." isLoading />;
     }
