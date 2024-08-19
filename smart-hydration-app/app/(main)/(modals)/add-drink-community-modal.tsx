@@ -177,6 +177,7 @@ export default function AddDrinkPane() {
 
     return (
         <View className="items-center">
+            <Text className="text-xl font-semibold text-gray-500 dark:text-gray-400 my-2">Containers represent volumes of water</Text>
             <FlatList
                 data={drinkTypes}
                 renderItem={({ item }) => <DrinkButton drinkType={item} />}
