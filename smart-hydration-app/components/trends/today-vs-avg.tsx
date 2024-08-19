@@ -23,7 +23,7 @@ export default function TodayVsAvgInsight(
     }
 
     const dailyAvgDiff = amountDrankToday - avgAmountDrankByNow;
-    if (selectedMemberData.id == userJUserId) {
+    if (selectedMember.id == userJUserId) {
         return (
             <InsightsPane
                 heading={`So far today, you're drinking ${dailyAvgDiff > 0 ? "more" : "less"} than you normally would.`}

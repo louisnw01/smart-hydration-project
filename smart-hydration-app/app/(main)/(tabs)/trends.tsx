@@ -102,7 +102,6 @@ export default function TrendsPage() {
                 value: row,
             }));
         }
-        //console.log(communityMembers);
     }
     return (
         <ScrollPageWrapper
@@ -114,7 +113,7 @@ export default function TrendsPage() {
             <>
                 {isCarer && isInCommunity && (
                     <View className="flex-row justify-evenly bg-white dark:bg-black py-4">
-                        <Text className="pt-4 flex-wrap text-xl font-semibold">
+                        <Text className="pt-4 flex-wrap text-xl font-semibold dark:text-white">
                             Community Member:
                         </Text>
                         <SelectList
@@ -132,6 +131,14 @@ export default function TrendsPage() {
                                             parseInt(val.match(/\d+/)[0]),
                                     ).value,
                                 );
+                            }}
+                            defaultOption={{
+                                key: selectedUser?.id?.toString(),
+                                value: selectedUser
+                                    ? selectedUser.name +
+                                      ": #" +
+                                      selectedUser.id
+                                    : "Select a member",
                             }}
                             data={communityMembers?.map(
                                 (items) =>
@@ -158,11 +165,22 @@ export default function TrendsPage() {
                 )}
                 {!(isCarer && !isInCommunity) && (
                     <>
-                        <View className="flex px-4 pb-5 bg-white dark:bg-black">
-                            <TrendsChart />
-                            <Switcher />
-                        </View>
-                        <Insights />
+                        {selectedUser == null && (
+                            <View className="bg-white dark:bg-black justify-center h-full">
+                                <Text className="dark:text-white text-center text-xl">
+                                    Please select a community member
+                                </Text>
+                            </View>
+                        )}
+                        {selectedUser != null && (
+                            <View>
+                                <View className="flex px-4 pb-5 bg-white dark:bg-black">
+                                    <TrendsChart />
+                                    <Switcher />
+                                </View>
+                                <Insights />
+                            </View>
+                        )}
                     </>
                 )}
                 {isCarer && !isInCommunity && (

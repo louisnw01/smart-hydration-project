@@ -125,7 +125,6 @@ function DrinkButton({ drinkType }: { drinkType: DrinkType }) {
             capacity: drinkJSON.value,
         });
         juguser.drankToday += drinkJSON.value;
-        console.log("Current amount: " + juguser.drankToday);
     }
 
     function handleAddDrink() {

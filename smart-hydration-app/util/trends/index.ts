@@ -123,7 +123,7 @@ export const formattedDataAtom = atom((get) => {
     if (isLoading || !data) {
         return [];
     }
-    console.log("FORMATTED: " + data);
+
     const unit = get(unitsAtom);
     const convertedData = data.map((row) => ({
         time: row.time,
@@ -141,7 +141,6 @@ export interface FormattedData {
 export function getAmountDrankToday(data: ITimeSeries[]) {
     const todayStartMS = Math.floor(Date.now() / MS_DAY) * MS_DAY;
     let amountDrankToday = 0;
-    console.log("DATA BEING USED: ", data);
     for (const row of data) {
         if (row.time * 1000 < todayStartMS) continue;
         amountDrankToday += row.value;
