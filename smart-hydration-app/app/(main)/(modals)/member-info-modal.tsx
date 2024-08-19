@@ -75,11 +75,6 @@ export default function MemberInfoModal() {
                     </Text>
                 </View>
             </MemberInfoBlock>
-            <MemberInfoBlock title="Trends Page">
-                <Text className="text-xl dark:text-white">
-                    Embed graph here
-                </Text>
-            </MemberInfoBlock>
             <Text className="text-xl font-bold dark:text-white">Devices</Text>
             <DeviceSection
                 addJugButton={false}
@@ -89,11 +84,8 @@ export default function MemberInfoModal() {
                     router.push("device-info-modal");
                 }}
             />
-            <MemberInfoBlock title="Favourite Drink">
-                <Text className="text-xl dark:text-white">Tea</Text>
-            </MemberInfoBlock>
-            <MemberInfoBlock title="Location">
-                <Text className="text-xl dark:text-white">Room 101</Text>
+            <MemberInfoBlock title="Room">
+                <Text className="text-xl dark:text-white">{member.room}</Text>
             </MemberInfoBlock>
             <StyledButton
                 text="Add a Device"

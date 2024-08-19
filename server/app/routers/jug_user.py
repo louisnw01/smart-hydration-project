@@ -17,7 +17,7 @@ router = APIRouter(
 async def add_jug_user(form: AddJugUserForm, user_id: str = Depends(auth_user)):
     with db_session:
         community = try_get_users_community(user_id)
-        juguser = JugUser(name=form.name, community=community, dob=form.dob)
+        juguser = JugUser(name=form.name, community=community, dob=form.dob, room=form.room)
         commit()
 
 
