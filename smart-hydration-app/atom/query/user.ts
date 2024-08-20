@@ -1,6 +1,5 @@
 import { UserInfo } from "@/interfaces/user";
-import { ENDPOINTS, request } from "@/util/fetch";
-import { atomWithMutation } from "jotai-tanstack-query";
+import { ENDPOINTS } from "@/util/fetch";
 import {
     authTokenAtom,
     emailIsVerifiedAtom,
@@ -15,23 +14,16 @@ import {
     atomWithQueryInfo,
 } from "./common";
 
-export const changeUserModeMAtom = atomWithMutation((get) => ({
-    mutationKey: ["change-mode", get(authTokenAtom)],
-    mutationFn: async () => {
-        const token = get(authTokenAtom);
-        const mode = get(userModeAtom);
-        const response = await request(ENDPOINTS.CHANGE_MODE, {
-            method: "post",
-            body: { mode: mode },
-            auth: token as string,
+export const changeUserModeMAtom = atomWithMutationCustom({
+    mutationKey: "change-mode",
+    endpoint: ENDPOINTS.CHANGE_MODE,
+    body: (get) => ({ mode: get(userModeAtom) }),
+    onSuccess: (get, qc, form) => {
+        qc.invalidateQueries({
+            queryKey: ["get-patient-info"],
         });
-
-        if (!response.ok) {
-            return;
-        }
     },
-    enabled: !!get(authTokenAtom) && !!get(userModeAtom),
-}));
+});
 
 export const updateUserTargetMAtom = atomWithMutationCustom<{
     newValue: number;

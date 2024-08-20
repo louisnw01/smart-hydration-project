@@ -1,26 +1,16 @@
-import { selectedMemberAtom } from "@/atom/community";
-import { communityInfoQAtom, patientInfoQAtom } from "@/atom/query";
+import { patientInfoQAtom } from "@/atom/query";
 import PageWrapper from "@/components/common/page-wrapper";
-import { MemberInfo } from "@/interfaces/community";
-import { MemberData, useFormattedMemberData } from "@/util/community";
+import { MemberData, useFormattedMemberDataFunction } from "@/util/community";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import { useAtomValue, useAtom } from "jotai";
-import { View, Text, Pressable } from "react-native";
-import { ScrollView } from "react-native-reanimated/lib/typescript/Animated";
-import router from "expo-router";
+import { useAtomValue } from "jotai";
+import { Pressable, Text, View } from "react-native";
 export default function CommunityLeaderboard() {
-    const { isLoading, refetch: refetchCommunityInfo } =
-        useAtomValue(communityInfoQAtom);
-    const [selectedMember, setSelectedMember] = useAtom(selectedMemberAtom);
-    const {
-        data,
-        isLoading: patientInfoIsLoading,
-        refetch: refetchPatientInfo,
-    } = useAtomValue(patientInfoQAtom);
+    const { data } = useAtomValue(patientInfoQAtom);
+    const formatMemberData = useFormattedMemberDataFunction();
     if (!data) {
         return;
     }
-    const formattedData = data.map((row) => useFormattedMemberData(row));
+    const formattedData = data.map((row) => formatMemberData(row));
     const sortedData = formattedData.slice().sort((a, b) => {
         const progressA = parseInt(a.targetProgress);
         const progressB = parseInt(b.targetProgress);

@@ -12,14 +12,16 @@ import {
 } from "@expo/vector-icons";
 
 import { router, Tabs } from "expo-router";
-import { useAtomValue } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import { Pressable, Text } from "react-native";
+import { qrScannerIsVisibleAtom } from "./devices";
 
 export default function TabLayout() {
     const palette = useColorPalette();
     const { isCarer } = useSettings();
     const isCommunityTabVisible = useAtomValue(communityTabVisible);
     const hasCommunity = useAtomValue(userHasCommunityAtom);
+    const setQRScannerVisible = useSetAtom(qrScannerIsVisibleAtom);
     return (
         <Tabs
             screenOptions={{
@@ -135,7 +137,7 @@ export default function TabLayout() {
                     headerRight: () => (
                         <Pressable
                             className="px-5"
-                            onPress={() => router.push("add-device-modal")}
+                            onPress={() => setQRScannerVisible(true)}
                         >
                             <Entypo
                                 name="circle-with-plus"
