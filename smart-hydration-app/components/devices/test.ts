@@ -1,5 +1,5 @@
-import WifiManager from "react-native-wifi-reborn"
-import { router } from "expo-router"
+import { router } from "expo-router";
+import WifiManager from "react-native-wifi-reborn";
 
 
 export function connectToWifi(jugId: number) {

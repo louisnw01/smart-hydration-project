@@ -50,9 +50,7 @@ export default function ConnectPage() {
                 router.replace("wifisetup/success");
             },
             () => {
-                alert(
-                    "Connection to the jug failed; ensure the jug is in pairing mode and try again.",
-                );
+                alert("Incorrect password; please try again");
             },
         );
     }, [isSuccess]);
