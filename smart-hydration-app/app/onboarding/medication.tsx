@@ -1,13 +1,12 @@
 import Logo from "@/assets/svgs/SH_logo.svg";
 import { registerInfoAtom } from "@/atom/user";
 import KeyboardScrollView from "@/components/common/keyboard-scrollview";
-import StyledTextInput from "@/components/common/text-input";
 import GenericOnboardContent from "@/components/onboarding/generic-onboard-content";
-import OnboardingHeader from "@/components/onboarding/onboarding-header";
+import { SelectInputBox } from "@/components/onboarding/select-input-box";
 import { useRouter } from "expo-router";
 import { useSetAtom } from "jotai";
 import { useEffect, useState } from "react";
-import { Pressable, Text,  View } from "react-native";
+import { Text,  View } from "react-native";
 
 export default function MedicationPage() {
     const router = useRouter();
@@ -24,6 +23,16 @@ export default function MedicationPage() {
       })
     }
 
+    const onSelectMedicine = (value: string[]) => {
+      let medicationData = ''
+      if (value.length) {
+        medicationData = value.join(', ')
+      }
+
+      setInfo((prev) => ({ ...prev, medication: medicationData }))
+      changeValue('medication', medicationData)
+    }
+
     useEffect(() => {
       setProceed(!!formData.medication)
     }, [formData])
@@ -35,41 +44,26 @@ export default function MedicationPage() {
                     <Logo width={330} height={105} />
                 </View>
                 <View className="gap-5 mt-16">
-                    <StyledTextInput
-                        requiredIcon
-                        title="Medication"
-                        onChangeText={(val) => changeValue('medication', val)}
-                        keyboardType="default"
-                        onSubmitEditing={() => {
-                            setInfo((prev) => ({ ...prev, medication: formData.medication }));
-                        }}
-                        onEndEditing={() => {
-                          setInfo((prev) => ({ ...prev, medication: formData.medication }));
-                        }}
+                    <SelectInputBox
+                      onChangeMultiple={onSelectMedicine}
+                      multiple
+                      data={[
+                        {
+                          key: '1',
+                          value: "Medicine 1"
+                        },
+                        {
+                          key: '2',
+                          value: "Medicine 2"
+                        }
+                      ]}
                     />
 
                     <Text style={{ color: "red", fontSize: 18 }}>
 
                     </Text>
 
-                    <Pressable
-                        onPress={() => router.push("onboarding/login")}
-                        style={{ marginTop: 24 }}
-                        //accessibilityRole="link"
-                        //accessibilityLabel="Navigate to login"
-                    >
-                        {({ pressed }) => (
-                            <Text
-                                style={{
-                                    fontWeight: "600",
-                                    color: pressed ? "darkblue" : "blue",
-                                    textDecorationLine: "underline",
-                                }}
-                            >
-                                Already have an account? Login
-                            </Text>
-                        )}
-                    </Pressable>
+
                 </View>
             </KeyboardScrollView>
         </GenericOnboardContent>

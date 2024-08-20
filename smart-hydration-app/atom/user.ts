@@ -8,7 +8,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { atomWithStorage, createJSONStorage } from "jotai/vanilla/utils";
 
 export const registerInfoAtom = atom<Partial<RegistrationInfo>>({
-  unit: UserUnit.POUNDS,
+  unit: UserUnit.KILOS,
 });
 
 // Stored values that persist between open/closing the app
