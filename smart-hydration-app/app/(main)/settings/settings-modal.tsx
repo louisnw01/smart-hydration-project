@@ -157,11 +157,10 @@ const settingsList: ISettingsSection[] = [
                         <OptionBlock
                             isLast={isLast}
                             text={name}
-                            onPress={() =>
-                                router.navigate(
-                                    "manage-community/community-settings",
-                                )
-                            }
+                            onPress={() => {
+                                router.dismiss();
+                                router.navigate("manage-community/community-settings");
+                            }}
                             icon={
                                 <MaterialCommunityIcons
                                     name="account-group-outline"
