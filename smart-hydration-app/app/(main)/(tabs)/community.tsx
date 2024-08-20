@@ -10,8 +10,10 @@ import {
     patientInfoQAtom,
     userHasCommunityAtom,
 } from "@/atom/query";
+import { userModeAtom } from "@/atom/user";
 import Loading from "@/components/common/loading";
 import StyledTextInput from "@/components/common/text-input";
+import CommunityLeaderboard from "@/components/community/community-leaderboard";
 import MemberRow from "@/components/community/member-row";
 import { FilterObject, MemberInfo } from "@/interfaces/community";
 import useColorPalette from "@/util/palette";
@@ -30,9 +32,9 @@ export default function CommunityPage() {
     const hasCommunity = useAtomValue(userHasCommunityAtom);
     const [refreshing, setRefreshing] = useState(false);
     const palette = useColorPalette();
-    console.log(data);
     const [filteredData, setFilteredData] = useState<ReactElement[]>([]);
     const [textInput, setTextInput] = useState("");
+    const isCarer = useAtomValue(userModeAtom) == "Carer";
     const [filters, setFilters] = useState<FilterObject>({
         searchTerm: "",
         sort: "asc",
@@ -74,7 +76,7 @@ export default function CommunityPage() {
             <View className="mt-8 flex gap-6">
                 <View className="flex flex-row justify-center">
                     <StyledButton
-                        text="+ Add a member"
+                        text="+ Add a patient"
                         onPress={() => router.push("add-jug-user")}
                         textClass="text-lg"
                     />
@@ -130,6 +132,9 @@ export default function CommunityPage() {
         { key: "drankToday", value: "Amount Drank Today" },
         { key: "lastDrank", value: "Last Drank" },
     ];
+    if (!isCarer) {
+        return <CommunityLeaderboard />;
+    }
 
     if (!hasCommunity) {
         return (
@@ -232,7 +237,7 @@ export default function CommunityPage() {
                         <View className="flex-1">
                             <StyledTextInput
                                 value={textInput}
-                                placeholder="Search members..."
+                                placeholder="Search patients..."
                                 onChangeText={(val) => {
                                     setTextInput(val);
                                     setFilters((prev) => ({

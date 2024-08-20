@@ -93,6 +93,38 @@ export default function CustomDrinkLayout() {
                     },
                 }}
             />
+            <Stack.Screen
+                name="success"
+                options={{
+                    headerLeft: () => {
+                        return (
+                            <Pressable onPress={() => router.back()}>
+                                <Entypo
+                                    name="circle-with-cross"
+                                    size={24}
+                                    color="rgb(80, 80, 80)"
+                                />
+                            </Pressable>
+                        );
+                    },
+                }}
+            />
+            <Stack.Screen
+                name="input-size"
+                options={{
+                    headerLeft: () => {
+                        return (
+                            <Pressable onPress={() => router.back()}>
+                                <Entypo
+                                    name="chevron-left"
+                                    size={24}
+                                    color="rgb(80, 80, 80)"
+                                />
+                            </Pressable>
+                        );
+                    },
+                }}
+            />
         </Stack>
     );
 }
