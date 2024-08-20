@@ -96,9 +96,7 @@ async def link_jugs(form: LinkJugs, user_id: str = Depends(auth_user)):
                         cw.end = int(time_now)
                     juguser.jugs.remove(jug_to_add)
 
-
             juguser_to_link.jugs.add(jug_to_add)
-
             connection_window = ConnectionWindow(jug=jug_to_add, jug_user=juguser_to_link, start=time_now)
             commit()
 

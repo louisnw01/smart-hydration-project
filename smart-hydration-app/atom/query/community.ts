@@ -8,12 +8,14 @@ import { DeviceInfo } from "@/interfaces/device";
 import { UserInfo } from "@/interfaces/user";
 import { ENDPOINTS } from "@/util/fetch";
 import { jugUserInfoAtom } from "../jug-user";
-import { authTokenAtom, inviteCodeAtom } from "../user";
+import { authTokenAtom, inviteCodeAtom, userModeAtom } from "../user";
 import {
     atomWithMutationCustom,
     atomWithQueryDerivation,
     atomWithQueryInfo,
 } from "./common";
+import { userInfoQAtom, userJugUserIdAtom } from "./user";
+import { atom } from "jotai";
 
 export const communityInfoQAtom = atomWithQueryInfo<CommunityInfo>({
     queryKey: "get-community-info",
@@ -37,7 +39,11 @@ export const userIsCommunityOwnerAtom = atomWithQueryDerivation(
 );
 
 export const patientInfoQAtom = atomWithQueryInfo<MemberInfo[]>({
-    queryKey: "get-patient-info",
+    queryKey: (get) => [
+        "get-patient-info",
+        get(authTokenAtom),
+        get(userModeAtom),
+    ],
     endpoint: ENDPOINTS.PATIENT_INFO,
     enabled: (get) => !!get(authTokenAtom) && !!get(userHasCommunityAtom),
 });

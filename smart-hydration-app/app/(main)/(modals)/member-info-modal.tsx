@@ -34,7 +34,7 @@ function MemberInfoBlock({
 
 export default function MemberInfoModal() {
     const palette = useColorPalette();
-    const member = useAtomValue(selectedMemberAtom);
+    const [member, setSelectedMember] = useAtom(selectedMemberAtom);
     const setJug = useSetAtom(selectedDeviceAtom);
     const memberData = useFormattedMemberData(member);
     const { isCarer } = useSettings();
@@ -103,6 +103,18 @@ export default function MemberInfoModal() {
                         %
                     </Text>
                 </View>
+            </MemberInfoBlock>
+            <MemberInfoBlock title="Trends Page">
+                <Pressable
+                    onPress={() => {
+                        setSelectedMember(member);
+                        router.replace("(tabs)/trends");
+                    }}
+                >
+                    <Text className="text-xl dark:text-white">
+                        View Trends for {member.name}
+                    </Text>
+                </Pressable>
             </MemberInfoBlock>
             <Text className="text-xl font-bold dark:text-white">Devices</Text>
             <DeviceSection
