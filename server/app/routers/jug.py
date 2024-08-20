@@ -1,11 +1,12 @@
 from typing import List
 from fastapi import APIRouter, Depends, HTTPException
-from pony.orm.core import db_session, select
+from pony.orm.core import db_session, select, commit
 from pydantic import BaseModel
+import datetime as dt
 
 from ..api import get_hydration_events
 from ..auth import auth_user
-from ..models import JugUser, User, Jug
+from ..models import JugUser, User, Jug, ConnectionWindow
 from ..schemas import UpdateJugForm
 from ..services import get_users_community, try_get_users_community, user_exists
 
@@ -57,9 +58,8 @@ class LinkJugs(BaseModel):
 
 @router.post("/link")
 async def link_jugs(form: LinkJugs, user_id: str = Depends(auth_user)):
+    time_now = int(dt.datetime.now().timestamp())
     with db_session:
-
-        print("/link", form)
 
         # add this one as unassigned
         if form.jugUserId is None:
@@ -72,6 +72,10 @@ async def link_jugs(form: LinkJugs, user_id: str = Depends(auth_user)):
                 # unlink the jug from all others
                 for juguser in community.jug_users:
                     juguser.jugs.remove(jug)
+                    cw = ConnectionWindow.get(jug=jug, jug_user=juguser)
+                    if cw:
+                        cw.end = time_now
+            commit()
             return
 
         user = User.get(id=user_id)
@@ -87,10 +91,14 @@ async def link_jugs(form: LinkJugs, user_id: str = Depends(auth_user)):
                 # remove from unassigned, and remove from any other jug users
                 community.unassigned_jugs.remove(jug_to_add)
                 for juguser in community.jug_users:
-                    print('removed it from ', juguser.name)
+                    cw = ConnectionWindow.get(jug=jug_to_add, jug_user=juguser)
+                    if cw:
+                        cw.end = int(time_now)
                     juguser.jugs.remove(jug_to_add)
-            print('adding jug ', jug_to_add.smart_hydration_id, 'to', juguser_to_link.name)
+
             juguser_to_link.jugs.add(jug_to_add)
+            connection_window = ConnectionWindow(jug=jug_to_add, jug_user=juguser_to_link, start=time_now)
+            commit()
 
 
 class UnlinkJug(BaseModel):
@@ -99,6 +107,7 @@ class UnlinkJug(BaseModel):
 
 @router.post('/unlink')
 async def unlink_jug_from_user(form: UnlinkJug, user_id: str = Depends(auth_user)):
+    time_now = int(dt.datetime.now().timestamp())
     with db_session:
         if form.jugUserId is None:
             community = try_get_users_community(user_id)
@@ -114,3 +123,5 @@ async def unlink_jug_from_user(form: UnlinkJug, user_id: str = Depends(auth_user
             raise HTTPException(400, 'jug does not exist')
 
         juguser.jugs.remove(jug)
+        ConnectionWindow.get(jug=jug, jug_user=juguser).end = time_now
+        commit()
