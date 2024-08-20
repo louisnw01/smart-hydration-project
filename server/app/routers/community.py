@@ -151,6 +151,27 @@ async def delete_community_member(form: DeleteCommunityMemberForm, user_id: str 
 
         member_to_delete.delete()
 
+@router.post("/remove-patient")
+async def remove_patient(form: DeleteCommunityMemberForm, user_id: str = Depends(auth_user)):
+    with db_session:
+        user = User.get(id=user_id)
+
+        member = user.community_member
+        if member is None:
+            raise HTTPException(400, 'user is not associated with a community')
+
+        if member.is_owner is False:
+            raise HTTPException(400, 'user does not have permissions to remove patients')
+        community = member.community
+
+        patient_to_remove = JugUser.get(id=form.id, community=community)
+
+        if patient_to_remove is None:
+            raise HTTPException(400, 'patient does not exist in this community')
+
+        patient_to_remove.community = None
+        commit()
+
 
 @router.post("/leave")
 async def leave_community(user_id: str = Depends(auth_user)):

@@ -55,7 +55,7 @@ export function LeaderboardRow({
 }) {
     const progressWidth = `${parseInt(member.targetProgress)}%`;
     return (
-        <View className="relative w-[93%] h-24 left-4 rounded-xl overflow-hidden mb-1 bg-gray-200">
+        <View className="relative w-[93%] h-24 left-4 rounded-xl overflow-hidden mb-1 bg-gray-200 dark:text-white">
             <View
                 className="absolute left-0 top-0 bottom-0 h-12 bg-blue "
                 style={{ width: progressWidth, height: "4rem" }}
@@ -90,10 +90,10 @@ export function LeaderboardWinner({ member }: { member: MemberData }) {
                 <Text>PH</Text>
             </View>
             <Text className=" text-3xl font-bold pt-1">{member.name}</Text>
-            <Text className="text-3xl">
+            <Text className="text-3xl dark:text-white">
                 {member.name} is closest to their target!
             </Text>
-            <Text className="pt-2">
+            <Text className="pt-2 dark:text-white">
                 Drink water regularly to be the champion!
             </Text>
         </View>

@@ -133,6 +133,19 @@ export const deleteCommunityMemberMAtom = atomWithMutationCustom<{
     },
 });
 
+export const removePatientMAtom = atomWithMutationCustom<{
+    id: number;
+}>({
+    mutationKey: "remove-patient",
+    endpoint: ENDPOINTS.REMOVE_PATIENT,
+    onSuccess: (get, qc, form) => {
+        qc.setQueryData<{ id: number }[]>(
+            ["get-patient-info", get(authTokenAtom)],
+            (prev) => prev?.filter((member) => member.id != form.id),
+        );
+    },
+});
+
 export const leaveCommunityMAtom = atomWithMutationCustom({
     mutationKey: "leave-community",
     endpoint: ENDPOINTS.LEAVE_COMMUNITY,
