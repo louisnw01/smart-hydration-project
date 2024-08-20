@@ -45,7 +45,7 @@ export function LeaderboardRow({
 }) {
     const progressWidth = `${parseInt(member.targetProgress)}%`;
     return (
-        <View className="relative w-[93%] h-24 left-4 rounded-xl overflow-hidden mb-1 bg-gray-200 dark:text-white">
+        <View className="relative w-[93%] h-24 left-4 rounded-xl overflow-hidden mb-1 bg-gray-200">
             <View
                 className="absolute left-0 top-0 bottom-0 h-12 bg-blue "
                 style={{ width: progressWidth, height: "4rem" }}
@@ -56,13 +56,15 @@ export function LeaderboardRow({
                 <View className="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center">
                     <Text>PH</Text>
                 </View>
-                <Text className="pl-4 flex-1 text-2xl font-semibold">
+                <Text className="pl-4 flex-1 text-2xl font-semibold dark:text-white">
                     {member.name}
                 </Text>
-                <Text className="text-2xl font-semibold">
+                <Text className="text-2xl font-semibold dark:text-white">
                     {member.targetProgress}
                 </Text>
-                <Text className="pl-4 text-4xl font-bold">#{index + 1}</Text>
+                <Text className="pl-4 text-4xl font-bold dark:text-white">
+                    #{index + 1}
+                </Text>
             </View>
         </View>
     );
@@ -70,7 +72,7 @@ export function LeaderboardRow({
 
 export function LeaderboardWinner({ member }: { member: MemberData }) {
     return (
-        <View className="items-center relative w-[93%] h-64 left-4 rounded-xl top-4 mb-6 overflow-hidden border-gray-100 border-2">
+        <View className="items-center relative w-[93%] h-64 left-4 rounded-xl top-4 mb-6 overflow-hidden border-gray-100 border-2 dark:border-neutral-800">
             <MaterialCommunityIcons
                 name="crown"
                 size={39}
