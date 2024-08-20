@@ -40,6 +40,7 @@ class User(db.Entity):
     email_verified = Required(bool)
     email_link = Optional('VerifyEmail')
     notifications = Set('Notifications')
+    mode = Required(str)
     height = Required(str)
     weight = Required(str)
     unit = Required(str)
