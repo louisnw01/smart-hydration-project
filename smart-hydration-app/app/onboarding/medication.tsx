@@ -38,7 +38,7 @@ export default function MedicationPage() {
     }, [formData])
 
     return (
-        <GenericOnboardContent nextHref="onboarding/submit" proceed={proceed}>
+        <GenericOnboardContent nextHref="onboarding/dob" proceed={proceed}>
             <KeyboardScrollView keyboardVerticalOffset={-60}>
                 <View className="self-center mb-8" style={{}}>
                     <Logo width={330} height={105} />

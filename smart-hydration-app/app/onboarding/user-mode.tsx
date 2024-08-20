@@ -9,7 +9,7 @@ export default function UserMode() {
     return (
         <GenericOnboardContent
             proceed={true}
-            nextHref={isCarer ? "onboarding/submit" : "onboarding/dob"}
+            nextHref={isCarer ? "onboarding/submit" : "onboarding/size"}
         >
             <View className="py-4" />
             <OnboardingHeader text="What mode would you like to use?" />
