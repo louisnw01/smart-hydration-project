@@ -2,7 +2,8 @@ import useSettings from "@/app/hooks/user";
 import Jug from "@/assets/svgs/jug.svg";
 import { selectedMemberAtom } from "@/atom/community";
 import { selectedDeviceAtom } from "@/atom/device";
-import { deleteCommunityMemberMAtom, patientJugDataAtom, removePatientMAtom } from "@/atom/query";
+import { patientJugDataAtom, removePatientMAtom } from "@/atom/query";
+import { unitConverter, unitsAtom } from "@/atom/user";
 import StyledButton from "@/components/common/button";
 import { ScrollPageWrapper } from "@/components/common/page-wrapper";
 import Tag from "@/components/community/tag";
@@ -14,8 +15,7 @@ import { router } from "expo-router";
 import { useAtomValue, useSetAtom } from "jotai";
 import { ReactNode, useEffect, useState } from "react";
 import { Text, View } from "react-native";
-import { ConfirmModal } from "../manage-community/remove-member";
-import { unitConverter, unitsAtom } from "@/atom/user";
+import { ConfirmModal } from "../settings/remove-member";
 
 function MemberInfoBlock({
     children,
@@ -38,11 +38,9 @@ export default function MemberInfoModal() {
     const setJug = useSetAtom(selectedDeviceAtom);
     const memberData = useFormattedMemberData(member);
     const { isCarer } = useSettings();
-    const unit = useAtomValue(unitsAtom)
+    const unit = useAtomValue(unitsAtom);
 
-    const { mutate, isPending, isSuccess } = useAtomValue(
-        removePatientMAtom,
-    );
+    const { mutate, isPending, isSuccess } = useAtomValue(removePatientMAtom);
 
     const [modalVisible, setModalVisible] = useState<boolean>(false);
 
@@ -93,7 +91,9 @@ export default function MemberInfoModal() {
             <MemberInfoBlock title="Progress to Target">
                 <View className="flex-row justify-between">
                     <Text className="text-xl dark:text-white">
-                        {unitConverter(member.drankToday, unit) | 0} / {Math.floor(unitConverter(member.dailyTarget, unit))}{unit}
+                        {unitConverter(member.drankToday, unit) | 0} /{" "}
+                        {Math.floor(unitConverter(member.dailyTarget, unit))}
+                        {unit}
                     </Text>
                     <Text className="text-xl font-semibold dark:text-white">
                         {(
@@ -158,7 +158,7 @@ export default function MemberInfoModal() {
                     color={palette.border}
                 />
                 onPress={() => {
-                    router.push("add-drink-community-modal");
+                    router.push(`custom/add-drink?id=${member.id}`);
                 }}
                 chevron
             />
@@ -180,18 +180,19 @@ export default function MemberInfoModal() {
                 chevron
             />
             <>
-            { isCarer && (
-            <StyledButton
-                text="Remove Patient"
-                buttonClass="flex flex-row items-center gap-3 rounded-xl px-4 py-3 bg-red"
-                textClass="text-xl text-white -ml-[2px]"
-                icon=<MaterialCommunityIcons
-                    name="delete"
-                    size={23}
-                    color={palette.border}
-                />
-                onPress={confirmRemoveMember}
-            />)}
+                {isCarer && (
+                    <StyledButton
+                        text="Remove Patient"
+                        buttonClass="flex flex-row items-center gap-3 rounded-xl px-4 py-3 bg-red"
+                        textClass="text-xl text-white -ml-[2px]"
+                        icon=<MaterialCommunityIcons
+                            name="delete"
+                            size={23}
+                            color={palette.border}
+                        />
+                        onPress={confirmRemoveMember}
+                    />
+                )}
             </>
             <ConfirmModal
                 message={`Are you sure you want to remove the patient ${member?.name}?`}

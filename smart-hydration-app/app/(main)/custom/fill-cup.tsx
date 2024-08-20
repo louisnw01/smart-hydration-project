@@ -52,7 +52,7 @@ export default function AskIfJugIsEmptyOrNot() {
                     right={4}
                 />
                 text="I have filled up the cup"
-                textClass="text-lg font-bold"
+                textClass="text-lg font-bold text-white"
                 buttonClass="self-center bg-green absolute items-center"
                 style={{ bottom: insets.bottom + 100 }}
                 onPress={() => {

@@ -59,6 +59,7 @@ class JugUser(db.Entity):
     drank_today = Optional(int)
     last_drank = Optional(int)
     tags = Set('Tag')
+    custom_cups = Set('CustomCup')
     connection_windows = Set('ConnectionWindow')
     room = Optional(str)
 
@@ -136,6 +137,13 @@ class Notifications(db.Entity):
     frequency = Required(int)
     send_time = Required(int)
     user = Required(User)
+
+
+class CustomCup(db.Entity):
+    id = PrimaryKey(int, auto=True)
+    name = Required(str)
+    size = Required(int)
+    juguser = Required(JugUser)
 
 
 class ConnectionWindow(db.Entity):
