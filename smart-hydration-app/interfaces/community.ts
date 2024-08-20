@@ -12,6 +12,7 @@ export interface MemberInfo {
     drankToday: number;
     dailyTarget: number;
     tags: TagInfo[];
+    room: string;
 }
 
 export interface FilterObject {
