@@ -80,7 +80,7 @@ async def community_users(user_id: str = Depends(auth_user)):
         community = try_get_users_community(user_id)
         data = []
         for member in community.followers:
-            ##if member.mode == "standard": //think about if member is just a carer 
+            ##if member.mode == "standard": //think about if member is just a carer
             data.append({
                 "name": member.user.name,
                 "isOwner": member.is_owner,
@@ -111,12 +111,8 @@ async def update_community_info(form: UpdateCommunityForm, user_id: str = Depend
         member = user.community_member
         if member is None:
             raise HTTPException(400, 'user is not associated with a community')
-        ## member.community.name = form.name
-        #when you're not the owner -> it returns success but it doesn't persist in database so it should give different response
-        #if we comment line 117 and 118
-        #check what should be shown in screen -> should changing ownership and changing name you still see if you're not the owner
         if form.new_owner_id:
-            if member.is_owner == False: #check if false? //check if member is owner
+            if member.is_owner == False:
                 raise HTTPException(400, 'user does not have permissions to change ownership of this community')
             new_owner = User.get(id=form.new_owner_id)
             new_owner_member = new_owner.community_member
@@ -125,7 +121,7 @@ async def update_community_info(form: UpdateCommunityForm, user_id: str = Depend
             if new_owner_member.community != member.community:
                 raise HTTPException(400, 'User associated with a different community')
             new_owner_member.is_owner = True
-            member.is_owner = False #should this be = none as it's a boolean? #member is previous owner
+            member.is_owner = False 
             commit()
         if form.name: #check if name on form , updating community name
             member.community.name = form.name

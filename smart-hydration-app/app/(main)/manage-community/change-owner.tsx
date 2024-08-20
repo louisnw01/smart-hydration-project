@@ -35,7 +35,7 @@ export default function ChangeOwner({ community_id }: ChangeOwnerProps) {
     }, [changeOwnerError]);
 
     const handleOnSubmit = () => {
-      //TODO: call api to store the new owner
+      
       if (communityOwner) {
           submitNewOwner({
             new_owner_id: communityOwner,
@@ -47,7 +47,8 @@ export default function ChangeOwner({ community_id }: ChangeOwnerProps) {
             <View className="items-center gap-4 mt-20">
 
                     <Text className="text-black text-2xl font-semibold text-center">
-                      Change Community Owner {status}
+                      Change Community Owner
+
                     </Text>
                     {errorMessage && <Text className="text-red text-2xl font-semibold text-center">
                       {errorMessage}
