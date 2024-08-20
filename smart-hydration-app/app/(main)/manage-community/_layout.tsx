@@ -1,3 +1,4 @@
+import useSettings from "@/app/hooks/user";
 import useColorPalette from "@/util/palette";
 import { Entypo } from "@expo/vector-icons";
 import { router, Stack } from "expo-router";
@@ -6,6 +7,7 @@ import { Pressable } from "react-native";
 
 export default function ManageCommunityLayout() {
     const palette = useColorPalette();
+    const { isCarer } = useSettings()
     return (
         <Stack
             screenOptions={{
@@ -41,7 +43,7 @@ export default function ManageCommunityLayout() {
             <Stack.Screen
                 name="invite-member"
                 options={{
-                    title: "Invite a Member",
+                    title: isCarer ? "Invite a Carer" : "Invite another user to your community",
                     headerLeft: () => {
                         return (
                             <Pressable onPress={() => router.back()}>
@@ -93,24 +95,7 @@ export default function ManageCommunityLayout() {
             <Stack.Screen
                 name="remove-member"
                 options={{
-                    title: "Remove a Member",
-                    headerLeft: () => {
-                        return (
-                            <Pressable onPress={() => router.back()}>
-                                <Entypo
-                                    name="chevron-left"
-                                    size={24}
-                                    color="rgb(80, 80, 80)"
-                                />
-                            </Pressable>
-                        );
-                    },
-                }}
-            />
-            <Stack.Screen
-                name="add-member-modal"
-                options={{
-                    title: "Add a member",
+                    title: "Remove a carer from your community",
                     headerLeft: () => {
                         return (
                             <Pressable onPress={() => router.back()}>
