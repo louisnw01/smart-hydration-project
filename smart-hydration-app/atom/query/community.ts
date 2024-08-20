@@ -4,7 +4,6 @@ import {
     MemberInfo,
     TagInfo,
 } from "@/interfaces/community";
-import { DeviceInfo } from "@/interfaces/device";
 import { UserInfo } from "@/interfaces/user";
 import { ENDPOINTS } from "@/util/fetch";
 import { jugUserInfoAtom } from "../jug-user";
@@ -80,25 +79,6 @@ export const deleteCommunityMAtom = atomWithMutationCustom({
                 }) as UserInfo,
         );
         qc.setQueryData(["get-patient-info", authToken], []);
-    },
-});
-
-export const addCommunityDrinkMAtom = atomWithMutationCustom<{
-    juser_id: number;
-    timestamp: number;
-    name: string;
-    capacity: number;
-}>({
-    mutationKey: "/community/add-community-drink-event",
-    endpoint: ENDPOINTS.ADD_COMMUNITY_DRINK,
-    onSuccess: (get, qc, form) => {
-        qc.setQueryData(
-            ["/data/historical", get(authTokenAtom)],
-            (prev: DeviceInfo[]) => [
-                ...prev,
-                { time: form.timestamp * 1000, value: form.capacity },
-            ],
-        );
     },
 });
 

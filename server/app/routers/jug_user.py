@@ -1,9 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException
 from pony.orm.core import db_session, commit
+from pydantic.main import BaseModel
 
 from ..auth import auth_user
 from ..models import User, OtherDrink, JugUser, Tag
-from ..schemas import AddJugUserForm, JugUserUpdate, AddDrinkForm, AddTagsPatientForm
+from ..schemas import AddJugUserForm, JugUserUpdate, AddTagsPatientForm
 from ..services import try_get_users_community
 
 router = APIRouter(
@@ -35,12 +36,33 @@ async def update(form: JugUserUpdate, user_id: str = Depends(auth_user)):
     return {"message": "Jug user data updated successfully"}
 
 
-@router.post("/add-drink-event")
-async def add_drink_event(form: AddDrinkForm, user_id: str = Depends(auth_user)):
+class AddDrinkForm(BaseModel):
+    juguser_id: int
+    timestamp: int
+    name: str
+    capacity: int
+@router.post("/add-drink")
+async def add_drink(form: AddDrinkForm, user_id: str = Depends(auth_user)):
     with db_session:
-        user = User[user_id]
-        juguser = user.jug_user
+        juguser = JugUser.get(id=form.juguser_id)
+        if juguser is None:
+            raise HTTPException(400, 'jug user not found')
+
+        if User[user_id].jug_user != juguser:
+            community = try_get_users_community(user_id)
+
+            if juguser.community != community:
+                raise HTTPException(400, 'jug user is not associated with the same community as the user')
+
+            # dont think this should be here
+            # if member.is_owner is None:
+            #     raise HTTPException(400, 'user does not have permissions to add drinks for this community')
+
         OtherDrink(juguser=juguser, timestamp=form.timestamp, name=form.name, capacity=form.capacity)
+        if juguser.drank_today == None:
+            juguser.drank_today = 0
+        juguser.drank_today += form.capacity
+        juguser.last_drank = form.timestamp
         commit()
 
 

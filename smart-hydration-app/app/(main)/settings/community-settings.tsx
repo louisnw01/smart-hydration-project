@@ -28,7 +28,7 @@ const settingsList: ISettingsSection[] = [
                             isFirst={isFirst}
                             isLast={isLast}
                             onPress={() =>
-                                router.navigate("manage-community/change-name")
+                                router.navigate("settings/change-name")
                             }
                             icon={
                                 <MaterialCommunityIcons
@@ -79,9 +79,7 @@ const settingsList: ISettingsSection[] = [
                                     isFirst={isFirst}
                                     text={name}
                                     onPress={() =>
-                                        router.navigate(
-                                            "manage-community/edit-tags",
-                                        )
+                                        router.navigate("settings/edit-tags")
                                     }
                                     icon={
                                         <Ionicons
@@ -114,7 +112,7 @@ const settingsList: ISettingsSection[] = [
                                     text={name}
                                     onPress={() =>
                                         router.navigate(
-                                            "manage-community/remove-member",
+                                            "settings/remove-member",
                                         )
                                     }
                                     icon={
@@ -137,24 +135,24 @@ const settingsList: ISettingsSection[] = [
                     const { isCarer } = useSettings();
                     return (
                         <>
-                        {isCarer && data?.isOwner && (
-                            <OptionBlock
-                                isLast={isLast}
-                                text={name}
-                                onPress={() =>
-                                    router.navigate(
-                                        "manage-community/invite-member",
-                                    )
-                                }
-                                icon={
-                                    <Ionicons
-                                        name="add-circle-outline"
-                                        size={19}
-                                        color="gray"
-                                    />
-                                }
-                            />
-                        )}
+                            {isCarer && data?.isOwner && (
+                                <OptionBlock
+                                    isLast={isLast}
+                                    text={name}
+                                    onPress={() =>
+                                        router.navigate(
+                                            "settings/invite-member",
+                                        )
+                                    }
+                                    icon={
+                                        <Ionicons
+                                            name="add-circle-outline"
+                                            size={19}
+                                            color="gray"
+                                        />
+                                    }
+                                />
+                            )}
                         </>
                     );
                 },
@@ -165,24 +163,24 @@ const settingsList: ISettingsSection[] = [
                     const { isCarer } = useSettings();
                     return (
                         <>
-                        {!isCarer && (
-                            <OptionBlock
-                                isLast={isLast}
-                                text={name}
-                                onPress={() =>
-                                    router.navigate(
-                                        "manage-community/invite-member",
-                                    )
-                                }
-                                icon={
-                                    <Ionicons
-                                        name="add-circle-outline"
-                                        size={19}
-                                        color="gray"
-                                    />
-                                }
-                            />
-                        )}
+                            {!isCarer && (
+                                <OptionBlock
+                                    isLast={isLast}
+                                    text={name}
+                                    onPress={() =>
+                                        router.navigate(
+                                            "settings/invite-member",
+                                        )
+                                    }
+                                    icon={
+                                        <Ionicons
+                                            name="add-circle-outline"
+                                            size={19}
+                                            color="gray"
+                                        />
+                                    }
+                                />
+                            )}
                         </>
                     );
                 },

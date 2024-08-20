@@ -1,15 +1,21 @@
 import SodaCan from "@/assets/svgs/soda-can-svgrepo-com.svg";
-import { addDrinkMAtom } from "@/atom/query";
+import { userJugUserIdAtom } from "@/atom/query";
+import { addDrinkMAtom, customCupsQAtom } from "@/atom/query/drinks";
 import { drinkListAtom, unitConverter, unitsAtom } from "@/atom/user";
+import colors from "@/colors";
 import { ITimeSeries } from "@/interfaces/device";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
-import Ionicons from "@expo/vector-icons/Ionicons";
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
-import { useRouter } from "expo-router";
+import {
+    Entypo,
+    FontAwesome,
+    Ionicons,
+    MaterialCommunityIcons,
+    SimpleLineIcons,
+} from "@expo/vector-icons";
+
+import { router, useLocalSearchParams, useRouter } from "expo-router";
 import { useAtom } from "jotai";
 import { useAtomValue } from "jotai/index";
-import { ReactNode, useEffect } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import {
     ActivityIndicator,
     FlatList,
@@ -82,25 +88,11 @@ const drinkTypes: DrinkType[] = [
             />
         ),
     },
-    {
-        name: "Add a new cup",
-        capacity: 0,
-        icon: (
-            <View className="-ml-2">
-                <FontAwesome
-                    className=""
-                    color="rgb(180, 180, 180)"
-                    name="plus"
-                    size={35}
-                />
-            </View>
-        ),
-    },
 ];
 
-function constructDrinkEvent(drinkName: string) {
-    const drinkType = drinkTypes.find((drink) => drink.name === drinkName);
-    if (!drinkType) return;
+function constructDrinkEvent(drinkType: DrinkType) {
+    // const drinkType = drinkTypes.find((drink) => drink.name === drinkName);
+    // if (!drinkType) return;
     const returnValue = {
         time: Math.round(new Date().getTime() / 1000),
         value: drinkType.capacity,
@@ -112,24 +104,29 @@ function constructDrinkEvent(drinkName: string) {
 function DrinkButton({ drinkType }: { drinkType: DrinkType }) {
     const [drinkList, setDrinkList] = useAtom(drinkListAtom);
     const { mutate } = useAtomValue(addDrinkMAtom);
+    const usersJugUser = useAtomValue(userJugUserIdAtom);
+    const params = useLocalSearchParams();
+    const juguserIdToAdd = params.id || usersJugUser;
     const router = useRouter();
     const unit = useAtomValue(unitsAtom);
 
     function postDrinkToDB(drinkJSON: ITimeSeries, drinkName: string) {
         if (!drinkJSON) return;
+
         mutate({
             timestamp: drinkJSON.time,
             name: drinkName,
             capacity: drinkJSON.value,
+            juguser_id: juguserIdToAdd,
         });
     }
 
     function handleAddDrink() {
         if (drinkType.name == "Add a new cup") {
-            router.push("custom/add-custom-cup");
+            router.push(`custom/add-custom-cup?id=${juguserIdToAdd}`);
             return;
         }
-        const drinkJSON = constructDrinkEvent(drinkType.name);
+        const drinkJSON = constructDrinkEvent(drinkType);
         if (!drinkJSON) return;
         drinkList.push(drinkJSON);
         postDrinkToDB(drinkJSON, drinkType.name);
@@ -153,7 +150,8 @@ function DrinkButton({ drinkType }: { drinkType: DrinkType }) {
 
                 {drinkType.capacity ? (
                     <Text className="text-xl bottom-2 font-semibold text-gray-500 dark:text-gray-400">
-                        {Math.floor(unitConverter(drinkType.capacity, unit))}{unit}
+                        {Math.floor(unitConverter(drinkType.capacity, unit))}
+                        {unit}
                     </Text>
                 ) : null}
             </View>
@@ -163,21 +161,58 @@ function DrinkButton({ drinkType }: { drinkType: DrinkType }) {
 
 export default function AddDrinkPane() {
     const { isPending, isSuccess } = useAtomValue(addDrinkMAtom);
-    const router = useRouter();
+    const params = useLocalSearchParams<{ id: string }>();
+    const usersJugUser = useAtomValue(userJugUserIdAtom);
+    const jugUserId = params.id || usersJugUser;
+    const [cups, setCups] = useState(drinkTypes);
+    const { data: customDrinkTypes, isLoading } = useAtomValue(customCupsQAtom);
+
+    useEffect(() => {
+        const newCups = [];
+        if (customDrinkTypes && jugUserId) {
+            const drinkTypesForUser = customDrinkTypes[jugUserId];
+            for (const customDrink of drinkTypesForUser) {
+                newCups.push({
+                    name: customDrink.name,
+                    capacity: customDrink.size,
+                    icon: (
+                        <View className="-ml-2">
+                            <Entypo name="cup" size={24} color={colors.green} />
+                        </View>
+                    ),
+                });
+            }
+        }
+        newCups.push({
+            name: "Add a new cup",
+            capacity: 0,
+            icon: (
+                <View className="-ml-2">
+                    <FontAwesome
+                        className=""
+                        color="rgb(180, 180, 180)"
+                        name="plus"
+                        size={35}
+                    />
+                </View>
+            ),
+        });
+        setCups([...drinkTypes, ...newCups]);
+    }, [customDrinkTypes]);
 
     useEffect(() => {
         if (!isSuccess) return;
         router.back();
     }, [isSuccess]);
 
-    if (isPending) {
+    if (isPending || isLoading) {
         return <ActivityIndicator />;
     }
 
     return (
         <View className="items-center">
             <FlatList
-                data={drinkTypes}
+                data={cups}
                 renderItem={({ item }) => <DrinkButton drinkType={item} />}
                 keyExtractor={(item) => item.name}
                 contentContainerStyle={{}}
