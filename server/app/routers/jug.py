@@ -4,7 +4,9 @@ from pony.orm.core import db_session, select, commit
 from pydantic import BaseModel
 import datetime as dt
 
-from ..api import get_hydration_events
+from .data import get_device_info_dict
+
+from ..api import SmartHydrationSession, get_hydration_events, get_jug_latest
 from ..auth import auth_user
 from ..models import JugUser, User, Jug, ConnectionWindow
 from ..schemas import UpdateJugForm
@@ -125,3 +127,23 @@ async def unlink_jug_from_user(form: UnlinkJug, user_id: str = Depends(auth_user
         juguser.jugs.remove(jug)
         ConnectionWindow.get(jug=jug, jug_user=juguser).end = time_now
         commit()
+
+
+class CheckQR(BaseModel):
+    qr: str
+
+@router.post('/qr')
+async def check_qr(form: CheckQR, user_id: str = Depends(auth_user)):
+    with db_session:
+        jug = Jug.get(qr_hash=form.qr)
+        if jug is None:
+            raise HTTPException(400, 'Invalid QR code')
+
+    async with SmartHydrationSession() as session:
+        jug_data = await get_jug_latest(session, jug.smart_hydration_id)
+    if not jug_data:
+        raise HTTPException(400, 'Jug not found')
+
+    jug_info = get_device_info_dict(jug, None)
+    jug_info['ssid'] = jug_data['ssid']
+    return jug_info

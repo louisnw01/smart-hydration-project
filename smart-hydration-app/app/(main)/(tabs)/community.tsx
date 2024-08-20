@@ -10,16 +10,16 @@ import {
     patientInfoQAtom,
     userHasCommunityAtom,
 } from "@/atom/query";
+import { userModeAtom } from "@/atom/user";
 import Loading from "@/components/common/loading";
 import StyledTextInput from "@/components/common/text-input";
+import CommunityLeaderboard from "@/components/community/community-leaderboard";
 import MemberRow from "@/components/community/member-row";
 import { FilterObject, MemberInfo } from "@/interfaces/community";
 import useColorPalette from "@/util/palette";
 import { Entypo } from "@expo/vector-icons";
-import { useFocusEffect } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 import { SelectList } from "react-native-dropdown-select-list";
-import CommunityLeaderboard from "@/components/community/community-leaderboard";
-import { userModeAtom } from "@/atom/user";
 
 export default function CommunityPage() {
     const { isLoading, refetch: refetchCommunityInfo } =
@@ -77,7 +77,7 @@ export default function CommunityPage() {
                 <View className="flex flex-row justify-center">
                     <StyledButton
                         text="+ Add a patient"
-                        href="add-jug-user"
+                        onPress={() => router.push("add-jug-user")}
                         textClass="text-lg"
                     />
                 </View>
@@ -154,13 +154,15 @@ export default function CommunityPage() {
 
                         <StyledButton
                             text="+ Create a community"
-                            href="create-community-modal"
+                            onPress={() =>
+                                router.push("create-community-modal")
+                            }
                             buttonClass="w-56 self-center"
                             textClass="text-lg text-center w-full"
                         />
                         <StyledButton
                             text="+ Join a community"
-                            href="join-community-modal"
+                            onPress={() => router.push("join-community-modal")}
                             buttonClass="w-56 self-center"
                             textClass="text-lg text-center w-full"
                         />

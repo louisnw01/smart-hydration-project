@@ -6,7 +6,7 @@ export default function Typography({
     className,
 }: {
     children: ReactNode;
-    className: string;
+    className?: string;
 }) {
     let finalTextClass = "";
     if (className && className.includes("dark:text")) {

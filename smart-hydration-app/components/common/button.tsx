@@ -55,13 +55,6 @@ export default function StyledButton(props: ButtonProps) {
         <Pressable
             style={props.style}
             className={finalButtonClass}
-            onPress={() =>
-                props.onPress
-                    ? props.onPress
-                    : props.href
-                      ? router.navigate(props.href)
-                      : undefined
-            }
             onTouchStart={() => setTouched(true)}
             onTouchEnd={() => setTouched(false)}
             {...props}
