@@ -89,12 +89,13 @@ async def get_all_jug_ids(user_id, session):
 
 
 
-async def get_hydration_events(session, jug_id, jug_name, start_timestamp, last_day=False):
+async def get_hydration_events(session, jug_id, jug_name, start_timestamp, end_timestamp=None, last_day=False):
     # get a list of all hydration events for the jug for the past year
     # TODO convert start_timestamp to datetime. fromTimestamp
-    start_date = dt.datetime.fromtimestamp(start_timestamp)
-    todays_date = dt.date.today().strftime("%Y-%m-%d") if last_day else None
-    data = await query(session, f'/data/device/{jug_id}/events/hydration?maxCount=1000{f"&minDate={todays_date}" if last_day else ""}')
+    start_date = dt.datetime.fromtimestamp(start_timestamp).strftime("%Y-%m-%d") if start_timestamp else None
+    if last_day:
+        start_date = dt.date.today().strftime("%Y-%m-%d")
+    data = await query(session, f'/data/device/{jug_id}/events/hydration?maxCount=1000{f"&minDate={start_date}" if start_date else ""}')
 
     if data is None or (type(data) == list and len(data) == 0):
         return []
@@ -104,6 +105,13 @@ async def get_hydration_events(session, jug_id, jug_name, start_timestamp, last_
         if row['type'] != 'DRINK':
             continue
         iso_date = dt.datetime.fromisoformat(row['timestamp'].replace('Z', ''))
+        timestamp = iso_date.timestamp()
+        if start_timestamp:
+            if timestamp < start_timestamp:
+                continue
+        if end_timestamp:
+            if timestamp > end_timestamp:
+                continue
 
         events.append({
             'time': iso_date.timestamp(),
@@ -112,6 +120,7 @@ async def get_hydration_events(session, jug_id, jug_name, start_timestamp, last_
         })
 
     return events
+
 
 async def fetch_all_registered_jugs():
     async with SmartHydrationSession() as session:
