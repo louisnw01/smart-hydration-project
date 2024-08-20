@@ -16,7 +16,6 @@ import { router } from "expo-router";
 import { useAtomValue, useSetAtom } from "jotai";
 import { useEffect, useState } from "react";
 import { Pressable, View } from "react-native";
-import WifiManager from "react-native-wifi-reborn";
 import StyledButton from "../common/button";
 import Loading from "../common/loading";
 import Typography from "../common/typography";
