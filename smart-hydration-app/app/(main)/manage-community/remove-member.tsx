@@ -46,22 +46,26 @@ export default function MemberList() {
 
     return (
         <View className="p-5">
-            <Text className="text-black text-xl font-semibold text-center mb-5">
-                Member List
+            <Text className="text-black text-xl font-semibold text-center mb-5 dark:text-white">
+                Carer List
             </Text>
             <FlatList
                 data={members}
                 keyExtractor={(item) => item.id}
                 renderItem={({ item }) => (
-                    <View className="flex-row justify-between items-center p-3 border-b border-gray-300 bg-gray-200 rounded-lg mb-2">
-                        <Text className="text-lg">{item.name}</Text>
-                        <TouchableOpacity
-                            className="bg-blue-700 border border-gray-400 py-1 px-4 rounded-lg"
-                            onPress={() => confirmRemoveMember(item)}
-                        >
-                            <Text className="text-black text-lg">-</Text>
-                        </TouchableOpacity>
-                    </View>
+                    <>
+                    { !item.isOwner && (
+                        <View className="flex-row justify-between items-center p-3 border-b border-gray-300 bg-gray-200 rounded-lg mb-2">
+                            <Text className="text-lg dark:text-white">{item.name}</Text>
+                            <TouchableOpacity
+                                className="bg-blue-700 border border-gray-400 py-1 px-4 rounded-lg"
+                                onPress={() => confirmRemoveMember(item)}
+                            >
+                                <Text className="text-black text-lg dark:text-white">-</Text>
+                            </TouchableOpacity>
+                        </View>
+                    )}
+                    </>
                 )}
             />
 
@@ -74,7 +78,7 @@ export default function MemberList() {
             /> */}
 
             <ConfirmModal
-                message={`Are you sure you want to remove the member ${member?.name}?`}
+                message={`Are you sure you want to remove the carer ${member?.name}?`}
                 confirmMessage="Remove"
                 onReject={handleOnReject}
                 onConfirm={handleRemoveMember}

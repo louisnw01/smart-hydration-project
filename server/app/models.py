@@ -59,6 +59,7 @@ class JugUser(db.Entity):
     drank_today = Optional(int)
     last_drank = Optional(int)
     tags = Set('Tag')
+    connection_windows = Set('ConnectionWindow')
     room = Optional(str)
 
 
@@ -77,6 +78,7 @@ class Jug(db.Entity):
     is_charging = Required(bool, default=False)
     capacity = Optional(int)
     staleness = Optional(int)
+    connection_windows = Set('ConnectionWindow')
 
 class Community(db.Entity):
     id = PrimaryKey(int, auto=True)
@@ -134,3 +136,11 @@ class Notifications(db.Entity):
     frequency = Required(int)
     send_time = Required(int)
     user = Required(User)
+
+
+class ConnectionWindow(db.Entity):
+    id = PrimaryKey(int, auto=True)
+    jug = Required(Jug)
+    jug_user = Required(JugUser)
+    start = Required(int)
+    end = Optional(int)
