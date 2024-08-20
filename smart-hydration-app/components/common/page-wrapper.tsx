@@ -16,11 +16,7 @@ export default function PageWrapper({
     className?: string;
 }) {
     if (isLoading) return <Loading isLoading message={message} />;
-    return (
-        <View className={`flex flex-1 dark:bg-black ${className}`}>
-            {children}
-        </View>
-    );
+    return <View className={`flex flex-1 ${className}`}>{children}</View>;
 }
 
 export function ScrollPageWrapper({

@@ -7,6 +7,7 @@ import { Atom, useAtomValue } from "jotai";
 import { AtomWithQueryResult } from "jotai-tanstack-query";
 
 import { DeviceInfo } from "@/interfaces/device";
+import { router } from "expo-router";
 import { FlatList, RefreshControl, View } from "react-native";
 import StyledButton from "../common/button";
 import Loading from "../common/loading";
@@ -18,11 +19,13 @@ export default function DeviceSection({
     onPress,
     queryAtom,
     activeColor,
+    onAddJug,
 }: {
     addJugButton?: boolean;
     onPress: (device: DeviceInfo) => void;
     queryAtom: Atom<AtomWithQueryResult<DeviceInfo[]>>;
     activeColor?: string;
+    onAddJug: () => void;
 }) {
     const palette = useColorPalette();
     const { data, isLoading } = useAtomValue(queryAtom);
@@ -45,7 +48,28 @@ export default function DeviceSection({
         listItems.push(
             <StyledButton
                 text="Add a New Jug"
-                href="add-device-modal"
+                onPress={onAddJug}
+                buttonClass="self-center mt-2"
+                textClass="text-lg mt-[1px]"
+                icon={
+                    <View className="flex flex-row w-6">
+                        <Jug width={16} fill={palette.fg} />
+                        <View className="aboslute top-[13px] right-[9px] w-[8px] h-[8px] rounded-xl bg-gray-200 dark:bg-black" />
+                        <FontAwesome
+                            name="plus-circle"
+                            size={12}
+                            left={-16}
+                            top={12}
+                            color={palette.fg}
+                        />
+                    </View>
+                }
+            />,
+        );
+        listItems.push(
+            <StyledButton
+                text="(DEBUG) Add any jug"
+                onPress={() => router.push("add-device-modal")}
                 buttonClass="self-center mt-2"
                 textClass="text-lg mt-[1px]"
                 icon={

@@ -17,7 +17,7 @@ export default function MVPAddDeviceModal() {
     const { data, isLoading } = useAtomValue(getAllJugsQAtom);
     const jugUserId = useAtomValue(userJugUserIdAtom);
     const [selectedJugs, setSelectedJugs] = useAtom(selectedJugsAtom);
-    const { mutate, isPending, isSuccess } = useAtomValue(linkJugMAtom);
+    const { mutate, isPending, isSuccess, reset } = useAtomValue(linkJugMAtom);
     const { isLoading: isLoadingNewJugs, isSuccess: isSuccessLoadingNewJugs } =
         useAtomValue(getJugDataQAtom);
     const isInCommunity = useAtomValue(userHasCommunityAtom);
@@ -31,6 +31,7 @@ export default function MVPAddDeviceModal() {
         ) {
             return;
         }
+        reset();
         router.back();
     }, [isPending, isSuccess, isLoadingNewJugs, isSuccessLoadingNewJugs]);
 

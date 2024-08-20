@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="169.767 161.133 100 100" width="100" height="100" xmlns="http://www.w3.org/2000/svg">
+  <ellipse style="stroke: rgb(0, 0, 0); fill: rgba(255, 255, 255, 0);" cx="219.767" cy="211.133" rx="50" ry="50"/>
+  <ellipse style="stroke: rgb(0, 0, 0); fill: rgba(216, 216, 216, 0);" cx="220.475" cy="171.265" rx="4.962" ry="4.962"/>
+  <ellipse style="stroke: rgb(0, 0, 0); fill: rgba(216, 216, 216, 0);" cx="255.28" cy="231.076" rx="4.962" ry="4.962"/>
+  <ellipse style="stroke: rgb(0, 0, 0); fill: rgba(216, 216, 216, 0);" cx="186.211" cy="231.425" rx="4.962" ry="4.962"/>
+  <rect style="stroke: rgb(0, 0, 0); fill: rgba(216, 216, 216, 0);" x="192.113" y="212.509" width="3.542" height="9.93" rx="1.8" ry="1.8"/>
+  <ellipse style="stroke: rgb(0, 0, 0);" cx="230.683" cy="188.661" rx="1" ry="1"/>
+  <ellipse style="stroke: rgb(0, 0, 0);" cx="210.683" cy="188.661" rx="1" ry="1"/>
+  <ellipse style="stroke: rgb(0, 0, 0);" cx="214.683" cy="188.661" rx="1" ry="1"/>
+  <ellipse style="stroke: rgb(0, 0, 0);" cx="218.683" cy="188.661" rx="1" ry="1"/>
+  <ellipse style="stroke: rgb(0, 0, 0);" cx="222.683" cy="188.661" rx="1" ry="1"/>
+  <ellipse style="stroke: rgb(0, 0, 0);" cx="226.683" cy="188.661" rx="1" ry="1"/>
+  <rect style="stroke: rgb(0, 0, 0); fill: rgba(216, 216, 216, 0);" x="206.998" y="185.186" width="27.246" height="7.106" rx="3.6" ry="3.6"/>
+  <rect style="stroke: rgb(0, 0, 0); fill: rgba(216, 216, 216, 0);" x="244.962" y="212.509" width="3.542" height="9.93" rx="1.8" ry="1.8"/>
+</svg>

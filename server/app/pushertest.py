@@ -122,7 +122,6 @@ async def on_telemetry_change(data):
 
 async def on_waterlevel_change(data):
     print(f'[{dt.datetime.now()}] waterlevel changed', data)
-    await fire_jug_info(data)
     await asyncio.gather(
         fire_jug_info(data['device']),
         fire_last_drank(data['device']),

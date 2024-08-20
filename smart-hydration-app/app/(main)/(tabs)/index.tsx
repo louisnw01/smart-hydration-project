@@ -46,7 +46,7 @@ export default function HomePage() {
                 {!hasJugs && (
                     <StyledButton
                         text="Add a New Jug"
-                        href="devices"
+                        onPress={() => router.push("devices")}
                         buttonClass="self-center mt-8"
                         textClass="text-lg mt-[1px]"
                         icon={

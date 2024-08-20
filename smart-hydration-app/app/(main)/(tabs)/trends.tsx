@@ -1,32 +1,30 @@
+import useSettings from "@/app/hooks/user";
+import { selectedMemberAtom } from "@/atom/community";
+import { mostHydratedDayOfWeekAtom } from "@/atom/hydration";
 import {
     getHydrationQAtom,
-    getJugDataQAtom,
     historicalPatientJugDataQAtom,
     patientInfoQAtom,
     userHasCommunityAtom,
-    userInfoQAtom,
     userJugUserIdAtom,
 } from "@/atom/query";
+import { userModeAtom } from "@/atom/user";
+import StyledButton from "@/components/common/button";
 import { ScrollPageWrapper } from "@/components/common/page-wrapper";
 import WaterAmount from "@/components/common/water-amount";
+import TrendsChart from "@/components/trends/chart";
 import InsightsPane from "@/components/trends/insights-pane";
 import MonthVsLastMonthInsight from "@/components/trends/month-vs-month";
 import Switcher from "@/components/trends/switcher";
 import TodayVsAvgInsight from "@/components/trends/today-vs-avg";
-import { formattedDataAtom } from "@/util/trends";
-import { useAtomValue, useAtom, useSetAtom } from "jotai";
-import { ActivityIndicator, Text, View } from "react-native";
-import { Entypo } from "@expo/vector-icons";
-import useSettings from "@/app/hooks/user";
-import { mostHydratedDayOfWeekAtom } from "@/atom/hydration";
-import StyledButton from "@/components/common/button";
-import TrendsChart from "@/components/trends/chart";
 import useColorPalette from "@/util/palette";
-import { FontAwesome6 } from "@expo/vector-icons";
-import { userModeAtom } from "@/atom/user";
-import { SelectList } from "react-native-dropdown-select-list";
+import { formattedDataAtom } from "@/util/trends";
+import { Entypo, FontAwesome6 } from "@expo/vector-icons";
+import { router } from "expo-router";
+import { useAtom, useAtomValue } from "jotai";
 import { useEffect } from "react";
-import { selectedMemberAtom } from "@/atom/community";
+import { Text, View } from "react-native";
+import { SelectList } from "react-native-dropdown-select-list";
 
 function MostHydratedDayOfWeek() {
     const { name, value } = useAtomValue(mostHydratedDayOfWeekAtom);
@@ -194,7 +192,9 @@ export default function TrendsPage() {
                             <View className="flex flex-row items-center justify-center">
                                 <StyledButton
                                     text="Community"
-                                    href="(tabs)/community"
+                                    onPress={() =>
+                                        router.push("(tabs)/community")
+                                    }
                                     textClass="text-lg self-center"
                                     buttonClass="self-center mt-20 px-3"
                                     icon={

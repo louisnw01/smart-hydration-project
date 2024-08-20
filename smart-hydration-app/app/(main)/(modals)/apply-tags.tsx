@@ -141,7 +141,8 @@ export default function ApplyTags() {
             <ScrollView>
                 <View className="mt-8 flex gap-6">
                     <Text className="dark:text-white text-2xl mx-6">
-                        Press a tag to add it to or remove it from {member?.name}. Press the Save button when done.
+                        Press a tag to add it to or remove it from{" "}
+                        {member?.name}. Press the Save button when done.
                     </Text>
                     <Text className="dark:text-white font-bold text-2xl mx-6">
                         {member?.name}'s tags
@@ -166,7 +167,8 @@ export default function ApplyTags() {
                     </Text>
                     {communityTags.length === 0 && (
                         <Text className="dark:text-white text-xl mx-6">
-                            No tags in this community. The community owner can create tags in Community settings.
+                            No tags in this community. The community owner can
+                            create tags in Community settings.
                         </Text>
                     )}
                     <View className="flex-row flex-wrap my-2 mx-3">
@@ -182,7 +184,7 @@ export default function ApplyTags() {
                     <View className="flex flex-col justify-center items-center">
                         <StyledButton
                             text="Save patient's tags"
-                            href="member-info-modal"
+                            // onPress={() => router.push("member-info-modal")}
                             textClass="text-lg"
                             onPress={handleSaveTags}
                         />

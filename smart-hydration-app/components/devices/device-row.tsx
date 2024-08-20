@@ -122,7 +122,7 @@ function BatteryIndicator({
                     size={15}
                     top={1}
                     right={4}
-                    color="black"
+                    color={palette.fg}
                 />
             )}
         </View>
