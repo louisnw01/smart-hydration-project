@@ -24,7 +24,7 @@ export default function AddJugUserLayout() {
             <Stack.Screen
                 name="add-jug-user-modal"
                 options={{
-                    title: "Add a New Jug User",
+                    title: "Add a New Patient",
                     headerLeft: () => {
                         return (
                             <Pressable onPress={() => router.back()}>
@@ -63,6 +63,23 @@ export default function AddJugUserLayout() {
                 name="dob"
                 options={{
                     title: "What is their date of birth?",
+                    headerLeft: () => {
+                        return (
+                            <Pressable onPress={() => router.back()}>
+                                <Entypo
+                                    name="chevron-left"
+                                    size={24}
+                                    color="rgb(80, 80, 80)"
+                                />
+                            </Pressable>
+                        );
+                    },
+                }}
+            />
+            <Stack.Screen
+                name="room"
+                options={{
+                    title: "What is their room?",
                     headerLeft: () => {
                         return (
                             <Pressable onPress={() => router.back()}>

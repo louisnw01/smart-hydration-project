@@ -70,9 +70,10 @@ const settingsList: ISettingsSection[] = [
                 name: "Edit community tags",
                 Component: (name, isFirst, isLast) => {
                     const { data } = useAtomValue(communityInfoQAtom);
+                    const { isCarer } = useSettings();
                     return (
                         <>
-                            {data?.isOwner && (
+                            {data?.isOwner && isCarer && (
                                 <OptionBlock
                                     isLast={isLast}
                                     isFirst={isFirst}
@@ -101,12 +102,13 @@ const settingsList: ISettingsSection[] = [
         title: "Members",
         data: [
             {
-                name: "Remove Member",
+                name: "Remove Carer",
                 Component: (name, isFirst, isLast) => {
                     const { data } = useAtomValue(communityInfoQAtom);
+                    const { isCarer } = useSettings();
                     return (
                         <>
-                            {data?.isOwner && (
+                            {data?.isOwner && isCarer && (
                                 <OptionBlock
                                     isLast={isLast}
                                     text={name}
@@ -129,39 +131,13 @@ const settingsList: ISettingsSection[] = [
                 },
             },
             {
-                name: "Add Member",
+                name: "Invite Carer",
                 Component: (name, isFirst, isLast) => {
                     const { data } = useAtomValue(communityInfoQAtom);
+                    const { isCarer } = useSettings();
                     return (
                         <>
-                            {data?.isOwner && (
-                                <OptionBlock
-                                    isLast={isLast}
-                                    text={name}
-                                    onPress={() =>
-                                        router.navigate(
-                                            "manage-community/add-member-modal",
-                                        )
-                                    }
-                                    icon={
-                                        <Ionicons
-                                            name="close-circle-outline"
-                                            size={19}
-                                            color="gray"
-                                        />
-                                    }
-                                />
-                            )}
-                        </>
-                    );
-                },
-            },
-            {
-                name: "Invite User",
-                Component: (name, isFirst, isLast) => {
-                    const { data } = useAtomValue(communityInfoQAtom);
-                    return (
-                        <>
+                        {isCarer && data?.isOwner && (
                             <OptionBlock
                                 isLast={isLast}
                                 text={name}
@@ -178,6 +154,35 @@ const settingsList: ISettingsSection[] = [
                                     />
                                 }
                             />
+                        )}
+                        </>
+                    );
+                },
+            },
+            {
+                name: "Invite User",
+                Component: (name, isFirst, isLast) => {
+                    const { isCarer } = useSettings();
+                    return (
+                        <>
+                        {!isCarer && (
+                            <OptionBlock
+                                isLast={isLast}
+                                text={name}
+                                onPress={() =>
+                                    router.navigate(
+                                        "manage-community/invite-member",
+                                    )
+                                }
+                                icon={
+                                    <Ionicons
+                                        name="add-circle-outline"
+                                        size={19}
+                                        color="gray"
+                                    />
+                                }
+                            />
+                        )}
                         </>
                     );
                 },
