@@ -114,15 +114,13 @@ export default function TrendsChart() {
             console.log("running..");
             scrollPosition.value = newValue;
         }, 100);
-    }, [timeframe]);
+    }, [timeframe, data]);
 
     const animatedStyles = useAnimatedStyle(() => ({
         width: scrollViewWidth.value,
         height: 300,
     }));
-
     if (!data || data.length === 0) {
-        console.log("ashdjkas");
         return (
             <View className="h-full justify-center text-center">
                 <ActivityIndicator />

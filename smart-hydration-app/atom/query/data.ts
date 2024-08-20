@@ -3,11 +3,7 @@ import { ENDPOINTS } from "@/util/fetch";
 import { atom } from "jotai";
 import { selectedMemberAtom } from "../community";
 import { authTokenAtom } from "../user";
-import {
-    atomWithMutationCustom,
-    atomWithQueryDerivation,
-    atomWithQueryInfo,
-} from "./common";
+import { atomWithQueryDerivation, atomWithQueryInfo } from "./common";
 import { userInfoQAtom } from "./user";
 
 export const getJugDataQAtom = atomWithQueryInfo<DeviceInfo[]>({
@@ -41,30 +37,16 @@ export const patientJugDataAtom = atom((get) => {
 //     enabled: (get) => !!get(authTokenAtom) && !!get(selectedMemberAtom),
 // });
 
-export const addDrinkMAtom = atomWithMutationCustom<{
-    timestamp: number;
-    name: string;
-    capacity: number;
-}>({
-    mutationKey: "/jug-user/add-drink-event",
-    endpoint: ENDPOINTS.ADD_DRINK,
-    onSuccess: (get, qc, form) => {
-        qc.setQueryData(
-            ["/data/historical", get(authTokenAtom)],
-            (prev: DeviceInfo[]) => [
-                ...prev,
-                { time: form.timestamp * 1000, value: form.capacity },
-            ],
-        );
-    },
-});
-
 export const historicalPatientJugDataQAtom = atomWithQueryInfo<ITimeSeries[]>({
-    queryKey: "historical-patient",
+    queryKey: (get) => [
+        "historical-patient",
+        get(authTokenAtom),
+        get(selectedMemberAtom),
+    ],
     endpoint: ENDPOINTS.FETCH_HISTORICAL_JUG_DATA,
     query: (get) => ({
         jug_user_id: get(selectedMemberAtom)?.id,
-        timestamp: new Date(2024, 5, 26).getTime() / 1000,
+        timestamp: 0,
     }),
     enabled: (get) => !!get(authTokenAtom) && !!get(selectedMemberAtom),
 });

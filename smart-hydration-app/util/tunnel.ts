@@ -2,6 +2,7 @@ import { isMeasuringNewCupSizeAtom } from "@/atom/device";
 import { getJugDataQAtom } from "@/atom/query";
 import { authTokenAtom } from "@/atom/user";
 import { DeviceInfo } from "@/interfaces/device";
+import { router } from "expo-router";
 import { atom } from "jotai";
 import { atomEffect } from "jotai-effect";
 import { queryClientAtom } from "jotai-tanstack-query";
@@ -133,7 +134,8 @@ export const subscribeToJugDataEAtom = atomEffect((get, set) => {
                 return;
             }
             // we can take this diff as the cup size
-            alert(`todo: implement custom cup size of ${diff}`);
+            // alert(`todo: implement custom cup size of ${diff}`);
+            router.push(`custom/success?size=${diff}`);
         }
 
         queryClient.setQueryData(

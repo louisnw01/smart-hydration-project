@@ -6,7 +6,7 @@ import Loading from "@/components/common/loading";
 import MarginBox from "@/components/common/margin-box";
 import DeviceSection from "@/components/devices/device-section";
 import { DeviceInfo } from "@/interfaces/device";
-import { router, useNavigation } from "expo-router";
+import { useNavigation } from "expo-router";
 import { useAtomValue } from "jotai";
 import { useState } from "react";
 import { Text, View } from "react-native";
@@ -102,7 +102,6 @@ export default function AddDeviceMemberModal() {
             {selectedJugs.size > 0 && (
                 <StyledButton
                     text={`Add ${selectedJugs.size} jug${selectedJugs.size > 1 ? "s" : ""} to member`}
-                    onPress={() => router.push("add-member-modal")}
                     textClass="text-lg"
                     onPress={handlePress}
                 />

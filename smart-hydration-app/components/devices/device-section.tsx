@@ -12,6 +12,7 @@ import { FlatList, RefreshControl, View } from "react-native";
 import StyledButton from "../common/button";
 import Loading from "../common/loading";
 import DeviceRow from "./device-row";
+import { unitsAtom } from "@/atom/user";
 
 export default function DeviceSection({
     addJugButton,

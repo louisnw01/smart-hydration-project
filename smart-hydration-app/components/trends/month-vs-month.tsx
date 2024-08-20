@@ -8,10 +8,14 @@ import { useAtomValue } from "jotai";
 import { Text, View } from "react-native";
 import WaterAmount from "../common/water-amount";
 import InsightsPane from "./insights-pane";
+import { selectedMemberAtom } from "@/atom/community";
+import { userJugUserIdAtom } from "@/atom/query";
 
 export default function MonthVsLastMonthInsight() {
     const avgAmountThisMonth = useAtomValue(avgAmountDrankThisMonthAtom);
     const avgAmountLastMonth = useAtomValue(avgAmountDrankLastMonthAtom);
+    const selectedMember = useAtomValue(selectedMemberAtom);
+    const userJUserId = useAtomValue(userJugUserIdAtom);
     if (Number.isNaN(avgAmountLastMonth) || Number.isNaN(avgAmountThisMonth)) {
         return null;
     }
@@ -23,38 +27,77 @@ export default function MonthVsLastMonthInsight() {
 
     const moreThisMonth = avgAmountThisMonth > avgAmountLastMonth;
 
-    return (
-        <InsightsPane
-            heading={`On average, you're drinking ${avgAmountThisMonth > avgAmountLastMonth ? "more" : "less"} this month when compared to last month.`}
-        >
-            <View className="flex gap-6">
-                <View className="gap-1">
-                    <WaterAmount value={avgAmountThisMonth} />
-                    <ValueBar
-                        text={thisMonthName}
-                        value={
-                            moreThisMonth
-                                ? 100
-                                : (avgAmountThisMonth / avgAmountLastMonth) *
-                                  100
-                        }
-                    />
+    if (selectedMember.id == userJUserId) {
+        return (
+            <InsightsPane
+                heading={`On average, you're drinking ${avgAmountThisMonth > avgAmountLastMonth ? "more" : "less"} this month when compared to last month.`}
+            >
+                <View className="flex gap-6">
+                    <View className="gap-1">
+                        <WaterAmount value={avgAmountThisMonth} />
+                        <ValueBar
+                            text={thisMonthName}
+                            value={
+                                moreThisMonth
+                                    ? 100
+                                    : (avgAmountThisMonth /
+                                          avgAmountLastMonth) *
+                                      100
+                            }
+                        />
+                    </View>
+                    <View className="gap-1">
+                        <WaterAmount value={avgAmountLastMonth} />
+                        <ValueBar
+                            text={lastMonthName}
+                            value={
+                                !moreThisMonth
+                                    ? 100
+                                    : (avgAmountLastMonth /
+                                          avgAmountThisMonth) *
+                                      100
+                            }
+                        />
+                    </View>
                 </View>
-                <View className="gap-1">
-                    <WaterAmount value={avgAmountLastMonth} />
-                    <ValueBar
-                        text={lastMonthName}
-                        value={
-                            !moreThisMonth
-                                ? 100
-                                : (avgAmountLastMonth / avgAmountThisMonth) *
-                                  100
-                        }
-                    />
+            </InsightsPane>
+        );
+    } else {
+        return (
+            <InsightsPane
+                heading={`On average, ${selectedMember.name} is drinking ${avgAmountThisMonth > avgAmountLastMonth ? "more" : "less"} this month when compared to last month.`}
+            >
+                <View className="flex gap-6">
+                    <View className="gap-1">
+                        <WaterAmount value={avgAmountThisMonth} />
+                        <ValueBar
+                            text={thisMonthName}
+                            value={
+                                moreThisMonth
+                                    ? 100
+                                    : (avgAmountThisMonth /
+                                          avgAmountLastMonth) *
+                                      100
+                            }
+                        />
+                    </View>
+                    <View className="gap-1">
+                        <WaterAmount value={avgAmountLastMonth} />
+                        <ValueBar
+                            text={lastMonthName}
+                            value={
+                                !moreThisMonth
+                                    ? 100
+                                    : (avgAmountLastMonth /
+                                          avgAmountThisMonth) *
+                                      100
+                            }
+                        />
+                    </View>
                 </View>
-            </View>
-        </InsightsPane>
-    );
+            </InsightsPane>
+        );
+    }
 }
 
 function ValueBar({ text, value }: { text: string; value: number }) {

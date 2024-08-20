@@ -14,6 +14,7 @@ import { useEffect, useState } from "react";
 import { Pressable, Text, View } from "react-native";
 import StyledButton from "../common/button";
 import Tag from "./tag";
+import { unitConverter, unitsAtom } from "@/atom/user";
 
 function getOrdinalSuffix(day) {
     if (day > 3 && day < 21) return "th";
@@ -38,6 +39,7 @@ export default function MemberRow({ member }: { member: MemberInfo }) {
     const setMember = useSetAtom(selectedMemberAtom);
     const memberData = useFormattedMemberData(member);
     const userInfo = useAtomValue(userInfoQAtom);
+    const unit = useAtomValue(unitsAtom);
 
     const [membersWarnings, setMembersWarnings] = useState<
         WarningsWithId[] | null
@@ -88,7 +90,7 @@ export default function MemberRow({ member }: { member: MemberInfo }) {
                         />
                         <MemberDetail
                             title="Target Progress"
-                            value={`${memberData.targetProgress}\n${memberData.amountDrank} out of ${memberData.target}ml`}
+                            value={`${memberData.targetProgress}\n${memberData.amountDrank} out of ${Math.floor(unitConverter(memberData.target, unit))}${unit}`}
                         />
                     </View>
                     <View className="flex-row gap-2 flex-wrap">
@@ -189,7 +191,9 @@ export default function MemberRow({ member }: { member: MemberInfo }) {
                         textClass="text-lg mt-[1px]"
                         onPress={() => {
                             setMember(member);
-                            router.push("add-drink-community-modal");
+                            router.push(
+                                `custom/add-drink-modal?id=${member.id}`,
+                            );
                         }}
                         icon=<MaterialCommunityIcons
                             name="water-plus-outline"

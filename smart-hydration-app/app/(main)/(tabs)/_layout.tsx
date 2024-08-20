@@ -11,7 +11,7 @@ import {
     MaterialIcons,
 } from "@expo/vector-icons";
 
-import { Link, router, Tabs } from "expo-router";
+import { router, Tabs } from "expo-router";
 import { useAtomValue } from "jotai";
 import { Pressable, Text } from "react-native";
 
@@ -81,11 +81,18 @@ export default function TabLayout() {
                     headerRight: () => (
                         <>
                             {!isCarer && hasCommunity && (
-                                <Link className="px-5" href="manage-community">
-                                    <Text className="text-xl font-semibold">
+                                <Pressable
+                                    className="px-5"
+                                    onPress={() =>
+                                        router.push(
+                                            "settings/community-settings",
+                                        )
+                                    }
+                                >
+                                    <Text className="text-xl font-semibold dark:text-white">
                                         Manage
                                     </Text>
-                                </Link>
+                                </Pressable>
                             )}
                             {isCarer && (
                                 <Pressable

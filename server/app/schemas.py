@@ -37,12 +37,6 @@ class AddDrinkForm(BaseModel):
     name: str
     capacity: int
 
-class AddCommunityDrinkForm(BaseModel):
-    juser_id: int
-    timestamp: int
-    name: str
-    capacity: int
-
 class CreateCommunityForm(BaseModel):
     name: str
 
@@ -50,6 +44,7 @@ class CreateCommunityForm(BaseModel):
 class AddJugUserForm(BaseModel):
     name: str
     dob: Optional[str] = None
+    room: Optional[str] = None
 
 
 class CreateInvitationForm(BaseModel):

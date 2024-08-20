@@ -28,7 +28,7 @@ const settingsList: ISettingsSection[] = [
                             isFirst={isFirst}
                             isLast={isLast}
                             onPress={() =>
-                                router.navigate("manage-community/change-name")
+                                router.navigate("settings/change-name")
                             }
                             icon={
                                 <MaterialCommunityIcons
@@ -70,17 +70,16 @@ const settingsList: ISettingsSection[] = [
                 name: "Edit community tags",
                 Component: (name, isFirst, isLast) => {
                     const { data } = useAtomValue(communityInfoQAtom);
+                    const { isCarer } = useSettings();
                     return (
                         <>
-                            {data?.isOwner && (
+                            {data?.isOwner && isCarer && (
                                 <OptionBlock
                                     isLast={isLast}
                                     isFirst={isFirst}
                                     text={name}
                                     onPress={() =>
-                                        router.navigate(
-                                            "manage-community/edit-tags",
-                                        )
+                                        router.navigate("settings/edit-tags")
                                     }
                                     icon={
                                         <Ionicons
@@ -101,18 +100,19 @@ const settingsList: ISettingsSection[] = [
         title: "Members",
         data: [
             {
-                name: "Remove Member",
+                name: "Remove Carer",
                 Component: (name, isFirst, isLast) => {
                     const { data } = useAtomValue(communityInfoQAtom);
+                    const { isCarer } = useSettings();
                     return (
                         <>
-                            {data?.isOwner && (
+                            {data?.isOwner && isCarer && (
                                 <OptionBlock
                                     isLast={isLast}
                                     text={name}
                                     onPress={() =>
                                         router.navigate(
-                                            "manage-community/remove-member",
+                                            "settings/remove-member",
                                         )
                                     }
                                     icon={
@@ -129,27 +129,58 @@ const settingsList: ISettingsSection[] = [
                 },
             },
             {
-                name: "Invite Member",
+                name: "Invite Carer",
                 Component: (name, isFirst, isLast) => {
                     const { data } = useAtomValue(communityInfoQAtom);
+                    const { isCarer } = useSettings();
                     return (
                         <>
-                            <OptionBlock
-                                isLast={isLast}
-                                text={name}
-                                onPress={() =>
-                                    router.navigate(
-                                        "manage-community/invite-member",
-                                    )
-                                }
-                                icon={
-                                    <Ionicons
-                                        name="add-circle-outline"
-                                        size={19}
-                                        color="gray"
-                                    />
-                                }
-                            />
+                            {isCarer && data?.isOwner && (
+                                <OptionBlock
+                                    isLast={isLast}
+                                    text={name}
+                                    onPress={() =>
+                                        router.navigate(
+                                            "settings/invite-member",
+                                        )
+                                    }
+                                    icon={
+                                        <Ionicons
+                                            name="add-circle-outline"
+                                            size={19}
+                                            color="gray"
+                                        />
+                                    }
+                                />
+                            )}
+                        </>
+                    );
+                },
+            },
+            {
+                name: "Invite User",
+                Component: (name, isFirst, isLast) => {
+                    const { isCarer } = useSettings();
+                    return (
+                        <>
+                            {!isCarer && (
+                                <OptionBlock
+                                    isLast={isLast}
+                                    text={name}
+                                    onPress={() =>
+                                        router.navigate(
+                                            "settings/invite-member",
+                                        )
+                                    }
+                                    icon={
+                                        <Ionicons
+                                            name="add-circle-outline"
+                                            size={19}
+                                            color="gray"
+                                        />
+                                    }
+                                />
+                            )}
                         </>
                     );
                 },
