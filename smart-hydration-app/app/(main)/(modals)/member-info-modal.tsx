@@ -15,7 +15,7 @@ import { router } from "expo-router";
 import { useAtomValue, useSetAtom } from "jotai";
 import { ReactNode, useEffect, useState } from "react";
 import { Text, View } from "react-native";
-import { ConfirmModal } from "../settings/remove-member";
+import { ConfirmModal } from "../manage-community/remove-member";
 
 function MemberInfoBlock({
     children,

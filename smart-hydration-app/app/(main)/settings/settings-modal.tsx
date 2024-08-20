@@ -15,7 +15,7 @@ import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { useEffect, useState } from "react";
 import { SectionList, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { ConfirmModal } from "../settings/remove-member";
+import { ConfirmModal } from "../manage-community/remove-member";
 
 const settingsList: ISettingsSection[] = [
     {
@@ -158,8 +158,8 @@ const settingsList: ISettingsSection[] = [
                             isLast={isLast}
                             text={name}
                             onPress={() => {
-                                // router.dismiss();
-                                router.push("settings/community-settings");
+                                router.dismiss();
+                                router.navigate("manage-community/community-settings");
                             }}
                             icon={
                                 <MaterialCommunityIcons
