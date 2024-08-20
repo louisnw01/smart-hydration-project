@@ -7,12 +7,14 @@ import {
 import { UserInfo } from "@/interfaces/user";
 import { ENDPOINTS } from "@/util/fetch";
 import { jugUserInfoAtom } from "../jug-user";
-import { authTokenAtom, inviteCodeAtom } from "../user";
+import { authTokenAtom, inviteCodeAtom, userModeAtom } from "../user";
 import {
     atomWithMutationCustom,
     atomWithQueryDerivation,
     atomWithQueryInfo,
 } from "./common";
+import { userInfoQAtom, userJugUserIdAtom } from "./user";
+import { atom } from "jotai";
 
 export const communityInfoQAtom = atomWithQueryInfo<CommunityInfo>({
     queryKey: "get-community-info",
@@ -36,7 +38,11 @@ export const userIsCommunityOwnerAtom = atomWithQueryDerivation(
 );
 
 export const patientInfoQAtom = atomWithQueryInfo<MemberInfo[]>({
-    queryKey: "get-patient-info",
+    queryKey: (get) => [
+        "get-patient-info",
+        get(authTokenAtom),
+        get(userModeAtom),
+    ],
     endpoint: ENDPOINTS.PATIENT_INFO,
     enabled: (get) => !!get(authTokenAtom) && !!get(userHasCommunityAtom),
 });
@@ -108,6 +114,19 @@ export const deleteCommunityMemberMAtom = atomWithMutationCustom<{
     onSuccess: (get, qc, form) => {
         qc.setQueryData<{ id: number }[]>(
             ["get-community-users", get(authTokenAtom)],
+            (prev) => prev?.filter((member) => member.id != form.id),
+        );
+    },
+});
+
+export const removePatientMAtom = atomWithMutationCustom<{
+    id: number;
+}>({
+    mutationKey: "remove-patient",
+    endpoint: ENDPOINTS.REMOVE_PATIENT,
+    onSuccess: (get, qc, form) => {
+        qc.setQueryData<{ id: number }[]>(
+            ["get-patient-info", get(authTokenAtom)],
             (prev) => prev?.filter((member) => member.id != form.id),
         );
     },

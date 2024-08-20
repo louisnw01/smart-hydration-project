@@ -11,15 +11,18 @@ import {
     avgAmountDrankThisMonthAtom,
     mostHydratedDayOfWeekAtom,
 } from "../hydration";
-import { getHydrationQAtom } from "../query";
+import { getHydrationQAtom, historicalPatientJugDataQAtom } from "../query";
 import { unitConverter, unitsAtom } from "../user";
 
 export const hydrationInsightsEAtom = atomEffect((get, set) => {
-    const { data, isLoading } = get(getHydrationQAtom);
+    const { data, isLoading } = get(historicalPatientJugDataQAtom);
 
     if (isLoading || !data) return;
     const unit = get(unitsAtom);
-    const convertedData = data.map((row) => ({time:row.time, value:unitConverter(row.value, unit)}))
+    const convertedData = data.map((row) => ({
+        time: row.time,
+        value: unitConverter(row.value, unit),
+    }));
 
     const dailyAggregates = getAllAggregates(convertedData, MS_DAY);
 

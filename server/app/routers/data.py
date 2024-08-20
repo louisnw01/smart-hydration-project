@@ -68,10 +68,15 @@ async def get_historical_jug_data(jug_user_id: int, timestamp: int, user_id: str
         for drink in other_drinks:
             big_list.append({"time": drink.timestamp, "value": drink.capacity})
 
-        jugs = [jug.to_dict() for jug in juguser.jugs]
+        jugs = [{
+            'start': window.start,
+            'end': window.end,
+            'smart_hydration_id': window.jug.smart_hydration_id,
+            'name': window.jug.name,
+        } for window in juguser.connection_windows]
 
     async with SmartHydrationSession() as session:
-        tasks = [get_hydration_events(session, jug['smart_hydration_id'], jug['name'], timestamp) for jug in jugs]
+        tasks = [get_hydration_events(session, jug['smart_hydration_id'], jug['name'], jug['start'], jug['end']) for jug in jugs]
         results = await asyncio.gather(*tasks)
         big_list.extend([event for sublist in results for event in sublist])
 

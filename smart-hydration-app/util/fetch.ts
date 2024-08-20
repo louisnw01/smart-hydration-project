@@ -43,6 +43,7 @@ export const ENDPOINTS = {
     UPDATE_TAG: "/community/update-tag",
     DELETE_TAG: "/community/delete-tag",
     COMMUNITY_TAGS: "/community/get-tags",
+    REMOVE_PATIENT: "/community/remove-patient",
 
     NAME_FROM_LINK: "/community/name-from-link",
 

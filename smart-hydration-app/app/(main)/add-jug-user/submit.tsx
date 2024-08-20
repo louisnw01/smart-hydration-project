@@ -23,7 +23,7 @@ export default function SubmitPage() {
     return (
         <GenericOnboardContent proceed={true}>
             <Text className="text-xl font-light dark:text-white">
-                Tap the button to finish setting up your new jug user.
+                Tap the button to finish setting up your new patient.
             </Text>
             <Loading isLoading={isPending} message="Setting up.." />
             <>
