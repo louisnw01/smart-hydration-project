@@ -60,6 +60,7 @@ class JugUser(db.Entity):
     last_drank = Optional(int)
     tags = Set('Tag')
     connection_windows = Set('ConnectionWindow')
+    room = Optional(str)
 
 
 class Jug(db.Entity):

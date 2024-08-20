@@ -13,8 +13,6 @@ import { useAtomValue } from "jotai";
 import { useEffect, useState } from "react";
 import { ScrollView, Text, View } from "react-native";
 
-//to do: add loading spinner while tags load
-
 export default function EditTags() {
     const [showNewTagBox, setShowNewTagBox] = useState(false);
     const [nameMatchesExisting, setNameMatchesExisting] = useState(false);
@@ -43,7 +41,7 @@ export default function EditTags() {
         setShowEditTagBox(!showEditTagBox);
     };
 
-    const handleStartup = async () => {};
+    const handleStartup = async () => { };
 
     useEffect(() => {
         refetchTags();
@@ -290,6 +288,9 @@ export default function EditTags() {
                             </View>
                         </View>
                     )}
+                    <Text className="dark:text-white text-xl mx-6">
+                        Changes are saved automatically
+                    </Text>
                 </View>
             </ScrollView>
         </PageWrapper>

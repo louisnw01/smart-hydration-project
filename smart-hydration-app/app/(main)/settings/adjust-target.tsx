@@ -30,7 +30,7 @@ export default function AdjustTarget() {
 
     return (
         <View className="flex flex-col gap-5 w-full">
-            <Text className="text-center text-2xl py-6 font-semibold">
+            <Text className="text-center text-2xl py-6 font-semibold dark:text-white">
                 Your daily target is{" "}
                 {unitConverter(currentDailyTarget, unit).toPrecision(
                     precisionVal,
@@ -38,7 +38,7 @@ export default function AdjustTarget() {
                 {unit}
             </Text>
             <View className="flex-col px-8 pt-6 gap-6">
-                <Text className="text-xl font-semibold">
+                <Text className="text-xl font-semibold dark:text-white">
                     New Target: {textToDisplay} {unit}
                 </Text>
                 <Slider
