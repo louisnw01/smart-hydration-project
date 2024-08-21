@@ -13,8 +13,6 @@ import {
     atomWithQueryDerivation,
     atomWithQueryInfo,
 } from "./common";
-import { userInfoQAtom, userJugUserIdAtom } from "./user";
-import { atom } from "jotai";
 
 export const communityInfoQAtom = atomWithQueryInfo<CommunityInfo>({
     queryKey: "get-community-info",
@@ -61,6 +59,9 @@ export const createCommunityMAtom = atomWithMutationCustom<{ name: string }>({
 export const updateCommunityMAtom = atomWithMutationCustom<{ name: string }>({
     mutationKey: "update-community",
     endpoint: ENDPOINTS.UPDATE_COMMUNITY,
+    onSuccess: (get, qc, form) => {
+        qc.invalidateQueries({ queryKey: ["get-community-info"] });
+    },
 });
 
 export const deleteCommunityMAtom = atomWithMutationCustom({

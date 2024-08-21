@@ -54,17 +54,21 @@ export default function MemberList() {
                 keyExtractor={(item) => item.id}
                 renderItem={({ item }) => (
                     <>
-                    { !item.isOwner && (
-                        <View className="flex-row justify-between items-center p-3 border-b border-gray-300 bg-gray-200 rounded-lg mb-2">
-                            <Text className="text-lg dark:text-white">{item.name}</Text>
-                            <TouchableOpacity
-                                className="bg-blue-700 border border-gray-400 py-1 px-4 rounded-lg"
-                                onPress={() => confirmRemoveMember(item)}
-                            >
-                                <Text className="text-black text-lg dark:text-white">-</Text>
-                            </TouchableOpacity>
-                        </View>
-                    )}
+                        {!item.isOwner && (
+                            <View className="flex-row justify-between items-center p-3 border-b border-gray-300 bg-gray-200 rounded-lg mb-2">
+                                <Text className="text-lg dark:text-white">
+                                    {item.name}
+                                </Text>
+                                <TouchableOpacity
+                                    className="bg-blue-700 border border-gray-400 py-1 px-4 rounded-lg"
+                                    onPress={() => confirmRemoveMember(item)}
+                                >
+                                    <Text className="text-black text-lg dark:text-white">
+                                        -
+                                    </Text>
+                                </TouchableOpacity>
+                            </View>
+                        )}
                     </>
                 )}
             />
@@ -146,17 +150,23 @@ export function ConfirmModal({
 export function BottomSheet({
     children,
     isVisible,
+    bg,
 }: {
     children: ReactNode;
     isVisible: boolean;
+    bg?: string;
 }) {
     const insets = useSafeAreaInsets();
+
+    let className = "rounded-3xl pt-6 ";
+
+    className += bg ? bg : "bg-gray-200 dark:bg-neutral-700";
 
     return (
         <Modal transparent visible={isVisible} animationType="slide">
             <View className="flex-1 justify-end">
                 <View
-                    className="bg-gray-200 dark:bg-neutral-700 rounded-3xl pt-6"
+                    className={className}
                     style={{
                         paddingBottom: insets.bottom,
                     }}

@@ -1,4 +1,4 @@
-import { BottomSheet } from "@/app/(main)/manage-community/remove-member";
+import { BottomSheet } from "@/app/(main)/settings/remove-member";
 import {
     checkQRCodeMAtom,
     linkJugMAtom,

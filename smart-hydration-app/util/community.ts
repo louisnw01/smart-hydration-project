@@ -76,8 +76,13 @@ export interface MemberData {
 }
 
 export function useFormattedMemberData(member: MemberInfo) {
+    const func = useFormattedMemberDataFunction();
+    return func(member);
+}
+
+export function useFormattedMemberDataFunction() {
     const unit = useAtomValue(unitsAtom);
-    const memberData = {
+    return (member: MemberInfo) => ({
         name: member.name,
         lastDrank: generateDateString(member.lastDrank * 1000) || "No data",
         juguser: member.id,
@@ -89,6 +94,5 @@ export function useFormattedMemberData(member: MemberInfo) {
                 .toFixed(0)
                 .toString() + "%",
         target: member.dailyTarget,
-    };
-    return memberData;
+    });
 }

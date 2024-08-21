@@ -1,6 +1,10 @@
+import { updateCommunityMAtom } from "@/atom/query";
+import StyledButton from "@/components/common/button";
+import StyledTextInput from "@/components/common/text-input";
 import { router } from "expo-router";
+import { useAtomValue } from "jotai";
 import { useEffect, useState } from "react";
-import { Pressable, Text, TextInput, View } from "react-native";
+import { Text, View } from "react-native";
 
 export interface ChangeNameProps {
     community_id: string;
@@ -8,38 +12,33 @@ export interface ChangeNameProps {
 
 export default function ChangeName({ community_id }: ChangeNameProps) {
     const [communityName, setCommunityName] = useState<string>("");
+    const { mutate, isPending, isSuccess } = useAtomValue(updateCommunityMAtom);
     useEffect(() => {
-        // TODO: fetch community data in order to get current name
-    });
-
-    const handleSubmit = () => {
-        //TODO: call api to store the new name
-        router.back();
-    };
+        if (isSuccess) {
+            router.back();
+        }
+    }, [isSuccess]);
 
     return (
-        <View className="flex flex-1 gap-8 mx-16 items-center mt-10">
-            <View className="items-center gap-4 mt-20">
-                <Text className="text-black text-2xl font-semibold text-center">
-                    Enter Community Name
-                </Text>
-                <TextInput
-                    placeholder="Enter Community name"
-                    textContentType="emailAddress"
-                    autoCapitalize="none"
-                    defaultValue={communityName}
-                    onChangeText={(value) => setCommunityName(value)}
-                    className="bg-gray-200 w-full h-14 placeholder-black text-xl rounded-xl px-3"
-                />
-                <Pressable
-                    onPress={handleSubmit}
-                    className="bg-blue px-2 py-2 rounded-lg w-32"
-                >
-                    <Text className="text-white text-2xl font-semibold text-center">
-                        Submit
-                    </Text>
-                </Pressable>
-            </View>
+        <View className="gap-10 mx-6 mt-20">
+            <Text className="text-2xl font-medium text-center dark:text-white">
+                Enter Community Name:
+            </Text>
+            <StyledTextInput
+                title="New Community Name"
+                onChangeText={(value) => setCommunityName(value)}
+            />
+            <StyledButton
+                onPress={
+                    communityName
+                        ? () => mutate({ name: communityName })
+                        : undefined
+                }
+                buttonClass="bg-blue rounded-lg self-center"
+                textClass="text-white text-2xl font-medium"
+                text="Submit"
+                isLoading={isPending}
+            />
         </View>
     );
 }

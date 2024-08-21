@@ -1,19 +1,15 @@
-import { useAtomValue } from "jotai";
-import InsightsPane from "./insights-pane";
-import { View, Text } from "react-native";
-import WaterAmount from "../common/water-amount";
+import { selectedMemberAtom } from "@/atom/community";
 import {
     amountDrankTodayAtom,
     avgAmountDrankByTimeNowAtom,
 } from "@/atom/hydration";
-import { selectedMemberAtom } from "@/atom/community";
 import { userJugUserIdAtom } from "@/atom/query";
-import { MemberInfo } from "@/interfaces/community";
+import { useAtomValue } from "jotai";
+import { Text, View } from "react-native";
+import WaterAmount from "../common/water-amount";
+import InsightsPane from "./insights-pane";
 
-export default function TodayVsAvgInsight(
-    selectedMemberData: MemberInfo,
-    userId: number,
-) {
+export default function TodayVsAvgInsight() {
     const amountDrankToday = useAtomValue(amountDrankTodayAtom);
     const selectedMember = useAtomValue(selectedMemberAtom);
     const avgAmountDrankByNow = useAtomValue(avgAmountDrankByTimeNowAtom);
