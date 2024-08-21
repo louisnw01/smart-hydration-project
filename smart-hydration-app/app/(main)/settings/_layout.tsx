@@ -211,24 +211,6 @@ export default function SettingsLayout() {
                 }}
             />
             <Stack.Screen
-                name="change-owner"
-                options={{
-                    title: "Transfer Community Ownership",
-                    headerLeft: () => {
-                        return (
-                            <Pressable onPress={() => router.back()}>
-                                <Entypo
-                                    name="chevron-left"
-                                    size={24}
-                                    color="rgb(80, 80, 80)"
-                                />
-                            </Pressable>
-                        );
-                    },
-                }}
-            />
-
-            <Stack.Screen
                 name="remove-member"
                 options={{
                     title: "Remove a carer from your community",
