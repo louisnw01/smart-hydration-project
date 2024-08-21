@@ -41,31 +41,6 @@ const settingsList: ISettingsSection[] = [
                     );
                 },
             },
-            // {
-            //     name: "Transfer Ownership",
-            //     Component: (name, isFirst, isLast) => {
-            //         const router = useRouter();
-            //         return (
-            //             <OptionBlock
-            //                 isLast={isLast}
-            //                 isFirst={isFirst}
-            //                 text={name}
-            //                 onPress={() =>
-            //                     router.navigate(
-            //                         "settings/community/change-owner",
-            //                     )
-            //                 }
-            //                 icon={
-            //                 <MaterialCommunityIcons
-            //                     name="cog-transfer"
-            //                     size={19}
-            //                     color="gray"
-            //                 />
-            //                 }
-            //             />
-            //         );
-            //     },
-            // },
             {
                 name: "Edit community tags",
                 Component: (name, isFirst, isLast) => {

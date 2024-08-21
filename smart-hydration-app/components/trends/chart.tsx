@@ -1,6 +1,9 @@
 import SFPro from "@/assets/fonts/SF-Pro-Display-Regular.otf";
+import { selectedMemberAtom } from "@/atom/community";
 import { chartTimeWindowAtom } from "@/atom/nav";
+import colors from "@/colors";
 import ToolTip from "@/components/trends/tooltip";
+import { Timeframe } from "@/interfaces/data";
 import useColorPalette from "@/util/palette";
 import { formattedDataAtom } from "@/util/trends";
 import { useFont } from "@shopify/react-native-skia";
@@ -15,7 +18,7 @@ import Animated, {
     useDerivedValue,
     useSharedValue,
 } from "react-native-reanimated";
-import { Bar, CartesianChart, useChartPressState } from "victory-native";
+import { Bar, CartesianChart, Line, useChartPressState } from "victory-native";
 import ChartAxis, { canvasInfoAtom } from "./axis";
 
 const screenWidth = Dimensions.get("screen").width;
@@ -78,6 +81,7 @@ export default function TrendsChart() {
     const { state, isActive } = useChartPressState({ x: "", y: { y: 0 } });
     const palette = useColorPalette();
     const setCanvasInfo = useSetAtom(canvasInfoAtom);
+    const member = useAtomValue(selectedMemberAtom);
 
     const scrollRef = useAnimatedRef<Animated.ScrollView>();
     const scrollPosition = useSharedValue(0);
@@ -93,6 +97,7 @@ export default function TrendsChart() {
             data.map((val) => ({
                 x: tickFormatMap[timeframe](new Date(val.x)),
                 y: val.y,
+                line: member?.dailyTarget,
             })),
         [data, timeframe],
     );
@@ -159,7 +164,7 @@ export default function TrendsChart() {
                     <CartesianChart
                         data={memoedData.toReversed()}
                         xKey="x"
-                        yKeys={["y"]}
+                        yKeys={["y", "line"]}
                         chartPressState={state}
                         domain={{ y: [0] }}
                         domainPadding={{
@@ -200,6 +205,15 @@ export default function TrendsChart() {
                                         animate={{ type: "timing" }}
                                     />
 
+                                    {timeframe != Timeframe.Y &&
+                                        timeframe != Timeframe.D && (
+                                            <Line
+                                                points={points.line}
+                                                color={colors.green}
+                                                strokeWidth={2}
+                                            />
+                                        )}
+
                                     <ToolTip
                                         isActive={isActive}
                                         x={state.x}
@@ -213,12 +227,6 @@ export default function TrendsChart() {
                                 </>
                             );
                         }}
-                        {/*
-                <VictoryLine
-                    data={
-                        memoedData?.map((row) => ({ x: row.x, y: 2200 })) ?? []
-                    }
-                /> */}
                     </CartesianChart>
                 </Animated.View>
             </Animated.ScrollView>
