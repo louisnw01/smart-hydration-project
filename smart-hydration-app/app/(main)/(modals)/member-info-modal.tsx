@@ -12,9 +12,9 @@ import { useFormattedMemberData } from "@/util/community";
 import useColorPalette from "@/util/palette";
 import { FontAwesome, MaterialCommunityIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
-import { useAtomValue, useSetAtom } from "jotai";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { ReactNode, useEffect, useState } from "react";
-import { Text, View } from "react-native";
+import { Pressable, Text, View } from "react-native";
 import { ConfirmModal } from "../settings/remove-member";
 
 function MemberInfoBlock({

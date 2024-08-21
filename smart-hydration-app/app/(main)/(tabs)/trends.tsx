@@ -8,7 +8,6 @@ import {
     userHasCommunityAtom,
     userJugUserIdAtom,
 } from "@/atom/query";
-import { userModeAtom } from "@/atom/user";
 import StyledButton from "@/components/common/button";
 import { ScrollPageWrapper } from "@/components/common/page-wrapper";
 import WaterAmount from "@/components/common/water-amount";
@@ -17,6 +16,7 @@ import InsightsPane from "@/components/trends/insights-pane";
 import MonthVsLastMonthInsight from "@/components/trends/month-vs-month";
 import Switcher from "@/components/trends/switcher";
 import TodayVsAvgInsight from "@/components/trends/today-vs-avg";
+import { MemberInfo } from "@/interfaces/community";
 import useColorPalette from "@/util/palette";
 import { formattedDataAtom } from "@/util/trends";
 import { Entypo, FontAwesome6 } from "@expo/vector-icons";
@@ -31,7 +31,7 @@ function MostHydratedDayOfWeek() {
     const selectedMember = useAtomValue(selectedMemberAtom);
     const userJUserId = useAtomValue(userJugUserIdAtom);
     if (!value) return null;
-    if (selectedMember.id == userJUserId) {
+    if (selectedMember?.id == userJUserId) {
         return (
             <InsightsPane heading={`You tend to drink the most on ${name}.`}>
                 <WaterAmount value={value} />
@@ -40,7 +40,7 @@ function MostHydratedDayOfWeek() {
     } else {
         return (
             <InsightsPane
-                heading={`${selectedMember.name} tends to drink the most on ${name}.`}
+                heading={`${selectedMember?.name} tends to drink the most on ${name}.`}
             >
                 <WaterAmount value={value} />
             </InsightsPane>
@@ -50,7 +50,6 @@ function MostHydratedDayOfWeek() {
 
 function Insights() {
     const data = useAtomValue(formattedDataAtom);
-    useEffect(() => {}, [formattedDataAtom]);
     if (!data || data.length === 0) {
         return <View className="h-3/4 justify-center text-center"></View>;
     }
@@ -74,28 +73,24 @@ export default function TrendsPage() {
     const { isCarer } = useSettings();
     const palette = useColorPalette();
     const userJugUserId = useAtomValue(userJugUserIdAtom);
-    const communityMemberData = useAtomValue(patientInfoQAtom);
-    const juserData = useAtomValue(historicalPatientJugDataQAtom);
+    const { data } = useAtomValue(patientInfoQAtom);
     const [selectedUser, setSelectedJugUser] = useAtom(selectedMemberAtom);
-    const userMode = useAtomValue(userModeAtom);
 
-    let communityMembers;
+    let communityMembers: { key: number; value: MemberInfo }[] | undefined;
 
     // need a way to get the memberinfo of the current user
     //
 
     useEffect(() => {
-        if (isCarer) return;
+        if (isCarer || !data) return;
         setSelectedJugUser(
-            communityMemberData.data?.find((row) => row.id == userJugUserId),
+            data?.find((row) => row.id == userJugUserId) || null,
         );
-    }, [isCarer, communityMemberData.data]);
-
-    useEffect(() => {}, [communityMemberData.data]);
+    }, [isCarer, data]);
 
     if (isCarer) {
-        if (communityMemberData.data != undefined) {
-            communityMembers = communityMemberData?.data.map((row) => ({
+        if (data != undefined) {
+            communityMembers = data.map((row) => ({
                 key: row.id,
                 value: row,
             }));
@@ -123,11 +118,11 @@ export default function TrendsPage() {
                             setSelected={(val) => {
                                 // gets the memberinfo of the user to be used in historical data atom
                                 setSelectedJugUser(
-                                    communityMembers.find(
+                                    communityMembers?.find(
                                         (member) =>
                                             member.key ===
                                             parseInt(val.match(/\d+/)[0]),
-                                    ).value,
+                                    )?.value || null,
                                 );
                             }}
                             defaultOption={{

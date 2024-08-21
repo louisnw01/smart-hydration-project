@@ -2,10 +2,8 @@ import { changeUserModeMAtom } from "@/atom/query";
 import { authTokenAtom, userModeAtom } from "@/atom/user";
 import { MultiSelectOptionBlock } from "@/components/common/option-block";
 import { ISettingsSection } from "@/interfaces/settings";
-import { FontAwesome6, Fontisto, Ionicons } from "@expo/vector-icons";
+import { Fontisto, Ionicons } from "@expo/vector-icons";
 import { useAtomValue } from "jotai";
-import { queryClientAtom } from "jotai-tanstack-query";
-import { useEffect } from "react";
 import { SectionList, View } from "react-native";
 
 const settingsList: ISettingsSection[] = [
@@ -15,17 +13,7 @@ const settingsList: ISettingsSection[] = [
             {
                 name: "Standard",
                 Component: (name, isFirst, isLast) => {
-                    const { mutate, isPending, isSuccess } =
-                        useAtomValue(changeUserModeMAtom);
-                    const queryClient = useAtomValue(queryClientAtom);
-
-                    useEffect(() => {
-                        if (isPending || !isSuccess) return;
-                        queryClient.invalidateQueries({
-                            queryKey: ["get-patient-info"],
-                        });
-                    }, [isPending, isSuccess]);
-
+                    const { mutate } = useAtomValue(changeUserModeMAtom);
                     return (
                         <MultiSelectOptionBlock
                             text={name}
