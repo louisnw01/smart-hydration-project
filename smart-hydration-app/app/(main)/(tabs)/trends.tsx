@@ -132,7 +132,7 @@ export default function TrendsPage() {
                                     ? selectedUser.name +
                                       ": #" +
                                       selectedUser.id
-                                    : "Select a member",
+                                    : "Select a patient",
                             }}
                             data={communityMembers?.map(
                                 (items) =>
@@ -162,7 +162,7 @@ export default function TrendsPage() {
                         {selectedUser == null && (
                             <View className="bg-white dark:bg-black justify-center h-full">
                                 <Text className="dark:text-white text-center text-xl">
-                                    Please select a community member
+                                    Please select a community patient
                                 </Text>
                             </View>
                         )}
