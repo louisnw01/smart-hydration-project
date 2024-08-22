@@ -165,22 +165,29 @@ export default function AddDrinkPane() {
     const usersJugUser = useAtomValue(userJugUserIdAtom);
     const jugUserId = params.id || usersJugUser;
     const [cups, setCups] = useState(drinkTypes);
-    const { data: customDrinkTypes, isLoading } = useAtomValue(customCupsQAtom);
+    const { data: customDrinkTypes, isFetching } =
+        useAtomValue(customCupsQAtom);
 
     useEffect(() => {
         const newCups = [];
-        if (customDrinkTypes && jugUserId) {
+        if (customDrinkTypes && jugUserId && !isFetching) {
             const drinkTypesForUser = customDrinkTypes[jugUserId];
-            for (const customDrink of drinkTypesForUser) {
-                newCups.push({
-                    name: customDrink.name,
-                    capacity: customDrink.size,
-                    icon: (
-                        <View className="-ml-2">
-                            <Entypo name="cup" size={24} color={colors.green} />
-                        </View>
-                    ),
-                });
+            if (drinkTypesForUser != undefined) {
+                for (const customDrink of drinkTypesForUser) {
+                    newCups.push({
+                        name: customDrink.name,
+                        capacity: customDrink.size,
+                        icon: (
+                            <View className="-ml-2">
+                                <Entypo
+                                    name="cup"
+                                    size={24}
+                                    color={colors.green}
+                                />
+                            </View>
+                        ),
+                    });
+                }
             }
         }
         newCups.push({
@@ -205,7 +212,7 @@ export default function AddDrinkPane() {
         router.back();
     }, [isSuccess]);
 
-    if (isPending || isLoading) {
+    if (isPending || isFetching) {
         return <ActivityIndicator />;
     }
 

@@ -9,7 +9,7 @@ from .auth import auth_user
 from .models import connect_to_database, Jug
 from .notifications import send_drink_reminders
 from .routers import community, jug_user, user, data, jug, websocket_tunnel, simulator
-from .pushertest import pusher_init
+from .pusher import pusher_init
 
 from fastapi.middleware.cors import CORSMiddleware
 
