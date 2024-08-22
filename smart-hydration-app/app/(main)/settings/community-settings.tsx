@@ -236,8 +236,16 @@ const settingsList: ISettingsSection[] = [
                                 }}
                             />
                             <ConfirmModal
-                                message="Are you sure you want to delete this community?"
-                                confirmMessage="Delete"
+                                message={
+                                    isOwner
+                                        ? "Are you sure you want to delete this community?"
+                                        : "Are you sure you want to leave this community?"
+                                }
+                                confirmMessage={
+                                    isOwner
+                                        ? "Delete"
+                                        : "Leave"
+                                }
                                 onConfirm={() => {
                                     if (isOwner) {
                                         deleteCommunity();
