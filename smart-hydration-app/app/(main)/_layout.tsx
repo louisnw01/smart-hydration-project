@@ -6,11 +6,13 @@ import useSession from "@/util/auth";
 import { subscribeToJugDataEAtom, tunnelInitEAtom } from "@/util/tunnel";
 import { Redirect, Stack } from "expo-router";
 import { View } from "react-native";
+import useSettings from "../hooks/user";
 
 export default function MainLayout() {
     useAtomValue(colorSchemeEAtom);
     useAtomValue(tunnelInitEAtom);
     useAtomValue(subscribeToJugDataEAtom);
+    const { isCarer } = useSettings()
 
     const { isLoading, isSuccess, isEmailVerified } = useSession();
 
@@ -24,6 +26,8 @@ export default function MainLayout() {
         return <Redirect href="onboarding/email-verification" />;
     } else if (!isSuccess) {
         return <Redirect href="onboarding/login-register" />;
+    } else if (isCarer) {
+        return <Redirect href="(tabs)/commmunity" />;
     }
 
     return (
