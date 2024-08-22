@@ -4,7 +4,7 @@ import { Text, View } from "react-native";
 
 export default function Tag({ name }: { name: string }) {
     return (
-        <View className="bg-blue rounded-full px-2 py-1 mx-1 my-1">
+        <View className="bg-red rounded-full px-2 py-1 mx-1 my-1">
             <Text className="text-white font-bold text-sm">{name}</Text>
         </View>
     );
