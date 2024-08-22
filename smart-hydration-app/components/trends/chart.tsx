@@ -9,7 +9,7 @@ import { formattedDataAtom } from "@/util/trends";
 import { useFont } from "@shopify/react-native-skia";
 import { useAtomValue, useSetAtom } from "jotai";
 import { useEffect, useMemo } from "react";
-import { ActivityIndicator, Dimensions, Text, View } from "react-native";
+import { Dimensions, Text, View } from "react-native";
 import Animated, {
     scrollTo,
     useAnimatedRef,

@@ -1,7 +1,7 @@
 import { chartTimeWindowAtom } from "@/atom/nav";
-import { getHydrationQAtom, historicalPatientJugDataQAtom } from "@/atom/query";
+import { historicalPatientJugDataQAtom } from "@/atom/query";
 import { unitConverter, unitsAtom } from "@/atom/user";
-import { MS_DAY, MS_HOUR, MS_MONTH, MS_WEEK } from "@/constants/data";
+import { MS_DAY, MS_HOUR, MS_MONTH, MS_WEEK, MS_YEAR } from "@/constants/data";
 import { Timeframe } from "@/interfaces/data";
 import { ITimeSeries } from "@/interfaces/device";
 import { atom } from "jotai";
@@ -68,28 +68,31 @@ export function getAggregates(
         Y: MS_MONTH,
     };
 
-    // let timeRange = 0;
+    let timeRange = 0;
     let interval = MS_DAY;
     switch (type) {
         case "W":
-            // timeRange = MS_WEEK;
+            timeRange = MS_WEEK;
             break;
         case "D":
-            // timeRange = MS_DAY;
+            timeRange = MS_DAY;
             interval = MS_HOUR;
             break;
         case "Y":
-            // timeRange = MS_YEAR;
+            timeRange = MS_YEAR * 1.5;
             interval = MS_MONTH;
             break;
         case "M":
-            // timeRange = MS_MONTH;
+            timeRange = MS_MONTH;
             break;
     }
     const roundedTimeNow =
         Math.floor(Date.now() / timeWindowMap[type]) * timeWindowMap[type];
 
-    const newTimeRange = data[data.length - 1].time - data[0].time;
+    const dataTimeRange = data[data.length - 1].time - data[0].time;
+
+    const newTimeRange =
+        dataTimeRange < timeRange / 1000 ? timeRange / 1000 : dataTimeRange;
 
     const aggs: Map<number, number> = new Map();
     const maxBars = 50;

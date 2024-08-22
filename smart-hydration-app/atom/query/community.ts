@@ -6,6 +6,7 @@ import {
 } from "@/interfaces/community";
 import { UserInfo } from "@/interfaces/user";
 import { ENDPOINTS } from "@/util/fetch";
+import { selectedMemberAtom } from "../community";
 import { jugUserInfoAtom } from "../jug-user";
 import { authTokenAtom, inviteCodeAtom, userModeAtom } from "../user";
 import {
@@ -191,5 +192,13 @@ export const createJugUserMAtom = atomWithMutationCustom({
     body: (get) => get(jugUserInfoAtom),
     onSuccess: (get, qc, form) => {
         qc.invalidateQueries({ queryKey: ["get-patient-info"] });
+        qc.invalidateQueries({ queryKey: ["get-custom-cups"] });
+        qc.invalidateQueries({
+            queryKey: [
+                "historical-patient",
+                get(authTokenAtom),
+                get(selectedMemberAtom),
+            ],
+        });
     },
 });

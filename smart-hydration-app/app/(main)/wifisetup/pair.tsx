@@ -2,7 +2,7 @@ import { wifiPairInfoAtom } from "@/atom/wifi";
 import StyledButton from "@/components/common/button";
 import Typography from "@/components/common/typography";
 import JugBaseDiagram from "@/components/devices/jug-base-diagram";
-import { connectToWifi } from "@/components/devices/test";
+import { connectToWifi } from "@/components/devices/wifi";
 import { useAtomValue } from "jotai";
 import { View } from "react-native";
 

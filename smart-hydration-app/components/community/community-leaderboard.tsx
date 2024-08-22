@@ -22,12 +22,8 @@ export default function CommunityLeaderboard() {
             <View className="flex-col gap-4 pt-4 w-full">
                 {sortedData.map((row, index) => {
                     return (
-                        <Pressable>
-                            <LeaderboardRow
-                                key={index}
-                                member={row}
-                                index={index}
-                            />
+                        <Pressable key={index}>
+                            <LeaderboardRow member={row} index={index} />
                         </Pressable>
                     );
                 })}

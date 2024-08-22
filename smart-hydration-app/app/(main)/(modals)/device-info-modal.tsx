@@ -4,18 +4,20 @@ import { unlinkJugMAtom, userHasCommunityAtom } from "@/atom/query";
 import { unitConverter, unitsAtom } from "@/atom/user";
 import colors from "@/colors";
 import StyledButton from "@/components/common/button";
+import Typography from "@/components/common/typography";
 import getStalenessMessage from "@/util/device";
 import useColorPalette from "@/util/palette";
 import {
     Entypo,
     FontAwesome,
-    MaterialCommunityIcons,
     FontAwesome6,
+    MaterialCommunityIcons,
 } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useAtomValue, useSetAtom } from "jotai";
 import { ReactNode, useEffect } from "react";
 import { Text, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 function Container({
     children,
@@ -70,6 +72,7 @@ export default function DeviceInfoModal() {
     const device = useAtomValue(selectedDeviceAtom);
     const setSelectedJugs = useSetAtom(selectedJugsAtom);
     const palette = useColorPalette();
+    const insets = useSafeAreaInsets();
     const {
         mutate: unlinkJug,
         isPending,
@@ -84,7 +87,7 @@ export default function DeviceInfoModal() {
     });
     if (!device) return;
     return (
-        <View className="mt-8 mx-5">
+        <View className="mt-8 mx-5 flex-1">
             <View className="flex-row justify-between items-center">
                 <View className="flex-row gap-3">
                     <JugIcon
@@ -119,7 +122,8 @@ export default function DeviceInfoModal() {
                 >
                     <Text className="dark:text-white">Water Level</Text>
                     <Text className="text-4xl dark:text-white">
-                        {Math.floor(unitConverter(device.water_level, unit))}{unit}
+                        {Math.floor(unitConverter(device.water_level, unit))}
+                        {unit}
                     </Text>
                 </Container>
             </View>
@@ -154,25 +158,30 @@ export default function DeviceInfoModal() {
             </View>
             <View className="flex flex-row items-center gap-3 rounded-xl top-2 px-4 py-3 bg-gray-100 dark:bg-neutral-900">
                 <View className="w-4/5">
-                    <Text className="text-xl font-semibold">
+                    <Typography className="text-xl font-medium">
                         {getStalenessMessage(device.warnings.stale)}
-                    </Text>
+                    </Typography>
                 </View>
-                {device.staleness == 2 && (
-                    <FontAwesome6 name="face-frown" size={42} color="red" />
+                {device.warnings.stale == 2 && (
+                    <FontAwesome6 name="face-frown" size={30} color="red" />
                 )}
-                {device.staleness == 1 && (
-                    <FontAwesome6 name="face-smile" size={42} color="yellow" />
+                {device.warnings.stale == 1 && (
+                    <FontAwesome6 name="face-smile" size={30} color="yellow" />
                 )}
-                {device.staleness == 0 && (
+                {device.warnings.stale == 0 && (
                     <FontAwesome6
                         name="face-grin-beam"
-                        size={42}
-                        color="green"
+                        size={30}
+                        color={colors.green}
                     />
                 )}
             </View>
-            <View className="flex mt-56 gap-3">
+            <View
+                className="gap-3 flex-grow justify-end"
+                style={{
+                    marginBottom: insets.bottom,
+                }}
+            >
                 <StyledButton
                     text="Change Device Name"
                     buttonClass="flex flex-row items-center gap-3 rounded-xl px-4 py-3 bg-gray-100 dark:bg-neutral-900"
@@ -218,7 +227,7 @@ export default function DeviceInfoModal() {
                             });
                     }}
                     isLoading={isPending}
-                    keepTextWhileLoading
+                    loadingColor={palette.fg}
                 />
             </View>
         </View>

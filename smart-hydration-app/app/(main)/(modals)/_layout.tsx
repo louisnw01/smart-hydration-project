@@ -106,24 +106,6 @@ export default function ModalLayout() {
                 }}
             />
             <Stack.Screen
-                name="add-drink-community-modal"
-                options={{
-                    title: "Add a drink for a patient",
-                    headerBackVisible: false,
-                    headerLeft: () => {
-                        return (
-                            <Pressable onPress={() => router.back()}>
-                                <Entypo
-                                    name="chevron-left"
-                                    size={24}
-                                    color="rgb(80, 80, 80)"
-                                />
-                            </Pressable>
-                        );
-                    },
-                }}
-            />
-            <Stack.Screen
                 name="add-device-chooser"
                 options={{
                     title: "Add a device",

@@ -2,6 +2,7 @@ import Jug from "@/assets/svgs/jug.svg";
 import SH_Drop from "@/assets/svgs/SH_Drop.svg";
 import { selectedMemberAtom } from "@/atom/community";
 import { getJugDataQAtom, userInfoQAtom } from "@/atom/query";
+import { unitConverter, unitsAtom } from "@/atom/user";
 import { MemberInfo } from "@/interfaces/community";
 import { StaleWarningType, Warnings } from "@/interfaces/device";
 import { useFormattedMemberData } from "@/util/community";
@@ -14,7 +15,6 @@ import { useEffect, useState } from "react";
 import { Pressable, Text, View } from "react-native";
 import StyledButton from "../common/button";
 import Tag from "./tag";
-import { unitConverter, unitsAtom } from "@/atom/user";
 
 function getOrdinalSuffix(day) {
     if (day > 3 && day < 21) return "th";

@@ -21,6 +21,7 @@ interface ButtonProps extends PressableProps {
     style?: ViewStyle;
     isLoading?: boolean;
     chevron?: boolean;
+    loadingColor?: string;
 }
 
 export default function StyledButton(props: ButtonProps) {
@@ -63,7 +64,9 @@ export default function StyledButton(props: ButtonProps) {
 
             <Text className={textClass}>{props.text}</Text>
 
-            {props.isLoading && <ActivityIndicator color="black" />}
+            {props.isLoading && (
+                <ActivityIndicator color={props.loadingColor || "black"} />
+            )}
 
             {props.chevron && (
                 <View className="flex-grow items-center flex-row justify-end">

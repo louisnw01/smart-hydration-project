@@ -61,7 +61,7 @@ async def get_historical_jug_data(jug_user_id: int, timestamp: int, user_id: str
         # if user.community != juguser.community:
             # raise HTTPException(status_code=400, detail='unauthorized')
         if not juguser:
-            return []
+            raise HTTPException(status_code=400, detail='jug user not found')
 
         other_drinks = juguser.otherdrinks
 

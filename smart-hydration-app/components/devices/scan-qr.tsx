@@ -20,7 +20,7 @@ import StyledButton from "../common/button";
 import Loading from "../common/loading";
 import Typography from "../common/typography";
 import DeviceRow from "./device-row";
-import { getWifiName } from "./test";
+import { getWifiName } from "./wifi";
 
 export default function ScanWithCamera({ visible, setVisible }) {
     const { mutate, data, isPending, isSuccess, reset } =

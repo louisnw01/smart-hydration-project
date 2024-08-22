@@ -130,12 +130,12 @@ export default function MemberInfoModal() {
             </MemberInfoBlock>
             <StyledButton
                 text="Add a Device"
-                buttonClass="mt-16 flex flex-row items-center gap-3 rounded-xl px-4 py-3 bg-gray-100 dark:bg-neutral-900"
+                buttonClass="mt-16 flex flex-row items-center gap-3 rounded-xl px-4 py-3"
                 textClass="text-xl dark:text-gray-200"
                 icon={
                     <View className="flex flex-row w-6">
                         <Jug width={18} fill={palette.border} />
-                        <View className="aboslute top-[13px] right-[9px] w-[8px] h-[8px] rounded-xl bg-gray-200 dark:bg-black" />
+                        <View className="aboslute top-[13px] right-[9px] w-[8px] h-[8px] rounded-xl bg-gray-200 dark:bg-neutral-800" />
                         <FontAwesome
                             name="plus-circle"
                             size={14}
@@ -150,7 +150,7 @@ export default function MemberInfoModal() {
             />
             <StyledButton
                 text="Add a Drink"
-                buttonClass="flex flex-row items-center gap-3 rounded-xl px-4 py-3 bg-gray-100 dark:bg-neutral-900"
+                buttonClass="flex flex-row items-center gap-3 rounded-xl px-4 py-3"
                 textClass="text-xl dark:text-gray-200 -ml-[2px]"
                 icon=<MaterialCommunityIcons
                     name="water-plus-outline"
@@ -158,13 +158,13 @@ export default function MemberInfoModal() {
                     color={palette.border}
                 />
                 onPress={() => {
-                    router.push(`custom/add-drink?id=${member.id}`);
+                    router.push(`custom/add-drink-modal?id=${member.id}`);
                 }}
                 chevron
             />
             <StyledButton
                 text="Modify Tags"
-                buttonClass="flex flex-row items-center gap-3 rounded-xl px-4 py-3 bg-gray-100 dark:bg-neutral-900"
+                buttonClass="flex flex-row items-center gap-3 rounded-xl px-4 py-3"
                 textClass="text-xl dark:text-gray-200 -ml-[2px]"
                 icon=<MaterialCommunityIcons
                     name="label-multiple-outline"
@@ -183,12 +183,13 @@ export default function MemberInfoModal() {
                 {isCarer && (
                     <StyledButton
                         text="Remove Patient"
-                        buttonClass="flex flex-row items-center gap-3 rounded-xl px-4 py-3 bg-red"
-                        textClass="text-xl text-white -ml-[2px]"
-                        icon=<MaterialCommunityIcons
-                            name="delete"
-                            size={23}
-                            color={palette.border}
+                        buttonClass="flex flex-row items-center gap-3 rounded-xl px-4 py-3"
+                        textClass="text-xl text-white -ml-[2px] text-red dark:text-red"
+                        icon=<FontAwesome
+                            name="trash-o"
+                            size={18}
+                            color="red"
+                            left={2}
                         />
                         onPress={confirmRemoveMember}
                     />

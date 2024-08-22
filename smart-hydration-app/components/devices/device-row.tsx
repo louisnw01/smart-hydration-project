@@ -1,4 +1,3 @@
-import { selectedDeviceAtom } from "@/atom/device";
 import { patientInfoQAtom, userJugUserIdAtom } from "@/atom/query";
 import { unitConverter, unitsAtom } from "@/atom/user";
 import colors from "@/colors";
@@ -6,7 +5,7 @@ import { DeviceInfo } from "@/interfaces/device";
 import useColorPalette from "@/util/palette";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { useAtomValue } from "jotai";
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 import { Pressable, Text, View } from "react-native";
 
 export default function DeviceRow({
@@ -20,7 +19,8 @@ export default function DeviceRow({
 }) {
     const percentFull = (device.water_level / device.capacity) * 100;
     const isStale = false;
-    const isActive = useAtomValue(selectedDeviceAtom)?.id == device.id;
+    // const isActive = useAtomValue(selectedDeviceAtom)?.id == device.id;
+    const [isActive, setIsActive] = useState(false);
     const { data } = useAtomValue(patientInfoQAtom);
     const userJugUserId = useAtomValue(userJugUserIdAtom);
     const unit = useAtomValue(unitsAtom);
@@ -39,7 +39,10 @@ export default function DeviceRow({
     return (
         <Pressable
             className="bg-gray-200 px-7 py-4 flex flex-row justify-between rounded-xl dark:bg-neutral-800"
-            onPress={() => onPress(device)}
+            onPress={() => {
+                setIsActive(!isActive);
+                onPress(device);
+            }}
             style={
                 isActive && activeColor
                     ? { backgroundColor: activeColor }
@@ -60,7 +63,9 @@ export default function DeviceRow({
             </View>
             <View className="flex justify-evenly">
                 <EndText>
-                    {percentFull.toFixed(0)}% full ({Math.floor(unitConverter(device.water_level, unit))}{unit})
+                    {percentFull.toFixed(0)}% full (
+                    {Math.floor(unitConverter(device.water_level, unit))}
+                    {unit})
                 </EndText>
                 <EndText className="text-red-500">
                     {isStale && "water is stale"}
