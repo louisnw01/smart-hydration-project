@@ -216,7 +216,7 @@ export default function EditTags() {
                                 <View className="mr-4">
                                     <StyledButton
                                         text="Cancel"
-                                        textClass="text-lg"
+                                        textClass="text-lg dark:bg-gray-700 rounded-lg p-2"
                                         onPress={() => {
                                             setNewTextInput("");
                                             toggleNewTagSection();
@@ -227,7 +227,7 @@ export default function EditTags() {
                                     <View className="mr-2">
                                         <StyledButton
                                             text={`Create`}
-                                            textClass="text-lg"
+                                            textClass="text-lg dark:bg-gray-700 rounded-lg p-2"
                                             onPress={() =>
                                                 handleAddTag(newTextInput)
                                             }
@@ -238,7 +238,7 @@ export default function EditTags() {
                         </View>
                     )}
                     {showEditTagBox && (
-                        <View className="mx-10 bg-gray-400 mb-10 px-7 py-4 rounded-xl dark:bg-neutral-800">
+                        <View className="mx-10 bg-gray-400 mb-10 px-7 py-4 rounded-xl dark:bg-white">
                             <View className="mb-3">
                                 <Text className="dark:text-white text-xl font-bold">
                                     Edit tag
