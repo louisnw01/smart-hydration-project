@@ -132,9 +132,6 @@ export default function CommunityPage() {
         { key: "drankToday", value: "Amount Drank Today" },
         { key: "lastDrank", value: "Last Drank" },
     ];
-    if (!isCarer) {
-        return <CommunityLeaderboard />;
-    }
 
     if (!hasCommunity) {
         return (
@@ -170,6 +167,8 @@ export default function CommunityPage() {
                 </ScrollView>
             </PageWrapper>
         );
+    } else if (!isCarer) {
+        return <CommunityLeaderboard />;
     } else {
         return (
             <PageWrapper>
