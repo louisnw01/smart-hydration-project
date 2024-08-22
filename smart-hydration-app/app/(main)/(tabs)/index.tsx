@@ -10,7 +10,7 @@ import HydrationProgress from "@/components/home/progress";
 import useColorPalette from "@/util/palette";
 import { useQueryRefetch } from "@/util/query-refetch";
 import { FontAwesome, MaterialCommunityIcons } from "@expo/vector-icons";
-import { router } from "expo-router";
+import { Redirect, router } from "expo-router";
 import { useAtomValue } from "jotai";
 import { RefreshControl, ScrollView, View } from "react-native";
 
@@ -18,6 +18,11 @@ export default function HomePage() {
     useAtomValue(hydrationInsightsEAtom);
     const palette = useColorPalette();
     const { hasJugs, isLoading } = useAtomValue(userHasJugsAtom);
+    const { isCarer } = useSettings()
+
+    if (isCarer) {
+        return <Redirect href="commmunity" />;
+    }
 
     const { isRefreshing, handleRefresh } = useQueryRefetch(getHydrationQAtom);
 
