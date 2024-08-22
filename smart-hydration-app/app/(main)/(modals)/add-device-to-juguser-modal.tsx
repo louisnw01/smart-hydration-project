@@ -21,8 +21,6 @@ export default function MVPAddDeviceModal() {
     } = useAtomValue(linkJugMAtom);
     const { data: userInfo } = useAtomValue(userInfoQAtom);
 
-    if (!selectedDevice && !selectedJugs) return;
-
     useEffect(() => {
         if (isPending || !isSuccess) return;
         setSelectedJugs([]);
@@ -37,6 +35,8 @@ export default function MVPAddDeviceModal() {
         }
         setSelectedUser(juser_id.id);
     };
+
+    if (!selectedDevice && !selectedJugs) return;
 
     const handlePress = (unassigned: boolean) => {
         if (selectedUser == null && !unassigned) return;

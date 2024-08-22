@@ -12,7 +12,6 @@ import { FlatList, RefreshControl, View } from "react-native";
 import StyledButton from "../common/button";
 import Loading from "../common/loading";
 import DeviceRow from "./device-row";
-import { unitsAtom } from "@/atom/user";
 
 export default function DeviceSection({
     addJugButton,
@@ -25,7 +24,7 @@ export default function DeviceSection({
     onPress: (device: DeviceInfo) => void;
     queryAtom: Atom<AtomWithQueryResult<DeviceInfo[]>>;
     activeColor?: string;
-    onAddJug: () => void;
+    onAddJug?: () => void;
 }) {
     const palette = useColorPalette();
     const { data, isLoading } = useAtomValue(queryAtom);
