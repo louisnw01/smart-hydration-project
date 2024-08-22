@@ -1,6 +1,7 @@
 import Logo from "@/assets/svgs/SH_logo.svg";
 import { getUserExistsQAtom } from "@/atom/query";
 import { registerInfoAtom } from "@/atom/user";
+import colors from "@/colors";
 import KeyboardScrollView from "@/components/common/keyboard-scrollview";
 import StyledTextInput from "@/components/common/text-input";
 import GenericOnboardContent from "@/components/onboarding/generic-onboard-content";
@@ -47,7 +48,7 @@ export default function RegisterPage() {
     }, [email]);
 
     useEffect(() => {
-        if(emailValid) refetch();
+        if (emailValid) refetch();
     }, [emailValid]);
 
     useEffect(() => {
@@ -147,7 +148,7 @@ export default function RegisterPage() {
                             <Text
                                 style={{
                                     fontWeight: "600",
-                                    color: pressed ? "darkblue" : "blue",
+                                    color: colors.blue,
                                     textDecorationLine: "underline",
                                 }}
                             >
