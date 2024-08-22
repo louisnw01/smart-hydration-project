@@ -26,7 +26,6 @@ export default function AddCupSizeInMls() {
                     setJug(device);
                     router.push("custom/fill-cup");
                 }}
-                queryAtom={getJugDataQAtom}
             />
         </View>
     );
