@@ -42,8 +42,7 @@ export default function InviteMember() {
     const handleOnShare = async () => {
         try {
             const result = await Share.share({
-                url: `https://${link}`,
-                message: "Hey, use this link to join our community!",
+                message: `Hey, use this link to join our community!\n\nhttps://${link}`,
             });
 
             if (result.action === Share.sharedAction) {
