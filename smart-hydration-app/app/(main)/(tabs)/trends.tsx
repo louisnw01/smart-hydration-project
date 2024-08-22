@@ -49,7 +49,7 @@ function MostHydratedDayOfWeek() {
 }
 
 function Insights() {
-    const data = useAtomValue(formattedDataAtom);
+    const { data } = useAtomValue(formattedDataAtom);
     if (!data || data.length === 0) {
         return <View className="h-3/4 justify-center text-center"></View>;
     }
@@ -75,6 +75,7 @@ export default function TrendsPage() {
     const userJugUserId = useAtomValue(userJugUserIdAtom);
     const { data } = useAtomValue(patientInfoQAtom);
     const [selectedUser, setSelectedJugUser] = useAtom(selectedMemberAtom);
+    const { isLoading: dataIsLoading } = useAtomValue(formattedDataAtom);
 
     let communityMembers: { key: number; value: MemberInfo }[] | undefined;
 
@@ -99,7 +100,7 @@ export default function TrendsPage() {
     return (
         <ScrollPageWrapper
             queryRefreshAtom={historicalPatientJugDataQAtom}
-            isLoading={isLoading}
+            isLoading={isLoading || dataIsLoading}
             message="Loading your information..."
             className="bg-gray-100 dark:bg-black"
         >
@@ -121,7 +122,7 @@ export default function TrendsPage() {
                                     communityMembers?.find(
                                         (member) =>
                                             member.key ===
-                                            parseInt(val.match(/\d+/)[0]),
+                                            parseInt(val?.match(/\d+/)[0]),
                                     )?.value || null,
                                 );
                             }}

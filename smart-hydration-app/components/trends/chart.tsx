@@ -77,7 +77,7 @@ function formatDateToDayMonth(date: Date) {
 export default function TrendsChart() {
     const font = useFont(SFPro);
     const timeframe = useAtomValue(chartTimeWindowAtom);
-    const data = useAtomValue(formattedDataAtom);
+    const { data } = useAtomValue(formattedDataAtom);
     const { state, isActive } = useChartPressState({ x: "", y: { y: 0 } });
     const palette = useColorPalette();
     const setCanvasInfo = useSetAtom(canvasInfoAtom);
@@ -125,16 +125,6 @@ export default function TrendsChart() {
         width: scrollViewWidth.value,
         height: 300,
     }));
-    if (!data || data.length === 0) {
-        return (
-            <View className="h-full justify-center text-center">
-                <ActivityIndicator />
-                <Text className="text-center dark:text-white">
-                    Loading Analytics, Please Wait...
-                </Text>
-            </View>
-        );
-    }
 
     const zeroCount = memoedData.reduce(
         (curr, row) => curr + (row.y == 0 ? 1 : 0),
@@ -143,7 +133,6 @@ export default function TrendsChart() {
     const hasNoData = zeroCount == memoedData.length;
 
     if (hasNoData) {
-        console.log("asdhjaslfdsbfhjdksfgdsbn");
         return (
             <View className="h-[300px] justify-center items-center">
                 <Text className="dark:text-white">

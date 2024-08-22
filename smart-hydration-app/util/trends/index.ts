@@ -121,7 +121,7 @@ export const formattedDataAtom = atom((get) => {
     const { data, isLoading } = get(historicalPatientJugDataQAtom);
     // alert(JSON.stringify(data));
     if (isLoading || !data) {
-        return [];
+        return { data: [], isLoading };
     }
 
     const unit = get(unitsAtom);
@@ -130,7 +130,7 @@ export const formattedDataAtom = atom((get) => {
         value: unitConverter(row.value, unit),
     }));
 
-    return getAggregates(convertedData, type);
+    return { data: getAggregates(convertedData, type), isLoading };
 });
 
 export interface FormattedData {
