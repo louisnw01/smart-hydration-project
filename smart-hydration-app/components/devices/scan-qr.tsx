@@ -15,12 +15,13 @@ import {
 import { router } from "expo-router";
 import { useAtomValue, useSetAtom } from "jotai";
 import { useEffect, useState } from "react";
-import { Pressable, View } from "react-native";
+import { Dimensions, Pressable, View } from "react-native";
 import StyledButton from "../common/button";
 import Loading from "../common/loading";
 import Typography from "../common/typography";
 import DeviceRow from "./device-row";
 import { getWifiName } from "./wifi";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function ScanWithCamera({ visible, setVisible }) {
     const { mutate, data, isPending, isSuccess, reset } =
@@ -31,6 +32,10 @@ export default function ScanWithCamera({ visible, setVisible }) {
     const [scanned, setScanned] = useState(false);
     const [jugName, setJugName] = useState("");
     const [question, setQuestion] = useState("");
+    const insets = useSafeAreaInsets();
+    const screenWidth = Dimensions.get('window').width;
+    const maxHeight = 200; 
+    const cameraViewHeight = Math.min(screenWidth / 3, maxHeight);
     const setWifiPairInfo = useSetAtom(wifiPairInfoAtom);
     const {
         mutate: linkJug,
@@ -163,30 +168,46 @@ export default function ScanWithCamera({ visible, setVisible }) {
 
                     {!jugName && !isPending && (
                         <>
-                            <View className="h-48 rounded-3xl overflow-hidden">
+                            <View
+                                className="h-60 rounded-3xl overflow-hidden mb-4 relative"
+                                style={{
+                                    marginBottom: insets.bottom + 16, // Adding extra margin to avoid cutting off
+                                    width:"100%",
+                                    maxHeight:maxHeight,
+                                    borderRadius:20,
+                                }}
+                            >
                                 <CameraView
                                     facing="back"
-                                    style={{ flex: 1 }}
+                                    style={{ 
+                                         flex:1,
+                                         overflow: 'hidden'
+                                        }} // Ensures the camera view fits and maintains aspect ratio
                                     barcodeScannerSettings={{
                                         barcodeTypes: ["qr"],
                                     }}
                                     onBarcodeScanned={handleBarcodeScanned}
                                 />
                             </View>
-                            <View className="flex-row items-center gap-4 ml-3 h-16 pt-2">
+
+                            <View
+                                className="flex-row items-center gap-4 ml-3 h-16 pt-2"
+                                style={{
+                                    marginBottom: insets.bottom + 16, // Ensure the text container has enough bottom space
+                                }}
+                            >
                                 <Ionicons
                                     name="qr-code-outline"
                                     size={24}
-                                    top={4}
+                                    style={{ top: 4 }}
                                     color={palette.fg}
                                 />
                                 <View className="gap-1">
                                     <Typography className="mt-2 font-semibold text-lg">
                                         Scan the QR code
                                     </Typography>
-                                    <Typography className="dark:text-gray-300 ">
-                                        It should be located on the base of the
-                                        jug.
+                                    <Typography className="text-gray-500 dark:text-gray-300">
+                                        It should be located on the base of the jug.
                                     </Typography>
                                 </View>
                             </View>
