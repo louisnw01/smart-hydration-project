@@ -132,7 +132,7 @@ export default function HydrationProgress() {
                         underlineColorAndroid="transparent"
                         editable={false}
                         value={text.value}
-                        className={`dark:text-white font-semibold ${screenIsLarge ? "text-7xl -mb-3" : "text-5xl"}`}
+                        className={`dark:text-white font-semibold ${screenIsLarge ? "text-7xl -mb-3" : "text-4xl"}`}
                         {...{ animatedProps }}
                     />
 
