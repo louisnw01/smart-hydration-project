@@ -34,7 +34,7 @@ export default function HomePage() {
             message="Loading your information..."
         >
             <ScrollView
-                contentContainerClassName={`flex-1 h-full items-center ${screenIsLarge ? "gap-20 mt-16" : "gap-12 mt-10"} `}
+                contentContainerClassName={`flex-1 h-full items-center ${screenIsLarge ? "gap-20 mt-16" : "gap-10 mt-10"} `}
                 refreshControl={
                     <RefreshControl
                         refreshing={isRefreshing}
@@ -44,7 +44,7 @@ export default function HomePage() {
             >
                 <HydrationProgress />
                 <HydrationStatus />
-                <View className={`${screenIsLarge ? "gap-5" : "gap-2"}`}>
+                <View className={`${screenIsLarge ? "gap-5" : "gap-3"}`}>
                     {!hasJugs && (
                         <StyledButton
                             text="Add a New Jug"

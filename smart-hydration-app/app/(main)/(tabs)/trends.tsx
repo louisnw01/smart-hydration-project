@@ -23,7 +23,7 @@ import { Entypo, FontAwesome6 } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useAtom, useAtomValue } from "jotai";
 import { useEffect } from "react";
-import { Text, View } from "react-native";
+import { Dimensions, Text, View } from "react-native";
 import { SelectList } from "react-native-dropdown-select-list";
 
 function MostHydratedDayOfWeek() {
@@ -70,6 +70,7 @@ function Insights() {
 export default function TrendsPage() {
     const { isLoading } = useAtomValue(getHydrationQAtom);
     const isInCommunity = useAtomValue(userHasCommunityAtom);
+    const screenSizeOffset = Dimensions.get("screen").height > 667 ? 14 : 8;
     const { isCarer } = useSettings();
     const palette = useColorPalette();
     const userJugUserId = useAtomValue(userJugUserIdAtom);
@@ -93,8 +94,10 @@ export default function TrendsPage() {
         if (data != undefined) {
             for (let datapoint of data) {
                 const memberName = datapoint.name;
-                if (memberName.length > 14) {
-                    datapoint.name = datapoint.name.substring(0, 13) + "... ";
+                if (memberName.length > screenSizeOffset) {
+                    datapoint.name =
+                        datapoint.name.substring(0, screenSizeOffset - 1) +
+                        "... ";
                 }
             }
             communityMembers = data.map((row) => ({
@@ -112,55 +115,66 @@ export default function TrendsPage() {
         >
             <>
                 {isCarer && isInCommunity && (
-                    <View className="flex-row justify-evenly bg-white dark:bg-black py-4">
-                        <Text className="pt-4 flex-wrap text-xl font-semibold dark:text-white">
-                            Community Member:
-                        </Text>
-                        <SelectList
-                            arrowicon=<Entypo
-                                name="chevron-down"
-                                size={24}
-                                color={palette.fglight}
+                    <View>
+                        <View className="flex-row justify-evenly bg-white dark:bg-black py-4">
+                            <Text className="pt-4 flex-wrap text-xl font-semibold dark:text-white">
+                                Community Member:
+                            </Text>
+                            <SelectList
+                                arrowicon=<Entypo
+                                    name="chevron-down"
+                                    size={24}
+                                    color={palette.fglight}
+                                />
+                                setSelected={(val) => {
+                                    // gets the memberinfo of the user to be used in historical data atom
+                                    setSelectedJugUser(
+                                        communityMembers?.find(
+                                            (member) =>
+                                                member.key ===
+                                                parseInt(val?.match(/\d+/)[0]),
+                                        )?.value || null,
+                                    );
+                                }}
+                                defaultOption={{
+                                    key: selectedUser?.id?.toString(),
+                                    value: selectedUser
+                                        ? selectedUser.name +
+                                          ": #" +
+                                          selectedUser.id
+                                        : "Select a member",
+                                }}
+                                data={communityMembers?.map(
+                                    (items) =>
+                                        items.value.name +
+                                        ": #" +
+                                        items.value.id,
+                                )}
+                                save="key"
+                                search={false}
+                                boxStyles={{
+                                    borderColor: "rgb(80, 80, 80)",
+                                }}
+                                dropdownStyles={{
+                                    // transform: [{ translateX: -68 }],
+                                    borderColor: "rgb(80, 80, 80)",
+                                }}
+                                dropdownTextStyles={{
+                                    color: palette.fg,
+                                }}
+                                inputStyles={{
+                                    color: palette.fg,
+                                    alignSelf: "center",
+                                }}
                             />
-                            setSelected={(val) => {
-                                // gets the memberinfo of the user to be used in historical data atom
-                                setSelectedJugUser(
-                                    communityMembers?.find(
-                                        (member) =>
-                                            member.key ===
-                                            parseInt(val?.match(/\d+/)[0]),
-                                    )?.value || null,
-                                );
-                            }}
-                            defaultOption={{
-                                key: selectedUser?.id?.toString(),
-                                value: selectedUser
-                                    ? selectedUser.name +
-                                      ": #" +
-                                      selectedUser.id
-                                    : "Select a member",
-                            }}
-                            data={communityMembers?.map(
-                                (items) =>
-                                    items.value.name + ": #" + items.value.id,
-                            )}
-                            save="key"
-                            search={false}
-                            boxStyles={{
-                                borderColor: "rgb(80, 80, 80)",
-                            }}
-                            dropdownStyles={{
-                                // transform: [{ translateX: -68 }],
-                                borderColor: "rgb(80, 80, 80)",
-                            }}
-                            dropdownTextStyles={{
-                                color: palette.fg,
-                            }}
-                            inputStyles={{
-                                color: palette.fg,
-                                alignSelf: "center",
-                            }}
-                        />
+                        </View>
+                        <View>
+                            <View className="flex px-4 pb-5 bg-white dark:bg-black">
+                                <TrendsChart />
+                                <Switcher />
+                            </View>
+                            <Insights />
+                        </View>
                     </View>
                 )}
                 {/* {!(isCarer && !isInCommunity) && (
