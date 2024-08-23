@@ -108,7 +108,7 @@ export default function TrendsPage() {
                 {isCarer && isInCommunity && (
                     <View className="flex-row justify-evenly bg-white dark:bg-black py-4">
                         <Text className="pt-4 flex-wrap text-xl font-semibold dark:text-white">
-                            Community Member:
+                            Patient:
                         </Text>
                         <SelectList
                             arrowicon=<Entypo
