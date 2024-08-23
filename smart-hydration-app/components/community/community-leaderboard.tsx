@@ -3,7 +3,7 @@ import PageWrapper from "@/components/common/page-wrapper";
 import { MemberData, useFormattedMemberDataFunction } from "@/util/community";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useAtomValue } from "jotai";
-import { Pressable, Text, View } from "react-native";
+import { Dimensions, Pressable, Text, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 export default function CommunityLeaderboard() {
     const { data } = useAtomValue(patientInfoQAtom);
@@ -40,10 +40,12 @@ export function LeaderboardRow({
     member: MemberData;
     index: number;
 }) {
+    const screenSizeCutoff = Dimensions.get("screen").height > 667 ? 15 : 12;
+
     const progressWidth = `${parseInt(member.targetProgress)}%`;
     const memberName =
-        member.name.length > 15
-            ? member.name.substring(0, 14) + "..."
+        member.name.length > screenSizeCutoff
+            ? member.name.substring(0, screenSizeCutoff - 1) + "..."
             : member.name;
     return (
         <View className="relative w-[93%] h-24 left-4 rounded-xl overflow-hidden mb-1 bg-gray-200">
@@ -72,9 +74,11 @@ export function LeaderboardRow({
 }
 
 export function LeaderboardWinner({ member }: { member: MemberData }) {
+    const screenSizeCutoff = Dimensions.get("screen").height > 667 ? 15 : 12;
+
     const memberName =
-        member.name.length > 15
-            ? member.name.substring(0, 14) + "..."
+        member.name.length > screenSizeCutoff
+            ? member.name.substring(0, screenSizeCutoff - 1) + "..."
             : member.name;
     return (
         <View className="items-center relative w-[93%] h-72 left-4 rounded-xl top-4 mb-6 overflow-hidden border-gray-100 border-2 dark:border-neutral-800">
