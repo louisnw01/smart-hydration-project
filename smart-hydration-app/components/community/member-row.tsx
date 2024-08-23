@@ -122,7 +122,7 @@ export default function MemberRow({ member }: { member: MemberInfo }) {
                                                 fill="white"
                                             />
                                         </View>
-                                        <View className="bg-white rounded-lg -top-1 -right-1 w-[6.5rem] h-11">
+                                        <View className="bg-white rounded-lg -top-1 -right-1 w-28 h-11">
                                             <Text className="px-2 text-sm">{`${row.name}`}</Text>
                                             <Text className="px-2 text-sm">
                                                 {row.waterLevel < 100
@@ -164,7 +164,7 @@ export default function MemberRow({ member }: { member: MemberInfo }) {
                                                     fill="white"
                                                 />
                                             </View>
-                                            <View className="bg-white rounded-lg -top-1 -right-1 w-24 h-11">
+                                            <View className="bg-white rounded-lg -top-1 -right-1 w-28 h-16">
                                                 <Text className="px-2 text-sm">{`${row.name}`}</Text>
                                                 <Text className="px-2 text-sm">
                                                     {getStalenessMessage(
