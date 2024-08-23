@@ -91,6 +91,12 @@ export default function TrendsPage() {
 
     if (isCarer) {
         if (data != undefined) {
+            for (let datapoint of data) {
+                const memberName = datapoint.name;
+                if (memberName.length > 14) {
+                    datapoint.name = datapoint.name.substring(0, 13) + "... ";
+                }
+            }
             communityMembers = data.map((row) => ({
                 key: row.id,
                 value: row,
@@ -157,7 +163,7 @@ export default function TrendsPage() {
                         />
                     </View>
                 )}
-                {!(isCarer && !isInCommunity) && (
+                {/* {!(isCarer && !isInCommunity) && (
                     <>
                         {selectedUser == null && (
                             <View className="bg-white dark:bg-black justify-center h-full">
@@ -166,16 +172,15 @@ export default function TrendsPage() {
                                 </Text>
                             </View>
                         )}
-                        {selectedUser != null && (
-                            <View>
-                                <View className="flex px-4 pb-5 bg-white dark:bg-black">
-                                    <TrendsChart />
-                                    <Switcher />
-                                </View>
-                                <Insights />
-                            </View>
-                        )}
-                    </>
+                        {selectedUser != null && ( */}
+                {!isCarer && isInCommunity && (
+                    <View>
+                        <View className="flex px-4 pb-5 bg-white dark:bg-black">
+                            <TrendsChart />
+                            <Switcher />
+                        </View>
+                        <Insights />
+                    </View>
                 )}
                 {isCarer && !isInCommunity && (
                     <>
