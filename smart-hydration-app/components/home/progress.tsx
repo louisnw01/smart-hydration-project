@@ -16,6 +16,7 @@ import Svg, { Circle, G } from "react-native-svg";
 import WaterAmount from "../common/water-amount";
 
 import { dailyTargetAtom, unitConverter, unitsAtom } from "@/atom/user";
+import { Dimensions } from "react-native";
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 const AnimatedTextInput = Animated.createAnimatedComponent(TextInput);
@@ -101,6 +102,7 @@ export function ProgressWheel({
 }
 
 export default function HydrationProgress() {
+    const screenIsLarge = Dimensions.get("screen").height > 667;
     const palette = useColorPalette();
     const amountDrankToday = useAtomValue(amountDrankTodayAtom) ?? 0;
 
@@ -116,21 +118,21 @@ export default function HydrationProgress() {
 
     return (
         <ProgressWheel
-            radius={130}
+            radius={screenIsLarge ? 130 : 100}
             max={target}
             progress={amountDrankToday ?? 0}
-            width={16}
+            width={screenIsLarge ? 16 : 10}
             color={amountDrankToday >= target ? colors.green : colors.blue}
             backgroundColor={palette.bglight}
             animatedProgress={animatedProgress}
         >
-            <View className="mt-6">
+            <View className={`${screenIsLarge ? "mt-6" : ""}`}>
                 <View className="flex-row justify-center ml-6">
                     <AnimatedTextInput
                         underlineColorAndroid="transparent"
                         editable={false}
                         value={text.value}
-                        className="dark:text-white text-7xl font-semibold -mb-3"
+                        className={`dark:text-white font-semibold ${screenIsLarge ? "text-7xl -mb-3" : "text-5xl"}`}
                         {...{ animatedProps }}
                     />
 
@@ -144,7 +146,9 @@ export default function HydrationProgress() {
                     </Text>
                     <WaterAmount value={target} size="md" />
                 </View>
-                <Text className="text-center text-lg dark:text-white mt-3">
+                <Text
+                    className={`text-center text-lg dark:text-white ${screenIsLarge ? "mt-3" : ""}`}
+                >
                     of your daily target
                 </Text>
             </View>
