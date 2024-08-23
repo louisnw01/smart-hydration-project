@@ -16,7 +16,9 @@ export default function PageHeader({ children }: { children: string }) {
             {children === "Home"
                 ? "smart hydration"
                 : children == "Community" && communityName
-                  ? communityName
+                  ? communityName.length > 18
+                      ? communityName.substring(0, 17) + "..."
+                      : communityName
                   : children}
         </Text>
     );
