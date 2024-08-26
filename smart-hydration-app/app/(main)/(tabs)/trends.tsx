@@ -16,15 +16,15 @@ import InsightsPane from "@/components/trends/insights-pane";
 import MonthVsLastMonthInsight from "@/components/trends/month-vs-month";
 import Switcher from "@/components/trends/switcher";
 import TodayVsAvgInsight from "@/components/trends/today-vs-avg";
+import TrendsSelectList from "@/components/trends/trends-select";
 import { MemberInfo } from "@/interfaces/community";
 import useColorPalette from "@/util/palette";
 import { formattedDataAtom } from "@/util/trends";
-import { Entypo, FontAwesome6 } from "@expo/vector-icons";
+import { FontAwesome6 } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useAtom, useAtomValue } from "jotai";
 import { useEffect } from "react";
 import { Text, View } from "react-native";
-import { SelectList } from "react-native-dropdown-select-list";
 
 function MostHydratedDayOfWeek() {
     const { name, value } = useAtomValue(mostHydratedDayOfWeekAtom);
@@ -105,64 +105,26 @@ export default function TrendsPage() {
             className="bg-gray-100 dark:bg-black"
         >
             <>
-                {isCarer && isInCommunity && (
-                    <View className="flex-row justify-evenly bg-white dark:bg-black py-4">
-                        <Text className="pt-4 flex-wrap text-xl font-semibold dark:text-white">
-                            Patient:
-                        </Text>
-                        <SelectList
-                            arrowicon=<Entypo
-                                name="chevron-down"
-                                size={24}
-                                color={palette.fglight}
-                            />
-                            setSelected={(val) => {
-                                // gets the memberinfo of the user to be used in historical data atom
-                                setSelectedJugUser(
-                                    communityMembers?.find(
-                                        (member) =>
-                                            member.key ===
-                                            parseInt(val?.match(/\d+/)[0]),
-                                    )?.value || null,
-                                );
-                            }}
-                            defaultOption={{
-                                key: selectedUser?.id?.toString(),
-                                value: selectedUser
-                                    ? selectedUser.name +
-                                      ": #" +
-                                      selectedUser.id
-                                    : "Select a member",
-                            }}
-                            data={communityMembers?.map(
-                                (items) =>
-                                    items.value.name + ": #" + items.value.id,
-                            )}
-                            save="key"
-                            search={false}
-                            boxStyles={{
-                                borderColor: "rgb(80, 80, 80)",
-                            }}
-                            dropdownStyles={{
-                                // transform: [{ translateX: -68 }],
-                                borderColor: "rgb(80, 80, 80)",
-                            }}
-                            dropdownTextStyles={{
-                                color: palette.fg,
-                            }}
-                            inputStyles={{
-                                color: palette.fg,
-                                alignSelf: "center",
-                            }}
-                        />
+                {!isCarer && (
+                    <View>
+                        <View className="flex px-4 pb-5 bg-white dark:bg-black">
+                            <TrendsChart />
+                            <Switcher />
+                        </View>
+                        <Insights />
                     </View>
                 )}
-                {!(isCarer && !isInCommunity) && (
+                {isCarer && isInCommunity && (
                     <>
+                        <TrendsSelectList
+                            setSelectedJugUser={setSelectedJugUser}
+                            communityMembers={communityMembers}
+                            selectedUser={selectedUser}
+                        />
                         {selectedUser == null && (
                             <View className="bg-white dark:bg-black justify-center h-full">
                                 <Text className="dark:text-white text-center text-xl">
-                                    Please select a community member
+                                    Please select a patient
                                 </Text>
                             </View>
                         )}

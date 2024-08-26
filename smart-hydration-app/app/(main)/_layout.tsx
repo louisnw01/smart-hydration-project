@@ -1,5 +1,6 @@
 import { useAtomValue, useSetAtom } from "jotai";
 
+import { setSelectedMemberInModeEAtom } from "@/atom/effect/mode";
 import { colorSchemeEAtom } from "@/atom/effect/user";
 import { authTokenAtom } from "@/atom/user";
 import Loading from "@/components/common/loading";
@@ -12,6 +13,7 @@ export default function MainLayout() {
     useAtomValue(colorSchemeEAtom);
     useAtomValue(tunnelInitEAtom);
     useAtomValue(subscribeToJugDataEAtom);
+    useAtomValue(setSelectedMemberInModeEAtom);
     const setAuthAtom = useSetAtom(authTokenAtom);
 
     const { isLoading, isSuccess, isEmailVerified } = useSession();

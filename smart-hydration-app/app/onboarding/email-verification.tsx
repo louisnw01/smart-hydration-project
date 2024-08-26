@@ -52,7 +52,6 @@ export default function EmailVerificationPage() {
 
     useEffect(() => {
         if (!verificationUrl) return;
-        alert(`Actual URL: ${verificationUrl}`);
         if (verificationUrl.length >= 10) {
             mutate({ code: verificationUrl.slice(-10) });
         } else {

@@ -15,7 +15,7 @@ import {
 import { router } from "expo-router";
 import { useAtomValue, useSetAtom } from "jotai";
 import { useEffect, useState } from "react";
-import { Dimensions, Pressable, View } from "react-native";
+import { Dimensions, Platform, Pressable, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import StyledButton from "../common/button";
 import Loading from "../common/loading";
@@ -168,21 +168,25 @@ export default function ScanWithCamera({ visible, setVisible }) {
 
                     {!jugName && !isPending && (
                         <>
-                            <View className="h-48 rounded-3xl overflow-hidden">
+                            <View className="h-56 w-full rounded-3xl overflow-hidden">
                                 <CameraView
                                     facing="back"
-                                    style={{ flex: 1 }}
+                                    style={{ flex: 1, marginBottom: -110 }}
                                     barcodeScannerSettings={{
                                         barcodeTypes: ["qr"],
                                     }}
                                     onBarcodeScanned={handleBarcodeScanned}
+                                    ratio="16:9"
                                 />
                             </View>
 
                             <View
                                 className="flex-row items-center gap-4 ml-3 h-16 pt-2"
                                 style={{
-                                    marginBottom: insets.bottom + 16, // Ensure the text container has enough bottom space
+                                    marginBottom:
+                                        Platform.OS == "android"
+                                            ? insets.bottom + 16
+                                            : 0, // Ensure the text container has enough bottom space
                                 }}
                             >
                                 <Ionicons
