@@ -1,9 +1,9 @@
 import { changeUserModeMAtom } from "@/atom/query";
-import { authTokenAtom, userModeAtom } from "@/atom/user";
+import { authTokenAtom, communityTabVisible, userModeAtom } from "@/atom/user";
 import { MultiSelectOptionBlock } from "@/components/common/option-block";
 import { ISettingsSection } from "@/interfaces/settings";
 import { Fontisto, Ionicons } from "@expo/vector-icons";
-import { useAtomValue } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import { SectionList, View } from "react-native";
 
 const settingsList: ISettingsSection[] = [
@@ -62,6 +62,7 @@ const settingsList: ISettingsSection[] = [
                 name: "Carer",
                 Component: (name, isFirst, isLast) => {
                     const { mutate } = useAtomValue(changeUserModeMAtom);
+                    const setCommunityVisible = useSetAtom(communityTabVisible);
                     return (
                         <MultiSelectOptionBlock
                             text={name}
@@ -76,7 +77,8 @@ const settingsList: ISettingsSection[] = [
                             isFirst={isFirst}
                             isLast={isLast}
                             onPress={() => {
-                                !!authTokenAtom && mutate();
+                                setCommunityVisible(true);
+                                mutate();
                             }}
                         />
                     );

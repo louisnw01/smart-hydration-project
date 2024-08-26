@@ -12,6 +12,10 @@ const checkTokenQAtom = atomWithQuery((get) => ({
             auth: token as string,
             method: "post",
         });
+        if (response.status != 403 && !response.ok) {
+            throw new Error("Failed to check token");
+        }
+        console.log("got here, ", response.status);
         return response.status != 403;
     },
     enabled: !!get(authTokenAtom),
@@ -27,5 +31,9 @@ export default function useSession() {
         if (data != undefined) setEmailVerifiedAtom(data);
     }, [data]);
 
-    return { isLoading: isFetching, isSuccess, isEmailVerified: data };
+    return {
+        isLoading: isFetching,
+        isSuccess,
+        isEmailVerified: data != undefined ? data : true,
+    };
 }
