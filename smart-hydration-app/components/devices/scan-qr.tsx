@@ -16,12 +16,12 @@ import { router } from "expo-router";
 import { useAtomValue, useSetAtom } from "jotai";
 import { useEffect, useState } from "react";
 import { Dimensions, Pressable, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import StyledButton from "../common/button";
 import Loading from "../common/loading";
 import Typography from "../common/typography";
 import DeviceRow from "./device-row";
 import { getWifiName } from "./wifi";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function ScanWithCamera({ visible, setVisible }) {
     const { mutate, data, isPending, isSuccess, reset } =
@@ -33,8 +33,8 @@ export default function ScanWithCamera({ visible, setVisible }) {
     const [jugName, setJugName] = useState("");
     const [question, setQuestion] = useState("");
     const insets = useSafeAreaInsets();
-    const screenWidth = Dimensions.get('window').width;
-    const maxHeight = 200; 
+    const screenWidth = Dimensions.get("window").width;
+    const maxHeight = 200;
     const cameraViewHeight = Math.min(screenWidth / 3, maxHeight);
     const setWifiPairInfo = useSetAtom(wifiPairInfoAtom);
     const {
@@ -168,21 +168,10 @@ export default function ScanWithCamera({ visible, setVisible }) {
 
                     {!jugName && !isPending && (
                         <>
-                            <View
-                                className="h-60 rounded-3xl overflow-hidden mb-4 relative"
-                                style={{
-                                    marginBottom: insets.bottom + 16, // Adding extra margin to avoid cutting off
-                                    width:"100%",
-                                    maxHeight:maxHeight,
-                                    borderRadius:20,
-                                }}
-                            >
+                            <View className="h-48 rounded-3xl overflow-hidden">
                                 <CameraView
                                     facing="back"
-                                    style={{ 
-                                         flex:1,
-                                         overflow: 'hidden'
-                                        }} // Ensures the camera view fits and maintains aspect ratio
+                                    style={{ flex: 1 }}
                                     barcodeScannerSettings={{
                                         barcodeTypes: ["qr"],
                                     }}
@@ -199,7 +188,7 @@ export default function ScanWithCamera({ visible, setVisible }) {
                                 <Ionicons
                                     name="qr-code-outline"
                                     size={24}
-                                    style={{ top: 4 }}
+                                    top={4}
                                     color={palette.fg}
                                 />
                                 <View className="gap-1">
@@ -207,7 +196,8 @@ export default function ScanWithCamera({ visible, setVisible }) {
                                         Scan the QR code
                                     </Typography>
                                     <Typography className="text-gray-500 dark:text-gray-300">
-                                        It should be located on the base of the jug.
+                                        It should be located on the base of the
+                                        jug.
                                     </Typography>
                                 </View>
                             </View>
