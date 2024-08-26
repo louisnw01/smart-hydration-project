@@ -1,9 +1,10 @@
 import { createCommunityMAtom, userInfoQAtom } from "@/atom/query";
+import StyledButton from "@/components/common/button";
 import StyledTextInput from "@/components/common/text-input";
 import { router } from "expo-router";
 import { useAtomValue } from "jotai";
 import { useEffect, useState } from "react";
-import { Pressable, Text, View } from "react-native";
+import { Text, View } from "react-native";
 
 export default function CreateCommunityModal() {
     const { data: userInfo } = useAtomValue(userInfoQAtom);
@@ -15,7 +16,7 @@ export default function CreateCommunityModal() {
     useEffect(() => {
         if (isPending) return;
         if (isSuccess) {
-            router.back();
+            router.dismissAll();
         } else if (isError) {
             // TODO: show an error message
         }
@@ -34,9 +35,9 @@ export default function CreateCommunityModal() {
     };
 
     return (
-        <View className="mt-8 flex gap-6 mx-6">
+        <View className="mt-16 flex gap-16 mx-6">
             <Text className="dark:text-white text-2xl text-center">
-                Enter a community name:
+                What would you like to call your community?
             </Text>
             <StyledTextInput
                 requiredIcon
@@ -56,16 +57,14 @@ export default function CreateCommunityModal() {
                     </Text>
                 </View>
             )}
-            <View className="flex flex-row justify-center items-center">
-                <Pressable
-                    onPress={handlePress}
-                    className="bg-blue px-4 py-2 rounded-xl mt-10"
-                >
-                    <Text className="text-2xl font-semibold text-white">
-                        Submit
-                    </Text>
-                </Pressable>
-            </View>
+
+            <StyledButton
+                text="Submit & Create Community"
+                buttonClass="bg-green px-4 py-2 rounded-xl self-center mt-8"
+                textClass="text-xl font-medium text-white"
+                onPress={handlePress}
+                isLoading={isPending}
+            />
         </View>
     );
 }
