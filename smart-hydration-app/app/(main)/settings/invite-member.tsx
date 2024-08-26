@@ -9,6 +9,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import * as Clipboard from "expo-clipboard";
 import { useAtomValue } from "jotai";
 import { useEffect, useState } from "react";
+import QRCode from "react-native-qrcode-svg";
 import { BottomSheet } from "./remove-member";
 
 export default function InviteMember() {
@@ -109,6 +110,12 @@ export default function InviteMember() {
                         />
                     </View>
                 </View>
+
+                {link && (
+                    <View className="self-center bg-white p-3 rounded-xl mt-10">
+                        <QRCode value={`https://${link}`} size={200} />
+                    </View>
+                )}
             </View>
             <BottomSheet isVisible={visible} bg="bg-green">
                 <View className="self-center px-4 py-1 rounded-lg">
