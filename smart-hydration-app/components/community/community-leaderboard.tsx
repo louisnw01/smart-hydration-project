@@ -4,11 +4,12 @@ import { MemberData, useFormattedMemberDataFunction } from "@/util/community";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useAtomValue } from "jotai";
 import { Pressable, Text, View } from "react-native";
+import Loading from "../common/loading";
 export default function CommunityLeaderboard() {
-    const { data } = useAtomValue(patientInfoQAtom);
+    const { data, isLoading } = useAtomValue(patientInfoQAtom);
     const formatMemberData = useFormattedMemberDataFunction();
     if (!data) {
-        return;
+        return null;
     }
     const formattedData = data.map((row) => formatMemberData(row));
     const sortedData = formattedData.slice().sort((a, b) => {
@@ -16,6 +17,9 @@ export default function CommunityLeaderboard() {
         const progressB = parseInt(b.targetProgress);
         return progressB - progressA;
     });
+    if (isLoading) {
+        return <Loading isLoading />;
+    }
     return (
         <PageWrapper>
             <LeaderboardWinner member={sortedData[0]} />
@@ -67,6 +71,9 @@ export function LeaderboardRow({
 }
 
 export function LeaderboardWinner({ member }: { member: MemberData }) {
+    if (!member) {
+        return null;
+    }
     return (
         <View className="items-center relative w-[93%] h-64 left-4 rounded-xl top-4 mb-6 overflow-hidden border-gray-100 border-2 dark:border-neutral-800">
             <MaterialCommunityIcons
