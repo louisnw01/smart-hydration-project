@@ -10,7 +10,7 @@ import {
     patientInfoQAtom,
     userHasCommunityAtom,
 } from "@/atom/query";
-import { userModeAtom } from "@/atom/user";
+import { communityTabVisible, userModeAtom } from "@/atom/user";
 import Loading from "@/components/common/loading";
 import StyledTextInput from "@/components/common/text-input";
 import CommunityLeaderboard from "@/components/community/community-leaderboard";
@@ -18,7 +18,7 @@ import MemberRow from "@/components/community/member-row";
 import { FilterObject, MemberInfo } from "@/interfaces/community";
 import useColorPalette from "@/util/palette";
 import { Entypo } from "@expo/vector-icons";
-import { router, useFocusEffect } from "expo-router";
+import { Redirect, router, useFocusEffect } from "expo-router";
 import { SelectList } from "react-native-dropdown-select-list";
 
 export default function CommunityPage() {
@@ -40,6 +40,8 @@ export default function CommunityPage() {
         sort: "asc",
     });
     const [selected, setSelected] = useAtom(selectedSortMethodAtom);
+
+    const communityVisible = useAtomValue(communityTabVisible);
 
     //refetch CommunityInfo and PatientInfo when the user navigates to this page
     useFocusEffect(
@@ -118,6 +120,10 @@ export default function CommunityPage() {
             setRefreshing(false);
         }
     }, [isLoading]);
+
+    if (!communityVisible) {
+        return <Redirect href="(tabs)" />;
+    }
 
     if (refreshing) {
         setRefreshing(false);

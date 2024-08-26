@@ -5,11 +5,13 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useAtomValue } from "jotai";
 import { Dimensions, Pressable, Text, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
+import Loading from "../common/loading";
+
 export default function CommunityLeaderboard() {
-    const { data } = useAtomValue(patientInfoQAtom);
+    const { data, isLoading } = useAtomValue(patientInfoQAtom);
     const formatMemberData = useFormattedMemberDataFunction();
     if (!data) {
-        return;
+        return null;
     }
     const formattedData = data.map((row) => formatMemberData(row));
     const sortedData = formattedData.slice().sort((a, b) => {
@@ -17,6 +19,9 @@ export default function CommunityLeaderboard() {
         const progressB = parseInt(b.targetProgress);
         return progressB - progressA;
     });
+    if (isLoading) {
+        return <Loading isLoading />;
+    }
     return (
         <PageWrapper>
             <LeaderboardWinner member={sortedData[0]} />
@@ -74,6 +79,9 @@ export function LeaderboardRow({
 }
 
 export function LeaderboardWinner({ member }: { member: MemberData }) {
+    if (!member) {
+        return null;
+    }
     const screenSizeCutoff = Dimensions.get("screen").height > 667 ? 15 : 12;
 
     const memberName =

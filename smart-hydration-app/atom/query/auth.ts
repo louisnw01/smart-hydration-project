@@ -1,5 +1,5 @@
 import { ENDPOINTS, request } from "@/util/fetch";
-import { atomWithMutation } from "jotai-tanstack-query";
+import { atomWithMutation, queryClientAtom } from "jotai-tanstack-query";
 import { registerInfoAtom } from "../user";
 import { atomWithMutationCustom, atomWithQueryInfo } from "./common";
 
@@ -18,6 +18,10 @@ export const loginMAtom = atomWithMutation((get) => ({
         }
 
         return object.access_token;
+    },
+    onSuccess: () => {
+        const qc = get(queryClientAtom);
+        qc.invalidateQueries({ predicate: () => true });
     },
 }));
 
@@ -39,6 +43,10 @@ export const registerMAtom = atomWithMutation((get) => ({
         const object = await response.json();
         return object.access_token;
     },
+    onSuccess: () => {
+        const qc = get(queryClientAtom);
+        qc.invalidateQueries({ predicate: () => true });
+    },
 }));
 
 export const getUserExistsQAtom = atomWithQueryInfo({
@@ -51,6 +59,10 @@ export const getUserExistsQAtom = atomWithQueryInfo({
 export const verifyEmailMAtom = atomWithMutationCustom<{ code: string }>({
     mutationKey: "/user/verify",
     endpoint: ENDPOINTS.VERIFY_EMAIL,
+    onSuccess: (get, qc, form) => {
+        qc.invalidateQueries({ queryKey: ["check-token"] });
+        qc.setQueryData(["check-token"], () => ({ status: 200 }));
+    },
 });
 
 export const addPushTokenMAtom = atomWithMutationCustom<{ pushToken: string }>({
