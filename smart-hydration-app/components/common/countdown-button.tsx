@@ -80,7 +80,7 @@ export default function CountdownButton({text, mutateAtom, icon}:CountdownProps)
               />
               </G>
             </Svg>
-            <Text className='px-1'>{countdown}s</Text>
+            <Text className='px-1 dark:text-white'>{countdown}s</Text>
           </View>
         )}
     </View>

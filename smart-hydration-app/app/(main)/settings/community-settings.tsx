@@ -220,6 +220,8 @@ const settingsList: ISettingsSection[] = [
                     }, [leaveSuccess]);
 
                     const isOwner = data?.isOwner;
+                    const confirmAction = data?.isOwner ? "Delete" : "Leave";
+                    const confirmWord = data?.isOwner ? "delete" : "leave";
                     return (
                         <View className="">
                             <View className="w-full h-[1px] bg-gray-300 dark:bg-neutral-800 mb-4 mt-16" />
@@ -236,8 +238,8 @@ const settingsList: ISettingsSection[] = [
                                 }}
                             />
                             <ConfirmModal
-                                message="Are you sure you want to delete this community?"
-                                confirmMessage="Delete"
+                                message={`Are you sure you want to ${confirmWord} this community?`}
+                                confirmMessage={confirmAction}
                                 onConfirm={() => {
                                     if (isOwner) {
                                         deleteCommunity();
