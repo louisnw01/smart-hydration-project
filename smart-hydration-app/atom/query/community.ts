@@ -81,6 +81,7 @@ export const deleteCommunityMAtom = atomWithMutationCustom({
                 }) as UserInfo,
         );
         qc.setQueryData(["get-patient-info", authToken], []);
+        qc.invalidateQueries({ queryKey: ["name-from-link"] });
     },
 });
 
@@ -140,6 +141,7 @@ export const leaveCommunityMAtom = atomWithMutationCustom({
     onSuccess: (get, qc, form) => {
         qc.invalidateQueries({ queryKey: ["get-community-info"] });
         qc.invalidateQueries({ queryKey: ["get-patient-info"] });
+        qc.invalidateQueries({ queryKey: ["name-from-link"] });
     },
 });
 
