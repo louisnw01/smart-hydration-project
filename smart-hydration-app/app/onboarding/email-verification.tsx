@@ -8,34 +8,43 @@ import StyledButton from "@/components/common/button";
 import CountdownButton from "@/components/common/countdown-button";
 import GenericOnboardContent from "@/components/onboarding/generic-onboard-content";
 import OnboardingHeader from "@/components/onboarding/onboarding-header";
-import useSession from "@/util/auth";
-import { registerForPushNotificationsAsync } from "@/util/notifications";
 import useColorPalette from "@/util/palette";
 import { FontAwesome } from "@expo/vector-icons";
 import * as Linking from "expo-linking";
-import { Redirect, router } from "expo-router";
+import { router } from "expo-router";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { useEffect, useState } from "react";
 import { Text, View } from "react-native";
+import useSettings from "../hooks/user";
+import { registerForPushNotificationsAsync } from "@/util/notifications";
 
 export default function EmailVerificationPage() {
     const setAuthAtom = useSetAtom(authTokenAtom);
     const verificationUrl = Linking.useURL();
+    const [code, setCode] = useState("");
     const palette = useColorPalette();
+    const { isCarer } = useSettings();
     const [errorMessage, setErrorMessage] = useState("");
     const { mutate: addPushToken } = useAtomValue(addPushTokenMAtom);
     const [storedPushToken, setStoredPushToken] = useAtom(pushTokenAtom);
-    const { mutate, isPending, error, isSuccess, isIdle } =
+
+    //function to extract verification code from link
+    //format = smarthydration://verify_email/auth=xxxxxxxx
+    function processVerificationUrl(url: string) {
+        if (url.length >= 10) {
+            setCode(url.slice(-10));
+        } else {
+            setCode(url);
+        }
+    }
+
+    const { mutate, isSuccess, isPending, error } =
         useAtomValue(verifyEmailMAtom);
 
-    const { isEmailVerified } = useSession();
-
     useEffect(() => {
-        setErrorMessage("");
-        if (isPending || isIdle) return;
-        if (!isSuccess) {
-            setErrorMessage("Invalid verification code. Please try again");
-        } else if (isSuccess) {
+        if (!isSuccess || error) {
+            setErrorMessage(error?.message ?? "");
+        } else {
             if (storedPushToken) {
                 addPushToken({ pushToken: storedPushToken });
             } else {
@@ -47,21 +56,22 @@ export default function EmailVerificationPage() {
                     })
                     .catch((error: any) => console.error(error));
             }
+            router.replace("(tabs)");
         }
-    }, [isSuccess, isPending]);
+    }, [isSuccess, error]);
 
     useEffect(() => {
         if (!verificationUrl) return;
-        if (verificationUrl.length >= 10) {
-            mutate({ code: verificationUrl.slice(-10) });
-        } else {
-            mutate({ code: verificationUrl });
-        }
+        processVerificationUrl(verificationUrl);
     }, [verificationUrl]);
 
-    if (isEmailVerified) {
-        return <Redirect href="(tabs)" />;
-    }
+    useEffect(() => {
+        if (code) handleVerify();
+    }, [code]);
+
+    const handleVerify = () => {
+        mutate({ code });
+    };
 
     return (
         <GenericOnboardContent proceed={true}>
