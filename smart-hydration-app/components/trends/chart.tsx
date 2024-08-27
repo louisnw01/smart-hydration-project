@@ -92,8 +92,6 @@ export default function TrendsChart() {
         scrollPosition.value = event.contentOffset.x;
     });
 
-    console.log("MEMBER: ", member);
-
     const scrollViewWidth = useSharedValue(screenWidth);
 
     const memoedData = useMemo(
