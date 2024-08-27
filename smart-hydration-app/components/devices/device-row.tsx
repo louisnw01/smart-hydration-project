@@ -41,6 +41,7 @@ export default function DeviceRow({
             className="bg-gray-200 px-7 py-4 flex flex-row justify-between rounded-xl dark:bg-neutral-800"
             onPress={() => {
                 setIsActive(!isActive);
+                if (!onPress) return;
                 onPress(device);
             }}
             style={
