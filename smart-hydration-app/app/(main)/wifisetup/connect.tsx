@@ -71,6 +71,7 @@ export default function ConnectPage() {
                 title="WiFi Password"
                 secureTextEntry
                 onChangeText={setPassword}
+                autoCapitalize="none"
             />
 
             <StyledButton

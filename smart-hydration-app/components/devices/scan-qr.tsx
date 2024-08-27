@@ -46,9 +46,7 @@ export default function ScanWithCamera({ visible, setVisible }) {
     const userJugUserId = useAtomValue(userJugUserIdAtom);
 
     const checkWifiAndSetMessage = async (device) => {
-        alert("here now");
-        const ssid = WifiManager.getCurrentWifiSSID();
-        alert("HERHEREHREHRE");
+        const ssid = await WifiManager.getCurrentWifiSSID();
         const sameSSID = ssid === device.ssid;
 
         setWifiPairInfo({
