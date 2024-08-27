@@ -174,7 +174,13 @@ export default function CommunityPage() {
             </PageWrapper>
         );
     } else if (!isCarer) {
-        return <CommunityLeaderboard />;
+        return (
+            <PageWrapper>
+                <ScrollView>
+                    <CommunityLeaderboard />
+                </ScrollView>
+            </PageWrapper>
+        );
     } else {
         return (
             <PageWrapper>
