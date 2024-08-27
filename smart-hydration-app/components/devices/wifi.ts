@@ -1,13 +1,12 @@
 import { router } from "expo-router";
 import WifiManager from "react-native-wifi-reborn";
 
-
 export function connectToWifi(jugId: number) {
     WifiManager.connectToProtectedSSID(
         `SmartHydration: ${jugId}`,
         null,
         false,
-        false
+        false,
     ).then(
         () => {
             router.replace("wifisetup/connect");
@@ -18,9 +17,9 @@ export function connectToWifi(jugId: number) {
             );
         },
     );
-};
+}
 
 export async function getWifiName() {
-    const res  = await WifiManager.getCurrentWifiSSID();
+    const res = await WifiManager.getCurrentWifiSSID();
     return res;
 }

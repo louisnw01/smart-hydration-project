@@ -61,7 +61,7 @@ def auth_key(key):
     if user_id is None:
         return False
     with db_session:
-        if User[user_id] is None:
+        if User.get(id=user_id) is None:
             return False
     return True
 

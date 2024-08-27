@@ -45,7 +45,7 @@ def get_users_jugs_sh_ids(user_id):
 
 
 def get_users_community(user_id):
-    user = User[user_id]
+    user = User.get(id=user_id)
     member = user.community_member
     if not member:
         return None
@@ -66,8 +66,8 @@ def clear_drank_today():
 
 async def reset_drank_today():
     while True:
-        clear_drank_today()
         now = datetime.now()
         end_of_day_today = datetime.combine(now.date(), time(23, 59, 59))
         time_to_wait = end_of_day_today.timestamp() - now.timestamp()
         await asyncio.sleep(time_to_wait)
+        clear_drank_today()
