@@ -118,7 +118,6 @@ export default function TrendsChart() {
         scrollViewWidth.value = newValue;
 
         setTimeout(() => {
-            console.log("running..");
             scrollPosition.value = newValue;
         }, 100);
     }, [timeframe, data]);
