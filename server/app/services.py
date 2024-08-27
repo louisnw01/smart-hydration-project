@@ -1,10 +1,12 @@
+import asyncio
+
 from fastapi import HTTPException
 from pony.orm.core import commit, get, select, db_session
 
 from .mail import send_email_with_ses
 from .models import User, Jug, JugUser, Community
 from .schemas import AddJugUserForm
-
+from datetime import datetime, time
 
 @db_session
 def user_exists(email):
@@ -55,3 +57,17 @@ def try_get_users_community(user_id):
     if not community:
         raise HTTPException(400, 'user is not part of a community')
     return community
+
+@db_session
+def clear_drank_today():
+    for jug_user in select(j for j in JugUser):
+        jug_user.drank_today = 0
+    commit()
+
+async def reset_drank_today():
+    while True:
+        clear_drank_today()
+        now = datetime.now()
+        end_of_day_today = datetime.combine(now.date(), time(23, 59, 59))
+        time_to_wait = end_of_day_today.timestamp() - now.timestamp()
+        await asyncio.sleep(time_to_wait)

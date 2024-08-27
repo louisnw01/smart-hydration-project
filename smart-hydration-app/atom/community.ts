@@ -20,7 +20,7 @@ export const formattedMemberDataAtom = atom((get) => {
             ? member.drankToday.toString() + "ml"
             : null,
         targetProgress:
-            ((member.drankToday / member.dailyTarget) * 100)
+            (Math.min(((member.drankToday / member.dailyTarget) * 100), 100))
                 .toFixed(0)
                 .toString() + "%",
         target: member.dailyTarget,

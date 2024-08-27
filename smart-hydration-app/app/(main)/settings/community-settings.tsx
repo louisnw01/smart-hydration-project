@@ -3,16 +3,17 @@ import {
     communityInfoQAtom,
     deleteCommunityMAtom,
     leaveCommunityMAtom,
+    userHasCommunityAtom,
 } from "@/atom/query";
 import { communityTabVisible } from "@/atom/user";
 import StyledButton from "@/components/common/button";
 import { OptionBlock } from "@/components/common/option-block";
-import { ISettingsSection } from "@/interfaces/settings";
+import { ISettingsActions, ISettingsSection } from "@/interfaces/settings";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useAtomValue } from "jotai";
 import { useEffect, useState } from "react";
-import { SectionList, Text, View } from "react-native";
+import { SectionList, SectionListData, Text, View } from "react-native";
 import { ConfirmModal } from "./remove-member";
 
 const settingsList: ISettingsSection[] = [
@@ -22,7 +23,11 @@ const settingsList: ISettingsSection[] = [
             {
                 name: "Change community Name",
                 Component: (name, isFirst, isLast) => {
+                    const inCommunity = useAtomValue(userHasCommunityAtom);
+                    const { data } = useAtomValue(communityInfoQAtom);
                     return (
+                        <>
+                        { inCommunity && data?.isOwner && (
                         <OptionBlock
                             text={name}
                             isFirst={isFirst}
@@ -37,7 +42,8 @@ const settingsList: ISettingsSection[] = [
                                     color="gray"
                                 />
                             }
-                        />
+                        />)}
+                        </>
                     );
                 },
             },
@@ -46,9 +52,10 @@ const settingsList: ISettingsSection[] = [
                 Component: (name, isFirst, isLast) => {
                     const { data } = useAtomValue(communityInfoQAtom);
                     const { isCarer } = useSettings();
+                    const inCommunity = useAtomValue(userHasCommunityAtom);
                     return (
                         <>
-                            {data?.isOwner && isCarer && (
+                            {data?.isOwner && isCarer && inCommunity && (
                                 <OptionBlock
                                     isLast={isLast}
                                     isFirst={isFirst}
@@ -79,9 +86,10 @@ const settingsList: ISettingsSection[] = [
                 Component: (name, isFirst, isLast) => {
                     const { data } = useAtomValue(communityInfoQAtom);
                     const { isCarer } = useSettings();
+                    const inCommunity = useAtomValue(userHasCommunityAtom);
                     return (
                         <>
-                            {data?.isOwner && isCarer && (
+                            {data?.isOwner && isCarer && inCommunity && (
                                 <OptionBlock
                                     isLast={isLast}
                                     text={name}
@@ -108,9 +116,10 @@ const settingsList: ISettingsSection[] = [
                 Component: (name, isFirst, isLast) => {
                     const { data } = useAtomValue(communityInfoQAtom);
                     const { isCarer } = useSettings();
+                    const inCommunity = useAtomValue(userHasCommunityAtom);
                     return (
                         <>
-                            {isCarer && data?.isOwner && (
+                            {isCarer && data?.isOwner && inCommunity && (
                                 <OptionBlock
                                     isLast={isLast}
                                     text={name}
@@ -136,9 +145,10 @@ const settingsList: ISettingsSection[] = [
                 name: "Invite User",
                 Component: (name, isFirst, isLast) => {
                     const { isCarer } = useSettings();
+                    const inCommunity = useAtomValue(userHasCommunityAtom);
                     return (
                         <>
-                            {!isCarer && (
+                            {!isCarer && inCommunity && (
                                 <OptionBlock
                                     isLast={isLast}
                                     text={name}
@@ -199,6 +209,7 @@ const settingsList: ISettingsSection[] = [
             {
                 Component: () => {
                     const { data } = useAtomValue(communityInfoQAtom);
+                    const inCommunity = useAtomValue(userHasCommunityAtom);
                     const {
                         mutate: deleteCommunity,
                         isSuccess: deleteSuccess,
@@ -225,6 +236,7 @@ const settingsList: ISettingsSection[] = [
                     return (
                         <View className="">
                             <View className="w-full h-[1px] bg-gray-300 dark:bg-neutral-800 mb-4 mt-16" />
+                            {inCommunity && (
                             <StyledButton
                                 text={
                                     isOwner
@@ -236,7 +248,7 @@ const settingsList: ISettingsSection[] = [
                                 onPress={() => {
                                     setModalVisible(true);
                                 }}
-                            />
+                            />)}
                             <ConfirmModal
                                 message={`Are you sure you want to ${confirmWord} this community?`}
                                 confirmMessage={confirmAction}
@@ -258,6 +270,16 @@ const settingsList: ISettingsSection[] = [
     },
 ];
 
+const shouldRenderHeader = (
+    section: SectionListData<ISettingsActions, ISettingsSection>,
+) => {
+    // Condition to render section headers
+    // For example, don't render headers for empty sections
+    if(!section.title) {
+    return false;}
+    return true;
+};
+
 export default function CommunityProfile() {
     return (
         <View className="flex flex-1 justify-between mx-4 mt-4">
@@ -271,7 +293,9 @@ export default function CommunityProfile() {
                     )
                 }
                 renderSectionHeader={({ section }) => {
-                    if (!section.title) return null;
+                    if (!shouldRenderHeader(section)) {
+                        return null;
+                    }
                     return (
                         <View className="bg-gray-100 dark:bg-neutral-900 py-4 px-4 rounded-t-xl mt-6">
                             <Text className="font-bold dark:text-white">
