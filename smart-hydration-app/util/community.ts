@@ -90,7 +90,7 @@ export function useFormattedMemberDataFunction() {
             ? Math.floor(unitConverter(member.drankToday, unit)).toString()
             : "0",
         targetProgress:
-            ((member.drankToday / member.dailyTarget) * 100)
+            (Math.min(((member.drankToday / member.dailyTarget) * 100), 100))
                 .toFixed(0)
                 .toString() + "%",
         target: member.dailyTarget,
