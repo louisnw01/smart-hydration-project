@@ -45,7 +45,7 @@ def validate_auth_header(auth: Optional[HTTPAuthorizationCredentials]):
     if user_id is None:
         raise HTTPException(status_code=401, detail='unauthorized token')
     with db_session:
-        user = User[user_id]
+        user = User.get(id=user_id)
         if user is None:
             raise HTTPException(status_code=401, detail='unauthorized token')
     return user

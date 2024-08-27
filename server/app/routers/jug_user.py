@@ -27,7 +27,7 @@ async def add_jug_user(form: AddJugUserForm, user_id: str = Depends(auth_user)):
 @router.post("/update")
 async def update(form: JugUserUpdate, user_id: str = Depends(auth_user)):
     with db_session:
-        user = User[user_id]
+        user = User.get(id=user_id)
         if user is None:
             raise HTTPException(status_code=400, detail='user not found')
         if user.jug_user is None:
@@ -48,7 +48,10 @@ async def add_drink(form: AddDrinkForm, user_id: str = Depends(auth_user)):
         if juguser is None:
             raise HTTPException(400, 'jug user not found')
 
-        if User[user_id].jug_user != juguser:
+
+        user = User.get(id=user_id)
+
+        if user is None or user.jug_user != juguser:
             community = try_get_users_community(user_id)
 
             if juguser.community != community:
@@ -69,7 +72,7 @@ async def add_drink(form: AddDrinkForm, user_id: str = Depends(auth_user)):
 @router.post("/add-tags-patient")
 async def add_tags_patient(form: AddTagsPatientForm, user_id: str = Depends(auth_user)):
     with db_session:
-        user = User[user_id]
+        user = User.get(id=user_id)
         if not user:
             raise HTTPException(status_code=400, detail='user not found')
         juguser = JugUser.get(id=form.memberID)

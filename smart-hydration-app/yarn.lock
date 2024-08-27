@@ -9704,10 +9704,10 @@ react-native-vector-icons@^10.1.0:
     prop-types "^15.7.2"
     yargs "^16.1.1"
 
-react-native-wifi-reborn@^4.12.1:
-  version "4.12.1"
-  resolved "https://registry.yarnpkg.com/react-native-wifi-reborn/-/react-native-wifi-reborn-4.12.1.tgz#12c44514d4a0baa21f434e987cef2a0f58874770"
-  integrity sha512-HZvXJepGZu75GqtYD1qfYxW1PlV9LeTtSWt81IcAOAyn0qfyJO0ayym2AiJwd297jRF704q6jYvkeW19RfE+8w==
+react-native-wifi-reborn@4.11.0:
+  version "4.11.0"
+  resolved "https://registry.yarnpkg.com/react-native-wifi-reborn/-/react-native-wifi-reborn-4.11.0.tgz#934c5f8b6db01b791b67c5bf2634aaab994c495e"
+  integrity sha512-CNVKXT6HNZzTENFgZ8WvDluUyyY9+tJY0HF70lhZiDuyXPaY9OonGWnFf7mfEgp8+0CMUU2jcT7BoSp1uRAzUw==
 
 react-native@*, react-native@0.74.3:
   version "0.74.3"

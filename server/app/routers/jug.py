@@ -74,7 +74,7 @@ async def link_jugs(form: LinkJugs, user_id: str = Depends(auth_user)):
                 # unlink the jug from all others
                 for juguser in community.jug_users:
                     juguser.jugs.remove(jug)
-                    cw = ConnectionWindow.get(jug=jug, jug_user=juguser)
+                    cw = ConnectionWindow.get(jug=jug, jug_user=juguser, end=None)
                     if cw:
                         cw.end = time_now
             commit()
@@ -93,7 +93,7 @@ async def link_jugs(form: LinkJugs, user_id: str = Depends(auth_user)):
                 # remove from unassigned, and remove from any other jug users
                 community.unassigned_jugs.remove(jug_to_add)
                 for juguser in community.jug_users:
-                    cw = ConnectionWindow.get(jug=jug_to_add, jug_user=juguser)
+                    cw = ConnectionWindow.get(jug=jug_to_add, jug_user=juguser, end=None)
                     if cw:
                         cw.end = int(time_now)
                     juguser.jugs.remove(jug_to_add)
@@ -125,7 +125,7 @@ async def unlink_jug_from_user(form: UnlinkJug, user_id: str = Depends(auth_user
             raise HTTPException(400, 'jug does not exist')
 
         juguser.jugs.remove(jug)
-        ConnectionWindow.get(jug=jug, jug_user=juguser).end = time_now
+        ConnectionWindow.get(jug=jug, jug_user=juguser, end=None).end = time_now
         commit()
 
 

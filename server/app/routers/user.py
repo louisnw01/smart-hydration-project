@@ -252,7 +252,10 @@ class AddCustomCup(BaseModel):
 async def add_custom_cup(form: AddCustomCup, user_id: str = Depends(auth_user)):
     with db_session:
         juguser = JugUser.get(id=form.juguser)
-        if juguser != User[user_id].jug_user:
+        user = User.get(id=user_id)
+        if user is None:
+            return
+        if juguser != user.jug_user:
             community = try_get_users_community(user_id)
 
             for juguser in community.jug_users:
@@ -268,7 +271,7 @@ async def add_custom_cup(form: AddCustomCup, user_id: str = Depends(auth_user)):
 @router.get("/get-custom-cups")
 async def get_custom_cups(user_id: str = Depends(auth_user)):
     with db_session:
-        user = User[user_id]
+        user = User.get(id=user_id)
         result = {user.jug_user.id: [{"name": c.name, "size": c.size} for c in user.jug_user.custom_cups]}
 
         community = get_users_community(user_id);

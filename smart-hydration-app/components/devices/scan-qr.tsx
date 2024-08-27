@@ -17,11 +17,11 @@ import { useAtomValue, useSetAtom } from "jotai";
 import { useEffect, useState } from "react";
 import { Dimensions, Platform, Pressable, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import WifiManager from "react-native-wifi-reborn";
 import StyledButton from "../common/button";
 import Loading from "../common/loading";
 import Typography from "../common/typography";
 import DeviceRow from "./device-row";
-import { getWifiName } from "./wifi";
 
 export default function ScanWithCamera({ visible, setVisible }) {
     const { mutate, data, isPending, isSuccess, reset } =
@@ -46,7 +46,9 @@ export default function ScanWithCamera({ visible, setVisible }) {
     const userJugUserId = useAtomValue(userJugUserIdAtom);
 
     const checkWifiAndSetMessage = async (device) => {
-        const ssid = await getWifiName();
+        alert("here now");
+        const ssid = WifiManager.getCurrentWifiSSID();
+        alert("HERHEREHREHRE");
         const sameSSID = ssid === device.ssid;
 
         setWifiPairInfo({

@@ -41,11 +41,12 @@ export default function ConnectPage() {
 
     useEffect(() => {
         if (!isSuccess) return;
-        WifiManager.connectToProtectedWifiSSID({
-            ssid: pairInfo.ssid,
-            password: password,
-            isWEP: false,
-        }).then(
+        WifiManager.connectToProtectedSSID(
+            pairInfo.ssid,
+            password,
+            false,
+            false,
+        ).then(
             () => {
                 router.replace("wifisetup/success");
             },
