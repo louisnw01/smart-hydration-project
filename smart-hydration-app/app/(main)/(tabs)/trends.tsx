@@ -24,7 +24,8 @@ import { FontAwesome6 } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useAtom, useAtomValue } from "jotai";
 import { useEffect } from "react";
-import { Text, View } from "react-native";
+import { Dimensions, Text, View } from "react-native";
+import { SelectList } from "react-native-dropdown-select-list";
 
 function MostHydratedDayOfWeek() {
     const { name, value } = useAtomValue(mostHydratedDayOfWeekAtom);
@@ -70,6 +71,7 @@ function Insights() {
 export default function TrendsPage() {
     const { isLoading } = useAtomValue(getHydrationQAtom);
     const isInCommunity = useAtomValue(userHasCommunityAtom);
+    const screenSizeOffset = Dimensions.get("screen").height > 667 ? 14 : 8;
     const { isCarer } = useSettings();
     const palette = useColorPalette();
     const userJugUserId = useAtomValue(userJugUserIdAtom);
@@ -91,6 +93,14 @@ export default function TrendsPage() {
 
     if (isCarer) {
         if (data != undefined) {
+            for (let datapoint of data) {
+                const memberName = datapoint.name;
+                if (memberName.length > screenSizeOffset) {
+                    datapoint.name =
+                        datapoint.name.substring(0, screenSizeOffset - 1) +
+                        "... ";
+                }
+            }
             communityMembers = data.map((row) => ({
                 key: row.id,
                 value: row,
@@ -128,16 +138,15 @@ export default function TrendsPage() {
                                 </Text>
                             </View>
                         )}
-                        {selectedUser != null && (
-                            <View>
-                                <View className="flex px-4 pb-5 bg-white dark:bg-black">
-                                    <TrendsChart />
-                                    <Switcher />
-                                </View>
-                                <Insights />
-                            </View>
-                        )}
-                    </>
+                        {selectedUser != null && ( */}
+                {!isCarer && isInCommunity && (
+                    <View>
+                        <View className="flex px-4 pb-5 bg-white dark:bg-black">
+                            <TrendsChart />
+                            <Switcher />
+                        </View>
+                        <Insights />
+                    </View>
                 )}
                 {isCarer && !isInCommunity && (
                     <>
