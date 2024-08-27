@@ -86,9 +86,9 @@ export default function TrendsPage() {
 
     useEffect(() => {
         if (isCarer || !data) return;
-        setSelectedJugUser(
-            data?.find((row) => row.id == userJugUserId) || null,
-        );
+        const newPatient = data?.find((row) => row.id == userJugUserId);
+        if (!newPatient) return;
+        setSelectedJugUser(newPatient);
     }, [isCarer, data]);
 
     if (isCarer) {

@@ -83,7 +83,7 @@ export default function TrendsChart() {
     const palette = useColorPalette();
     const setCanvasInfo = useSetAtom(canvasInfoAtom);
     const member = useAtomValue(selectedMemberAtom);
-    const unit = useAtomValue(unitsAtom)
+    const unit = useAtomValue(unitsAtom);
 
     const scrollRef = useAnimatedRef<Animated.ScrollView>();
     const scrollPosition = useSharedValue(0);
@@ -91,6 +91,8 @@ export default function TrendsChart() {
     const scrollHandler = useAnimatedScrollHandler((event) => {
         scrollPosition.value = event.contentOffset.x;
     });
+
+    console.log("MEMBER: ", member);
 
     const scrollViewWidth = useSharedValue(screenWidth);
 
