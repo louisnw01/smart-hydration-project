@@ -53,7 +53,7 @@ export function LeaderboardRow({
             ? member.name.substring(0, screenSizeCutoff - 1) + "..."
             : member.name;
     return (
-        <View className="relative w-[93%] h-24 left-4 rounded-xl overflow-hidden mb-1 bg-gray-200">
+        <View className="relative w-[93%] h-24 left-4 rounded-xl overflow-hidden mb-1 bg-gray-200 dark:bg-neutral-800">
             <View
                 className="absolute left-0 top-0 bottom-0 h-12 bg-blue "
                 style={{ width: progressWidth, height: "4rem" }}
