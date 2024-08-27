@@ -16,7 +16,6 @@ export const setSelectedMemberInModeEAtom = atomEffect((get, set) => {
         !data?.has_community &&
         data
     ) {
-        console.log("DATA", data);
         set(selectedMemberAtom, {
             id: data?.juguser,
             name: data?.name,
