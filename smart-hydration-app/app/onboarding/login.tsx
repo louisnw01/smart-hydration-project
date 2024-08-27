@@ -15,6 +15,7 @@ import { registerForPushNotificationsAsync } from "@/util/notifications";
 import { useRouter } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import useSettings from "../hooks/user";
+import { Dimensions } from "react-native";
 
 export default function LoginPage() {
     const router = useRouter();
@@ -58,10 +59,17 @@ export default function LoginPage() {
         router.replace(isCarer ? "(tabs)/community" : "(tabs)");
     }, [isSuccess, data]);
 
+    const windowHeight = Dimensions.get("screen").height;
+
     return (
         <PageWrapper>
-            <KeyboardScrollView keyboardVerticalOffset={-170}>
-                <View className="self-center mb-8" style={{}}>
+            <KeyboardScrollView
+                keyboardVerticalOffset={windowHeight > 667 ? -100 : -20}
+            >
+                <View
+                    className={`self-center mb-8 ${windowHeight > 667 ? "top-10" : "top-8 pb-8"}`}
+                    style={{}}
+                >
                     <Logo width={330} height={105} />
                 </View>
                 <OnboardingHeader text="Login" />

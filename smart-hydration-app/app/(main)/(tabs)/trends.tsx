@@ -1,213 +1,312 @@
 import useSettings from "@/app/hooks/user";
-import { selectedMemberAtom } from "@/atom/community";
-import { mostHydratedDayOfWeekAtom } from "@/atom/hydration";
 import {
-    getHydrationQAtom,
-    historicalPatientJugDataQAtom,
-    patientInfoQAtom,
+    communityInfoQAtom,
+    deleteCommunityMAtom,
+    leaveCommunityMAtom,
     userHasCommunityAtom,
-    userJugUserIdAtom,
 } from "@/atom/query";
+import { communityTabVisible } from "@/atom/user";
 import StyledButton from "@/components/common/button";
-import { ScrollPageWrapper } from "@/components/common/page-wrapper";
-import WaterAmount from "@/components/common/water-amount";
-import TrendsChart from "@/components/trends/chart";
-import InsightsPane from "@/components/trends/insights-pane";
-import MonthVsLastMonthInsight from "@/components/trends/month-vs-month";
-import Switcher from "@/components/trends/switcher";
-import TodayVsAvgInsight from "@/components/trends/today-vs-avg";
-import { MemberInfo } from "@/interfaces/community";
-import useColorPalette from "@/util/palette";
-import { formattedDataAtom } from "@/util/trends";
-import { Entypo, FontAwesome6 } from "@expo/vector-icons";
+import { OptionBlock } from "@/components/common/option-block";
+import { ISettingsActions, ISettingsSection } from "@/interfaces/settings";
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
-import { useAtom, useAtomValue } from "jotai";
-import { useEffect } from "react";
-import { Text, View } from "react-native";
-import { SelectList } from "react-native-dropdown-select-list";
+import { useAtomValue } from "jotai";
+import { useEffect, useState } from "react";
+import { SectionList, SectionListData, Text, View } from "react-native";
+import { ConfirmModal } from "./remove-member";
 
-function MostHydratedDayOfWeek() {
-    const { name, value } = useAtomValue(mostHydratedDayOfWeekAtom);
-    const selectedMember = useAtomValue(selectedMemberAtom);
-    const userJUserId = useAtomValue(userJugUserIdAtom);
-    if (!value) return null;
-    if (selectedMember?.id == userJUserId) {
-        return (
-            <InsightsPane heading={`You tend to drink the most on ${name}.`}>
-                <WaterAmount value={value} />
-            </InsightsPane>
-        );
-    } else {
-        return (
-            <InsightsPane
-                heading={`${selectedMember?.name} tends to drink the most on ${name}.`}
-            >
-                <WaterAmount value={value} />
-            </InsightsPane>
-        );
-    }
-}
-
-function Insights() {
-    const { data } = useAtomValue(formattedDataAtom);
-    if (!data || data.length === 0) {
-        return <View className="h-3/4 justify-center text-center"></View>;
-    }
-    return (
-        <View className="flex gap-4 px-4 mt-3 mb-4">
-            <Text className="font-bold text-2xl mt-5 dark:text-white">
-                Insights
-            </Text>
-            <TodayVsAvgInsight />
-
-            <MonthVsLastMonthInsight />
-
-            <MostHydratedDayOfWeek />
-        </View>
-    );
-}
-
-export default function TrendsPage() {
-    const { isLoading } = useAtomValue(getHydrationQAtom);
-    const isInCommunity = useAtomValue(userHasCommunityAtom);
-    const { isCarer } = useSettings();
-    const palette = useColorPalette();
-    const userJugUserId = useAtomValue(userJugUserIdAtom);
-    const { data } = useAtomValue(patientInfoQAtom);
-    const [selectedUser, setSelectedJugUser] = useAtom(selectedMemberAtom);
-    const { isLoading: dataIsLoading } = useAtomValue(formattedDataAtom);
-
-    let communityMembers: { key: number; value: MemberInfo }[] | undefined;
-
-    // need a way to get the memberinfo of the current user
-    //
-
-    useEffect(() => {
-        if (isCarer || !data) return;
-        setSelectedJugUser(
-            data?.find((row) => row.id == userJugUserId) || null,
-        );
-    }, [isCarer, data]);
-
-    if (isCarer) {
-        if (data != undefined) {
-            communityMembers = data.map((row) => ({
-                key: row.id,
-                value: row,
-            }));
-        }
-    }
-    return (
-        <ScrollPageWrapper
-            queryRefreshAtom={historicalPatientJugDataQAtom}
-            isLoading={isLoading || dataIsLoading}
-            message="Loading your information..."
-            className="bg-gray-100 dark:bg-black"
-        >
-            <>
-                {isCarer && isInCommunity && (
-                    <View className="flex-row justify-evenly bg-white dark:bg-black py-4">
-                        <Text className="pt-4 flex-wrap text-xl font-semibold dark:text-white">
-                            Community Member:
-                        </Text>
-                        <SelectList
-                            arrowicon=<Entypo
-                                name="chevron-down"
-                                size={24}
-                                color={palette.fglight}
-                            />
-                            setSelected={(val) => {
-                                // gets the memberinfo of the user to be used in historical data atom
-                                setSelectedJugUser(
-                                    communityMembers?.find(
-                                        (member) =>
-                                            member.key ===
-                                            parseInt(val?.match(/\d+/)[0]),
-                                    )?.value || null,
-                                );
-                            }}
-                            defaultOption={{
-                                key: selectedUser?.id?.toString(),
-                                value: selectedUser
-                                    ? selectedUser.name +
-                                      ": #" +
-                                      selectedUser.id
-                                    : "Select a patient",
-                            }}
-                            data={communityMembers?.map(
-                                (items) =>
-                                    items.value.name + ": #" + items.value.id,
-                            )}
-                            save="key"
-                            search={false}
-                            boxStyles={{
-                                borderColor: "rgb(80, 80, 80)",
-                            }}
-                            dropdownStyles={{
-                                // transform: [{ translateX: -68 }],
-                                borderColor: "rgb(80, 80, 80)",
-                            }}
-                            dropdownTextStyles={{
-                                color: palette.fg,
-                            }}
-                            inputStyles={{
-                                color: palette.fg,
-                                alignSelf: "center",
-                            }}
-                        />
-                    </View>
-                )}
-                {!(isCarer && !isInCommunity) && (
-                    <>
-                        {selectedUser == null && (
-                            <View className="bg-white dark:bg-black justify-center h-full">
-                                <Text className="dark:text-white text-center text-xl">
-                                    Please select a community patient
-                                </Text>
-                            </View>
-                        )}
-                        {selectedUser != null && (
-                            <View>
-                                <View className="flex px-4 pb-5 bg-white dark:bg-black">
-                                    <TrendsChart />
-                                    <Switcher />
-                                </View>
-                                <Insights />
-                            </View>
-                        )}
-                    </>
-                )}
-                {isCarer && !isInCommunity && (
-                    <>
-                        <View className="flex items-center py-10 px-10 bg-white dark:bg-black">
-                            <Text className="text-black dark:text-white text-xl font-light">
-                                You're not tracking anyone's hydration yet. Go
-                                to the Community tab to join a join a community
-                                or create your own.
-                            </Text>
-                            <View className="flex flex-row items-center justify-center">
-                                <StyledButton
-                                    text="Community"
+const settingsList: ISettingsSection[] = [
+    {
+        title: "Community Profile",
+        data: [
+            {
+                name: "Change community Name",
+                Component: (name, isFirst, isLast) => {
+                    const inCommunity = useAtomValue(userHasCommunityAtom);
+                    const { data } = useAtomValue(communityInfoQAtom);
+                    return (
+                        <>
+                        { inCommunity && data?.isOwner && (
+                        <OptionBlock
+                            text={name}
+                            isFirst={isFirst}
+                            isLast={isLast}
+                            onPress={() =>
+                                router.navigate("settings/change-name")
+                            }
+                            icon={
+                                <MaterialCommunityIcons
+                                    name="lead-pencil"
+                                    size={19}
+                                    color="gray"
+                                />
+                            }
+                        />)}
+                        </>
+                    );
+                },
+            },
+            {
+                name: "Edit community tags",
+                Component: (name, isFirst, isLast) => {
+                    const { data } = useAtomValue(communityInfoQAtom);
+                    const { isCarer } = useSettings();
+                    const inCommunity = useAtomValue(userHasCommunityAtom);
+                    return (
+                        <>
+                            {data?.isOwner && isCarer && inCommunity && (
+                                <OptionBlock
+                                    isLast={isLast}
+                                    isFirst={isFirst}
+                                    text={name}
                                     onPress={() =>
-                                        router.push("(tabs)/community")
+                                        router.navigate("settings/edit-tags")
                                     }
-                                    textClass="text-lg self-center"
-                                    buttonClass="self-center mt-20 px-3"
                                     icon={
-                                        <View className="flex flex-row w-6 pr-1">
-                                            <FontAwesome6
-                                                name="people-group"
-                                                size={22}
-                                                color={palette.fg}
-                                            />
-                                        </View>
+                                        <Ionicons
+                                            name="pricetag-outline"
+                                            size={19}
+                                            color="gray"
+                                        />
                                     }
                                 />
-                            </View>
+                            )}
+                        </>
+                    );
+                },
+            },
+        ],
+    },
+    {
+        title: "Members",
+        data: [
+            {
+                name: "Remove Carer",
+                Component: (name, isFirst, isLast) => {
+                    const { data } = useAtomValue(communityInfoQAtom);
+                    const { isCarer } = useSettings();
+                    const inCommunity = useAtomValue(userHasCommunityAtom);
+                    return (
+                        <>
+                            {data?.isOwner && isCarer && inCommunity && (
+                                <OptionBlock
+                                    isLast={isLast}
+                                    text={name}
+                                    onPress={() =>
+                                        router.navigate(
+                                            "settings/remove-member",
+                                        )
+                                    }
+                                    icon={
+                                        <Ionicons
+                                            name="close-circle-outline"
+                                            size={19}
+                                            color="gray"
+                                        />
+                                    }
+                                />
+                            )}
+                        </>
+                    );
+                },
+            },
+            {
+                name: "Invite Carer",
+                Component: (name, isFirst, isLast) => {
+                    const { data } = useAtomValue(communityInfoQAtom);
+                    const { isCarer } = useSettings();
+                    const inCommunity = useAtomValue(userHasCommunityAtom);
+                    return (
+                        <>
+                            {isCarer && data?.isOwner && inCommunity && (
+                                <OptionBlock
+                                    isLast={isLast}
+                                    text={name}
+                                    onPress={() =>
+                                        router.navigate(
+                                            "settings/invite-member",
+                                        )
+                                    }
+                                    icon={
+                                        <Ionicons
+                                            name="add-circle-outline"
+                                            size={19}
+                                            color="gray"
+                                        />
+                                    }
+                                />
+                            )}
+                        </>
+                    );
+                },
+            },
+            {
+                name: "Invite User",
+                Component: (name, isFirst, isLast) => {
+                    const { isCarer } = useSettings();
+                    const inCommunity = useAtomValue(userHasCommunityAtom);
+                    return (
+                        <>
+                            {!isCarer && inCommunity && (
+                                <OptionBlock
+                                    isLast={isLast}
+                                    text={name}
+                                    onPress={() =>
+                                        router.navigate(
+                                            "settings/invite-member",
+                                        )
+                                    }
+                                    icon={
+                                        <Ionicons
+                                            name="add-circle-outline"
+                                            size={19}
+                                            color="gray"
+                                        />
+                                    }
+                                />
+                            )}
+                        </>
+                    );
+                },
+            },
+        ],
+    },
+    {
+        title: "",
+        data: [
+            {
+                name: "Hide Community Tab",
+                Component: (name, isFirst, isLast) => {
+                    const { isCarer } = useSettings();
+                    return (
+                        <>
+                            {!isCarer && (
+                                <View className="py-6">
+                                    <OptionBlock
+                                        atom={communityTabVisible}
+                                        text="Show Community Tab"
+                                        isFirst={isFirst}
+                                        isLast={isLast}
+                                        icon={
+                                            <Ionicons
+                                                name="eye-outline"
+                                                size={19}
+                                                color="gray"
+                                            />
+                                        }
+                                    />
+                                </View>
+                            )}
+                        </>
+                    );
+                },
+            },
+        ],
+    },
+    {
+        data: [
+            {
+                Component: () => {
+                    const { data } = useAtomValue(communityInfoQAtom);
+                    const inCommunity = useAtomValue(userHasCommunityAtom);
+                    const {
+                        mutate: deleteCommunity,
+                        isSuccess: deleteSuccess,
+                    } = useAtomValue(deleteCommunityMAtom);
+
+                    const { mutate: leaveCommunity, isSuccess: leaveSuccess } =
+                        useAtomValue(leaveCommunityMAtom);
+
+                    const [modalVisible, setModalVisible] = useState(false);
+
+                    useEffect(() => {
+                        if (!deleteSuccess) return;
+                        router.back();
+                    }, [deleteSuccess]);
+
+                    useEffect(() => {
+                        if (!leaveSuccess) return;
+                        router.back();
+                    }, [leaveSuccess]);
+
+                    const isOwner = data?.isOwner;
+                    const confirmAction = data?.isOwner ? "Delete" : "Leave";
+                    const confirmWord = data?.isOwner ? "delete" : "leave";
+                    return (
+                        <View className="">
+                            <View className="w-full h-[1px] bg-gray-300 dark:bg-neutral-800 mb-4 mt-16" />
+                            {inCommunity && (
+                            <StyledButton
+                                text={
+                                    isOwner
+                                        ? "Delete Community"
+                                        : "Leave Community"
+                                }
+                                buttonClass="bg-red rounded-xl justify-center"
+                                textClass="text-xl text-white my-1"
+                                onPress={() => {
+                                    setModalVisible(true);
+                                }}
+                            />)}
+                            <ConfirmModal
+                                message={`Are you sure you want to ${confirmWord} this community?`}
+                                confirmMessage={confirmAction}
+                                onConfirm={() => {
+                                    if (isOwner) {
+                                        deleteCommunity();
+                                    } else {
+                                        leaveCommunity();
+                                    }
+                                }}
+                                modalVisible={modalVisible}
+                                setModalVisible={setModalVisible}
+                            />
                         </View>
-                    </>
-                )}
-            </>
-        </ScrollPageWrapper>
+                    );
+                },
+            },
+        ],
+    },
+];
+
+const shouldRenderHeader = (
+    section: SectionListData<ISettingsActions, ISettingsSection>,
+) => {
+    // Condition to render section headers
+    // For example, don't render headers for empty sections
+    if(!section.title) {
+    return false;}
+    return true;
+};
+
+export default function CommunityProfile() {
+    return (
+        <View className="flex flex-1 justify-between mx-4 mt-4">
+            <SectionList
+                sections={settingsList}
+                renderItem={({ item, index, section }) =>
+                    item.Component(
+                        item.name || "",
+                        index == 0,
+                        index == section.data.length - 1,
+                    )
+                }
+                renderSectionHeader={({ section }) => {
+                    if (!shouldRenderHeader(section)) {
+                        return null;
+                    }
+                    return (
+                        <View className="bg-gray-100 dark:bg-neutral-900 py-4 px-4 rounded-t-xl mt-6">
+                            <Text className="font-bold dark:text-white">
+                                {section.title}
+                            </Text>
+                        </View>
+                    );
+                }}
+                keyExtractor={(item, idx) => idx.toString()}
+                stickySectionHeadersEnabled={false}
+            />
+        </View>
     );
 }
