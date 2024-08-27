@@ -83,7 +83,7 @@ export default function TrendsChart() {
     const palette = useColorPalette();
     const setCanvasInfo = useSetAtom(canvasInfoAtom);
     const member = useAtomValue(selectedMemberAtom);
-    const unit = useAtomValue(unitsAtom)
+    const unit = useAtomValue(unitsAtom);
 
     const scrollRef = useAnimatedRef<Animated.ScrollView>();
     const scrollPosition = useSharedValue(0);
