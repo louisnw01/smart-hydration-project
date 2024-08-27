@@ -115,7 +115,7 @@ export default function TrendsPage() {
             className="bg-gray-100 dark:bg-black"
         >
             <>
-                {!isCarer && (
+                {!isCarer && !isInCommunity && (
                     <View>
                         <View className="flex px-4 pb-5 bg-white dark:bg-black">
                             <TrendsChart />
