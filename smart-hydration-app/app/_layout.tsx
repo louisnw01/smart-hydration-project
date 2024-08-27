@@ -45,7 +45,6 @@ async function getAndriodPermissions() {
 }
 
 export default function Index() {
-    console.log("INDEX");
     //clearStorage();
     if (Platform.OS == "android") getAndriodPermissions();
     const [expoPushToken, setExpoPushToken] = useState("");
