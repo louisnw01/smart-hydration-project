@@ -184,7 +184,7 @@ export default function MemberInfoModal() {
                     <StyledButton
                         text="Remove Patient"
                         buttonClass="flex flex-row items-center gap-3 rounded-xl px-4 py-3"
-                        textClass="text-xl text-white -ml-[2px] text-red dark:text-red"
+                        textClass="text-xl -ml-[2px] text-red dark:text-red"
                         icon=<FontAwesome
                             name="trash-o"
                             size={18}
