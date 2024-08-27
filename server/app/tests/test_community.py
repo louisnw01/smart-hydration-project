@@ -7,6 +7,7 @@ client = get_test_client()
 
 def test_community_endpoints():
     # test creating a community
+    client.post("/community/delete")
     response = client.post('/community/create', json={'name': "MyTestCommunity"})
     assert response.status_code == 200
     with db_session:

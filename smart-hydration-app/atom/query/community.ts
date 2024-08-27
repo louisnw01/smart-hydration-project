@@ -165,6 +165,9 @@ export const createTagMAtom = atomWithMutationCustom<{
 }>({
     mutationKey: "create-tag",
     endpoint: ENDPOINTS.CREATE_TAG,
+    onSuccess: (get, qc, form) => {
+        qc.invalidateQueries({ queryKey: ["get-community-tags"] });
+    },
 });
 
 export const updateTagMAtom = atomWithMutationCustom<{
@@ -173,6 +176,9 @@ export const updateTagMAtom = atomWithMutationCustom<{
 }>({
     mutationKey: "update-tag",
     endpoint: ENDPOINTS.UPDATE_TAG,
+    onSuccess: (get, qc, form) => {
+        qc.invalidateQueries({ queryKey: ["get-community-tags"] });
+    },
 });
 
 export const deleteTagMAtom = atomWithMutationCustom<{
@@ -180,6 +186,9 @@ export const deleteTagMAtom = atomWithMutationCustom<{
 }>({
     mutationKey: "delete-tag",
     endpoint: ENDPOINTS.DELETE_TAG,
+    onSuccess: (get, qc, form) => {
+        qc.invalidateQueries({ queryKey: ["get-community-tags"] });
+    },
 });
 
 export const communityTagsQAtom = atomWithQueryInfo<TagInfo[]>({

@@ -7,6 +7,13 @@ client = get_test_client()
 
 
 def test_jug_user_endpoints():
+    client.post("/community/delete")
+
+    with db_session:
+        jugusers = JugUser.select(lambda j: j.name == "MyTestJugUser")
+        [juguser.delete() for juguser in jugusers]
+
+
     # first create a community for them to be part of
     client.post('/community/create', json={'name': "MyTestCommunity"})
     # test creating a community
@@ -23,4 +30,3 @@ def test_jug_user_endpoints():
         jug_user.delete()
     # delete community
     client.post('/community/delete')
-
