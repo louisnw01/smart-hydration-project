@@ -56,7 +56,6 @@ export default function AskIfJugIsEmptyOrNot() {
                 buttonClass="self-center bg-green absolute items-center"
                 style={{ bottom: insets.bottom + 100 }}
                 onPress={() => {
-                    console.log("beginning measurement..");
                     setIsMeasuring(device.id);
                     router.push("custom/finished-wait");
                 }}
