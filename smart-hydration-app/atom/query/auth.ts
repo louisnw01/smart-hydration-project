@@ -59,10 +59,6 @@ export const getUserExistsQAtom = atomWithQueryInfo({
 export const verifyEmailMAtom = atomWithMutationCustom<{ code: string }>({
     mutationKey: "/user/verify",
     endpoint: ENDPOINTS.VERIFY_EMAIL,
-    onSuccess: (get, qc, form) => {
-        qc.invalidateQueries({ queryKey: ["check-token"] });
-        qc.setQueryData(["check-token"], () => ({ status: 200 }));
-    },
 });
 
 export const addPushTokenMAtom = atomWithMutationCustom<{ pushToken: string }>({

@@ -16,6 +16,7 @@ import { useEffect, useState } from "react";
 import { SectionList, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ConfirmModal } from "../settings/remove-member";
+import useSettings from "@/app/hooks/user";
 
 const settingsList: ISettingsSection[] = [
     {
@@ -82,21 +83,25 @@ const settingsList: ISettingsSection[] = [
             {
                 name: "Daily Target",
                 Component: (name, isFirst, isLast) => {
+                    const { isCarer } = useSettings();
                     return (
-                        <OptionBlock
-                            isLast={isLast}
-                            text={name}
-                            onPress={() =>
-                                router.navigate("settings/adjust-target")
-                            }
-                            icon={
-                                <MaterialCommunityIcons
-                                    name="target"
-                                    size={19}
-                                    color="gray"
-                                />
-                            }
-                        />
+                        <>
+                            {!isCarer && (
+                                <OptionBlock
+                                    isLast={isLast}
+                                    text={name}
+                                    onPress={() =>
+                                        router.navigate("settings/adjust-target")
+                                    }
+                                    icon={
+                                        <MaterialCommunityIcons
+                                            name="target"
+                                            size={19}
+                                            color="gray"
+                                        />
+                                    }
+                                />)}
+                        </>
                     );
                 },
             },
