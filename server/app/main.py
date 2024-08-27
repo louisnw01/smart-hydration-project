@@ -13,6 +13,8 @@ from .pusher import pusher_init
 
 from fastapi.middleware.cors import CORSMiddleware
 
+from .services import reset_drank_today
+
 load_dotenv()
 
 connect_to_database()
@@ -42,6 +44,7 @@ app.include_router(simulator.router)
 async def init():
     asyncio.create_task(pusher_init())
     asyncio.create_task(send_drink_reminders())
+    asyncio.create_task(reset_drank_today())
 
     jugs = await fetch_all_registered_jugs()
 
@@ -77,3 +80,5 @@ async def get_all_jugs(user_id: str = Depends(auth_user)):
     with db_session:
         jugs = select(j.smart_hydration_id for j in Jug if True)
         return sorted([j for j in jugs], key=lambda x: int(x[3:]))
+
+
