@@ -22,30 +22,9 @@ export default function AddJugUserLayout() {
             }}
         >
             <Stack.Screen
-                name="add-jug-user-modal"
-                options={{
-                    title: "Add a New Patient",
-                    headerLeft: () => {
-                        return (
-                            <Pressable onPress={() => router.back()}>
-                                <Entypo
-                                    name={
-                                        Platform.OS == "android"
-                                            ? "chevron-left"
-                                            : "circle-with-cross"
-                                    }
-                                    size={24}
-                                    color="rgb(80, 80, 80)"
-                                />
-                            </Pressable>
-                        );
-                    },
-                }}
-            />
-            <Stack.Screen
                 name="name"
                 options={{
-                    title: "What is their name?",
+                    title: "What is the patient's name?",
                     headerLeft: () => {
                         return (
                             <Pressable onPress={() => router.back()}>
