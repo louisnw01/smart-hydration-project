@@ -138,7 +138,17 @@ export default function TrendsPage() {
                                 </Text>
                             </View>
                         )}
-                        {selectedUser != null && ( */}
+                        {selectedUser != null && (
+                            <View>
+                                <View className="flex px-4 pb-5 bg-white dark:bg-black">
+                                    <TrendsChart />
+                                    <Switcher />
+                                </View>
+                                <Insights />
+                            </View>
+                        )}
+                    </>
+                )}
                 {!isCarer && isInCommunity && (
                     <View>
                         <View className="flex px-4 pb-5 bg-white dark:bg-black">
