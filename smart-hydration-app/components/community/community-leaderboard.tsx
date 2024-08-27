@@ -3,12 +3,15 @@ import PageWrapper from "@/components/common/page-wrapper";
 import { MemberData, useFormattedMemberDataFunction } from "@/util/community";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useAtomValue } from "jotai";
-import { Pressable, Text, View } from "react-native";
+import { Dimensions, Pressable, Text, View } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
+import Loading from "../common/loading";
+
 export default function CommunityLeaderboard() {
-    const { data } = useAtomValue(patientInfoQAtom);
+    const { data, isLoading } = useAtomValue(patientInfoQAtom);
     const formatMemberData = useFormattedMemberDataFunction();
     if (!data) {
-        return;
+        return null;
     }
     const formattedData = data.map((row) => formatMemberData(row));
     const sortedData = formattedData.slice().sort((a, b) => {
@@ -16,6 +19,9 @@ export default function CommunityLeaderboard() {
         const progressB = parseInt(b.targetProgress);
         return progressB - progressA;
     });
+    if (isLoading) {
+        return <Loading isLoading />;
+    }
     return (
         <PageWrapper>
             <LeaderboardWinner member={sortedData[0]} />
@@ -39,9 +45,15 @@ export function LeaderboardRow({
     member: MemberData;
     index: number;
 }) {
+    const screenSizeCutoff = Dimensions.get("screen").height > 667 ? 15 : 12;
+
     const progressWidth = `${parseInt(member.targetProgress)}%`;
+    const memberName =
+        member.name.length > screenSizeCutoff
+            ? member.name.substring(0, screenSizeCutoff - 1) + "..."
+            : member.name;
     return (
-        <View className="relative w-[93%] h-24 left-4 rounded-xl overflow-hidden mb-1 bg-gray-200">
+        <View className="relative w-[93%] h-24 left-4 rounded-xl overflow-hidden mb-1 bg-gray-200 dark:bg-neutral-800">
             <View
                 className="absolute left-0 top-0 bottom-0 h-12 bg-blue "
                 style={{ width: progressWidth, height: "4rem" }}
@@ -53,7 +65,7 @@ export function LeaderboardRow({
                     <Text>PH</Text>
                 </View>
                 <Text className="pl-4 flex-1 text-2xl font-semibold dark:text-white">
-                    {member.name}
+                    {memberName}
                 </Text>
                 <Text className="text-2xl font-semibold dark:text-white">
                     {member.targetProgress}
@@ -67,8 +79,17 @@ export function LeaderboardRow({
 }
 
 export function LeaderboardWinner({ member }: { member: MemberData }) {
+    if (!member) {
+        return null;
+    }
+    const screenSizeCutoff = Dimensions.get("screen").height > 667 ? 15 : 12;
+
+    const memberName =
+        member.name.length > screenSizeCutoff
+            ? member.name.substring(0, screenSizeCutoff - 1) + "..."
+            : member.name;
     return (
-        <View className="items-center relative w-[93%] h-64 left-4 rounded-xl top-4 mb-6 overflow-hidden border-gray-100 border-2 dark:border-neutral-800">
+        <View className="items-center relative w-[93%] h-72 left-4 rounded-xl top-4 mb-6 overflow-hidden border-gray-100 border-2 dark:border-neutral-800">
             <MaterialCommunityIcons
                 name="crown"
                 size={39}
@@ -77,9 +98,9 @@ export function LeaderboardWinner({ member }: { member: MemberData }) {
             <View className="w-20 h-20 bg-gray-300 rounded-full flex items-center justify-center">
                 <Text>PH</Text>
             </View>
-            <Text className=" text-3xl font-bold pt-1">{member.name}</Text>
-            <Text className="text-3xl dark:text-white">
-                {member.name} is closest to their target!
+            <Text className=" text-3xl font-bold pt-1">{memberName}</Text>
+            <Text className="text-3xl dark:text-white text-center">
+                {memberName} is closest to their target!
             </Text>
             <Text className="pt-2 dark:text-white">
                 Drink water regularly to be the champion!

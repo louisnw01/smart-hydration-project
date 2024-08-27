@@ -2,7 +2,6 @@ import "../global.css";
 
 import { registerForPushNotificationsAsync } from "@/util/notifications";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import * as Linking from "expo-linking";
 import * as Notifications from "expo-notifications";
 import { router, Slot } from "expo-router";
 import { deleteItemAsync } from "expo-secure-store";
@@ -10,7 +9,7 @@ import { Provider } from "jotai";
 import { queryClientAtom } from "jotai-tanstack-query";
 import { useHydrateAtoms } from "jotai/react/utils";
 import { useEffect, useRef, useState } from "react";
-import { PermissionsAndroid } from "react-native";
+import { PermissionsAndroid, Platform } from "react-native";
 
 const queryClient = new QueryClient();
 
@@ -47,7 +46,7 @@ async function getAndriodPermissions() {
 
 export default function Index() {
     //clearStorage();
-    getAndriodPermissions();
+    if (Platform.OS == "android") getAndriodPermissions();
     const [expoPushToken, setExpoPushToken] = useState("");
     const [notification, setNotification] = useState<
         Notifications.Notification | undefined
@@ -65,21 +64,22 @@ export default function Index() {
                 setNotification(notification);
             });
 
-        responseListener.current =
-            Notifications.addNotificationResponseReceivedListener(
-                (response) => {
-                    // for linking from notifications when app is foregrounded or backgrounded
-                    const { screen } = response.notification.request.content.data;
-                    if ( screen ) {
-                        router.replace(screen)
-                    }
-                },
-            );
+        // responseListener.current =
+        //     Notifications.addNotificationResponseReceivedListener(
+        //         (response) => {
+        //             // for linking from notifications when app is foregrounded or backgrounded
+        //             const { screen } =
+        //                 response.notification.request.content.data;
+        //             if (screen) {
+        //                 router.replace(screen);
+        //             }
+        //         },
+        //     );
 
-     // for linking from notifications when app is killed
-        Linking.addEventListener('url', ({ url }) => {
-            router.push(url);
-        });
+        // for linking from notifications when app is killed
+        // Linking.addEventListener("url", ({ url }) => {
+        //     router.push(url);
+        // });
 
         return () => {
             notificationListener.current &&

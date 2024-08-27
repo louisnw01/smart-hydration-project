@@ -1,4 +1,8 @@
-import { addPushTokenMAtom, sendVerificationEmailMAtom, verifyEmailMAtom } from "@/atom/query";
+import {
+    addPushTokenMAtom,
+    sendVerificationEmailMAtom,
+    verifyEmailMAtom,
+} from "@/atom/query";
 import { authTokenAtom, pushTokenAtom } from "@/atom/user";
 import StyledButton from "@/components/common/button";
 import CountdownButton from "@/components/common/countdown-button";
@@ -20,7 +24,7 @@ export default function EmailVerificationPage() {
     const [code, setCode] = useState("");
     const palette = useColorPalette();
     const { isCarer } = useSettings();
-    const [ errorMessage, setErrorMessage ] = useState("");
+    const [errorMessage, setErrorMessage] = useState("");
     const { mutate: addPushToken } = useAtomValue(addPushTokenMAtom);
     const [storedPushToken, setStoredPushToken] = useAtom(pushTokenAtom);
 
@@ -38,8 +42,8 @@ export default function EmailVerificationPage() {
         useAtomValue(verifyEmailMAtom);
 
     useEffect(() => {
-        if (!isSuccess || error){
-            setErrorMessage(error?.message ?? "")
+        if (!isSuccess || error) {
+            setErrorMessage(error?.message ?? "");
         } else {
             if (storedPushToken) {
                 addPushToken({ pushToken: storedPushToken });
@@ -52,8 +56,8 @@ export default function EmailVerificationPage() {
                     })
                     .catch((error: any) => console.error(error));
             }
-            router.replace(isCarer ? "(tabs)/community" : "(tabs)");
-        }    
+            router.replace("(tabs)");
+        }
     }, [isSuccess, error]);
 
     useEffect(() => {

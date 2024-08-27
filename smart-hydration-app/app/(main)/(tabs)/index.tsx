@@ -12,10 +12,12 @@ import { useQueryRefetch } from "@/util/query-refetch";
 import { FontAwesome, MaterialCommunityIcons } from "@expo/vector-icons";
 import { Redirect, router } from "expo-router";
 import { useAtomValue } from "jotai";
+import { Dimensions } from "react-native";
 import { RefreshControl, ScrollView, View } from "react-native";
 
 export default function HomePage() {
     useAtomValue(hydrationInsightsEAtom);
+    const screenIsLarge = Dimensions.get("screen").height > 667;
     const palette = useColorPalette();
     const { hasJugs, isLoading } = useAtomValue(userHasJugsAtom);
     const { isCarer } = useSettings();
@@ -32,7 +34,7 @@ export default function HomePage() {
             message="Loading your information..."
         >
             <ScrollView
-                contentContainerClassName="flex-1 h-full items-center gap-20 mt-16"
+                contentContainerClassName={`flex-1 h-full items-center ${screenIsLarge ? "gap-20 mt-16" : "gap-10 mt-10"} `}
                 refreshControl={
                     <RefreshControl
                         refreshing={isRefreshing}
@@ -42,7 +44,7 @@ export default function HomePage() {
             >
                 <HydrationProgress />
                 <HydrationStatus />
-                <View className="gap-5">
+                <View className={`${screenIsLarge ? "gap-5" : "gap-3"}`}>
                     {!hasJugs && (
                         <StyledButton
                             text="Add a New Jug"

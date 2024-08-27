@@ -20,6 +20,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { Bar, CartesianChart, Line, useChartPressState } from "victory-native";
 import ChartAxis, { canvasInfoAtom } from "./axis";
+import { unitConverter, unitsAtom } from "@/atom/user";
 
 const screenWidth = Dimensions.get("screen").width;
 
@@ -82,6 +83,7 @@ export default function TrendsChart() {
     const palette = useColorPalette();
     const setCanvasInfo = useSetAtom(canvasInfoAtom);
     const member = useAtomValue(selectedMemberAtom);
+    const unit = useAtomValue(unitsAtom)
 
     const scrollRef = useAnimatedRef<Animated.ScrollView>();
     const scrollPosition = useSharedValue(0);
@@ -97,7 +99,7 @@ export default function TrendsChart() {
             data.map((val) => ({
                 x: tickFormatMap[timeframe](new Date(val.x)),
                 y: val.y,
-                line: member?.dailyTarget,
+                line: unitConverter(member?.dailyTarget, unit),
             })),
         [data, timeframe],
     );
@@ -116,7 +118,6 @@ export default function TrendsChart() {
         scrollViewWidth.value = newValue;
 
         setTimeout(() => {
-            console.log("running..");
             scrollPosition.value = newValue;
         }, 100);
     }, [timeframe, data]);
