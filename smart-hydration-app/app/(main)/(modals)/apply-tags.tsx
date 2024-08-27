@@ -195,6 +195,7 @@ export default function ApplyTags() {
                 <View className="flex-1">
                     <StyledTextInput
                         placeholder="Search unapplied tags..."
+                        value={textInput}
                         onChangeText={(val) => {
                             setTextInput(val);
                             setFilters((prev) => ({
