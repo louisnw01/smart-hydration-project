@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-const LOCAL_SERVER_URL = "http://localhost:8085/simulator";
+const LOCAL_SERVER_URL = "https://hydrationapi.louisnw.com/simulator";
 
 export default function Home() {
     const [dbValue, setDbValue] = useState(0);
