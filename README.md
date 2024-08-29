@@ -1,20 +1,30 @@
-# smart-hydration-project
-Smart Hydration UoB Final Project
+# Smart Hydration App: A hydration monitoring app for carers and standard consumers (University of Bristol Final Project)
 
-## App setup
+
+
+Small introduction here
+
+
+
+## Getting Started
+
+### React Native setup
 
 1. Install yarn
+
+On Mac:
 
 ```
 brew install yarn
 ```
 
-(probably different on windows)
+For Windows and Linux, see [here](https://classic.yarnpkg.com/lang/en/docs/install/#mac-stable).
+
 
 2. Install dependencies
 
 ```
-cd apps/smart-hydration-app
+cd smart-hydration-app
 yarn
 ```
 
@@ -25,7 +35,7 @@ yarn start
 ```
 
 
-## Server/Backend setup
+### Server/Backend setup
 
 1. Create a virtual environment (venv)
 
@@ -41,14 +51,19 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-3. Update `.env`
+3. Update `.env` file
+
+Please contact us for these, or you can [add your own](#adding-your-own-infrastructure).
 
 
 3. Run the dev server with the makefile
 
 ```
+cd server
 make dev
 ```
+
+
 4. If using an Android simulator:
 
 Make sure the TCP port of the Android simulator is the same as displayed when running `make dev` by running:
@@ -59,3 +74,39 @@ If the ports are different, you can change the Android TCP port as follows:
 ```
 adb reverse tcp:[FastAPI port] tcp:[FastAPI port]
 ```
+
+### Architecture Diagram
+TODO
+
+### Using your own infrastructure
+
+You can run this project by using your own database and API keys. You will require the following `.env` variables:
+
+Database environment: we used Supabase for this.
+* `PROD_DB_USERNAME`
+* `PROD_DB_PASSWORD`
+* `PROD_DB_HOST`
+* `STAGING_DB_USERNAME`
+* `STAGING_DB_PASSWORD`
+* `STAGING_DB_HOST`
+
+Smart Hydration login: please contact Smart Hydration for this:
+* `SMART_HYDRATION_EMAIL`
+* `SMART_HYDRATION_PASSWORD`
+
+JWT Tokens + algorithm: you can generate these in python:
+* `JWT_SECRET`
+* `JWT_ALGORITHM`
+
+* `TESTING_USER_ID`: you can create a dedicated test account and get the accounts UUID from the database:
+* `USE_PRODUCTION_DB`: Toggle this depending on which database you would like to use.
+
+Pusher environment; please contact Smart Hydration for this:
+* `PUSHER_APP_KEY`
+* `PUSHER_APP_SECRET`
+* `PUSHER_APP_CLUSTER`
+
+Email API environment:
+* `SES_USER_ID`
+* `SES_PASSWORD`
+* `SES_HOST_ADDRESS`
