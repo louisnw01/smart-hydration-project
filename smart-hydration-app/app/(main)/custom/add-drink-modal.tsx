@@ -5,7 +5,7 @@ export default function AddDrinkModal() {
     return (
         <View>
             <Text className="dark:text-white font-bold text-2xl mt-4 mx-6 text-center">
-                Select a volume of water
+                Containers represent a volume of any fluid
             </Text>
             <View className="top-5">
                 <AddDrinkPane />
