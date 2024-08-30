@@ -53,7 +53,7 @@ pip install -r requirements.txt
 
 3. Update `.env` file
 
-Please contact us for these, or you can [add your own](#adding-your-own-infrastructure).
+Please contact us for these, or you can [add your own](#using-your-own-infrastructure).
 
 
 3. Run the dev server with the makefile
@@ -76,7 +76,12 @@ adb reverse tcp:[FastAPI port] tcp:[FastAPI port]
 ```
 
 ### Architecture Diagram
-TODO
+
+![Architecture diagram](architecture-diagram.png)
+
+### Walkthrough video
+
+LINK HERE
 
 ### Using your own infrastructure
 
