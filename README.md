@@ -82,7 +82,7 @@ adb reverse tcp:[FastAPI port] tcp:[FastAPI port]
 
 ### Walkthrough video
 
-![Walkthrough Video](https://www.youtube.com/watch?v=Z6E3xgtG2q4)
+[Walkthrough Video](https://www.youtube.com/watch?v=Z6E3xgtG2q4)
 
 ### Using your own infrastructure
 
