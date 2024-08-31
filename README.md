@@ -140,7 +140,7 @@ Then install android studio and use it to install the Android SDK. Add the Andro
 
 Before building the app, you will need to remove `google-services.json` from your `.gitignore`, otherwise eas won’t be able to find it. Make sure to add it back in after building, as this contains sensitive information which should not be pushed to your remote repository.
 
-Then run `yarn expo prebuild –platform android` to prebuild the android folder for the app.
+Then run `yarn expo prebuild --platform android` to prebuild the android folder for the app.
 
-To build a local .apk file, run `eas build –platform android –local`. Wait for the build process to complete and then install the app on the android device of your choosing.
+To build a local .apk file, run `eas build –-platform android –-local`. Wait for the build process to complete and then install the app on the android device of your choosing.
 
