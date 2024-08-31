@@ -142,5 +142,5 @@ Before building the app, you will need to remove `google-services.json` from you
 
 Then run `yarn expo prebuild --platform android` to prebuild the android folder for the app.
 
-To build a local .apk file, run `eas build –-platform android –-local`. Wait for the build process to complete and then install the app on the android device of your choosing.
+To build a local .apk file, run `eas build --platform android --local`. Wait for the build process to complete and then install the app on the android device of your choosing.
 
