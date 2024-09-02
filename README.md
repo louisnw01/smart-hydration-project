@@ -1,10 +1,11 @@
-# Smart Hydration App: A hydration monitoring app for carers and standard consumers (University of Bristol Final Project)
+# Smart Hydration App: A hydration monitoring app for carers and standard users (University of Bristol Final Project)
 
+Smart Hydration: a React Native application for iOS / Android. 
 
+This app is designed to be a hydration monitoring app for carers and the general public. To build this app, it is recommended that you install the following:
 
-Small introduction here
-
-
+* xCode / Android Studio
+* Python 3.10
 
 ## Getting Started
 
@@ -53,7 +54,7 @@ pip install -r requirements.txt
 
 3. Update `.env` file
 
-Please contact us for these, or you can [add your own](#adding-your-own-infrastructure).
+Please contact us for these, or you can [add your own](#using-your-own-infrastructure).
 
 
 3. Run the dev server with the makefile
@@ -76,7 +77,12 @@ adb reverse tcp:[FastAPI port] tcp:[FastAPI port]
 ```
 
 ### Architecture Diagram
-TODO
+
+![Architecture diagram](architecture-diagram.png)
+
+### Walkthrough video
+
+[Walkthrough Video](https://www.youtube.com/watch?v=Z6E3xgtG2q4)
 
 ### Using your own infrastructure
 
@@ -110,3 +116,31 @@ Email API environment:
 * `SES_USER_ID`
 * `SES_PASSWORD`
 * `SES_HOST_ADDRESS`
+
+### Building for iOS
+
+It's best to do this in XCode. You will need to add the following capabilities:
+* Access Wi-Fi Information
+* Hotspot
+* Push Notifications
+
+You will also need to add the following your `info.plist` file:
+```
+<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+<string>Always and in usage permissions for Location</string>
+<key>NSLocationWhenInUseUsageDescription</key>
+<string>Location when in use</string>
+```
+
+### Building for Android
+
+Before building the app, you will need to follow this [guide](https://docs.expo.dev/push-notifications/fcm-credentials/) to configure FCM credentials for the app. 
+
+Then install android studio and use it to install the Android SDK. Add the Android SDK to your path as `$ANDROID_HOME`.
+
+Before building the app, you will need to remove `google-services.json` from your `.gitignore`, otherwise eas won’t be able to find it. Make sure to add it back in after building, as this contains sensitive information which should not be pushed to your remote repository.
+
+Then run `yarn expo prebuild --platform android` to prebuild the android folder for the app.
+
+To build a local .apk file, run `eas build --platform android --local`. Wait for the build process to complete and then install the app on the android device of your choosing.
+
