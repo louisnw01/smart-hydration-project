@@ -6,7 +6,7 @@ import { router } from "expo-router";
 import { useAtomValue } from "jotai";
 import { atomWithMutation } from "jotai-tanstack-query";
 import { useEffect, useState } from "react";
-import { View } from "react-native";
+import { Alert, View } from "react-native";
 import WifiManager from "react-native-wifi-reborn";
 
 const pairJugToNetworkMAtom = atomWithMutation<
@@ -51,7 +51,10 @@ export default function ConnectPage() {
                 router.replace("wifisetup/success");
             },
             () => {
-                alert("Incorrect password; please try again");
+                Alert.alert(
+                    "Incorrect password",
+                    "please try again, or reconnect to your WiFi network.",
+                );
             },
         );
     }, [isSuccess]);

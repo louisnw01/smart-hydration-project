@@ -1,7 +1,9 @@
 import { router } from "expo-router";
+import { Alert } from "react-native";
 import WifiManager from "react-native-wifi-reborn";
 
-export function connectToWifi(jugId: number) {
+export function connectToWifi(jugId: number, setLoading) {
+    setLoading(true);
     WifiManager.connectToProtectedSSID(
         `SmartHydration: ${jugId}`,
         null,
@@ -10,10 +12,13 @@ export function connectToWifi(jugId: number) {
     ).then(
         () => {
             router.replace("wifisetup/connect");
+            setLoading(false);
         },
         () => {
-            alert(
-                "Connection to the jug failed; ensure the jug is in pairing mode and try again.",
+            setLoading(false);
+            Alert.alert(
+                "Connection failed",
+                "Ensure the jug is in pairing mode and try again.",
             );
         },
     );

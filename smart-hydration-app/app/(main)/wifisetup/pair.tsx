@@ -1,9 +1,11 @@
 import { wifiPairInfoAtom } from "@/atom/wifi";
 import StyledButton from "@/components/common/button";
+import Loading from "@/components/common/loading";
 import Typography from "@/components/common/typography";
 import JugBaseDiagram from "@/components/devices/jug-base-diagram";
 import { connectToWifi } from "@/components/devices/wifi";
 import { useAtomValue } from "jotai";
+import { useState } from "react";
 import { View } from "react-native";
 
 function NumberSection({ number, text }: { number: number; text: string }) {
@@ -17,6 +19,10 @@ function NumberSection({ number, text }: { number: number; text: string }) {
 
 export default function PairingPage() {
     const pairInfo = useAtomValue(wifiPairInfoAtom);
+    const [loading, setLoading] = useState(false);
+    if (loading) {
+        return <Loading isLoading />;
+    }
     return (
         <View className="mx-6 flex-1 justify-center mb-12">
             <Typography className="text-xl text-center font-medium">
@@ -48,7 +54,7 @@ export default function PairingPage() {
                 buttonClass="bg-green mt-5"
                 textClass="text-center w-full text-lg font-medium text-white"
                 onPress={() => {
-                    connectToWifi(pairInfo?.id);
+                    connectToWifi(pairInfo?.id, setLoading);
                 }}
             />
         </View>
