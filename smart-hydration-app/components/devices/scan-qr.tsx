@@ -15,7 +15,7 @@ import {
 import { router } from "expo-router";
 import { useAtomValue, useSetAtom } from "jotai";
 import { useEffect, useState } from "react";
-import { Dimensions, Platform, Pressable, View } from "react-native";
+import { Alert, Dimensions, Platform, Pressable, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import WifiManager from "react-native-wifi-reborn";
 import StyledButton from "../common/button";
@@ -24,7 +24,7 @@ import Typography from "../common/typography";
 import DeviceRow from "./device-row";
 
 export default function ScanWithCamera({ visible, setVisible }) {
-    const { mutate, data, isPending, isSuccess, reset } =
+    const { mutate, data, isPending, isSuccess, reset, isError } =
         useAtomValue(checkQRCodeMAtom);
 
     const palette = useColorPalette();
@@ -74,6 +74,15 @@ export default function ScanWithCamera({ visible, setVisible }) {
 
         checkWifiAndSetMessage(data);
     }, [data, isSuccess]);
+
+    useEffect(() => {
+        if (isError) {
+            Alert.alert(
+                "Invalid QR code",
+                "Try scanning again, or use a different QR code.",
+            );
+        }
+    }, [isError]);
 
     if (!permissions) {
         return null;
@@ -137,18 +146,20 @@ export default function ScanWithCamera({ visible, setVisible }) {
 
                     {!!jugName && !linkJugIsSuccess && (
                         <View className="px-2 h-64 pt-4">
-                            <DeviceRow device={jugName} />
+                            <View className="bg-white rounded-3xl p-3 dark:bg-transparent">
+                                <DeviceRow device={jugName} />
+                            </View>
                             <View className="flex-row justify-evenly pt-16">
                                 <StyledButton
                                     text="Cancel"
-                                    buttonClass="px-4 py-3 rounded-xl"
+                                    buttonClass="px-4 py-3 rounded-xl bg-gray-100 dark:bg-neutral-900"
                                     textClass="text-lg font-medium"
                                     onPress={() => setVisible(false)}
                                 />
                                 <StyledButton
                                     text="Add to account"
                                     buttonClass="bg-green px-4 py-3 rounded-xl"
-                                    textClass="text-lg font-medium"
+                                    textClass="text-lg font-medium text-white"
                                     onPress={() => {
                                         linkJug({
                                             jugIds: [jugName.id],
