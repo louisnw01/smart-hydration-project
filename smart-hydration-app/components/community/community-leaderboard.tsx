@@ -6,6 +6,7 @@ import { useAtomValue } from "jotai";
 import { Dimensions, Pressable, Text, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import Loading from "../common/loading";
+import { FontAwesome6 } from "@expo/vector-icons";
 
 export default function CommunityLeaderboard() {
     const { data, isLoading } = useAtomValue(patientInfoQAtom);
@@ -62,7 +63,7 @@ export function LeaderboardRow({
             {/* Foreground content */}
             <View className="flex-row items-center h-full bg-transparent rounded-xl p-4">
                 <View className="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center">
-                    <Text>PH</Text>
+                    <FontAwesome6 name="face-smile" size={30} color="gray" />
                 </View>
                 <Text className="pl-4 flex-1 text-2xl font-semibold dark:text-white">
                     {memberName}
@@ -96,7 +97,7 @@ export function LeaderboardWinner({ member }: { member: MemberData }) {
                 color="rgb(255, 215, 0)"
             />
             <View className="w-20 h-20 bg-gray-300 rounded-full flex items-center justify-center">
-                <Text>PH</Text>
+                <FontAwesome6 name="face-smile" size={60} color="gray" />
             </View>
             <Text className=" text-3xl font-bold pt-1">{memberName}</Text>
             <Text className="text-3xl dark:text-white text-center">
