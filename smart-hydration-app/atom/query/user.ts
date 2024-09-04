@@ -22,6 +22,10 @@ export const changeUserModeMAtom = atomWithMutationCustom({
         qc.invalidateQueries({
             queryKey: ["get-patient-info"],
         });
+        qc.invalidateQueries({ queryKey: ["/data/historical"] });
+        qc.invalidateQueries({ queryKey: ["historical-patient"] });
+        qc.setQueryData(["/data/historical"], () => undefined);
+        qc.setQueryData(["historical-patient"], () => undefined);
     },
 });
 

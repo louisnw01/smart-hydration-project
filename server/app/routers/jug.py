@@ -33,7 +33,9 @@ async def update_jug_name(form: UpdateJugForm, user_id: str = Depends(auth_user)
 
         if community := get_users_community(user_id):
             valid_jugs.extend([j for j in community.unassigned_jugs])
-            valid_jugs.extend([j for j in juguser.jugs for juguser in community.jug_users])
+
+            for juguser in community.jug_users:
+                valid_jugs.extend([j for j in juguser.jugs])
 
         if jug not in valid_jugs:
             raise HTTPException(status_code=401, detail='Unauthorized')

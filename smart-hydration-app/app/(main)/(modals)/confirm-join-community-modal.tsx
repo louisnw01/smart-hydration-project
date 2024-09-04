@@ -23,7 +23,8 @@ export default function ConfirmJoinCommunityModal() {
     } = useAtomValue(joinCommunityMAtom);
 
     useEffect(() => {
-        if (!inviteCode) {
+        setInviteCode("");
+        if (!inviteCode && verificationUrl) {
             setInviteCode(verificationUrl?.slice(-10) ?? "");
         }
     }, [verificationUrl]);

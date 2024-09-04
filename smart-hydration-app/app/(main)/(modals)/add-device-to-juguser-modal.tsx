@@ -18,12 +18,14 @@ export default function MVPAddDeviceModal() {
         mutate: linkJugToCommunityMember,
         isPending,
         isSuccess,
+        reset,
     } = useAtomValue(linkJugMAtom);
     const { data: userInfo } = useAtomValue(userInfoQAtom);
 
     useEffect(() => {
         if (isPending || !isSuccess) return;
         setSelectedJugs([]);
+        reset();
         router.replace("/devices");
     }, [isPending, isSuccess]);
 
