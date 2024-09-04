@@ -1,9 +1,9 @@
 import { amountDrankTodayAtom } from "@/atom/hydration";
 import colors from "@/colors";
 import useColorPalette from "@/util/palette";
-import { useAtomValue } from "jotai";
-import { ReactNode } from "react";
-import { Text, TextInput, View } from "react-native";
+import { atom, useAtom, useAtomValue } from "jotai";
+import { ReactNode, useState } from "react";
+import { Pressable, Text, TextInput, View } from "react-native";
 import Animated, {
     Easing,
     SharedValue,
@@ -20,6 +20,8 @@ import { Dimensions } from "react-native";
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 const AnimatedTextInput = Animated.createAnimatedComponent(TextInput);
+
+export const debugModeAtom = atom(false);
 
 export function ProgressWheel({
     children,
@@ -52,12 +54,24 @@ export function ProgressWheel({
         easing: Easing.inOut(Easing.quad),
     });
 
+    const [numClicks, setNumClicks] = useState(0);
+    const [debugMode, setDebugMode] = useAtom(debugModeAtom);
+
     return (
-        <View
+        <Pressable
             className="flex flex-row items-center"
             style={{
                 width: radius * 2 + width,
                 height: radius * 2 + width,
+            }}
+            onPress={() => {
+                if (numClicks == 5) {
+                    setDebugMode(!debugMode);
+                    alert(`debug mode ${!debugMode ? "ENABLED" : "DISABLED"}`);
+                    setNumClicks(0);
+                } else {
+                    setNumClicks(numClicks + 1);
+                }
             }}
         >
             <Svg
@@ -96,7 +110,7 @@ export function ProgressWheel({
             <View className="absolute h-full w-full items-center justify-center">
                 {children}
             </View>
-        </View>
+        </Pressable>
     );
 }
 

@@ -146,7 +146,11 @@ export const leaveCommunityMAtom = atomWithMutationCustom({
 });
 
 export const communityNameQAtom = atomWithQueryInfo<string>({
-    queryKey: "name-from-link",
+    queryKey: (get) => [
+        "name-from-link",
+        get(authTokenAtom),
+        get(inviteCodeAtom),
+    ],
     endpoint: ENDPOINTS.NAME_FROM_LINK,
     query: (get) => ({ code: get(inviteCodeAtom) }),
     enabled: (get) => !!get(authTokenAtom) && !!get(inviteCodeAtom),

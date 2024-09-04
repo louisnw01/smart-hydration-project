@@ -58,7 +58,7 @@ export default function MemberRow({ member }: { member: MemberInfo }) {
                     name: row.name,
                 })),
         );
-    }, [data]);
+    }, [data, member]);
 
     return (
         <View className="w-full">
@@ -94,12 +94,13 @@ export default function MemberRow({ member }: { member: MemberInfo }) {
                         />
                     </View>
                     <View className="flex-row gap-2 flex-wrap">
-                        {member.jugs.map((row) => {
+                        {member.jugs.map((row, idx) => {
                             if (row.waterLevel > 200) {
                                 return null;
                             }
                             return (
                                 <View
+                                    key={idx}
                                     className="flex-row pt-2 flex-wrap rounded-lg py px-2"
                                     style={{
                                         backgroundColor:
@@ -137,11 +138,12 @@ export default function MemberRow({ member }: { member: MemberInfo }) {
                     </View>
                     {membersWarnings && (
                         <View className="flex-row gap-2 flex-wrap">
-                            {membersWarnings.map((row) => {
+                            {membersWarnings.map((row, idx) => {
                                 if (row.stale == StaleWarningType.NOT_STALE)
                                     return null;
                                 return (
                                     <View
+                                        key={idx}
                                         className="flex-row pt-2 flex-wrap rounded-lg py px-2"
                                         style={{
                                             backgroundColor:
